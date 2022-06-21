@@ -1,4 +1,3 @@
-const sql = require('mssql');
 require('dotenv').config();
 
 const {PORT, SQL_USER, SQL_PASSWORD, SQL_DATABASE, SQL_SERVER} = process.env
@@ -16,9 +15,7 @@ const dbconfig = {
     }
 }
 
-const pool = sql.connect(dbconfig);
-
 module.exports = {
     PORT,
-    pool
+    dbconfig
 }

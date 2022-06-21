@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { pool } = require('../../config');
+const sql = require('mssql');
+const { dbconfig } = require('../../config');
 
 const ifLoggedIn = (req, res, next) => {
     if (req.session.isLoggedIn) {
@@ -16,6 +17,7 @@ router.get('/login', ifLoggedIn, (req, res, next) => {
 
 router.post('/login', async (req, res) => {
     let { username, password } = req.body;
+    let pool = await sql.connect(dbconfig);
     let user = await pool.request().query(`SELECT * FROM users WHERE username = ${username}`);
     if (user.recordset.length) {
         let compared = await bcrypt.compare(password, user.recordset[0].password)
@@ -40,3 +42,5 @@ router.get('/logout', (req, res, next) => {
     req.isAuth = false;
     req.redirect('/user/login');
 })
+
+module.exports = router
