@@ -28,22 +28,12 @@ router.post('/add', async (req, res, next) => {
             THEN CAST (1 AS BIT)
             ELSE CAST (0 AS BIT) END AS 'check'`);
         if(CheckEmployee.recordset[0].check){
+            res.status(400).send({message: 'Duplicate Employee Email'});  
+        } else {
             let InsertEmployee = `INSERT INTO MasterEmployee(EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition)
                 VALUES  (N'${EmployeeTitle}', N'${EmployeeFname}', N'${EmployeeLname}', N'${EmployeeTel}', N'${EmployeeEmail}', N'${EmployeePosition}')`;
             await pool.request().query(InsertEmployee);
             res.status(201).send({message: 'Successfully add Employee'});
-        } else {
-            if(CheckEmployee.recordset[0].EmployeeActive){
-                console.log('checked')
-                res.status(400).send({message: 'Duplicate Employee Email'});
-            } else{
-                let ActivateEmployee = `UPDATE MasterEmployee
-                    SET
-                    EmployeeActive = 1
-                    WHERE EmployeeEmail = N'${EmployeeEmail}'`;
-                await pool.request().query(ActivateEmployee);
-                res.status(201).send({message: 'Successfully add Employee'});
-            }
         }
     } catch(err){
         res.status(500).send({message: err});
@@ -52,49 +42,45 @@ router.post('/add', async (req, res, next) => {
 
 router.put('/edit/:EmployeeId', async (req, res) => {
     try{
-        let CustomerId = req.params.CustomerId;
-        let { CustomerTitle, CustomerFname, CustomerLname, CustomerTel, CustomerEmail, CompanyId } = req.body
-        if(CompanyId == 'null'){
-            res.status(400).send({message: 'Please select Company'});
-            return;
-        }
+        let EmployeeId = req.params.EmployeeId;
+        let { EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition } = req.body
         let pool = await sql.connect(dbconfig);
-        let CheckCustomer = await pool.request().query(`SELECT CASE
+        let CheckEmployee = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
                 SELECT *
-                FROM MasterCustomer
-                WHERE CustomerEmail = N'${CustomerEmail}  AND NOT CompanyId = ${CustomerId}'
+                FROM MasterEmployee
+                WHERE EmployeeEmail = N'${EmployeeEmail}  AND NOT EmployeeId = ${EmployeeId}'
             )
             THEN CAST (1 AS BIT)
             ELSE CAST (0 AS BIT) END AS 'check'`);
-        if(CheckCustomer.recordset[0].check){
-            res.status(400).send({message: 'Duplicate Customer Email'});
+        if(CheckEmployee.recordset[0].check){
+            res.status(400).send({message: 'Duplicate Employee Email'});
         } else{
-            let UpdateCustomer = `UPDATE MasterCustomer
+            let UpdateEmployee = `UPDATE MasterEmployee
                 SET
-                CustomerTitle = N'${CustomerTitle}',
-                CustomerFname = N'${CustomerFname}',
-                CustomerLname = N'${CustomerLname}',
-                CustomerTel = N'${CustomerTel}',
-                CustomerEmail = N'${CustomerEmail}'
-                WHERE CustomerId = ${CustomerId}`;
-            await pool.request().query(UpdateCustomer);
-            res.status(200).send({message: `Successfully edit customer`});
+                EmployeeTitle = N'${EmployeeTitle}',
+                EmployeeFname = N'${EmployeeFname}',
+                EmployeeLname = N'${EmployeeLname}',
+                EmployeeTel = N'${EmployeeTel}',
+                EmployeeEmail = N'${EmployeeEmail}',
+                EmployeePosition = N'${EmployeePosition}'
+                WHERE EmployeeId = ${EmployeeId}`;
+            await pool.request().query(UpdateEmployee);
+            res.status(200).send({message: `Successfully edit Employee`});
         }
     } catch(err){
         res.status(500).send({message: `${err}`});
     }
 })
 
-router.delete('/delete/:CustomerId', async (req, res) => {
+router.delete('/delete/:EmployeeId', async (req, res) => {
     try{
-        let CustomerId = req.params.CustomerId;
-        let DeleteCustomer = `UPDATE MasterCustomer
-            SET CustomerActive = 0
-            WHERE CustomerId = ${CustomerId}`;
+        let EmployeeId = req.params.EmployeeId;
+        let DeleteEmployee = `DELETE FROM MasterEmployee
+            WHERE EmployeeId = ${EmployeeId}`;
         let pool = await sql.connect(dbconfig);
-        await pool.request().query(DeleteCustomer);
-        res.status(200).send({message: `Successfully delete customer`});
+        await pool.request().query(DeleteEmployee);
+        res.status(200).send({message: `Successfully delete Employee`});
     } catch(err){
         res.status(500).send({message: `${err}`});
     }

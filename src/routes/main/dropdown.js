@@ -5,7 +5,7 @@ const { pool } = require('../../../config');
 // Show Dropdown
 router.get('/company', async (req, res) => {
     try{
-        let SelectCompany = `Select * FROM Company order by CompanyName`;
+        let SelectCompany = `Select * FROM MasterCompany order by CompanyName`;
         let Company = await pool.request().query(SelectCompany);
         res.status(200).send(JSON.stringify(Company.recordset));
     } catch(err){
@@ -15,10 +15,7 @@ router.get('/company', async (req, res) => {
 
 router.get('/customer', async (req, res) => {
     try{
-        let SelectCustomer = `Select *
-        FROM [Customer] a
-        LEFT JOIN [Company] b ON a.CompanyId = b.CompanyId
-        order by CustomerName`;
+        let SelectCustomer = `Select * FROM MasterCustomer order by CustomerFname`;
         let Customer = await pool.request().query(SelectCustomer);
         res.status(200).send(JSON.stringify(Customer.recordset));
     } catch(err){

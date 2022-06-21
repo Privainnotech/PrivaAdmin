@@ -37,7 +37,7 @@ CREATE Table [PrivaAdmin].[dbo].[MasterEmployee](
 
 CREATE Table [PrivaAdmin].[dbo].[QuotationNo](
     QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
+    QuotationNo NVARCHAR(20) NOT NULL UNIQUE DEFAULT N'pre_' + fnFormatDate (getdate(), N'YYYYMM00'),
 	CustomerId bigint NOT NULL,
 	QuotationDate NVARCHAR(10) NOT NULL DEFAULT CONVERT(VARCHAR(10), getdate(), 105),
 	CONSTRAINT FK_quotationno_customer FOREIGN KEY (CustomerId)
@@ -82,5 +82,58 @@ CREATE Table [PrivaAdmin].[dbo].[Users](
 	Password NVARCHAR(255) NOT NULL,
 	Role NVARCHAR(255) NULL
 )
+
+CREATE FUNCTION dbo.fnFormatDate (@Datetime DATETIME, @FormatMask NVARCHAR(32))
+RETURNS NVARCHAR(32)
+AS
+BEGIN
+    DECLARE @StringDate NVARCHAR(32)
+	SET @StringDate = @FormatMask
+	IF (CHARINDEX ('YYYY',@StringDate) > 0)
+	   SET @StringDate = REPLACE(@StringDate, 'YYYY',
+	                     DATENAME(YY, @Datetime))
+
+    IF (CHARINDEX ('YY',@StringDate) > 0)
+		SET @StringDate = REPLACE(@StringDate, 'YY',
+		                  RIGHT(DATENAME(YY, @Datetime),2))
+
+    IF (CHARINDEX ('Month',@StringDate) > 0)
+	    SET @StringDate = REPLACE(@StringDate, 'Month',
+		                  DATENAME(MM, @Datetime))
+
+    IF (CHARINDEX ('MON',@StringDate COLLATE SQL_Latin1_General_CP1_CS_AS)>0)
+	    SET @StringDate = REPLACE(@StringDate, 'MON',
+		                  LEFT(UPPER(DATENAME(MM, @Datetime)),3))
+
+    IF (CHARINDEX ('Mon',@StringDate) > 0)
+	    SET @StringDate = REPLACE(@StringDate, 'Mon',
+		                  LEFT(DATENAME(MM, @Datetime),3))
+
+    IF (CHARINDEX ('MM',@StringDate) > 0)
+	    SET @StringDate = REPLACE(@StringDate, 'MM',
+		                  RIGHT('0'+CONVERT(VARCHAR,DATEPART(MM, @Datetime)),2))
+
+    IF (CHARINDEX ('M',@StringDate) > 0)
+	    SET @StringDate = REPLACE(@StringDate, 'M',
+		                  CONVERT(VARCHAR,DATEPART(MM, @Datetime)))
+
+    IF (CHARINDEX ('DD',@StringDate) > 0)
+	    SET @StringDate = REPLACE(@StringDate, 'DD',
+	                      RIGHT('0'+DATENAME(DD, @Datetime),2))
+
+    IF (CHARINDEX ('D',@StringDate) > 0)
+	    SET @StringDate = REPLACE(@StringDate, 'D',
+		                  DATENAME(DD, @Datetime))   
+
+RETURN @StringDate
+END
+
+GO
+
+INSERT INTO MasterStatus
+VALUES (N'pre')
+
+ALTER TABLE QuotationNo
+ADD CONSTRAINT df_QuotationNo DEFAULT N'pre_' + dbo.fnFormatDate (getdate(), N'YYYYMM00') FOR QuotationNo;
 
 
