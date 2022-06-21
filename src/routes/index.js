@@ -20,4 +20,13 @@ router.get('/', (req, res, next) => {
     res.render('index')
 });
 
+router.get('/', ifNotLoggedIn, (req , res, next) => {
+    res.redirect('index');
+  })
+
+// customer page
+router.get('/customer', (req, res, next) => {
+    res.render('customer')
+});
+
 module.exports = router
