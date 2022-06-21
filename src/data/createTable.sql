@@ -46,7 +46,7 @@ CREATE Table [PrivaAdmin].[dbo].[MasterEmployee](
 CREATE Table [PrivaAdmin].[dbo].[MasterProduct](
 	ProductId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	ProductCode NVARCHAR(20) NOT NULL UNIQUE,
-	ProductName NVARCHAR(50) NOT NULL UNIQUE,
+	ProductName NVARCHAR(255) NOT NULL UNIQUE,
     ProductPrice money NULL,
 )
 
@@ -83,9 +83,9 @@ CREATE Table [PrivaAdmin].[dbo].[Quotation](
 CREATE Table [PrivaAdmin].[dbo].[QuotationItem](
 	ItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     QuotationId bigint NOT NULL,
-	ItemName NVARCHAR(50) NOT NULL,
+	ItemName NVARCHAR(255) NOT NULL,
     ItemPrice money NULL,
-	ItemQty NVARCHAR(20) NULL
+	ItemQty int NULL
 	CONSTRAINT FK_qitem_quotation FOREIGN KEY (QuotationId)
 	REFERENCES Quotation(QuotationId)
 )
@@ -94,7 +94,8 @@ CREATE Table [PrivaAdmin].[dbo].[QuotationSubItem](
 	SubItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     ItemId bigint NOT NULL,
 	ProductId bigint NULL,
-	SubItemQty NVARCHAR(20) NULL
+	SubItemQty int NULL,
+	SubItemUnit NVARCHAR(10) NULL
 	FOREIGN KEY (ItemId) REFERENCES QuotationItem(ItemId),
 	FOREIGN KEY (ProductId) REFERENCES MasterProduct(ProductId)
 )
