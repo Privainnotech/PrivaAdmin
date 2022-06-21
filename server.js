@@ -15,7 +15,7 @@ app.set('views', path.join(__dirname, "views"));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.use(express.static(path.join(__dirname, '/asset/')));
+app.use(express.static(path.join(__dirname, '/assets/')));
 app.use(express.static(path.join(__dirname, '/public/')));
 app.use(express.static(path.join(__dirname, '/script/')));
 
