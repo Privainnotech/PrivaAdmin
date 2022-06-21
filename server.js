@@ -37,7 +37,23 @@ app.use(flash());
 let indexRoute = require('./src/routes/index');
 let userRoute = require('./src/routes/user');
 
-app.use('/', indexRoute)
-app.use('/user', userRoute)
+// path setting module
+let employeeRoute = require('./src/routes/master_setting/employee_master')
+let companyRoute = require('./src/routes/master_setting/company_master')
+let customerRoute = require('./src/routes/master_setting/customer_master')
+
+// path main module
+let quotationRoute = require('./src/routes/quotation/quotation');
+let dropdownRoute = require('./src/routes/main/dropdown')
+
+app.use('/', indexRoute);
+app.use('/user', userRoute);
+
+app.use('/company', companyRoute)
+app.use('/customer', customerRoute)
+app.use('/employee', employeeRoute)
+
+app.use('/quotation', quotationRoute);
+app.use('/dropdown', dropdownRoute)
 
 app.listen(PORT, () => console.log(`Server is listening on ${PORT}`))

@@ -1,63 +1,86 @@
-CREATE Table company(
-    companyId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    companyName NVARCHAR(50) NOT NULL UNIQUE,
-    companyAddress NVARCHAR(255) NOT NULL,
-	companyTel NVARCHAR(20) NULL,
-	companyEmail NVARCHAR(20) NULL
+CREATE Table [PrivaAdmin].[dbo].[MasterCompany](
+    CompanyId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+    CompanyName NVARCHAR(50) NOT NULL UNIQUE,
+    CompanyAddress NVARCHAR(255) NOT NULL,
+	CompanyEmail NVARCHAR(50) NULL,
+	CompanyTel NVARCHAR(20) NULL,
+	CompanyActive int NOT NULL DEFAULT 1
 )
 
-CREATE Table customer(
-    customerId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    customerTitle NVARCHAR(50) NULL,
-	customerFname NVARCHAR(50) NOT NULL UNIQUE,
-	customerLname NVARCHAR(50) NULL,
-    CustomerEmail NVARCHAR(50) NOT NULL UNIQUE,
-	companyId int NOT NULL
-	CONSTRAINT FK_customer_company FOREIGN KEY (companyId)
-	REFERENCES company(companyId)
+CREATE Table [PrivaAdmin].[dbo].[MasterCustomer](
+    CustomerId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	CompanyId bigint NOT NULL,
+    CustomerTitle NVARCHAR(10) NULL,
+	CustomerFname NVARCHAR(50) NOT NULL,
+	CustomerLname NVARCHAR(50) NULL,
+    CustomerEmail NVARCHAR(50) NOT NULL,
+	CustomerTel NVARCHAR(20) NULL,
+	CustomerActive int NOT NULL DEFAULT 1
+	CONSTRAINT FK_customer_company FOREIGN KEY (CompanyId)
+	REFERENCES MasterCompany(CompanyId)
 )
 
-CREATE Table quotation(
-    quotationId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    quotationNo NVARCHAR(20) NOT NULL UNIQUE,
-	customerId int NOT NULL,
-	quotationSubject NVARCHAR(255) NOT NULL,
-	createdDate NVARCHAR(10) NOT NULL DEFAULT CONVERT(VARCHAR(10), getdate(), 105),
-	total_price money NULL,
-	discount money NULL,
-	netprice money NULL,
-	vat money NULL,
-	netprice_vat money NULL,
-	thaiBaht NVARCHAR(50) NULL,
-	validityDate int NULL,
-	payTerm NVARCHAR(MAX) NULL,
-	delivery NVARCHAR(255) NULL,
-	remark NVARCHAR(MAX) NULL
-	CONSTRAINT FK_quotation_customer FOREIGN KEY (customerId)
-	REFERENCES customer(customerId)
+CREATE Table [PrivaAdmin].[dbo].[MasterStatus](
+    StatusId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	StatusName NVARCHAR(20) NOT NULL UNIQUE
 )
 
-CREATE Table quotation_item(
-	itemId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    quotationId int NOT NULL,
-	itemName NVARCHAR(50) NOT NULL,
-    itemPrice money NULL,
-	itemQty NVARCHAR(20) NULL,
-	totalPrice money NULL
-	CONSTRAINT FK_qitem_quotation FOREIGN KEY (quotationId)
-	REFERENCES quotation(quotationId)
+CREATE Table [PrivaAdmin].[dbo].[MasterEmployee](
+	EmployeeId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	EmployeeTitle NVARCHAR(10) NULL,
+	EmployeeFname NVARCHAR(50) NOT NULL,
+	EmployeeLname NVARCHAR(50) NULL,
+	EmployeeEmail NVARCHAR(50) NULL,
+	EmployeeTel NVARCHAR(20) NULL,
+	EmployeePosition NVARCHAR(50) NULL
 )
 
-CREATE Table quotation_subitem(
-	subitemId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    itemId int NOT NULL,
-	subItemName NVARCHAR(50) NOT NULL,
-    subitemPrice money NULL,
-	subitemQty NVARCHAR(20) NULL,
-	totalPrice money NULL,
-	detail NVARCHAR(MAX) NULL
-	CONSTRAINT FK_qsubitem_qitem FOREIGN KEY (itemId)
-	REFERENCES quotation_item(itemId)
+CREATE Table [PrivaAdmin].[dbo].[QuotationNo](
+    QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+    QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
+	CustomerId bigint NOT NULL,
+	QuotationDate NVARCHAR(10) NOT NULL DEFAULT CONVERT(VARCHAR(10), getdate(), 105),
+	CONSTRAINT FK_quotationno_customer FOREIGN KEY (CustomerId)
+	REFERENCES MasterCustomer(CustomerId)
+)
+
+CREATE Table [PrivaAdmin].[dbo].[Quotation](
+    QuotationId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+    QuotationNoId bigint NOT NULL,
+	QuotationRevised int NOT NULL,
+	QuotationSubject NVARCHAR(255) NOT NULL,
+	QuotationStatus bigint NOT NULL DEFAULT 1,
+	QuotationTotalPrice money NULL,
+	QuotationDiscount money NULL,
+	QuotationNet money NULL,
+	QuotationVat money NULL,
+	QuotationNetVat money NULL,
+	QuotationValidityDate int NULL,
+	QuotationPayTerm NVARCHAR(MAX) NULL,
+	QuotationDelivery NVARCHAR(255) NULL,
+	QuotationRemark NVARCHAR(MAX) NULL,
+	EmployeeApproveId int NULL
+	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
+	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId)
+)
+
+CREATE Table [PrivaAdmin].[dbo].[QuotationItem](
+	ItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+    QuotationId bigint NOT NULL,
+	ItemName NVARCHAR(50) NOT NULL,
+    ItemPrice money NULL,
+	ItemQty NVARCHAR(20) NULL,
+	ItemTotalPrice money NULL
+	CONSTRAINT FK_qitem_quotation FOREIGN KEY (QuotationId)
+	REFERENCES Quotation(QuotationId)
+)
+
+CREATE Table [PrivaAdmin].[dbo].[Users](
+	UserId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	AvatarPath NVARCHAR(255) NOT NULL DEFAULT N'./images/avatar/0.png',
+	Username NVARCHAR(50) NOT NULL,
+	Password NVARCHAR(255) NOT NULL,
+	Role NVARCHAR(255) NULL
 )
 
 
