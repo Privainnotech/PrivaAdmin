@@ -23,4 +23,4 @@ SELECT row_number() over(order by CustomerFname) as 'index', *
 FROM MasterCustomer a
 LEFT JOIN MasterCompany b ON a.CompanyId = b.CompanyId
 ORDER BY CustomerFname
-WHERE CompanyId = ${CompanyId}
+-- WHERE CompanyId = ${CompanyId}

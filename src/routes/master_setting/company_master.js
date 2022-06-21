@@ -21,13 +21,13 @@ router.post('/add', async (req, res, next) => {
         let CheckCompany = await pool.request().query(`SELECT *
             FROM MasterCompany
             WHERE CompanyName = '${CompanyName}'`);
-        if(!CheckCustomer.recordset.length){
+        if(!CheckCompany.recordset.length){
             let InsertCompany = `INSERT INTO MasterCompany(CompanyName, CompanyAddress, CompanyTel, CompanyEmail)
                 VALUES(N'${CompanyName}', N'${CompanyAddress}', N'${CompanyTel}', N'${CompanyEmail}')`;
             await pool.request().query(InsertCompany);
             res.status(201).send({message: 'Successfully add customer'});
         } else {
-            if(CheckCustomer.recordset[0].CustomerActive){
+            if(CheckCompany.recordset[0].CustomerActive){
                 res.status(400).send({message: 'Duplicate Company Name'});
             } else{
                 let ActivateCompany = `UPDATE MasterCompany

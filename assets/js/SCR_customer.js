@@ -2,7 +2,7 @@
 
 function loadCompanyTable() {
     const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "http://localhost:8080/api/events");
+    xhttp.open("GET", "http://localhost:3080/api/events");
     xhttp.send();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
