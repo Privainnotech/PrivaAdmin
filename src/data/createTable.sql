@@ -1,3 +1,11 @@
+CREATE Table [PrivaAdmin].[dbo].[Users](
+	UserId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	AvatarPath NVARCHAR(255) NOT NULL DEFAULT N'./images/avatar/0.png',
+	Username NVARCHAR(50) NOT NULL,
+	Password NVARCHAR(255) NOT NULL,
+	Role NVARCHAR(255) NULL
+)
+
 CREATE Table [PrivaAdmin].[dbo].[MasterCompany](
     CompanyId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     CompanyName NVARCHAR(50) NOT NULL UNIQUE,
@@ -35,33 +43,41 @@ CREATE Table [PrivaAdmin].[dbo].[MasterEmployee](
 	EmployeePosition NVARCHAR(50) NULL
 )
 
+CREATE Table [PrivaAdmin].[dbo].[MasterProduct](
+	ProductId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	ProductCode NVARCHAR(20) NOT NULL UNIQUE,
+	ProductName NVARCHAR(50) NOT NULL UNIQUE,
+    ProductPrice money NULL,
+)
+
 CREATE Table [PrivaAdmin].[dbo].[QuotationNo](
     QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    QuotationNo NVARCHAR(20) NOT NULL UNIQUE DEFAULT N'pre_' + fnFormatDate (getdate(), N'YYYYMM00'),
+    QuotationNo NVARCHAR(20) NOT NULL UNIQUE DEFAULT N'pre_' + dbo.fnFormatDate (getdate(), N'YYYYMM00'),
 	CustomerId bigint NOT NULL,
-	QuotationDate NVARCHAR(10) NOT NULL DEFAULT CONVERT(VARCHAR(10), getdate(), 105),
-	CONSTRAINT FK_quotationno_customer FOREIGN KEY (CustomerId)
-	REFERENCES MasterCustomer(CustomerId)
+	QuotationDate NVARCHAR(10) NOT NULL DEFAULT CONVERT(VARCHAR(10), getdate(), 105)
+	FOREIGN KEY (CustomerId) REFERENCES MasterCustomer(CustomerId)
 )
 
 CREATE Table [PrivaAdmin].[dbo].[Quotation](
     QuotationId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     QuotationNoId bigint NOT NULL,
-	QuotationRevised int NOT NULL,
+	QuotationRevised int NOT NULL DEFAULT 0,
 	QuotationSubject NVARCHAR(255) NOT NULL,
 	QuotationStatus bigint NOT NULL DEFAULT 1,
-	QuotationTotalPrice money NULL,
-	QuotationDiscount money NULL,
-	QuotationNet money NULL,
-	QuotationVat money NULL,
-	QuotationNetVat money NULL,
+	QuotationTotalPrice money NULL DEFAULT 0,
+	QuotationDiscount money NULL DEFAULT 0,
+	QuotationNet AS QuotationTotalPrice - QuotationDiscount,
+	QuotationVat AS (QuotationTotalPrice - QuotationDiscount) * 0.07 ,
+	QuotationNetVat AS (QuotationTotalPrice - QuotationDiscount) * 1.07,
 	QuotationValidityDate int NULL,
 	QuotationPayTerm NVARCHAR(MAX) NULL,
 	QuotationDelivery NVARCHAR(255) NULL,
 	QuotationRemark NVARCHAR(MAX) NULL,
-	EmployeeApproveId int NULL
+	QuotationDescription NVARCHAR(MAX) NULL,
+	EmployeeApproveId bigint NULL
 	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
-	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId)
+	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
+	FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId)
 )
 
 CREATE Table [PrivaAdmin].[dbo].[QuotationItem](
@@ -69,18 +85,18 @@ CREATE Table [PrivaAdmin].[dbo].[QuotationItem](
     QuotationId bigint NOT NULL,
 	ItemName NVARCHAR(50) NOT NULL,
     ItemPrice money NULL,
-	ItemQty NVARCHAR(20) NULL,
-	ItemTotalPrice money NULL
+	ItemQty NVARCHAR(20) NULL
 	CONSTRAINT FK_qitem_quotation FOREIGN KEY (QuotationId)
 	REFERENCES Quotation(QuotationId)
 )
 
-CREATE Table [PrivaAdmin].[dbo].[Users](
-	UserId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-	AvatarPath NVARCHAR(255) NOT NULL DEFAULT N'./images/avatar/0.png',
-	Username NVARCHAR(50) NOT NULL,
-	Password NVARCHAR(255) NOT NULL,
-	Role NVARCHAR(255) NULL
+CREATE Table [PrivaAdmin].[dbo].[QuotationSubItem](
+	SubItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+    ItemId bigint NOT NULL,
+	ProductId bigint NULL,
+	SubItemQty NVARCHAR(20) NULL
+	FOREIGN KEY (ItemId) REFERENCES QuotationItem(ItemId),
+	FOREIGN KEY (ProductId) REFERENCES MasterProduct(ProductId)
 )
 
 CREATE FUNCTION dbo.fnFormatDate (@Datetime DATETIME, @FormatMask NVARCHAR(32))

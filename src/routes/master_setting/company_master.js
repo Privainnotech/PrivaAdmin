@@ -5,7 +5,10 @@ const { dbconfig } = require('../../../config');
 
 router.get('/data', async (req, res, next) => {
     try{
-        let SelectCompany = `SELECT row_number() over(order by CompanyName) as 'index', * FROM MasterCompany ORDER BY CompanyName`;
+        let SelectCompany = `SELECT row_number() over(order by CompanyName) as 'index', *
+            FROM MasterCompany
+            WHERE CompanyActive = 1
+            ORDER BY CompanyName`;
         let pool = await sql.connect(dbconfig);
         let Company = await pool.request().query(SelectCompany);
         res.status(200).send(JSON.stringify(Company.recordset));

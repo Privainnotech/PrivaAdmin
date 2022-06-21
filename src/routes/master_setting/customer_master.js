@@ -11,7 +11,7 @@ router.get('/data/:CompanyId', async (req, res, next) => {
             a.CustomerEmail, a.CustomerTel, b.CompanyName
             FROM MasterCustomer a
             LEFT JOIN MasterCompany b ON a.CompanyId = b.CompanyId
-            WHERE a.CompanyId = N'${CompanyId}'
+            WHERE a.CompanyId = N'${CompanyId}' and a.CustomerActive = 1
             ORDER BY CustomerFname`;
         let pool = await sql.connect(dbconfig);
         let Customer = await pool.request().query(SelectCustomer);
