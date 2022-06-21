@@ -65,7 +65,7 @@ router.put('/edit/:CustomerId', async (req, res) => {
             WHEN EXISTS(
                 SELECT *
                 FROM MasterCustomer
-                WHERE CustomerEmail = N'${CustomerEmail}  AND NOT CompanyId = ${CustomerId}'
+                WHERE CustomerEmail = N'${CustomerEmail}  AND NOT CustomerId = ${CustomerId}'
             )
             THEN CAST (1 AS BIT)
             ELSE CAST (0 AS BIT) END AS 'check'`);
@@ -78,7 +78,8 @@ router.put('/edit/:CustomerId', async (req, res) => {
                 CustomerFname = N'${CustomerFname}',
                 CustomerLname = N'${CustomerLname}',
                 CustomerTel = N'${CustomerTel}',
-                CustomerEmail = N'${CustomerEmail}'
+                CustomerEmail = N'${CustomerEmail}',
+                CompanyId = ${CompanyId}
                 WHERE CustomerId = ${CustomerId}`;
             await pool.request().query(UpdateCustomer);
             res.status(200).send({message: `Successfully edit customer`});

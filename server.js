@@ -15,7 +15,7 @@ app.set('views', path.join(__dirname, "views"));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.use(express.static(path.join(__dirname, '/assets/')));
+app.use(express.static(path.join(__dirname, '/asset/')));
 app.use(express.static(path.join(__dirname, '/public/')));
 app.use(express.static(path.join(__dirname, '/script/')));
 
@@ -49,9 +49,9 @@ let dropdownRoute = require('./src/routes/main/dropdown')
 app.use('/', indexRoute);
 app.use('/user', userRoute);
 
-app.use('/company', companyRoute)
-app.use('/customer', customerRoute)
-app.use('/employee', employeeRoute)
+app.use('/company_master', companyRoute)
+app.use('/customer_master', customerRoute)
+app.use('/employee_master', employeeRoute)
 
 app.use('/quotation', quotationRoute);
 app.use('/dropdown', dropdownRoute)
