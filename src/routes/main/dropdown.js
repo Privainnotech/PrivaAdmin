@@ -18,7 +18,7 @@ router.get('/company', async (req, res) => {
 router.get('/customer', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let SelectCustomer = `Select * FROM MasterCustomer WHERE CustomerActive = 1 order by CustomerFname`;
+        let SelectCustomer = `Select *, CustomerTitle+CustomerFname+' '+CustomerLname CustomerName FROM MasterCustomer WHERE CustomerActive = 1 order by CustomerFname`;
         let Customer = await pool.request().query(SelectCustomer);
         res.status(200).send(JSON.stringify(Customer.recordset));
     } catch(err){
