@@ -110,14 +110,25 @@ router.get('/item/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemQty, a.ItemDescription,
-            (SELECT c.ProductCode, c.ProductName, c.ProductPrice. b.SubItemQty, b.SubItemUnit
-                FROM [QuotationSubItem] b
-                LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId)
-            FROM [QuotationItem] a
-            LEFT JOIN [QuotationSubItem] b ON a.ItemId = b.ItemId
-            WHERE a.QuotationId = ${QuotationId}`;
+        getQuotationItem = `SELECT QuotationId, ItemId, ItemName, ItemPrice, ItemQty, ItemDescription
+            FROM QuotationItem
+            WHERE QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotationItem);
+        res.status(200).send(JSON.stringify(quotations.recordset));
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+})
+
+router.get('/subitem/:ItemId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let ItemId = req.params.ItemId
+        getQuotationSubItem = `SELECT a.ItemId, b.ProductCode , b.ProductName, b.ProductPrice, a.SubItemQty, a.SubItemUnit
+            FROM [QuotationSubItem] a
+            LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
+            WHERE a.ItemId = ${ItemId}`;
+        let quotations = await pool.request().query(getQuotationSubItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){
         res.status(500).send({message: err});
