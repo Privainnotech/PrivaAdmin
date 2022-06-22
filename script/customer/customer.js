@@ -1,11 +1,11 @@
 $(document).ready(function () {
     //MOSTRAR
-    function fill_customer(CompanyId) {
-        console.log(CompanyId)
+    function fill_customer(Id) {
+        console.log(Id)
         tableCustomer = $('#tableCustomer').DataTable({
             "bDestroy": true,
             "ajax": {
-                "url": `/customer_master/data/${CompanyId}`,
+                "url": `/customer_master/data/${Id}`,
                 "dataSrc": ""
             },
             "columns": [
@@ -16,7 +16,7 @@ $(document).ready(function () {
                     "data": "CustomerFname" 
                 },
                 {
-                    "data": "CompanyName"
+                    "data": "CompanyId"
                 },
                 {
                     "data": "CustomerEmail"
@@ -40,58 +40,64 @@ $(document).ready(function () {
             ],
         });
     }
-    // fill_customer(1)
+    fill_customer(1)
 
     //Create
-    // $(document).on("click", "#addCompany", function () {
-    //     $("#formCompany").trigger("reset");
-    //     $(".modal-title").text("Add Company");
-    //     console.log("save0");
-    //     $("#modalSaveCompany").unbind();
-    //     $("#modalSaveCompany").click(function () {
-    //             let CompanyName = $.trim($('#modalInpCompanyName').val());
-    //             let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
-    //             let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
-    //             let CompanyTel = $.trim($('#modalInpCompanyTel').val());
-    //         if (CompanyName != null) {
-    //             $.ajax({
-    //                 url: "/company_master/add",
-    //                 method: 'post',
-    //                 contentType: 'application/json',
-    //                 data: JSON.stringify({
-    //                     CompanyName: CompanyName,
-    //                     CompanyAddress: CompanyAddress,
-    //                     CompanyEmail: CompanyEmail,
-    //                     CompanyTel: CompanyTel
-    //                 }),
-    //                 success: function () {
-    //                     Swal.fire({
-    //                         position: 'center',
-    //                         icon: 'success',
-    //                         title: 'Created',
-    //                         text: 'Company data have been created',
-    //                         showConfirmButton: false,
-    //                         timer: 1500
-    //                     })
-    //                     tableCompany.ajax.reload(null, false);
-    //                     $('#modalCompanyMaster').modal('hide');
-    //                 },
-    //                 error: function (err) {
-    //                     errorText = err.responseJSON.message;
-    //                     Swal.fire({
-    //                         position: 'center',
-    //                         icon: 'warning',
-    //                         title: 'Warning',
-    //                         text: errorText,
-    //                         showConfirmButton: true,
-    //                         confirmButtonText: 'OK',
-    //                         confirmButtonColor: '#FF5733'
-    //                     });
-    //                 }
-    //             });
-    //         }
-    //     })
-    // });
+    $(document).on("click", "#addCustomer", function () {
+        $("#formCustomer").trigger("reset");
+        $(".modal-title").text("Add Customer");
+        console.log("save0");
+        $("#modalSaveCustomer").unbind();
+        $("#modalSaveCustomer").click(function () {
+                let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
+                let CustomerFname = $.trim($('#modalInpCustomerFname').val());
+                let CustomerLname = $.trim($('#modalInpCustomerLname').val());
+                let CustomerEmail = $.trim($('#modalInpCustomerEmail').val());
+                let CustomerTel = $.trim($('#modalInpCustomerTel').val());
+                let CompanyId = $.trim($('#modalInpCompanyId').val());
+
+            if (CustomerFname != null) {
+                $.ajax({
+                    url: "/customer_master/add",
+                    method: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        CustomerTitle: CustomerTitle,
+                        CustomerFname: CustomerFname,
+                        CustomerLname: CustomerLname,
+                        CustomerEmail: CustomerEmail,
+                        CustomerTel: CustomerTel,
+                        CompanyId: CompanyId
+
+                    }),
+                    success: function () {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Created',
+                            text: 'Customer data have been created',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        // tableCustomer.ajax.reload(null, false);
+                        // $('#modalCustomerMaster').modal('hide');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
+                    }
+                });
+            }
+        })
+    });
 
     //Edit
     // $(document).on("click", "#btnEditCompany", function () {
