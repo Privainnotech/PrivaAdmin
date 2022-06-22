@@ -60,18 +60,30 @@ router.get('/product', async (req, res) => {
 })
 
 // Get Data
-router.get('/Customer/:CustomerId', async (req, res) => {
+router.get('/customer/:CustomerId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let CustomerID = req.params.CustomerID;
         let SelectCustomer = `Select
         a.CustomerId, a.CustomerTitle, a.CustomerFname, a.CustomerLname,
         a.CustomerEmail, b.CompanyId, b.CompanyName, b.CompanyAddress
-        FROM [Customer] a
-        LEFT JOIN [Company] b ON a.CompanyId = b.CompanyId
+        FROM [MasterCustomer] a
+        LEFT JOIN [MasterCompany] b ON a.CompanyId = b.CompanyId
         WHERE CustomerId = ${CustomerID}`;
         let Customer = await pool.request().query(SelectCustomer);
         res.status(200).send(JSON.stringify(Customer.recordset));
+    } catch(err){
+        res.status(500).send({message: `${err}`});
+    }
+})
+
+router.get('/product/:ProductId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let ProductID = req.params.ProductID;
+        let SelectProduct = `Select ProductId, ProductName, ProductPrice, FROM MasterProducth WHERE ProductId = ${ProductID}`;
+        let Product = await pool.request().query(SelectProduct);
+        res.status(200).send(JSON.stringify(Product.recordset));
     } catch(err){
         res.status(500).send({message: `${err}`});
     }
