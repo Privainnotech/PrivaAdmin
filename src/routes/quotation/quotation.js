@@ -41,11 +41,12 @@ router.get('/list', async (req, res, next) => {
         getQuotationList = `SELECT
         row_number() over(order by b.QuotationNo desc) as 'index',
         b.QuotationNoId,
-        b.QuotationNo + '_0' + a.QuotationRevised QuotationNo,
+        a.QuotationNo,
         a.QuotationRevised,
+        b.QuotationNo + '_0' + a.QuotationRevised QuotationNo_Revised,
         a.QuotationId,
         a.QuotationSubject,
-        c.CustomerTitle + c.CustomerFname + c.CustomerLname CustomerName,
+        c.CustomerTitle + c.CustomerFname + '_' + c.CustomerLname CustomerName,
         a.QuotationNetVat,
         b.QuotationDate,
         a.QuotationStatus,
@@ -207,19 +208,16 @@ router.delete('/delete_item/:ItemId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let ItemId = req.params.ItemId;
         let DeleteItem = `DECLARE @QuotationId bigint;
-        SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId =  ${ItemId});
-        
-        UPDATE QuotationItem
-        SET ItemQty = 0
-        WHERE ItemId = ${ItemId};
-
-        UPDATE Quotation
-        SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
-            FROM QuotationItem 
-            WHERE QuotationId = @QuotationId)
-        WHERE QuotationId = @QuotationId;
-
-        DELETE FROM QuotationItem WHERE ItemId=${ItemId}`;
+            SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId =  ${ItemId});
+            UPDATE QuotationItem
+            SET ItemQty = 0
+            WHERE ItemId = ${ItemId};
+            UPDATE Quotation
+            SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
+                FROM QuotationItem 
+                WHERE QuotationId = @QuotationId)
+            WHERE QuotationId = @QuotationId;
+            DELETE FROM QuotationItem WHERE ItemId=${ItemId}`;
         let DeleteSubItem = `DELETE FROM QuotationSubItem WHERE ItemId = ${ItemId}`;
         await pool.request().query(DeleteItem);
         await pool.request().query(DeleteSubItem);
@@ -235,27 +233,24 @@ router.delete('/delete_subitem/:SubItemId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let SubItemId = req.params.SubItemId;
         let DeleteSubItem = `DECLARE @QuotationId bigint, @ItemId bigint;
-        SET @ItemId = (SELECT ItemId FROM QuotationSubItem WHERE SubItemId = ${SubItemId});
-        SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = @ItemId);
-        
-        UPDATE QuotationSubItem
-        SET SubItemQty = 0
-        WHERE SubItemId = ${SubItemId};
+            SET @ItemId = (SELECT ItemId FROM QuotationSubItem WHERE SubItemId = ${SubItemId});
+            SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = @ItemId);
+            UPDATE QuotationSubItem
+            SET SubItemQty = 0
+            WHERE SubItemId = ${SubItemId};
+            UPDATE QuotationItem
+            SET ItemPrice = (SELECT SUM(a.SubItemQty * b.ProductPrice) 
+                FROM QuotationSubItem a
+                LEFT JOIN MasterProduct b on a.ProductId = b.ProductId
+                WHERE ItemId = @ItemId)
+            WHERE ItemId = @ItemId;
+            UPDATE Quotation
+            SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
+                FROM QuotationItem 
+                WHERE QuotationId = @QuotationId)
+            WHERE QuotationId = @QuotationId;
 
-        UPDATE QuotationItem
-        SET ItemPrice = (SELECT SUM(a.SubItemQty * b.ProductPrice) 
-            FROM QuotationSubItem a
-            LEFT JOIN MasterProduct b on a.ProductId = b.ProductId
-            WHERE ItemId = @ItemId)
-        WHERE ItemId = @ItemId;
-
-        UPDATE Quotation
-        SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
-            FROM QuotationItem 
-            WHERE QuotationId = @QuotationId)
-        WHERE QuotationId = @QuotationId;
-
-        DELETE FROM QuotationSubItem WHERE SubItemId = ${SubItemId};`;
+            DELETE FROM QuotationSubItem WHERE SubItemId = ${SubItemId};`;
         await pool.request().query(DeleteSubItem);
         res.status(200).send({message: 'Successfully delete Sub-item'});
     } catch(err){
@@ -271,7 +266,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             QuotationSubject,
             QuotationNo,
             CustomerId,
-            QuotationStatus,
             QuotationDiscount,
             QuotationValidityDate,
             QuotationPayterm,
@@ -295,38 +289,17 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         if(CheckQuotation.recordset[0].check){
             res.status(400).send({message: 'Duplicate Quotation'});
         } else{
-            switch(QuotationStatus){
-                case 1: //pre
-                    break;
-                case 2: //quotation
-                    let genQuotationNo = '';
-                    let CheckQuotationNo = await pool.request().query(`
-                        SELECT *
-                        FROM QuotationNo
-                        WHERE QuotationNo LIKE N'%${checkDate()}%'`)
-                    if (CheckQuotationNo.recordset.length<10) {
-                        genQuotationNo = 'pre_'+checkDate()+'0'+CheckQuotationNo.recordset.length
-                    } else {
-                        genQuotationNo = 'pre_'+checkDate()+CheckQuotationNo.recordset.length
-                    }
-                    console.log("Gen QuotationNo: " + genQuotationNo)
-                    let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
-                        SELECT SCOPE_IDENTITY() AS Id`;
-                    let QuotationNo = await pool.request().query(InsertQuotationNo);
-                    let QuotationNoId = QuotationNo.recordset[0].Id
-                    break;
-                case 3: //booking
-                    break;
-                case 4: //loss
-                    break;
-                case 5: //cancel
-                    break;
-            }
             // Insert Quotation with QuotationNoId
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject) VALUES(${QuotationNoId}, N'${QuotationSubject}')
-            SELECT SCOPE_IDENTITY() AS Id`;
-            let Quotation = await pool.request().query(InsertQuotation);
-            let QuotationId = Quotation.recordset[0].Id
+            let UpdateQuotation = `UPDATE Quotation
+            SET QuotationSubject = ${QuotationSubject},
+                QuotationDiscount = ${QuotationDiscount},
+                QuotationValidityDate = ${QuotationValidityDate}, 
+                QuotationPayterm = ${QuotationPayterm},
+                QuotationDelivery = ${QuotationDelivery},
+                QuotationRemark = ${RemarkFilter},
+                EmployeeApproveId = ${EmployeeApproveId}
+            WHERE QuotationId = ${QuotationId}`;
+            await pool.request().query(UpdateQuotation);
             res.status(201).send({message: 'Successfully Edit Quotation'});
         }
     } catch(err){
