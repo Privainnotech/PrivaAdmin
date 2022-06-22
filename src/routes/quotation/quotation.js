@@ -50,6 +50,7 @@ router.get('/list', async (req, res, next) => {
         a.QuotationNetVat,
         b.QuotationDate,
         a.QuotationStatus,
+        d.StatusName
         a.QuotationValidityDate,
         a.QuotationPayTerm,
         a.QuotationDelivery,
