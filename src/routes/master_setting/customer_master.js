@@ -6,16 +6,16 @@ const { dbconfig } = require('../../../config');
 router.get('/data/:CompanyId', async (req, res, next) => {
     try{
         let CompanyId = req.params.CompanyId;
-        SelectCustomer = `SELECT row_number() over(order by CustomerFname) as 'index',
-            a.CustomerId, a.CustomerTitle ,a.CustomerFname, a.CustomerLname,
-            a.CustomerEmail, a.CustomerTel, b.CompanyName
+        let SelectCustomer = `SELECT row_number() over(order by CustomerFname) as 'index',
+            a.CustomerId, a.CustomerTitle, a.CustomerFname, a.CustomerLname,
+            a.CustomerEmail, a.CustomerTel, a.CompanyId, b.CompanyName
             FROM MasterCustomer a
-            LEFT JOIN MasterCompany b ON a.CompanyId = b.CompanyId
+            LEFT JOIN MasterCompany b ON b.CompanyId = a.CompanyId
             WHERE a.CompanyId = N'${CompanyId}' and a.CustomerActive = 1
             ORDER BY CustomerFname`;
         let pool = await sql.connect(dbconfig);
         let Customer = await pool.request().query(SelectCustomer);
-        res.status(200).send(JSON.stringify(Customer.recordset[0]));
+        res.status(200).send(JSON.stringify(Customer.recordset));
     } catch(err){
         res.status(500).send({message: err});
     }
