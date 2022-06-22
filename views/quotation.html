@@ -144,26 +144,29 @@
           </div>
       </div>
 
-      <!-- Table Company -->
+      <!-- Table Quotation -->
       <div class="container1">
           <div class="title">
-          <h1>Company</h1><button type="button" class="btn btn-success" id="addCompany" data-toggle="modal" data-target="#modalCompanyMaster">ADD COMPANY</button>
+          <h1>Quotation List</h1><button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
           </div>
-          <table id="tableCompany" class="table table-hover display dataTables_wrapper" style="width:100%">
+          <table id="tableQuotation" class="table table-hover display dataTables_wrapper" style="width:100%">
             <thead  class="table-dark">
                 <tr>
                     <th>Index</th>
-                    <th>Company</th>
-                    <th>Address</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th style="width: 15%;">Action</th>
+                    <th>Quotation NO.</th>
+                    <th>Project</th>
+                    <th>Customer</th>
+                    <th>Create Date</th>
+                    <th>Status</th>
+                    <th style="width: 30%;">Action</th>
+                    <th style="display: none;"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
                     <td >Tiger Nixon</td>
+                    <td>Edinburgh</td>
                     <td>Edinburgh</td>
                     <td>61</td>
                     <td>61</td>
@@ -174,6 +177,7 @@
                     <td>Cedric Kelly</td>
                     <td>Edinburgh</td>
                     <td>61</td>
+                    <td>61</td>
                     <td>22</td>
                     <td class="d-xl-flex justify-content-xl-center p-0"><button style="width: 30%;" class="btn btn-primary p-1 m-2" data-toggle="modal" data-target="#modalPartMaster" style="width: 2rem;">Edit</button><button style="width: 30%;" class="btn btn-danger p-1 m-2" data-toggle="modal" data-target="#modalDeleteConfirm" style="width: 2rem;">Del</button></td>
                 </tr>
@@ -182,74 +186,18 @@
                     <td>Sonya Frost</td>
                     <td>Edinburgh</td>
                     <td>61</td>
+                    <td>61</td>
                     <td>23</td>
                     <td class="d-xl-flex justify-content-xl-center p-0"><button style="width: 30%;" class="btn btn-primary p-1 m-2" data-toggle="modal" data-target="#modalPartMaster" style="width: 2rem;">Edit</button><button style="width: 30%;" class="btn btn-danger p-1 m-2" data-toggle="modal" data-target="#modalDeleteConfirm" style="width: 2rem;">Del</button></td>
                 </tr>
             </tbody>
         </table>
       </div>
-      
 
-    <!-- Table Customer -->
-
-    <div class="container1">
-      <div class="title">
-      <h1>Customer</h1><button type="button" class="btn btn-success" id="addCustomer" data-toggle="modal" data-target="#modalCustomerMaster">ADD Customer</button>
-      </div>
-      <!-- Dropdown -->
-      <!-- <div class="dropdown">
-        <select class="form-select" aria-label="Default select example" id="modalCompanyName">
-          <option value= "0" selected>Select Company</option>
-          
-        </select>
-      </div> -->
-
-      <table id="tableCustomer" class="table table-hover display dataTables_wrapper" style="width:100%">
-        <thead  class="table-dark">
-            <tr>
-                <th>Index</th>
-                <th>Customer Name</th>
-                <th>Company</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th style="width: 15%;">Action</th>
-                <th style="display: none;"></th>
-            </tr>
-        </thead>
-        <tbody id="showTable">
-            <tr>
-              <td colspan="6">Select Company...</td>
-            </tr>
-        </tbody>
-    </table>
-  </div>
-    <!-- <div class="container1">
-        <div class="title">
-            <h1>Customer</h1><button type="button" class="btn btn-success">ADD CUSTOMER</button>
-        </div>
-        <table id="TableCustomer" class="table display dataTables_wrapper" style="width:100%">
-            <thead class="table-dark mg">
-                <tr>
-                    <th>Index</th>
-                    <th>Customer Name</th>
-                    <th>Company</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th style="width: 15%;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="6">Choose Company...</td>
-                </tr>
-            </tbody>
-        </table>
-    </div> -->
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <!-- <script src="/js/SCR_customer.js"></script> -->
     <script src="/js/jquery.min.js"></script>
     <!-- <script src="/js/sortTable.js"></script> -->
     <script src="/bootstrap/js/bootstrap.min.js"></script>
@@ -258,9 +206,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
-    <script src="/customer/company.js"></script>
-    <script src="/customer/customer.js"></script>
-    <script src="/customer/customerDropdown.js"></script> 
+    <script src="/quotations/quotation.js"></script>
     <!-- <script src="/Customer/customer.js"></script> -->
     <!-- <script src="/js/swalalert2.js"></script> -->
 

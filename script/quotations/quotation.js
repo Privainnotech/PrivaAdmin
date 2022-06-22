@@ -1,10 +1,10 @@
 $(document).ready(function () {
-    //MOSTRAR
-    function fill_Quotation() {
+    function fill_quotation() {
+        // console.log(Id)
         tableQuotation = $('#tableQuotation').DataTable({
             "bDestroy": true,
             "ajax": {
-                "url": '/quotation/list',
+                "url": "/quotation/list/",
                 "dataSrc": ""
             },
             "columns": [
@@ -12,10 +12,10 @@ $(document).ready(function () {
                     "data": "index"
                 },
                 {
-                    "data": "QuotationNo"
+                    "data":  "QuotationNo_Revised" 
                 },
                 {
-                    "data": "QuotationSubject"
+                    "data":  "QuotationSubject" 
                 },
                 {
                     "data": "CustomerName"
@@ -27,9 +27,13 @@ $(document).ready(function () {
                     "data": "QuotationStatus"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCompany' data-toggle='modal'  data-target='#modalCompanyMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCompany' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCustomer' data-toggle='modal'  data-target='#modalCustomerMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCustomer' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                 }
-                
+                ,
+                {
+                    "data": "QuotationId"
+                }
+
             ],"columnDefs":[
                 {
                     "targets": [7],
@@ -38,6 +42,7 @@ $(document).ready(function () {
             ],
         });
     }
-    fill_Quotation();
-
+    fill_quotation()
+    
 });
+
