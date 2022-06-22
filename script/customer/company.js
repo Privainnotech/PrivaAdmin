@@ -2,7 +2,7 @@ $(document).ready(function () {
     //MOSTRAR
     function fill_company() {
         tableCompany = $('#tableCompany').DataTable({
-            // "bDestroy": true,
+            "bDestroy": true,
             "ajax": {
                 "url": '/company_master/data',
                 "dataSrc": ""

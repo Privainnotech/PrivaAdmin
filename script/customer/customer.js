@@ -21,7 +21,7 @@ $(document).ready(function () {
                     "data": "index"
                 },
                 {
-                    "data":  "CustomerFname" 
+                    "data":  "CustomerName" 
                 },
                 {
                     "data": "CompanyId"
