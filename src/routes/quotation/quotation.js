@@ -41,7 +41,7 @@ router.get('/list', async (req, res, next) => {
         getQuotationList = `SELECT
         row_number() over(order by b.QuotationNo desc) as 'index',
         b.QuotationNoId,
-        a.QuotationNo,
+        b.QuotationNo,
         a.QuotationRevised,
         b.QuotationNo + '_0' + a.QuotationRevised QuotationNo_Revised,
         a.QuotationId,
@@ -57,9 +57,46 @@ router.get('/list', async (req, res, next) => {
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
-        LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
-        `;
+        LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId`;
         let pool = await sql.connect(dbconfig);
+        let quotations = await pool.request().query(getQuotationList);
+        res.status(200).send(JSON.stringify(quotations.recordset));
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+})
+
+router.get('/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationID = req.params.QuotationID
+        getQuotation = `SELECT
+            b.QuotationNoId,
+            b.QuotationNo,
+            a.QuotationRevised,
+            b.QuotationNo + '_0' + a.QuotationRevised QuotationNo_Revised,
+            a.QuotationStatus,
+            c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
+            a.QuotationId,
+            a.QuotationSubject,
+            b.QuotationDate,
+            a.QuotationStatus,
+            a.QuotationTotalPrice,
+            a.QuotationDiscount,
+            a.QuotationNet,
+            a.QuotationVat,
+            a.QuotationNetVat,
+            a.QuotationValidityDate,
+            a.QuotationPayTerm,
+            a.QuotationDelivery,
+            CONVERT(nvarchar(max), a.QuotationRemark) AS 'Remark',
+            a.EmployeeApproveId
+            e.
+            FROM [Quotation] a
+            LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+            LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
+            LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
+            LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId`;
         let quotations = await pool.request().query(getQuotationList);
         res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){
