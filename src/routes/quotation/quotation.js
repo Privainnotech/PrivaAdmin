@@ -46,7 +46,7 @@ router.get('/list', async (req, res, next) => {
         b.QuotationNo + '_0' + a.QuotationRevised QuotationNo_Revised,
         a.QuotationId,
         a.QuotationSubject,
-        c.CustomerTitle + c.CustomerFname + '_' + c.CustomerLname CustomerName,
+        c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
         a.QuotationNetVat,
         b.QuotationDate,
         a.QuotationStatus,
