@@ -14,15 +14,19 @@ const checkDate = () => {
 router.get('/list', async (req, res, next) => {
     try{
         getQuotationList = `SELECT
-        row_number() over(order by a.QuotationId desc) as 'index',
+        row_number() over(order by b.QuotationNo desc) as 'index',
+        b.QuotationNoId,
+        b.QuotationNo,
         a.QuotationId,
-        a.QuotationNo,
         a.QuotationSubject Subject,
-        b.CustomerTitle + b.CustomerFname + b.CustomerLname Customer,
-        a.QuotationDate,
+        c.CustomerTitle + c.CustomerFname + c.CustomerLname Customer,
+        b.QuotationDate,
         a.QuotationStatus Status
         FROM [Quotation] a
-        LEFT JOIN [MasterCustomer] b ON a.CustomerId = b.CustomerId`;
+        LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+        LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
+        LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
+        `;
         let pool = await sql.connect(dbconfig);
         let quotations = await pool.request().query(getQuotationList);
         res.status(200).send(JSON.stringify(quotations.recordset));
@@ -46,25 +50,28 @@ router.post('/add_quotation', async (req, res) => {
         if(CheckQuotation.recordset[0].check){
             res.status(400).send({message: 'Duplicate Quotation'});
         } else{
-            let QuotationNo = '';
+            // Generate QuotationNo
+            let genQuotationNo = '';
             let CheckQuotationNo = await pool.request().query(`
                 SELECT *
                 FROM QuotationNo
                 WHERE QuotationNo LIKE N'%${checkDate()}%'`)
             if (CheckQuotationNo.recordset.length<10) {
-                QuotationNo = 'pre_'+checkDate()+'0'+CheckQuotationNo.recordset.length
+                genQuotationNo = 'pre_'+checkDate()+'0'+CheckQuotationNo.recordset.length
             } else {
-                QuotationNo = 'pre_'+checkDate()+CheckQuotationNo.recordset.length
+                genQuotationNo = 'pre_'+checkDate()+CheckQuotationNo.recordset.length
             }
-            console.log("Gen QuotationNo: " + QuotationNo)
-            let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${QuotationNo}',${CustomerId})
-                SELECT SCOPE_IDENTITY() AS NoId`;
-            let Quotation = await pool.request().query(InsertQuotationNo);
-            console.log("QuotationId: " + Quotation.recordset[0].NoId)
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject) VALUES(${Quotation.recordset[0].NoId}, N'${QuotationSubject}')`;
-            await pool.request().query(InsertQuotation);
-            let SelectLatest = await pool.request().query(`SELECT max(QuotationId) AS 'QuotationId' FROM Quotation`);
-            let QuotationId = SelectLatest.recordset[0].QuotationId
+            console.log("Gen QuotationNo: " + genQuotationNo)
+            // Insert QuotationNo
+            let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
+                SELECT SCOPE_IDENTITY() AS Id`;
+            let QuotationNo = await pool.request().query(InsertQuotationNo);
+            let QuotationNoId = QuotationNo.recordset[0].Id
+            // Insert Quotation with QuotationNoId
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject) VALUES(${QuotationNoId}, N'${QuotationSubject}')
+            SELECT SCOPE_IDENTITY() AS Id`;
+            let Quotation = await pool.request().query(InsertQuotation);
+            let QuotationId = Quotation.recordset[0].Id
             res.status(201).send({message: 'Successfully add Ref.No.', QuotationId});
         }
     } catch(err){
@@ -76,7 +83,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        let { ItemName, ItemPrice, ItemQty } = req.body
+        let { ItemName, ItemPrice, ItemQty, ItemDescription } = req.body
         //Unit = {Pc, Set, Lot} => Dropdown
         let CheckQuotationItem = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
@@ -89,7 +96,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         if(CheckQuotationItem.recordset[0].check){
             res.status(400).send({message: 'Duplicate Item'});
         } else{
-            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty)VALUES(${QuotationId}, N'${ItemName}', N'${ItemPrice}', N'${ItemQty}')`;
+            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}, N'${ItemDescription}')`;
             await pool.request().query(InsertItem);
             res.status(201).send({message: 'Item has been added'});
         }

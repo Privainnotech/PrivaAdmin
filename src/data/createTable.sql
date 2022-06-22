@@ -73,7 +73,6 @@ CREATE Table [PrivaAdmin].[dbo].[Quotation](
 	QuotationPayTerm NVARCHAR(MAX) NULL,
 	QuotationDelivery NVARCHAR(255) NULL,
 	QuotationRemark NVARCHAR(MAX) NULL,
-	QuotationDescription NVARCHAR(MAX) NULL,
 	EmployeeApproveId bigint NULL
 	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
 	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
@@ -85,7 +84,8 @@ CREATE Table [PrivaAdmin].[dbo].[QuotationItem](
     QuotationId bigint NOT NULL,
 	ItemName NVARCHAR(255) NOT NULL,
     ItemPrice money NULL,
-	ItemQty int NULL
+	ItemQty int NULL,
+	ItemDescription NVARCHAR(MAX) NULL
 	CONSTRAINT FK_qitem_quotation FOREIGN KEY (QuotationId)
 	REFERENCES Quotation(QuotationId)
 )
