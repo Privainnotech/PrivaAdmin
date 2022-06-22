@@ -29,4 +29,9 @@ router.get('/customer', (req, res, next) => {
     res.render('customer')
 });
 
+// quotation page
+router.get('/quotation', (req, res, next) => {
+    res.render('quotation')
+});
+
 module.exports = router

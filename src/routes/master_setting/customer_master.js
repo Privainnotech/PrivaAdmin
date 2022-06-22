@@ -6,6 +6,7 @@ const { dbconfig } = require('../../../config');
 router.get('/data/:CompanyId', async (req, res, next) => {
     try{
         let CompanyId = req.params.CompanyId;
+        console.log(CompanyId);
         let SelectCustomer = `SELECT row_number() over(order by CustomerFname) as 'index',
             a.CustomerId, a.CustomerTitle, a.CustomerFname, a.CustomerLname,
             a.CustomerEmail, a.CustomerTel, a.CompanyId, b.CompanyName

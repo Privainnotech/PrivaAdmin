@@ -1,4 +1,5 @@
 async function LoadDropDown() {
+    // Edit Customer
     $.ajax({
         url: "/dropdown/company",
         method: 'get',

@@ -8,7 +8,7 @@ const dbconfig = {
     server: SQL_SERVER,
     database: SQL_DATABASE,
     options: {
-        encrypt: true,
+        encrypt: false,
         trustServerCertificate: true,
         enableArithAbort: true,
         trustedConnection: true

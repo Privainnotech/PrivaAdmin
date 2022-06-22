@@ -39,49 +39,7 @@ $(document).ready(function () {
             ],
         });
     }
-
-    // function fill_customer(CompanyId) {
-    //     console.log(CompanyId)
-    //     tableCustomer = $('#tableCustomer').DataTable({
-    //         "bDestroy": true,
-    //         "ajax": {
-    //             "url": `/customer_master/data/${CompanyId}`,
-    //             "dataSrc": ""
-    //         },
-    //         "columns": [
-    //             {
-    //                 "data": "index"
-    //             },
-    //             {
-    //                 "data": "CustomerFname" 
-    //             },
-    //             {
-    //                 "data": "CompanyName"
-    //             },
-    //             {
-    //                 "data": "CustomerEmail"
-    //             },
-    //             {
-    //                 "data": "CustomerTel"
-    //             },
-    //             {
-    //                 "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCompany' data-toggle='modal'  data-target='#modalCompanyMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCompany' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
-    //             }
-    //             ,
-    //             {
-    //                 "data": "CustomerId"
-    //             }
-
-    //         ],"columnDefs":[
-    //             {
-    //                 "targets": [6],
-    //                 "visible": false
-    //             },
-    //         ],
-    //     });
-    // }
     fill_company()
-    // fill_customer(1)
 
     //Create
     $(document).on("click", "#addCompany", function () {
@@ -224,16 +182,5 @@ $(document).ready(function () {
             $('#modalDeleteConfirm').modal('hide');
         })
     });
-
-    //==================================================================================//
-    //click on tableCompany Number table
-    // $(document).on('click', 'tr', function () {
-    //     // fill_company(CompanyId);
-    //     rows = $(this).closest("tr");
-    //     let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
-    //     console.log("CompanyId = ",CompanyId)
-    //     fill_customer(CompanyId)
-    // })
-    
 });
 

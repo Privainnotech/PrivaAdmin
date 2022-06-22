@@ -1,11 +1,19 @@
 $(document).ready(function () {
     //MOSTRAR
+    function fill_resetTable() {
+        var trHTML = ''; 
+        trHTML += '<tr>'
+        trHTML +=  '<td colspan="6">Choose Company...</td>'
+        trHTML +=  '</tr>' 
+        document.getElementById("showTable").innerHTML = trHTML;
+    }
+
     function fill_customer(Id) {
-        console.log(Id)
+        // console.log(Id)
         tableCustomer = $('#tableCustomer').DataTable({
             "bDestroy": true,
             "ajax": {
-                "url": `/customer_master/data/${Id}`,
+                "url": `/customer_master/data/` + Id,
                 "dataSrc": ""
             },
             "columns": [
@@ -13,7 +21,7 @@ $(document).ready(function () {
                     "data": "index"
                 },
                 {
-                    "data": "CustomerFname" 
+                    "data":  "CustomerFname" 
                 },
                 {
                     "data": "CompanyId"
@@ -25,7 +33,7 @@ $(document).ready(function () {
                     "data": "CustomerTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCustomer' data-toggle='modal'  data-target='#modalCompanyMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCompany' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCustomer' data-toggle='modal'  data-target='#modalCustomerMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCustomer' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -40,7 +48,7 @@ $(document).ready(function () {
             ],
         });
     }
-    fill_customer(1)
+    // fill_customer(1)
 
     //Create
     $(document).on("click", "#addCustomer", function () {
@@ -112,7 +120,7 @@ $(document).ready(function () {
         let CustomerLname = tableCustomer.rows(rows).data()[0].CustomerLname;
         let CustomerEmail = tableCustomer.rows(rows).data()[0].CustomerEmail;
         let CustomerTel = tableCustomer.rows(rows).data()[0].CustomerTel;
-        console.log(tableCustomer.rows(rows).data()[0]);
+        // console.log(tableCustomer.rows(rows).data()[0]);
         $('#modalInpCustomerTitle').val(CustomerTitle);
         $('#modalInpCustomerFname').val(CustomerFname);
         $('#modalInpCustomerLname').val(CustomerLname);
@@ -120,8 +128,8 @@ $(document).ready(function () {
         $('#modalInpCustomerTel').val(CustomerTel);
         $('#modalInpCompanyId').val(CompanyId);
 
-        $("#modalSaveCompany").unbind();
-        $("#modalSaveCompany").click(function () {
+        $("#modalSaveCustomer").unbind();
+        $("#modalSaveCustomer").click(function () {
             
             let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
             let CustomerFname = $.trim($('#modalInpCustomerFname').val());
@@ -172,41 +180,47 @@ $(document).ready(function () {
     });
     
     //Delete
-    // $(document).on("click", "#btnDelCompany", function () {
-    //     rows = $(this).closest('tr');
-    //     let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
-    //     $(".modal-title").text("Confirm Delete");
-    //     $("#btnYes").unbind("click");
-    //     $(".btnYes").click(function () {
-    //         $.ajax({
-    //             url: "/company_master/delete/" + CompanyId,
-    //             method: 'delete',
-    //             contentType: 'application/json',
-    //             success: function () {
-    //                 Swal.fire({
-    //                     position: 'center',
-    //                     icon: 'success',
-    //                     title: 'Deleted',
-    //                     text: 'Company have been deleted',
-    //                     showConfirmButton: false,
-    //                     timer: 1500
-    //                 })
-    //                 tableCompany.ajax.reload(null, false);
-    //             }
-    //         })
-    //         $('#modalDeleteConfirm').modal('hide');
-    //     })
-    // });
+    $(document).on("click", "#btnDelCustomer", function () {
+        rows = $(this).closest('tr');
+        let CustomerId = tableCustomer.rows(rows).data()[0].CustomerId;
+        $(".modal-title").text("Confirm Delete");
+        $("#btnYes").unbind("click");
+        $(".btnYes").click(function () {
+            $.ajax({
+                url: "/customer_master/delete/" + CustomerId,
+                method: 'delete',
+                contentType: 'application/json',
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: 'Company have been deleted',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableCustomer.ajax.reload(null, false);
+                }
+            })
+            $('#modalDeleteConfirm').modal('hide');
+        })
+    });
 
     //==================================================================================//
-    //click on tableCompany Number table
-    // $(document).on('click', 'tr', function () {
-    //     // fill_company(CompanyId);
-    //     rows = $(this).closest("tr");
-    //     let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
-    //     console.log("CompanyId = ",CompanyId)
-    //     fill_customer(CompanyId)
-    // })
-    
+    // click on tableCompany Number table
+    $('#tableCompany tbody' ).on('click', 'tr', function () {
+        rows = $(this).closest("tr");
+        let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
+
+        if($(this).hasClass('Myselected')){
+            $(this).removeClass('Myselected');
+            fill_resetTable();
+        }
+        else{
+            $('#tableCompany tr').removeClass('Myselected');
+            $(this).toggleClass('Myselected');
+            fill_customer(CompanyId)
+        }
+    })
 });
 

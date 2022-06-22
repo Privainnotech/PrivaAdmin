@@ -90,7 +90,7 @@
                           <div class="form-row my-2">
                             <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Customer Title:&nbsp;</span></div>
                             <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-                              <select class="form-control" id="modalInpCustomerTitle">
+                              <select class="form-select" id="modalInpCustomerTitle">
                                     <option value="null" selected="">-</option>
                                     <option value="Mr.">1-Mr.</option>
                                     <option value="Mrs.">2-Mrs.</option>
@@ -103,7 +103,7 @@
                           </div>
                           <div class="form-row my-2">
                             <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Customer Last Name:&nbsp;</span></div>
-                            <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpCompanyLname" style="width: 100%;" required=""></div>
+                            <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpCustomerLname" style="width: 100%;" required=""></div>
                           </div>
                           <div class="form-row my-2">
                             <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Customer Email:&nbsp;</span></div>
@@ -116,7 +116,7 @@
                           <div class="form-row my-2">
                             <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Company:&nbsp;</span></div>
                             <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-                              <select class="form-control" id="modalInpCompanyId">
+                              <select class="form-select" id="modalInpCompanyId">
                                     <option value="null" selected="">-</option>
                                     <!-- <option value="1">1</option> -->
                               </select>
@@ -197,6 +197,14 @@
       <div class="title">
       <h1>Customer</h1><button type="button" class="btn btn-success" id="addCustomer" data-toggle="modal" data-target="#modalCustomerMaster">ADD Customer</button>
       </div>
+      <!-- Dropdown -->
+      <!-- <div class="dropdown">
+        <select class="form-select" aria-label="Default select example" id="modalCompanyName">
+          <option value= "0" selected>Select Company</option>
+          
+        </select>
+      </div> -->
+
       <table id="tableCustomer" class="table table-hover display dataTables_wrapper" style="width:100%">
         <thead  class="table-dark">
             <tr>
@@ -206,11 +214,12 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th style="width: 15%;">Action</th>
+                <th style="display: none;"></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="showTable">
             <tr>
-              <td>Choose Company...</td>
+              <td colspan="6">Select Company...</td>
             </tr>
         </tbody>
     </table>
@@ -245,13 +254,14 @@
     <script src="/js/jquery.min.js"></script>
     <!-- <script src="/js/sortTable.js"></script> -->
     <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/customer/company.js"></script>
-    <script src="/customer/customer.js"></script>
-    <script src="/customer/customerDropdown.js"></script>  
+     
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+    <script src="/customer/company.js"></script>
+    <script src="/customer/customer.js"></script>
+    <script src="/customer/customerDropdown.js"></script> 
     <!-- <script src="/Customer/customer.js"></script> -->
     <!-- <script src="/js/swalalert2.js"></script> -->
 
