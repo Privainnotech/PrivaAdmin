@@ -6,7 +6,7 @@ async function LoadDropDown() {
         dataType: 'json',
         success: function (response) {
             response.forEach(Company => {
-                $("#modalInpCompanyId").append("<option value=" + Company.CompanyId + "><span>(" + Company.CompanyName + ")</span></option>");
+                $("#modalInpCompanyId").append("<option value=" + Company.CompanyId + "><span>" + Company.CompanyName + "</span></option>");
             });
         }
     })

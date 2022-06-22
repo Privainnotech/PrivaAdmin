@@ -25,7 +25,7 @@ $(document).ready(function () {
                     "data": "CustomerTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCompany' data-toggle='modal'  data-target='#modalCompanyMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCompany' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCustomer' data-toggle='modal'  data-target='#modalCompanyMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCompany' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -99,69 +99,77 @@ $(document).ready(function () {
         })
     });
 
-    //Edit
-    // $(document).on("click", "#btnEditCompany", function () {
-    //     // $("#formCompany").trigger("reset");
-    //     $(".modal-title").text("Edit Company");
-    //     // console.log("save0");
-    //     rows = $(this).closest("tr");
-    //     let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
-    //     let CompanyName = tableCompany.rows(rows).data()[0].CompanyName;
-    //     let CompanyAddress = tableCompany.rows(rows).data()[0].CompanyAddress;
-    //     let CompanyEmail = tableCompany.rows(rows).data()[0].CompanyEmail;
-    //     let CompanyTel = tableCompany.rows(rows).data()[0].CompanyTel;
-    //     console.log(tableCompany.rows(rows).data()[0]);
-    //     $('#modalInpCompanyName').val(CompanyName);
-    //     $('#modalInpCompanyAddress').val(CompanyAddress);
-    //     $('#modalInpCompanyEmail').val(CompanyEmail);
-    //     $('#modalInpCompanyTel').val(CompanyTel);
+    // Edit
+    $(document).on("click", "#btnEditCustomer", function () {
+        // $("#formCompany").trigger("reset");
+        $(".modal-title").text("Edit Customer");
+        // console.log("save0");
+        rows = $(this).closest("tr");
+        let CompanyId = tableCustomer.rows(rows).data()[0].CompanyId;
+        let CustomerId = tableCustomer.rows(rows).data()[0].CustomerId;
+        let CustomerTitle = tableCustomer.rows(rows).data()[0].CustomerTitle;
+        let CustomerFname = tableCustomer.rows(rows).data()[0].CustomerFname;
+        let CustomerLname = tableCustomer.rows(rows).data()[0].CustomerLname;
+        let CustomerEmail = tableCustomer.rows(rows).data()[0].CustomerEmail;
+        let CustomerTel = tableCustomer.rows(rows).data()[0].CustomerTel;
+        console.log(tableCustomer.rows(rows).data()[0]);
+        $('#modalInpCustomerTitle').val(CustomerTitle);
+        $('#modalInpCustomerFname').val(CustomerFname);
+        $('#modalInpCustomerLname').val(CustomerLname);
+        $('#modalInpCustomerEmail').val(CustomerEmail);
+        $('#modalInpCustomerTel').val(CustomerTel);
+        $('#modalInpCompanyId').val(CompanyId);
 
-    //     $("#modalSaveCompany").unbind();
-    //     $("#modalSaveCompany").click(function () {
+        $("#modalSaveCompany").unbind();
+        $("#modalSaveCompany").click(function () {
             
-    //             let CompanyName = $.trim($('#modalInpCompanyName').val());
-    //             let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
-    //             let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
-    //             let CompanyTel = $.trim($('#modalInpCompanyTel').val());
+            let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
+            let CustomerFname = $.trim($('#modalInpCustomerFname').val());
+            let CustomerLname = $.trim($('#modalInpCustomerLname').val());
+            let CustomerEmail = $.trim($('#modalInpCustomerEmail').val());
+            let CustomerTel = $.trim($('#modalInpCustomerTel').val());
+            let CompanyId = $.trim($('#modalInpCompanyId').val());
 
-    //             $.ajax({
-    //                 url: "/company_master/edit/" + CompanyId,
-    //                 method: 'put',
-    //                 contentType: 'application/json',
-    //                 data: JSON.stringify({
-    //                     CompanyName: CompanyName,
-    //                     CompanyAddress: CompanyAddress,
-    //                     CompanyEmail: CompanyEmail,
-    //                     CompanyTel: CompanyTel
-    //                 }),
-    //                 success: function () {
-    //                     Swal.fire({
-    //                         position: 'center',
-    //                         icon: 'success',
-    //                         title: 'Created',
-    //                         text: 'Company data have been created',
-    //                         showConfirmButton: false,
-    //                         timer: 1500
-    //                     })
-    //                     tableCompany.ajax.reload(null, false);
-    //                     $('#modalCompanyMaster').modal('hide');
-    //                 },
-    //                 error: function (err) {
-    //                     errorText = err.responseJSON.message;
-    //                     Swal.fire({
-    //                         position: 'center',
-    //                         icon: 'warning',
-    //                         title: 'Warning',
-    //                         text: errorText,
-    //                         showConfirmButton: true,
-    //                         confirmButtonText: 'OK',
-    //                         confirmButtonColor: '#FF5733'
-    //                     });
-    //                 }
-    //             });
+                $.ajax({
+                    url: "/customer_master/edit/" + CustomerId,
+                    method: 'put',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        CustomerTitle: CustomerTitle,
+                        CustomerFname: CustomerFname,
+                        CustomerLname: CustomerLname,
+                        CustomerEmail: CustomerEmail,
+                        CustomerTel: CustomerTel,
+                        CompanyId: CompanyId
+                    }),
+                    success: function () {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Created',
+                            text: 'Customer data have been created',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableCustomer.ajax.reload(null, false);
+                        $('#modalCustomerMaster').modal('hide');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
+                    }
+                });
             
-    //     })
-    // });
+        })
+    });
     
     //Delete
     // $(document).on("click", "#btnDelCompany", function () {
