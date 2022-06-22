@@ -1,10 +1,9 @@
 $(document).ready(function () {
     function fill_quotation() {
-        // console.log(Id)
-        tableQuotation = $('#tableQuotation').DataTable({
+        tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
             "ajax": {
-                "url": "/quotation/list/",
+                "url": "/quotation/list",
                 "dataSrc": ""
             },
             "columns": [
@@ -43,6 +42,8 @@ $(document).ready(function () {
         });
     }
     fill_quotation()
+    
+
     
 });
 
