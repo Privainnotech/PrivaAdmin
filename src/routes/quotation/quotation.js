@@ -43,7 +43,7 @@ router.get('/list', async (req, res, next) => {
         b.QuotationNoId,
         b.QuotationNo,
         a.QuotationRevised,
-        b.QuotationNo + '_0' + a.QuotationRevised QuotationNo_Revised,
+        b.QuotationNo + '_0' + CONVERT(nvarchar(5), a.QuotationRevised) QuotationNo_Revised,
         a.QuotationId,
         a.QuotationSubject,
         c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
@@ -69,18 +69,17 @@ router.get('/list', async (req, res, next) => {
 router.get('/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let QuotationID = req.params.QuotationID
-        getQuotation = `SELECT
+        let QuotationId = req.params.QuotationId
+        let getQuotation = `SELECT
             b.QuotationNoId,
             b.QuotationNo,
             a.QuotationRevised,
-            b.QuotationNo + '_0' + a.QuotationRevised QuotationNo_Revised,
+            b.QuotationNo + '_0' + CONVERT(nvarchar(5), a.QuotationRevised) QuotationNo_Revised,
             a.QuotationStatus,
             c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
             a.QuotationId,
             a.QuotationSubject,
             b.QuotationDate,
-            a.QuotationStatus,
             a.QuotationTotalPrice,
             a.QuotationDiscount,
             a.QuotationNet,
@@ -90,19 +89,41 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationPayTerm,
             a.QuotationDelivery,
             CONVERT(nvarchar(max), a.QuotationRemark) AS 'Remark',
-            a.EmployeeApproveId
-            e.
+            a.EmployeeApproveId,
+            e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
+            e.EmployeeEmail,
+            e.EmployeePosition
             FROM [Quotation] a
             LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
             LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
             LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
-            LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId`;
-        let quotations = await pool.request().query(getQuotationList);
+            LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
+            WHERE a.QuotationId = ${QuotationId}`;
+        let quotations = await pool.request().query(getQuotation);
+        res.status(200).send(JSON.stringify(quotations.recordset[0]));
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+})
+
+router.get('/item/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId
+        getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemQty, a.ItemDescription,
+            (SELECT c.ProductCode, c.ProductName, c.ProductPrice. b.SubItemQty, b.SubItemUnit
+                FROM [QuotationSubItem] b
+                LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId)
+            FROM [QuotationItem] a
+            LEFT JOIN [QuotationSubItem] b ON a.ItemId = b.ItemId
+            WHERE a.QuotationId = ${QuotationId}`;
+        let quotations = await pool.request().query(getQuotationItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){
         res.status(500).send({message: err});
     }
 })
+
 
 router.post('/add_pre_quotation', async (req, res) => {
     try{
