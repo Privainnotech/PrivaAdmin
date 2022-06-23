@@ -29,10 +29,13 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             QuotationRemark,
             EmployeeApproveId
         } = req.body
+        if (QuotationPayTerm) QuotationPayTerm="";
+        if (QuotationDelivery) QuotationDelivery="";
+        if (QuotationRemark) QuotationRemark="";
         let PayTermFilter = QuotationPayTerm.replace(/'/g, "''");
         let DeliveryFilter = QuotationDelivery.replace(/'/g, "''");
         let RemarkFilter = QuotationRemark.replace(/'/g, "''");
-        if (QuotationStatus !== 1) { // not pre status
+        if (QuotationStatus > 1 && QuotationStatus < 5) { // not pre status
             // InsertQuotationRevised
             let newRevise = QuotationRevised+1;
             console.log(newRevise)
@@ -57,7 +60,9 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
                     await pool.request().query(`INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemQty, SubItemUnit)
                     VALUES(${NewItemId}, ${subitem.ProductId}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`)
                 }
-            }            
+            }
+            // Update old quotation status to cancel
+            // await pool.request().query(`UPDATE Quotation SET QuotationStatus=5 WHERE QuotationId = ${OldQuotationId}`)
             res.status(200).send({message: 'Successfully revise quotation'});
         } else {
             res.status(400).send({message: "Cannot revise pre-quotation"});
@@ -72,11 +77,11 @@ router.get('/quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
-        let getQuotation = await pool.request().query(`SELECT a.QuotationStatus, b.CustomerId
+        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId a.QuotationStatus, b.CustomerId
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         WHERE QuotationId = ${QuotationId}`)
-        let {QuotationStatus, CustomerId} = getQuotation.recordset[0];
+        let {QuotationNoId, QuotationStatus, CustomerId} = getQuotation.recordset[0];
         if (QuotationStatus == 1) {
             // GenQuotationNo
             let genQuotationNo = '';
@@ -94,13 +99,15 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
                 SELECT SCOPE_IDENTITY() AS Id`;
             let QuotationNo = await pool.request().query(InsertQuotationNo);
-            let QuotationNoId = QuotationNo.recordset[0].Id
+            let newQuotationNoId = QuotationNo.recordset[0].Id
             // Update Quotation NoId, Status
-            console.log(QuotationNoId)
+            console.log(newQuotationNoId)
             let UpdateQuotationStatus = `Update Quotation
-            SET QuotationNoId = ${QuotationNoId}, QuotationStatus = 2
+            SET QuotationNoId = ${newQuotationNoId}, QuotationStatus = 2
             WHERE QuotationId = ${QuotationId}`;
             await pool.request().query(UpdateQuotationStatus);
+            let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId}`
+            await pool.request().query(DeletePreQuotationNo);
             res.status(200).send({message: 'Successfully set quotation'});
         } else {
             res.status(400).send({message: 'Already quotation'});
