@@ -186,6 +186,7 @@ $(document).ready(function () {
                 });
         })
     });
+    
     // Revised
     $(document).on("click", "#btnRevisedQuotation", function () {
         $(".modal-title").text("Edit Quotation");
