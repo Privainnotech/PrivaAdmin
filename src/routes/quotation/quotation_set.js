@@ -35,6 +35,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         if (QuotationStatus !== 1) { // not pre status
             // InsertQuotationRevised
             let newRevise = QuotationRevised+1;
+            console.log(newRevise)
             let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotaionPayTerm, QuotationDelivery, QuotationRemark, EmployeeApproveId)
             VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', ${EmployeeApproveId})
             SELECT SCOPE_IDENTITY() AS Id`;
@@ -43,6 +44,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             let NewQuotationId = Quotation.recordset[0].Id
             // Copy Item
             let selectOldItem = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${OldQuotationId}`)
+            console.log('select old item')
             for(const item of selectOldItem.recordset){
                 console.log('copy item')
                 let newItem = await pool.request().query(`INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)
