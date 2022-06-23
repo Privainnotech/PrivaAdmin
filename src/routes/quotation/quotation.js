@@ -53,12 +53,7 @@ router.get('/list', async (req, res, next) => {
         a.QuotationNetVat,
         b.QuotationDate,
         d.StatusName,
-        a.QuotationValidityDate,
-        a.QuotationPayTerm,
-        a.QuotationDelivery,
-        CONVERT(nvarchar(max), a.QuotationRemark) AS 'Remark',
         a.EmployeeApproveId
-        
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
@@ -294,9 +289,13 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
-        let Status = await pool.request().query(`SELECT QuotationStatus FROM Quotation WHERE QuotationId = ${QuotationId}`)
-        console.log(Status)
+        let Status = await pool.request().query(`SELECT QuotationStatus, QuotationRevised FROM Quotation WHERE QuotationId = ${QuotationId}`)
         if(Status.recordset[0].QuotationStatus == 1){
+            if(Status.recordset[0].QuotationRevised == 1){
+
+            }
+            // set latest revise cancel to quotation
+            let getLatestCancel = ``
             // Delete SubItem
             let selectItem = await pool.request().query(`SELECT ItemId FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
             if (selectItem.recordset.length){
