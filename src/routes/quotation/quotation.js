@@ -63,6 +63,7 @@ router.get('/list', async (req, res, next) => {
         a.QuotationDiscount,
         a.QuotationNetVat,
         a.QuotationDate,
+        a.QuotationUpdatedDate,
         d.StatusName,
         a.EmployeeApproveId
         FROM [Quotation] a
@@ -99,6 +100,7 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationId,
             a.QuotationSubject,
             a.QuotationDate,
+            a.QuotationUpdatedDate,
             a.QuotationTotalPrice,
             a.QuotationDiscount,
             a.QuotationNet,
