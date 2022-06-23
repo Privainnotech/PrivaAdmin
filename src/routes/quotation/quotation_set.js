@@ -37,7 +37,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             let newRevise = QuotationRevised+1;
             console.log(newRevise)
             let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotaionPayTerm, QuotationDelivery, QuotationRemark, EmployeeApproveId)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', ${EmployeeApproveId})
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, ${QuotationValidityDate}, N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', ${EmployeeApproveId})
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             console.log('insert quo')

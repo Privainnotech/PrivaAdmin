@@ -88,7 +88,7 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationRevised,
             b.QuotationNo + '_${Revised}' QuotationNo_Revised,
             a.QuotationStatus,
-            d.StatusName
+            d.StatusName,
             c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
             a.QuotationId,
             a.QuotationSubject,
@@ -398,7 +398,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             res.status(400).send({message: 'Please select Employee'});
             return;
         }
-        console.log('check1')
         let CheckQuotation = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
              SELECT *
@@ -410,7 +409,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         if(CheckQuotation.recordset[0].check){
             res.status(400).send({message: 'Duplicate Quotation'});
         } else{
-            console.log('check2')
             // Insert Quotation with QuotationNoId
             let UpdateQuotation = `UPDATE Quotation
             SET QuotationSubject = N'${QuotationSubject}',
