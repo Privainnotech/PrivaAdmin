@@ -23,10 +23,25 @@ $(document).ready(function () {
                     "data": "QuotationDate"
                 },
                 {
-                    "data": "QuotationStatus"
+                    "data": "StatusName"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCustomer' data-toggle='modal'  data-target='#modalCustomerMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCustomer' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "data": "Action",
+                    "render": function (data, type, row) {
+ 
+                        if ( row.StatusName === 'pre') {
+                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 ' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            ;}
+                 
+                            else {
+                 
+                                return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                ;
+                 
+                            }
+                        }
+                 
+                    
                 }
                 ,
                 {
@@ -87,6 +102,111 @@ $(document).ready(function () {
                     }
                 });
             }
+        })
+    });
+
+    //Edit
+    $(document).on("click", "#btnEditQuotation", function () {
+        $(".modal-title").text("Edit Quotation");
+        // console.log("save0");
+        rows = $(this).closest("tr");
+        let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
+        $.ajax({
+            url: "/quotation/" + QuotationId,
+            method: 'get',
+            cache: false,
+			success:function(response){
+				// console.log(QuotationId);
+				var obj = JSON.parse(response);
+				// console.log(obj.QuotationSubject);
+                    $('#modalEditProjectName').val(obj.QuotationSubject);
+      				$('#modalEditDiscout').val(obj.QuotationDiscount);
+                    $('#modalEditValidity').val(obj.QuotationValidityDate);
+                    $('#modalEditPayment').val(obj.QuotationPayterm);
+                    $('#modalEditDelivery').val(obj.QuotationDelivery);
+                    $('#modalEditRemark').val(obj.RemarkFilter);
+                    $('#modalEditApprove').val(obj.EmployeeApproveId);
+			}
+        })
+        
+        $("#modalEditProject").unbind();
+        $("#modalEditProject").click(function () {
+            
+                let QuotationSubject = $.trim($('#modalEditProjectName').val());
+                let QuotationDiscount = $.trim($('#modalEditDiscout').val());
+                let QuotationValidityDate = $.trim($('#modalEditValidity').val());
+                let QuotationPayterm = $.trim($('#modalEditPayment').val());
+                let QuotationDelivery = $.trim($('#modalEditDelivery').val());
+                let RemarkFilter = $.trim($('#modalEditRemark').val());
+                let EmployeeApproveId = $.trim($('#modalEditApprove').val());
+				console.log(RemarkFilter);
+
+                $.ajax({
+                    url: "/quotation/edit_quotation/" + QuotationId,
+                    method: 'put',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        QuotationSubject: QuotationSubject,
+                        QuotationDiscount: QuotationDiscount,
+                        QuotationValidityDate: QuotationValidityDate,
+                        QuotationPayterm: QuotationPayterm,
+                        QuotationDelivery: QuotationDelivery,
+                        RemarkFilter: RemarkFilter,
+                        EmployeeApproveId: EmployeeApproveId
+
+                    }),
+                    success: function () {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Created',
+                            text: 'Quotation data have been Edited',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableQuo.ajax.reload(null, false);
+                        $('#modalQuotationEditMaster').modal('hide');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
+                    }
+                });
+        })
+    });
+
+     //Delete
+     $(document).on("click", "#btnDelProject", function () {
+        rows = $(this).closest('tr');
+        let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
+        $(".modal-title").text("Confirm Delete");
+        $("#btnYes").unbind("click");
+        $(".btnYes").click(function () {
+            $.ajax({
+                url: "/quotation/delete/" + QuotationId,
+                method: 'delete',
+                contentType: 'application/json',
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: 'Company have been deleted',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableQuo.ajax.reload(null, false);
+                }
+            })
+            $('#modalDeleteConfirm').modal('hide');
         })
     });
     
