@@ -88,11 +88,11 @@ router.get('/quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
-        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId, a.QuotationStatus, b.CustomerId
+        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId, a.QuotationRevised, a.QuotationStatus, b.CustomerId
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         WHERE QuotationId = ${QuotationId}`)
-        let {QuotationNoId, QuotationStatus, CustomerId} = getQuotation.recordset[0];
+        let {QuotationNoId, QuotationRevised, QuotationStatus, CustomerId} = getQuotation.recordset[0];
         if (QuotationStatus == 1) {
             // GenQuotationNo
             let genQuotationNo = '';
@@ -116,7 +116,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
                 SET QuotationNoId = ${newQuotationNoId}, QuotationStatus = 2,
                 QuotationDate = ${checkDate()}, QuotationUpdatedDate = ${checkDate()}
                 WHERE QuotationId = ${QuotationId}`;
-            let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId}`
+            let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId} AND QuotationNo LIKE N'pre_%'`
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(DeletePreQuotationNo);
             res.status(200).send({message: 'Successfully set quotation'});
