@@ -111,13 +111,13 @@ router.get('/quotation/:QuotationId', async (req, res) => {
                 SELECT SCOPE_IDENTITY() AS Id`;
             let QuotationNo = await pool.request().query(InsertQuotationNo);
             let newQuotationNoId = QuotationNo.recordset[0].Id
-            // Update Quotation NoId, Status
-            console.log(newQuotationNoId)
+            // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation
-                SET QuotationNoId = ${newQuotationNoId}, QuotationStatus = 2
+                SET QuotationNoId = ${newQuotationNoId}, QuotationStatus = 2,
+                QuotationDate = ${checkDate()}, QuotationUpdatedDate = ${checkDate()}
                 WHERE QuotationId = ${QuotationId}`;
-            await pool.request().query(UpdateQuotationStatus);
             let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId}`
+            await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(DeletePreQuotationNo);
             res.status(200).send({message: 'Successfully set quotation'});
         } else {
