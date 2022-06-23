@@ -42,7 +42,6 @@ $(document).ready(function () {
                                         return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                                         ;}
                                         else {
-                            
                                             return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                                             ;}
                         }
@@ -66,7 +65,7 @@ $(document).ready(function () {
     $(document).on("click", "#addProject", function () {
         $("#formQuotation").trigger("reset");
         $(".modal-title").text("Add Project");
-        console.log("save0");
+        // console.log("save0");
         $("#modalSaveProject").unbind();
         $("#modalSaveProject").click(function () {
                 let ProjectName = $.trim($('#modalInpProjectName').val());
@@ -122,7 +121,6 @@ $(document).ready(function () {
 			success:function(response){
 				// console.log(QuotationId);
 				var obj = JSON.parse(response);
-				// console.log(obj.QuotationSubject);
                     $('#modalEditProjectName').val(obj.QuotationSubject);
       				$('#modalEditDiscout').val(obj.QuotationDiscount);
                     $('#modalEditValidity').val(obj.QuotationValidityDate);
@@ -143,7 +141,6 @@ $(document).ready(function () {
                 let QuotationDelivery = $.trim($('#modalEditDelivery').val());
                 let QuotationRemark = $.trim($('#modalEditRemark').val());
                 let EmployeeApproveId = $.trim($('#modalEditApprove').val());
-				console.log(EmployeeApproveId);
 
                 $.ajax({
                     url: "/quotation/edit_quotation/" + QuotationId,
@@ -186,11 +183,10 @@ $(document).ready(function () {
                 });
         })
     });
-    
+
     // Revised
     $(document).on("click", "#btnRevisedQuotation", function () {
         $(".modal-title").text("Edit Quotation");
-        // console.log("save0");
         rows = $(this).closest("tr");
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         $.ajax({
@@ -198,7 +194,6 @@ $(document).ready(function () {
             method: 'get',
             cache: false,
 			success:function(response){
-				// console.log(QuotationId);
 				var obj = JSON.parse(response);
 
                     let QuotationNoId = obj.QuotationNoId;
@@ -213,7 +208,6 @@ $(document).ready(function () {
                     let QuotationRemark = obj.QuotationRemark;
                     let EmployeeApproveId = obj.EmployeeApproveId;
                     
-                    console.log(QuotationId)
                     $.ajax({
                         url: "/quotation_set/revise/" + QuotationId,
                         method: 'post',

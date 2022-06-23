@@ -88,7 +88,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
-        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId a.QuotationStatus, b.CustomerId
+        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId, a.QuotationStatus, b.CustomerId
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         WHERE QuotationId = ${QuotationId}`)
