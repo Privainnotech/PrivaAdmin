@@ -56,8 +56,9 @@ router.get('/list', async (req, res, next) => {
         a.QuotationValidityDate,
         a.QuotationPayTerm,
         a.QuotationDelivery,
+        CONVERT(nvarchar(max), a.QuotationRemark) AS 'Remark',
         a.EmployeeApproveId
-        CONVERT(nvarchar(max), a.QuotationRemark) AS 'Remark'
+        
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
@@ -87,6 +88,7 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationRevised,
             b.QuotationNo + '_${Revised}' QuotationNo_Revised,
             a.QuotationStatus,
+            d.StatusName
             c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
             a.QuotationId,
             a.QuotationSubject,
@@ -297,7 +299,6 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
         if(Status.recordset[0].QuotationStatus == 1){
             // Delete SubItem
             let selectItem = await pool.request().query(`SELECT ItemId FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
-            console.log(selectItem.recordset)
             if (selectItem.recordset.length){
                 for(const item of selectItem.recordset){
                     let DeleteSubItem = `DELETE FROM QuotationSubItem WHERE ItemId=${item.ItemId}`;
@@ -380,7 +381,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId
         let {
             QuotationSubject,
-            QuotationNo,
             CustomerId,
             QuotationDiscount,
             QuotationValidityDate,
@@ -394,6 +394,11 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             res.status(400).send({message: 'Please select Customer'});
             return;
         }
+        if(EmployeeApproveId == 'null'){
+            res.status(400).send({message: 'Please select Employee'});
+            return;
+        }
+        console.log('check1')
         let CheckQuotation = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
              SELECT *
@@ -405,14 +410,15 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         if(CheckQuotation.recordset[0].check){
             res.status(400).send({message: 'Duplicate Quotation'});
         } else{
+            console.log('check2')
             // Insert Quotation with QuotationNoId
             let UpdateQuotation = `UPDATE Quotation
-            SET QuotationSubject = ${QuotationSubject},
+            SET QuotationSubject = N'${QuotationSubject}',
                 QuotationDiscount = ${QuotationDiscount},
                 QuotationValidityDate = ${QuotationValidityDate}, 
-                QuotationPayterm = ${QuotationPayterm},
-                QuotationDelivery = ${QuotationDelivery},
-                QuotationRemark = ${RemarkFilter},
+                QuotationPayterm = N'${QuotationPayterm}',
+                QuotationDelivery = N'${QuotationDelivery}',
+                QuotationRemark = N'${RemarkFilter}',
                 EmployeeApproveId = ${EmployeeApproveId}
             WHERE QuotationId = ${QuotationId}`;
             await pool.request().query(UpdateQuotation);
