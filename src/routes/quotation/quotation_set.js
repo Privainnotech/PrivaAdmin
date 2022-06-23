@@ -3,12 +3,23 @@ const router = express.Router();
 const sql = require('mssql');
 const { dbconfig } = require('../../../config');
 
-const checkDate = () => {
+const checkMonth = () => {
     let today = new Date();
     let mm = today.getMonth()+1;
     let yyyy = today.getFullYear();
     if (mm<10) { mm='0'+mm; }
     return yyyy+mm;
+}
+
+const checkDate = () => {
+    let today = new Date();
+    let dd = today.getDate()
+    let mm = today.getMonth()+1;
+    let yyyy = today.getFullYear();
+    if (dd<10) { dd='0'+dd; }
+    if (mm<10) { mm='0'+mm; }
+    // yyyy = yyyy[3]+yyyy[4]
+    return dd+'-'+mm+'-'+yyyy;
 }
 
 //revised quotation
@@ -39,8 +50,8 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             // InsertQuotationRevised
             let newRevise = QuotationRevised+1;
             console.log(newRevise)
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, EmployeeApproveId)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, ${QuotationValidityDate}, N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', ${EmployeeApproveId})
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationUpdatedDate, EmployeeApproveId)
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, ${QuotationValidityDate}, N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', N'${checkDate()}', ${EmployeeApproveId})
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             console.log('insert quo')
@@ -88,11 +99,11 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             let CheckQuotationNo = await pool.request().query(`
                 SELECT *
                 FROM QuotationNo
-                WHERE QuotationNo LIKE N'${checkDate()}%'`)
+                WHERE QuotationNo LIKE N'${checkMonth()}%'`)
             if (CheckQuotationNo.recordset.length<10) {
-                genQuotationNo = checkDate()+'0'+CheckQuotationNo.recordset.length
+                genQuotationNo = checkMonth()+'0'+CheckQuotationNo.recordset.length
             } else {
-                genQuotationNo = checkDate()+CheckQuotationNo.recordset.length
+                genQuotationNo = checkMonth()+CheckQuotationNo.recordset.length
             }
             console.log("Gen QuotationNo: " + genQuotationNo)
             // Insert QuotationNo
@@ -103,8 +114,8 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             // Update Quotation NoId, Status
             console.log(newQuotationNoId)
             let UpdateQuotationStatus = `Update Quotation
-            SET QuotationNoId = ${newQuotationNoId}, QuotationStatus = 2
-            WHERE QuotationId = ${QuotationId}`;
+                SET QuotationNoId = ${newQuotationNoId}, QuotationStatus = 2
+                WHERE QuotationId = ${QuotationId}`;
             await pool.request().query(UpdateQuotationStatus);
             let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId}`
             await pool.request().query(DeletePreQuotationNo);
