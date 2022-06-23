@@ -52,7 +52,7 @@ CREATE Table [PrivaAdmin].[dbo].[MasterProduct](
 
 CREATE Table [PrivaAdmin].[dbo].[QuotationNo](
     QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    QuotationNo NVARCHAR(20) NOT NULL UNIQUE DEFAULT N'pre_' + dbo.fnFormatDate (getdate(), N'YYYYMM00'),
+    QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
 	CustomerId bigint NOT NULL,
 	QuotationDate NVARCHAR(10) NOT NULL DEFAULT CONVERT(VARCHAR(10), getdate(), 105)
 	FOREIGN KEY (CustomerId) REFERENCES MasterCustomer(CustomerId)

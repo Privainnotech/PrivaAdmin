@@ -44,6 +44,7 @@ let customerRoute = require('./src/routes/master_setting/customer_master')
 
 // path main module
 let quotationRoute = require('./src/routes/quotation/quotation');
+let quotationStatusRoute = require('./src/routes/quotation/quotation_set');
 let dropdownRoute = require('./src/routes/main/dropdown')
 
 app.use('/', indexRoute);
@@ -54,6 +55,7 @@ app.use('/customer_master', customerRoute)
 app.use('/employee_master', employeeRoute)
 
 app.use('/quotation', quotationRoute);
+app.use('/quotation_set', quotationStatusRoute)
 app.use('/dropdown', dropdownRoute)
 
 app.listen(PORT, () => console.log(`Server is listening on ${PORT}`))
