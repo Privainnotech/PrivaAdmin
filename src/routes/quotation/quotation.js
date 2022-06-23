@@ -291,11 +291,10 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId;
         let Status = await pool.request().query(`SELECT QuotationStatus, QuotationRevised FROM Quotation WHERE QuotationId = ${QuotationId}`)
         if(Status.recordset[0].QuotationStatus == 1){
-            if(Status.recordset[0].QuotationRevised == 1){
-
+            if(Status.recordset[0].QuotationRevised > 0){
+                // set latest revise cancel to quotation
+                let getLatestCancel = ``
             }
-            // set latest revise cancel to quotation
-            let getLatestCancel = ``
             // Delete SubItem
             let selectItem = await pool.request().query(`SELECT ItemId FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
             if (selectItem.recordset.length){
@@ -383,7 +382,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             CustomerId,
             QuotationDiscount,
             QuotationValidityDate,
-            QuotationPayterm,
+            QuotationPayTerm,
             QuotationDelivery,
             QuotationRemark,
             EmployeeApproveId
@@ -413,7 +412,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             SET QuotationSubject = N'${QuotationSubject}',
                 QuotationDiscount = ${QuotationDiscount},
                 QuotationValidityDate = ${QuotationValidityDate}, 
-                QuotationPayterm = N'${QuotationPayterm}',
+                QuotationPayTerm = N'${QuotationPayTerm}',
                 QuotationDelivery = N'${QuotationDelivery}',
                 QuotationRemark = N'${RemarkFilter}',
                 EmployeeApproveId = ${EmployeeApproveId}
