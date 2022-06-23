@@ -71,7 +71,7 @@ $(document).ready(function () {
         $("#modalSaveProject").click(function () {
                 let ProjectName = $.trim($('#modalInpProjectName').val());
                 let CustomerId = $.trim($('#modalInpCustomerId').val());
-            if (ProjectName != null) {
+            if (ProjectName !== null) {
                 $.ajax({
                     url: "/quotation/add_pre_quotation",
                     method: 'post',
