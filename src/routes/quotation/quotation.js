@@ -41,19 +41,22 @@ router.get('/list', async (req, res, next) => {
         getQuotationList = `SELECT
         row_number() over(order by b.QuotationNo desc) as 'index',
         b.QuotationNoId,
+        a.QuotationId,
+        a.QuotationStatus,
         b.QuotationNo,
         a.QuotationRevised,
         b.QuotationNo + '_0' + CONVERT(nvarchar(5), a.QuotationRevised) QuotationNo_Revised,
-        a.QuotationId,
         a.QuotationSubject,
         c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
+        a.QuotationTotalPrice,
+        a.QuotationDiscount,
         a.QuotationNetVat,
         b.QuotationDate,
-        a.QuotationStatus,
-        d.StatusName
+        d.StatusName,
         a.QuotationValidityDate,
         a.QuotationPayTerm,
         a.QuotationDelivery,
+        a.EmployeeApproveId
         CONVERT(nvarchar(max), a.QuotationRemark) AS 'Remark'
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
@@ -71,11 +74,18 @@ router.get('/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
+        let getRevise = await pool.request().query(`SELECT QuotationRevised FROM Quotation WHERE QuotationId = ${QuotationId}`)
+        let Revised = '';
+        if (getRevise.recordset[0].QuotationRevised<10){
+            Revised = '0'+getRevise.recordset[0].QuotationRevised.toString()
+        } else {
+            Revised = getRevise.recordset[0].QuotationRevised.toString()
+        }
         let getQuotation = `SELECT
             b.QuotationNoId,
             b.QuotationNo,
             a.QuotationRevised,
-            b.QuotationNo + '_0' + CONVERT(nvarchar(5), a.QuotationRevised) QuotationNo_Revised,
+            b.QuotationNo + '_${Revised}' QuotationNo_Revised,
             a.QuotationStatus,
             c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
             a.QuotationId,
@@ -111,8 +121,13 @@ router.get('/item/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        getQuotationItem = `SELECT QuotationId, ItemId, ItemName, ItemPrice, ItemQty, ItemDescription
-            FROM QuotationItem
+        getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription,
+                ( SELECT CONVERT(nvarchar(20), b.SubItemId) + ','
+                    FROM [QuotationSubItem] b LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId
+                    WHERE b.ItemId = a.ItemId 
+                    FOR XML PATH('')) AS SubItemId
+            FROM [QuotationItem] a
+            
             WHERE QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotationItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
@@ -121,16 +136,16 @@ router.get('/item/:QuotationId', async (req, res) => {
     }
 })
 
-router.get('/subitem/:ItemId', async (req, res) => {
+router.get('/subitem/:SubItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let ItemId = req.params.ItemId
-        getQuotationSubItem = `SELECT a.ItemId, b.ProductCode , b.ProductName, b.ProductPrice, a.SubItemQty, a.SubItemUnit
+        let SubItemId = req.params.SubItemId
+        getQuotationSubItem = `SELECT a.ItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit
             FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
-            WHERE a.ItemId = ${ItemId}`;
+            WHERE a.SubItemId = ${SubItemId}`;
         let quotations = await pool.request().query(getQuotationSubItem);
-        res.status(200).send(JSON.stringify(quotations.recordset));
+        res.status(200).send(JSON.stringify(quotations.recordset[0]));
     } catch(err){
         res.status(500).send({message: err});
     }
@@ -197,7 +212,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         THEN CAST (1 AS BIT)
         ELSE CAST (0 AS BIT) END AS 'check'`);
         if(CheckQuotationItem.recordset[0].check){
-            res.status(400).send({message: 'Duplicate Item'});
+            res.status(400).send({message: 'Duplicate item in quotation'});
         } else{
             let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}, N'${DescriptionFilter}')`;
             await pool.request().query(InsertItem);
@@ -215,7 +230,7 @@ router.post('/add_subitem/:ItemId&:ProductId', async (req, res) => {
         let ProductId = req.params.ProductId;
         let { ProductType, SubItemName, SubItemPrice, SubItemQty, SubItemUnit} = req.body;
         // ProductType = {Labor, Material, Internal, Unknown} => Dropdown
-        //Unit = {Pc, Set, Lot} => Dropdown
+        // Unit = {Pc, Set, Lot} => Dropdown
         if (ProductId == 'null'){ // Add new product
             let CheckProduct = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
@@ -270,6 +285,37 @@ router.post('/add_subitem/:ItemId&:ProductId', async (req, res) => {
         }
     } catch(err){
         res.status(500).send({message: err});
+    }
+})
+
+router.delete('/delete_quotation/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId;
+        let Status = await pool.request().query(`SELECT QuotationStatus FROM Quotation WHERE QuotationId = ${QuotationId}`)
+        console.log(Status)
+        if(Status.recordset[0].QuotationStatus == 1){
+            // Delete SubItem
+            let selectItem = await pool.request().query(`SELECT ItemId FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
+            console.log(selectItem.recordset)
+            if (selectItem.recordset.length){
+                for(const item of selectItem.recordset){
+                    let DeleteSubItem = `DELETE FROM QuotationSubItem WHERE ItemId=${item.ItemId}`;
+                    await pool.request().query(DeleteSubItem);
+                }
+            }
+            let DeleteQuotation = `DECLARE @QuotationNoId bigint;
+                SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId =  ${QuotationId});
+                DELETE FROM QuotationItem WHERE QuotationId=${QuotationId}
+                DELETE FROM Quotation WHERE QuotationId=${QuotationId}
+                DELETE FROM QuotationNo WHERE QuotationNoId=@QuotationNoId`;
+            await pool.request().query(DeleteQuotation);
+            res.status(200).send({message: 'Successfully delete pre-quotation'});
+        } else {
+            res.status(400).send({message: 'Cannot delete quotation'});
+        }
+    } catch(err){
+        res.status(500).send({message : `${err}`});
     }
 })
 
