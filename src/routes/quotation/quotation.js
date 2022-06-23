@@ -3,12 +3,23 @@ const router = express.Router();
 const sql = require('mssql');
 const { dbconfig } = require('../../../config');
 
-const checkDate = () => {
+const checkMonth = () => {
     let today = new Date();
     let mm = today.getMonth()+1;
     let yyyy = today.getFullYear();
     if (mm<10) { mm='0'+mm; }
     return yyyy+mm;
+}
+
+const checkDate = () => {
+    let today = new Date();
+    let dd = today.getDate()
+    let mm = today.getMonth()+1;
+    let yyyy = today.getFullYear();
+    if (dd<10) { dd='0'+dd; }
+    if (mm<10) { mm='0'+mm; }
+    // yyyy = yyyy[3]+yyyy[4]
+    return dd+'-'+mm+'-'+yyyy;
 }
 
 const updatePriceI = async (ItemId) => {
@@ -51,7 +62,7 @@ router.get('/list', async (req, res, next) => {
         a.QuotationTotalPrice,
         a.QuotationDiscount,
         a.QuotationNetVat,
-        b.QuotationDate,
+        a.QuotationDate,
         d.StatusName,
         a.EmployeeApproveId
         FROM [Quotation] a
@@ -87,7 +98,7 @@ router.get('/:QuotationId', async (req, res) => {
             c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
             a.QuotationId,
             a.QuotationSubject,
-            b.QuotationDate,
+            a.QuotationDate,
             a.QuotationTotalPrice,
             a.QuotationDiscount,
             a.QuotationNet,
@@ -169,11 +180,11 @@ router.post('/add_pre_quotation', async (req, res) => {
             let CheckQuotationNo = await pool.request().query(`
                 SELECT *
                 FROM QuotationNo
-                WHERE QuotationNo LIKE N'%${checkDate()}%'`)
+                WHERE QuotationNo LIKE N'%${checkMonth()}%'`)
             if (CheckQuotationNo.recordset.length<10) {
-                genQuotationNo = 'pre_'+checkDate()+'0'+CheckQuotationNo.recordset.length
+                genQuotationNo = 'pre_'+checkMonth()+'0'+CheckQuotationNo.recordset.length
             } else {
-                genQuotationNo = 'pre_'+checkDate()+CheckQuotationNo.recordset.length
+                genQuotationNo = 'pre_'+checkMonth()+CheckQuotationNo.recordset.length
             }
             console.log("Gen QuotationNo: " + genQuotationNo)
             // Insert QuotationNo
@@ -182,7 +193,7 @@ router.post('/add_pre_quotation', async (req, res) => {
             let QuotationNo = await pool.request().query(InsertQuotationNo);
             let QuotationNoId = QuotationNo.recordset[0].Id
             // Insert Quotation with QuotationNoId
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject) VALUES(${QuotationNoId}, N'${QuotationSubject}')
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject, QuotationUpdatedDate) VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkDate()}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let QuotationId = Quotation.recordset[0].Id
@@ -244,13 +255,13 @@ router.post('/add_subitem/:ItemId&:ProductId', async (req, res) => {
                 let CheckProductCode = await pool.request().query(`
                     SELECT *
                     FROM MasterProduct
-                    WHERE ProductCode LIKE N'%${checkDate()}%'`)
+                    WHERE ProductCode LIKE N'%${checkMonth()}%'`)
                 if (CheckProductCode.recordset.length<10) {
-                    ProductCode = ProductType[0]+"_"+checkDate()+'00'+CheckProductCode.recordset.length
+                    ProductCode = ProductType[0]+"_"+checkMonth()+'00'+CheckProductCode.recordset.length
                 } else if (CheckProductCode.recordset.length<100) {
-                    ProductCode = ProductType[0]+"_"+checkDate()+'0'+CheckProductCode.recordset.length
+                    ProductCode = ProductType[0]+"_"+checkMonth()+'0'+CheckProductCode.recordset.length
                 } else {
-                    ProductCode = ProductType[0]+"_"+checkDate()+CheckProductCode.recordset.length
+                    ProductCode = ProductType[0]+"_"+checkMonth()+CheckProductCode.recordset.length
                 }
                 console.log("Gen ProductCode: " + ProductCode)
                 let InsertProduct = `INSERT INTO MasterProduct(ProductCode, ProductName, ProductPrice) VALUES(N'${ProductCode}', N'${SubItemName}', ${SubItemPrice})
@@ -291,10 +302,6 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId;
         let Status = await pool.request().query(`SELECT QuotationStatus, QuotationRevised FROM Quotation WHERE QuotationId = ${QuotationId}`)
         if(Status.recordset[0].QuotationStatus == 1){
-            if(Status.recordset[0].QuotationRevised > 0){
-                // set latest revise cancel to quotation
-                let getLatestCancel = ``
-            }
             // Delete SubItem
             let selectItem = await pool.request().query(`SELECT ItemId FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
             if (selectItem.recordset.length){
