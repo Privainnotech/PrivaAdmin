@@ -11,7 +11,10 @@ $(document).ready(function () {
                     "data": "index"
                 },
                 {
-                    "data":  "QuotationNo_Revised" 
+                    "data":  "QuotationNo" 
+                },
+                {
+                    "data":  "QuotationRevised" 
                 },
                 {
                     "data":  "QuotationSubject" 
@@ -32,16 +35,17 @@ $(document).ready(function () {
                         if ( row.StatusName === 'pre') {
                             return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 ' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                             ;}
-                 
-                            else {
-                 
-                                return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
-                                ;
-                 
-                            }
+                            if ( row.StatusName === 'quotation') {
+                                return  "<div class='text-center'><div class='btn-group'><button class='btn btn-warning p-1 m-2 ' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationRevisedMaster'  style='width: 2rem;''><i class='fa fa-file-o'></i></button><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                ;}
+                                    if ( row.StatusName === 'cancel') {
+                                        return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                        ;}
+                                        else {
+                            
+                                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                            ;}
                         }
-                 
-                    
                 }
                 ,
                 {
@@ -50,7 +54,7 @@ $(document).ready(function () {
 
             ],"columnDefs":[
                 {
-                    "targets": [7],
+                    "targets": [8],
                     "visible": false
                 },
             ],
@@ -124,7 +128,7 @@ $(document).ready(function () {
                     $('#modalEditValidity').val(obj.QuotationValidityDate);
                     $('#modalEditPayment').val(obj.QuotationPayterm);
                     $('#modalEditDelivery').val(obj.QuotationDelivery);
-                    $('#modalEditRemark').val(obj.RemarkFilter);
+                    $('#modalEditRemark').val(obj.QuotationRemark);
                     $('#modalEditApprove').val(obj.EmployeeApproveId);
 			}
         })
@@ -137,9 +141,9 @@ $(document).ready(function () {
                 let QuotationValidityDate = $.trim($('#modalEditValidity').val());
                 let QuotationPayterm = $.trim($('#modalEditPayment').val());
                 let QuotationDelivery = $.trim($('#modalEditDelivery').val());
-                let RemarkFilter = $.trim($('#modalEditRemark').val());
+                let QuotationRemark = $.trim($('#modalEditRemark').val());
                 let EmployeeApproveId = $.trim($('#modalEditApprove').val());
-				console.log(RemarkFilter);
+				console.log(EmployeeApproveId);
 
                 $.ajax({
                     url: "/quotation/edit_quotation/" + QuotationId,
@@ -151,7 +155,7 @@ $(document).ready(function () {
                         QuotationValidityDate: QuotationValidityDate,
                         QuotationPayterm: QuotationPayterm,
                         QuotationDelivery: QuotationDelivery,
-                        RemarkFilter: RemarkFilter,
+                        QuotationRemark: QuotationRemark,
                         EmployeeApproveId: EmployeeApproveId
 
                     }),
@@ -191,7 +195,7 @@ $(document).ready(function () {
         $("#btnYes").unbind("click");
         $(".btnYes").click(function () {
             $.ajax({
-                url: "/quotation/delete/" + QuotationId,
+                url: "/quotation/delete_quotation/" + QuotationId,
                 method: 'delete',
                 contentType: 'application/json',
                 success: function () {

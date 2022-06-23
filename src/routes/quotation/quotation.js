@@ -101,7 +101,7 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationValidityDate,
             a.QuotationPayTerm,
             a.QuotationDelivery,
-            CONVERT(nvarchar(max), a.QuotationRemark) AS 'Remark',
+            CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
             a.EmployeeApproveId,
             e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
             e.EmployeeEmail,
