@@ -63,15 +63,15 @@ router.get('/product', async (req, res) => {
 router.get('/customer/:CustomerId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let CustomerID = req.params.CustomerID;
+        let CustomerId = req.params.CustomerId;
         let SelectCustomer = `Select
         a.CustomerId, a.CustomerTitle, a.CustomerFname, a.CustomerLname,
         a.CustomerEmail, b.CompanyId, b.CompanyName, b.CompanyAddress
         FROM [MasterCustomer] a
         LEFT JOIN [MasterCompany] b ON a.CompanyId = b.CompanyId
-        WHERE CustomerId = ${CustomerID}`;
+        WHERE CustomerId = ${CustomerId}`;
         let Customer = await pool.request().query(SelectCustomer);
-        res.status(200).send(JSON.stringify(Customer.recordset));
+        res.status(200).send(JSON.stringify(Customer.recordset[0]));
     } catch(err){
         res.status(500).send({message: `${err}`});
     }
@@ -80,10 +80,10 @@ router.get('/customer/:CustomerId', async (req, res) => {
 router.get('/product/:ProductId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let ProductID = req.params.ProductID;
-        let SelectProduct = `Select ProductId, ProductName, ProductPrice, FROM MasterProducth WHERE ProductId = ${ProductID}`;
+        let ProductId = req.params.ProductId;
+        let SelectProduct = `Select ProductId, ProductCode, ProductName, ProductPrice, ProductType FROM MasterProduct WHERE ProductId = ${ProductId}`;
         let Product = await pool.request().query(SelectProduct);
-        res.status(200).send(JSON.stringify(Product.recordset));
+        res.status(200).send(JSON.stringify(Product.recordset[0]));
     } catch(err){
         res.status(500).send({message: `${err}`});
     }
