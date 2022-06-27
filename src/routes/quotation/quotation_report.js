@@ -77,113 +77,21 @@ router.get('/:QuotationId', async (req, res) => {
 
         let pdfmake = new Pdfmake(fonts);
 
+        const getItem = await pool.request().query(`select`)
+
         let table = {
             headerRows: 1,
-            widths: [] 
-        }
+            widths: ['10%','*','10%','10%','15%'],
 
-        let topic = {
-            columns: [
-                {
-                    width: '*',
-                    text: "528/2 Soi Ramkhamhang 39 (Theplila 1)\nWangthonglang, Wangthonglang, Bangkok 10310\nTel : 098-655-3926, 02-539-3766\nEmail : sale@privainnotech.com",
-                    fontSize: 8,
-                    color: '#808080'
-                },
-                {
-                    width: '*',
-                    text: "QUOTATION",
-                    font: 'Centaur',
-                    // bold: true,
-                    alignment: 'right',
-                    fontSize: 28,
-                    color: '#A6A6A6'
-                },
-            ]
-        }, {
-            text: "\n\n", style: 'text'
-        }, {
-            columns: [
-            {
-                width: '*',
-                columns: [{
-                    width: '15%',
-                    stack: [{
-                        text: "To:",
-                    },{
-                        text: "Email:"
-                    },{
-                        text: "Company:"
-                    },{
-                        text: "Address:"
-                    }],
-                    alignment: 'right',
-                    style: 'bitext',
-                    color: "#808080"
-                },{
-                    margin: [3,0,0,0],
-                    width: '*',
-                    stack: [{
-                        text: `${quotation.CustomerName}`,
-                        decoration: 'underline'
-                    },{
-                        text: `${quotation.CustomerEmail}`,
-                        decoration: 'underline'
-                    },{
-                        text: `${quotation.CompanyName}`
-                    },{
-                        text: `${quotation.CompanyAddress}`
-                    }],
-                    style: 'text',
-                }]
-            },
-            {
-                width: '30%',
-                columns: [{
-                    width: '*',
-                    stack: [{
-                        text: "Date:"
-                    },{
-                        text: "Quotation no."
-                    }],
-                    fontSize: 9
-                }, {
-                    width: '*',
-                    stack: [{
-                        text: `${quotation.QuotationDate}`
-                    },{
-                        text: `${quotation.QuotationNo_Revised}`
-                    }],
-                    fontSize: 9,
-                    alignment: 'right'
-                }
+            body: [
+                [
+                    { text: 'Item' },
+                    { text: 'Description' },
+                    { text: 'Unit Price' },
+                    { text: 'Qty' },
+                    { text: 'Line Total' }
                 ]
-            }]
-        }, {
-            text: "\n"
-        }, {
-            columns: [
-            {
-                width: '*',
-                columns: [{
-                    width: '15%',
-                    text: "Subject:",
-                    alignment: 'right',
-                    style: 'bitext',
-                    color: "#808080"
-                },{
-                    margin: [3,0,0,0],
-                    width: '*',
-                    text: `${quotation.QuotationSubject}`,
-                    style: 'text',
-                    // color: "#808080"
-                }],
-                // color: "#808080"
-            },
-            {
-                width: '30%',
-                text: ""
-            }]
+            ]
         }
 
         let doc = {
@@ -196,7 +104,109 @@ router.get('/:QuotationId', async (req, res) => {
                 height: 42,
                 width: 130
             },
-            content: [, {
+            content: [{
+                columns: [
+                    {
+                        width: '*',
+                        text: "528/2 Soi Ramkhamhang 39 (Theplila 1)\nWangthonglang, Wangthonglang, Bangkok 10310\nTel : 098-655-3926, 02-539-3766\nEmail : sale@privainnotech.com",
+                        fontSize: 8,
+                        color: '#808080'
+                    },
+                    {
+                        width: '*',
+                        text: "QUOTATION",
+                        font: 'Centaur',
+                        // bold: true,
+                        alignment: 'right',
+                        fontSize: 28,
+                        color: '#A6A6A6'
+                    },
+                ]
+            }, {
+                text: "\n\n", style: 'text'
+            }, {
+                columns: [
+                {
+                    width: '*',
+                    columns: [{
+                        width: '15%',
+                        stack: [{
+                            text: "To:",
+                        },{
+                            text: "Email:"
+                        },{
+                            text: "Company:"
+                        },{
+                            text: "Address:"
+                        }],
+                        alignment: 'right',
+                        style: 'bitext',
+                        color: "#808080"
+                    },{
+                        margin: [3,0,0,0],
+                        width: '*',
+                        stack: [{
+                            text: `${quotation.CustomerName}`,
+                            decoration: 'underline'
+                        },{
+                            text: `${quotation.CustomerEmail}`,
+                            decoration: 'underline'
+                        },{
+                            text: `${quotation.CompanyName}`
+                        },{
+                            text: `${quotation.CompanyAddress}`
+                        }],
+                        style: 'text',
+                    }]
+                },
+                {
+                    width: '30%',
+                    columns: [{
+                        width: '*',
+                        stack: [{
+                            text: "Date:"
+                        },{
+                            text: "Quotation no."
+                        }],
+                        fontSize: 9
+                    }, {
+                        width: '*',
+                        stack: [{
+                            text: `${quotation.QuotationDate}`
+                        },{
+                            text: `${quotation.QuotationNo_Revised}`
+                        }],
+                        fontSize: 9,
+                        alignment: 'right'
+                    }
+                    ]
+                }]
+            }, {
+                text: "\n"
+            }, {
+                columns: [
+                {
+                    width: '*',
+                    columns: [{
+                        width: '15%',
+                        text: "Subject:",
+                        alignment: 'right',
+                        style: 'bitext',
+                        color: "#808080"
+                    },{
+                        margin: [3,0,0,0],
+                        width: '*',
+                        text: `${quotation.QuotationSubject}`,
+                        style: 'text',
+                        // color: "#808080"
+                    }],
+                    // color: "#808080"
+                },
+                {
+                    width: '30%',
+                    text: ""
+                }]
+            }, {
                 text: "\n"
             }, {
                 columns: [
