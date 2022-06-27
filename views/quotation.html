@@ -114,10 +114,7 @@
                               <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>ItemName:&nbsp;</span></div>
                               <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpItemName" style="width: 100%;" required=""></div>
                           </div>
-                          <div class="form-row my-2">
-                            <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>UnitPrice:&nbsp;</span></div>
-                            <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpUnitPrice" style="width: 100%;" required=""></div>
-                          </div>
+                          
                           <div class="form-row my-2">
                             <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span></div>
                             <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpQty" style="width: 100%;" required=""></div>
@@ -255,31 +252,60 @@
                 <button type="button" class="btn btn-info">Lost</button>
                 <button type="button" class="btn btn-success" id="modalEditProject" >Edit</button>
               </div>
+        <div class="form-row my-2">
               <!-- TableItem -->
+          <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+            <div class="container min-h">
               <div class="title">
                 <h1>Item</h1><button type="button" class="btn btn-success" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
                 </div>
-                <table id="tableItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
-                  <thead  class="table-dark">
-                      <tr>
-                          <th>ItemName</th>
-                          <th>Unit Price</th>
-                          <th>Qty</th>
-                          <th style="width: 20%;">Action</th>
-                          <th style="display: none;"></th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td colspan="4">Error...</td>
-                      </tr>
-                  </tbody>
-                </table>
+                  <table id="tableItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                    <thead  class="table-dark">
+                        <tr>
+                            <th>ItemName</th>
+                            <th>Unit Price</th>
+                            <th>Qty</th>
+                            <th style="width: 20%;">Action</th>
+                            <th style="display: none;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">Error...</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-             
+              <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+                <div class="container min-h">
+                  <!-- TableSubItem -->
+                  <div class="title">
+                    <h1>Sub Item</h1>
+                    </div>
+                    <table id="tableSubItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                      <thead  class="table-dark">
+                          <tr>
+                              <th>ItemName</th>
+                              <th>Unit Price</th>
+                              <th>Qty</th>
+                              <th style="width: 20%;">Action</th>
+                              <th style="display: none;"></th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td colspan="4">Error...</td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
       
 
       

@@ -81,11 +81,50 @@ $(document).ready(function () {
                     "data": "ItemQty"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-success p-1 m-2' id='addSubItem' data-toggle='modal' data-target='#modalSubItemMaster'>Add</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
                     "data": "ItemId"
+                }
+
+            ],"columnDefs":[
+                {
+                    "targets": [4],
+                    "visible": false
+                },
+            ],
+        });
+    }
+
+     //Item Sub Table
+     function fill_subitem(Id) {
+        // console.log(Id)
+        tableSubItem = $('#tableSubItem').DataTable({
+            "bDestroy": true,
+            "scrollY": "250px",
+            "scrollCollapse": true,
+            // "paging": false,
+            "ajax": {
+                "url": `/quotation/item/` + Id,
+                "dataSrc": ""
+            },
+            "columns": [
+                {
+                    "data":  "SubItemName" 
+                },
+                {
+                    "data": "SubItemPrice"
+                },
+                {
+                    "data": "SubItemQty"
+                },
+                {
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                }
+                ,
+                {
+                    "data": "SubItemId"
                 }
 
             ],"columnDefs":[
@@ -466,6 +505,14 @@ $(document).ready(function () {
             })
             $('#modalDeleteConfirm').modal('hide');
         })
+    });
+
+
+    //clickTableQuotation
+    $('#tableSubItem tbody' ).on('click', 'tr', function ()  {
+        rows = $(this).closest('tr');
+        let ItemId = tableItem.rows(rows).data()[0].ItemId;
+        fill_subitem(ItemId)
     });
     
 });
