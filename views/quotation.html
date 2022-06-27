@@ -168,6 +168,7 @@
             </div>
           <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
             <div class="container2">
+              <div id="TitleProject"></div>
               <div class="title">
                 <h1 id="ProNo">Project NO.</h1><button type="button" class="btn btn-success" id="Revised" data-toggle="modal" data-target="#modalQuotationMaster">Revised</button>
               </div>
@@ -185,48 +186,67 @@
               </div>
               <div class="input-group">
                 <span class="input-group-text textbox">Project Name:</span>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="PJ_Name">
                 <span class="input-group-text textbox2">Discout: </span>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="PJ_Discout">
               </div>
               <div class="input-group">
                 <span class="input-group-text textbox">Validity:</span>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="PJ_Validity">
                 <span class="input-group-text textbox2">Delivery:</span>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="PJ_Delivery">
               </div>
               <div class="input-group">
                 <span class="input-group-text textbox">Remark:</span>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id="PJ_Remark">
               </div>
               <div class="input-group ">
-                <label class="input-group-text textbox" for="modalEditApprove">Approve By:</label>
-                  <select class="form-select wd-select" id="modalEditApprove">
+                <label class="input-group-text textbox" for="PJ_Approve">Approve By:</label>
+                  <select class="form-select wd-select" id="PJ_Approve">
                         <option value="null" selected="">-</option>
                   </select>
               </div>
               <div class="input-group">
                 <span class="input-group-text">Term of Payment:</span>
-                <textarea class="form-control"></textarea>
-              </div>
+                <textarea class="form-control" id="PJ_Payment"></textarea>
+              </div><br>
 
+              <!-- TableItem -->
               <div class="title">
-                <h1 id="Item">Item</h1>
+                <h1>Item</h1><button type="button" class="btn btn-success" id="addItem" data-toggle="modal" data-target="#modalItemMaster">Add Item</button>
+                </div>
+                <table id="tableItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                  <thead  class="table-dark">
+                      <tr>
+                          <th>ItemName</th>
+                          <th>Description</th>
+                          <th>Unit Price</th>
+                          <th>Qty</th>
+                          <th style="width: 20%;">Action</th>
+                          <th style="display: none;"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td colspan="5">Error...</td>
+                      </tr>
+                  </tbody>
+                </table>
               </div>
-              <div class="input-group">
+              <!-- <div class="input-group">
                 <span class="input-group-text textbox">Item:</span>
                 <input type="text" class="form-control ">
                 <span class="input-group-text textbox4">Qty: </span>
                 <input type="text" class="form-control ">
                 <span class="input-group-text textbox3">Unit Price:</span>
                 <input type="text" class="form-control">
-              </div>
+              </div> -->
               <!-- <div class="modal-footer"><button class="btn btn-primary" id="modalEditProject" type="button">Save</button></div> -->
-              <div class="btn-group btn-posituon" role="group" aria-label="Basic mixed styles example">
+              <!-- <div class="btn-group btn-posituon" role="group" aria-label="Basic mixed styles example">
                 <button type="button" class="btn btn-danger">Delete</button>
                 <button type="button" class="btn btn-warning">Edit</button>
                 <button type="button" class="btn btn-success" id="modalEditProject" >Save</button>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

@@ -36,16 +36,16 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
  
                         if ( row.StatusName === 'pre') {
-                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 ' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            return  "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                             ;}
-                            if ( row.StatusName === 'quotation') {
-                                return  "<div class='text-center'><div class='btn-group'><button class='btn btn-warning p-1 m-2 ' id='btnRevisedQuotation' data-toggle='modal'  style='width: 2rem;''><i class='fa fa-file-o'></i></button><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
-                                ;}
-                                    if ( row.StatusName === 'cancel') {
-                                        return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
-                                        ;}
+                            // if ( row.StatusName === 'quotation') {
+                            //     return  "<div class='text-center'><div class='btn-group'><button class='btn btn-warning p-1 m-2 ' id='btnRevisedQuotation' data-toggle='modal'  style='width: 2rem;''><i class='fa fa-file-o'></i></button><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            //     ;}
+                            //         if ( row.StatusName === 'cancel') {
+                            //             return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            //             ;}
                                         else {
-                                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2 disabled' id='btnEditQuotation' data-toggle='modal'  data-target='#modalQuotationEditMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                            return  "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                                             ;}
                         }
                 }
@@ -62,8 +62,48 @@ $(document).ready(function () {
             ],
         });
     }
+
+    //Item table
+    function fill_item(Id) {
+        // console.log(Id)
+        tableCustomer = $('#tableCustomer').DataTable({
+            "bDestroy": true,
+            "ajax": {
+                "url": `/item/` + Id,
+                "dataSrc": ""
+            },
+            "columns": [
+                {
+                    "data":  "ItemName" 
+                },
+                {
+                    "data": "Description"
+                },
+                {
+                    "data": "Unit Price"
+                },
+                {
+                    "data": "Qty"
+                },
+                {
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                }
+                ,
+                {
+                    "data": "ItemId"
+                }
+
+            ],"columnDefs":[
+                {
+                    "targets": [5],
+                    "visible": false
+                },
+            ],
+        });
+    }
     fill_quotation()
-    
+
+    //======================== Quotation =============================//
     //Create
     $(document).on("click", "#addProject", function () {
         $("#formQuotation").trigger("reset");
@@ -189,7 +229,7 @@ $(document).ready(function () {
 
     // Revised
     $(document).on("click", "#btnRevisedQuotation", function () {
-        $(".modal-title").text("Edit Quotation");
+        // $(".modal-title").text("Edit Quotation");
         rows = $(this).closest("tr");
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         $.ajax({
@@ -255,14 +295,10 @@ $(document).ready(function () {
                     });
 			}
         })
-        
-        
-
-               
     });
 
-     //Delete
-     $(document).on("click", "#btnDelProject", function () {
+    //Delete
+    $(document).on("click", "#btnDelProject", function () {
         rows = $(this).closest('tr');
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         $(".modal-title").text("Confirm Delete");
@@ -286,6 +322,37 @@ $(document).ready(function () {
             })
             $('#modalDeleteConfirm').modal('hide');
         })
+    });
+
+    //ShowPro
+    function ShowPro(QuotationId) {
+        $.ajax({
+            url: "/quotation/" + QuotationId,
+            method: 'get',
+            cache: false,
+			success:function(response){
+				// console.log(QuotationId);
+				var obj = JSON.parse(response);
+                // QuotationNo_Revised
+                    $('#ProNo').val(obj.QuotationNo_Revised);
+
+                    $('#PJ_Name').val(obj.QuotationSubject);
+      				$('#PJ_Discout').val(obj.QuotationDiscount);
+                    $('#PJ_Validity').val(obj.QuotationValidityDate);
+                    $('#PJ_Payment').val(obj.QuotationPayTerm);
+                    $('#PJ_Delivery').val(obj.QuotationDelivery);
+                    $('#PJ_Remark').val(obj.QuotationRemark);
+                    $('#PJ_Approve').val(obj.EmployeeApproveId);
+			}
+        })
+    }
+    //showEdit
+    $('#tableQuo tbody' ).on('click', 'tr', function ()  {
+        // $(".modal-title").text("Edit Quotation");
+        rows = $(this).closest("tr");
+        let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
+        console.log(QuotationId)
+        ShowPro(QuotationId)
     });
     
 });

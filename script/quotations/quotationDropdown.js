@@ -33,7 +33,7 @@ async function LoadDropDown() {
         dataType: 'json',
         success: function (response) {
             response.forEach(Employee => {
-                $("#modalEditApprove").append("<option value=" + Employee.EmployeeId + "><span>" + Employee.EmployeeName + "</span></option>");
+                $("#PJ_Approve").append("<option value=" + Employee.EmployeeId + "><span>" + Employee.EmployeeName + "</span></option>");
             });
         }
     })
