@@ -52,7 +52,7 @@ $(document).ready(function () {
                 let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
                 let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
                 let CompanyTel = $.trim($('#modalInpCompanyTel').val());
-            if (CompanyName != null) {
+            if (CompanyName !== null) {
                 $.ajax({
                     url: "/company_master/add",
                     method: 'post',

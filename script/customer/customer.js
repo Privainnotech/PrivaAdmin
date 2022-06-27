@@ -64,7 +64,7 @@ $(document).ready(function () {
                 let CustomerTel = $.trim($('#modalInpCustomerTel').val());
                 let CompanyId = $.trim($('#modalInpCompanyId').val());
 
-            if (CustomerFname != null) {
+            if (CustomerFname !== null) {
                 $.ajax({
                     url: "/customer_master/add",
                     method: 'post',
