@@ -217,7 +217,8 @@ router.post('/add_item/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        let { ItemName, ItemPrice, ItemQty, ItemDescription } = req.body
+        let { ItemName, ItemQty, ItemDescription } = req.body
+        if (!ItemDescription) ItemDescription="";
         let DescriptionFilter = ItemDescription.replace(/'/g, "''")
         //Unit = {Pc, Set, Lot} => Dropdown
         let CheckQuotationItem = await pool.request().query(`SELECT CASE
@@ -231,7 +232,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         if(CheckQuotationItem.recordset[0].check){
             res.status(400).send({message: 'Duplicate item in quotation'});
         } else{
-            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}, N'${DescriptionFilter}')`;
+            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemQty}, N'${DescriptionFilter}')`;
             await pool.request().query(InsertItem);
             res.status(201).send({message: 'Item has been added'});
         }
@@ -429,7 +430,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             let UpdateQuotation = `UPDATE Quotation
             SET QuotationSubject = N'${QuotationSubject}',
                 QuotationDiscount = ${QuotationDiscount},
-                QuotationValidityDate = ${QuotationValidityDate}, 
+                QuotationValidityDate = N'${QuotationValidityDate}', 
                 QuotationPayTerm = N'${QuotationPayTerm}',
                 QuotationDelivery = N'${QuotationDelivery}',
                 QuotationRemark = N'${RemarkFilter}',

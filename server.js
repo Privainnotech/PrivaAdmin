@@ -39,12 +39,14 @@ let userRoute = require('./src/routes/user');
 
 // path setting module
 let employeeRoute = require('./src/routes/master_setting/employee_master')
+let productRoute = require('./src/routes/master_setting/product_master')
 let companyRoute = require('./src/routes/master_setting/company_master')
 let customerRoute = require('./src/routes/master_setting/customer_master')
 
 // path main module
 let quotationRoute = require('./src/routes/quotation/quotation');
 let quotationStatusRoute = require('./src/routes/quotation/quotation_set');
+let quotationReportRoute = require('./src/routes/quotation/quotation_report')
 let dropdownRoute = require('./src/routes/main/dropdown')
 
 app.use('/', indexRoute);
@@ -53,9 +55,11 @@ app.use('/user', userRoute);
 app.use('/company_master', companyRoute)
 app.use('/customer_master', customerRoute)
 app.use('/employee_master', employeeRoute)
+app.use('/product_master', productRoute)
 
 app.use('/quotation', quotationRoute);
 app.use('/quotation_set', quotationStatusRoute)
+app.use('/quotation_report', quotationReportRoute)
 app.use('/dropdown', dropdownRoute)
 
 app.listen(PORT, () => console.log(`Server is listening on ${PORT}`))
