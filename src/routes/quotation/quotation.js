@@ -97,6 +97,12 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationStatus,
             d.StatusName,
             c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
+            c.CustomerTitle,
+            c.CustomerFname,
+            c.CustomerLname,
+            c.CustomerEmail,
+            f.CompanyName,
+            f.CompanyAddress,
             a.QuotationId,
             a.QuotationSubject,
             a.QuotationDate,
@@ -119,6 +125,7 @@ router.get('/:QuotationId', async (req, res) => {
             LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
             LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
             LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
+            LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
             WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotation);
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
@@ -132,12 +139,11 @@ router.get('/item/:QuotationId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
         getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription,
-                ( SELECT CONVERT(nvarchar(20), b.SubItemId) + ','
+            ( SELECT CONVERT(nvarchar(20), b.SubItemId) + ','
                     FROM [QuotationSubItem] b LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId
                     WHERE b.ItemId = a.ItemId 
                     FOR XML PATH('')) AS SubItemId
             FROM [QuotationItem] a
-            
             WHERE QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotationItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
@@ -234,12 +240,11 @@ router.post('/add_item/:QuotationId', async (req, res) => {
     }
 })
 
-router.post('/add_subitem/:ItemId&:ProductId', async (req, res) => {
+router.post('/add_subitem/:ItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let ItemId = req.params.ItemId;
-        let ProductId = req.params.ProductId;
-        let { ProductType, SubItemName, SubItemPrice, SubItemQty, SubItemUnit} = req.body;
+        let { ProductId, ProductType, SubItemName, SubItemPrice, SubItemQty, SubItemUnit} = req.body;
         // ProductType = {Labor, Material, Internal, Unknown} => Dropdown
         // Unit = {Pc, Set, Lot} => Dropdown
         if (ProductId == 'null'){ // Add new product
@@ -267,7 +272,7 @@ router.post('/add_subitem/:ItemId&:ProductId', async (req, res) => {
                     ProductCode = ProductType[0]+"_"+checkMonth()+CheckProductCode.recordset.length
                 }
                 console.log("Gen ProductCode: " + ProductCode)
-                let InsertProduct = `INSERT INTO MasterProduct(ProductCode, ProductName, ProductPrice) VALUES(N'${ProductCode}', N'${SubItemName}', ${SubItemPrice})
+                let InsertProduct = `INSERT INTO MasterProduct(ProductCode, ProductName, ProductPrice, ProductType) VALUES(N'${ProductCode}', N'${SubItemName}', ${SubItemPrice}, N'${ProductType}')
                     SELECT SCOPE_IDENTITY() AS Id`;
                 let newProduct = await pool.request().query(InsertProduct);
                 console.log("ProductId: " + newProduct.recordset[0].Id)
@@ -433,6 +438,39 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             await pool.request().query(UpdateQuotation);
             res.status(201).send({message: 'Successfully Edit Quotation'});
         }
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+})
+
+router.put('/edit_item/:ItemId', async (req, res) => {
+    try{
+        let ItemId = req.params.ItemId;
+        let { ItemName, ItemQty, ItemDescription} = req.body
+        let pool = await sql.connect(dbconfig);
+        UpdateQuotationItem = `UPDATE QuotationItem
+        SET ItemName = N'${ItemName}', ItemQty = ${ItemQty}, ItemDescription =N'${ItemDescription}'
+        WHERE ItemId = ${ItemId}`;
+        await pool.request().query(UpdateQuotationItem);
+        res.status(200).send({message: 'Successfully Edit Item'});
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+})
+
+router.put('/edit_subitem/:SubItemId', async (req, res) => {
+    try{
+        let SubItemId = req.params.SubItemId;
+        let { ProductId, ProductName, ProductPrice, ProductType, SubItemQty, SubItemUnit} = req.body
+        let pool = await sql.connect(dbconfig);
+        UpdateProduct = `UPDATE MasterProduct
+        SET ProductName =N'${ProductName}, ProductPrice = ${ProductPrice}'
+        WHERE ProductId = ${ProductId}`;
+        UpdateQuotationSubItem = `UPDATE QuotationSubItem
+        SET SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
+        WHERE SubItemId = ${SubItemId}`;
+        await pool.request().query(UpdateQuotationSubItem);
+        res.status(200).send({message: 'Successfully Edit Sub-Item'});
     } catch(err){
         res.status(500).send({message: err});
     }
