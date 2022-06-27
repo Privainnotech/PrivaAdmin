@@ -152,16 +152,16 @@ router.get('/item/:QuotationId', async (req, res) => {
     }
 })
 
-router.get('/subitem/:SubItemId', async (req, res) => {
+router.get('/subitem/:ItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let SubItemId = req.params.SubItemId
-        getQuotationSubItem = `SELECT a.ItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit
+        let ItemId = req.params.SubItemId
+        getQuotationSubItem = `SELECT a.ItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, a.SubItemQty+a.SubItemUnit SubItemQtyUnit
             FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
-            WHERE a.SubItemId = ${SubItemId}`;
+            WHERE a.ItemId = ${ItemId}`;
         let quotations = await pool.request().query(getQuotationSubItem);
-        res.status(200).send(JSON.stringify(quotations.recordset[0]));
+        res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){
         res.status(500).send({message: err});
     }
