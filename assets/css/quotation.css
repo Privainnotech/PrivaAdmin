@@ -78,14 +78,32 @@ nav{
 .container1 {
 	display: flexbox;
 	padding: 10px;
+	min-height: 90vh;
+	padding-bottom: 0;
 	justify-content: center;
 	align-items: center;
-	margin-bottom: 50px;
-	margin-left: 50px;
-	margin-right: 50px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	margin-right: 20px;
 	background: #fff;
 	border-radius: 8px;
 }
+
+.container2 {
+	display: flexbox;
+	padding: 10px;
+	width: 100%;
+	min-height: 90vh;
+	padding-bottom: 0;
+	justify-content: center;
+	/* align-items: center; */
+	margin-bottom: 0px;
+	margin-left: 20px;
+	margin-right: 20px;
+	background: #fff;
+	border-radius: 8px;
+}
+
 .dataTables_wrapper {
 	/* margin-top: 2em; */
 	margin-bottom: 2em;
@@ -104,6 +122,45 @@ nav{
 	border-radius: 7px;
 	/* color: #fff; */
 	font-weight: 700;
+}
+
+.textbox{
+	width: 125px;
+	font-weight: 500;
+	margin-bottom: 10px;
+}
+
+.textbox2{
+	font-weight: 500;
+	width: 85px;
+	margin-bottom: 10px;
+}
+
+.textbox3{
+	font-weight: 500;
+	width: 100px;
+	margin-bottom: 10px;
+}
+
+.textbox4{
+	font-weight: 500;
+	/* width: 100px; */
+	margin-bottom: 10px;
+}
+
+
+.wd-select{
+	height: 37.99px;
+}
+
+.btn-posituon{
+	/* display: flex; */
+	position:absolute;
+	right: 35px;
+	margin: 10px;
+	margin-top: 30px;
+
+	justify-content: flex-end;
 }
 
 

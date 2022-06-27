@@ -23,7 +23,10 @@ $(document).ready(function () {
                     "data": "CustomerName"
                 },
                 {
-                    "data": "QuotationDate"
+                    "data": "QuotationDate" 
+                },
+                {
+                    "data": "QuotationUpdatedDate" 
                 },
                 {
                     "data": "StatusName"
@@ -53,7 +56,7 @@ $(document).ready(function () {
 
             ],"columnDefs":[
                 {
-                    "targets": [8],
+                    "targets": [9],
                     "visible": false
                 },
             ],
