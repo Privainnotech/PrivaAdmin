@@ -106,7 +106,7 @@ $(document).ready(function () {
             "scrollCollapse": true,
             // "paging": false,
             "ajax": {
-                "url": `/quotation/item/` + Id,
+                "url": `/quotation/subitem/` + Id,
                 "dataSrc": ""
             },
             "columns": [
@@ -117,7 +117,7 @@ $(document).ready(function () {
                     "data": "SubItemPrice"
                 },
                 {
-                    "data": "SubItemQty"
+                    "data": "SubItemQtyUnit"
                 },
                 {
                     "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
@@ -508,10 +508,11 @@ $(document).ready(function () {
     });
 
 
-    //clickTableQuotation
-    $('#tableSubItem tbody' ).on('click', 'tr', function ()  {
+    //clickTableItem
+    $('#tableItem tbody' ).on('click', 'tr', function ()  {
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
+        console.log(ItemId)
         fill_subitem(ItemId)
     });
     
