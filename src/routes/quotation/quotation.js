@@ -155,8 +155,8 @@ router.get('/item/:QuotationId', async (req, res) => {
 router.get('/subitem/:ItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let ItemId = req.params.SubItemId
-        getQuotationSubItem = `SELECT a.ItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, a.SubItemQty+a.SubItemUnit SubItemQtyUnit
+        let ItemId = req.params.ItemId
+        getQuotationSubItem = `SELECT a.SubItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+a.SubItemUnit SubItemQtyUnit
             FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
             WHERE a.ItemId = ${ItemId}`;
