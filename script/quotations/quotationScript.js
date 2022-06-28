@@ -250,6 +250,17 @@ $(document).ready(function () {
     $('#tableQuo tbody' ).on('click', 'tr', function ()  {
         rows = $(this).closest("tr");
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
+
+        // if($(this).hasClass('Myselected')){
+        //     $(this).removeClass('Myselected');
+        //     fill_resetTable();
+        // }
+        // else{
+        //     $('#tableCompany tr').removeClass('Myselected');
+        //     $(this).toggleClass('Myselected');
+        //     fill_customer(CompanyId)
+        // }
+
         ShowPro(QuotationId)
         fill_item(QuotationId)
 
@@ -355,7 +366,8 @@ $(document).ready(function () {
         })
 
         // Revised
-        $("#btnRevised").click(function () {
+        // $("#btnRevised").click(
+        $(document).on("click", "#btnRevised",function () {
             $.ajax({
                 url: "/quotation/" + QuotationId,
                 method: 'get',
@@ -394,7 +406,7 @@ $(document).ready(function () {
                                 QuotationRemark: QuotationRemark,
                                 EmployeeApproveId: EmployeeApproveId
             
-                                
+
                             }),
                             success: function () {
                                 Swal.fire({
@@ -422,6 +434,7 @@ $(document).ready(function () {
                       });
                 } 
             })
+            QuotationId = null
         });
     });
 
