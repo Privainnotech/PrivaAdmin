@@ -27,7 +27,7 @@ const fonts = {
         normal: 'assets/fonts/tahoma/tahoma.ttf',
         bold: 'assets/fonts/tahoma/tahomabd.ttf',
         italics: 'assets/fonts/tahoma/tahomait.ttf',
-        bolditalics: 'assets/fonts/tahoma/tahomabi.ttf'
+        bolditalics: 'assets/fonts/tahoma/tahomabfi.ttf'
     }
 };
 
@@ -75,6 +75,7 @@ router.get('/:QuotationId', async (req, res) => {
             CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
             a.EmployeeApproveId,
             e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
+            e.EmployeeFname,
             e.EmployeeEmail,
             e.EmployeePosition
             FROM [Quotation] a
@@ -97,7 +98,7 @@ router.get('/:QuotationId', async (req, res) => {
             {
                 width: '*',
                 text: "528/2 Soi Ramkhamhang 39 (Theplila 1)\nWangthonglang, Wangthonglang, Bangkok 10310\nTel : 098-655-3926, 02-539-3766\nEmail : sale@privainnotech.com",
-                fontSize: 8,
+                fontSize: 7,
                 color: '#808080'
             },
             {
@@ -126,7 +127,7 @@ router.get('/:QuotationId', async (req, res) => {
                     style: 'bitext',
                     color: "#808080"
                 },{
-                    margin: [3,0,0,0],
+                    margin: [3,0,50,0],
                     width: '*',
                     stack: [{ text: `${quotation.CustomerName}`, decoration: 'underline' },
                         { text: `${quotation.CustomerEmail}`, decoration: 'underline' },
@@ -136,18 +137,18 @@ router.get('/:QuotationId', async (req, res) => {
                 }]
             },
             {
-                width: '30%',
+                width: '25%',
                 columns: [{
                     width: '*',
                     stack: [{ text: "Date:" },
                         { text: "Quotation no." }
-                    ], fontSize: 9
+                    ], fontSize: 8
                 }, {
                     width: '*',
                     stack: [{ text: `${quotation.QuotationDate}` },
                         { text: `${quotation.QuotationNo_Revised}` }
                     ],
-                    fontSize: 9,
+                    fontSize: 8,
                     alignment: 'right'
                 }
                 ]
@@ -184,9 +185,7 @@ router.get('/:QuotationId', async (req, res) => {
                 width: '*',
                 margin: [5,5,0,0],
                 text: `[THAI BAHT] :  ${bahttext(quotation.QuotationNetVat.toFixed(2))}`,
-                style: 'text',
-                color: "#808080"
-
+                style: 'bahttext'
             },
             {
                 width: '40%',
@@ -205,15 +204,27 @@ router.get('/:QuotationId', async (req, res) => {
                 },{
                     margin: [3,0,0,0],
                     width: '40%',
-                    stack: [
-                        { text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}` },
-                        { text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}` },
-                        { text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}` },
-                        { text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}` },
-                        { text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}` }
-                    ],
-                    alignment: 'right',
-                    style: 'blacktext',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                        headerRows: 0,
+                        widths: ['*'],
+                        body: [
+                            [{ text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}`,alignment: 'right', style: 'blacktext', border: [false, false, false, false]}],
+                            [{ text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}`,alignment: 'right', style: 'blacktext', border: [false, false, false, false]}],
+                            [{ text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}`,alignment: 'right', style: 'blacktext'}],
+                            [{ text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}`,alignment: 'right', style: 'blacktext'}],
+                            [{ text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}`,alignment: 'right', style: 'blacktext'}]
+                        ]
+                    },
+                    // stack: [
+                    //     { text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}` },
+                    //     { text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}` },
+                    //     { text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}` },
+                    //     { text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}` },
+                    //     { text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}` }
+                    // ],
+                    // alignment: 'right',
+                    // style: 'blacktext',
                 }]
             }
         ]
@@ -227,15 +238,16 @@ router.get('/:QuotationId', async (req, res) => {
         let condition = [
             {
                 margin: [25,0,0,0],
-                width: '60%',
+                width: '50%',
                 columns: [{
-                    width: '30%',
+                    width: '40%',
                     stack: [
-                        { text: "CONDITION:", style: 'condition', margin: [-25,0,0,0]},
+                        { text: "CONDITION:", style: 'condition', margin: [-22,0,0,0]},
                         { text: "Validity:", style: 'conditiontext'},
                         { text: "Term of payment:", style: 'conditiontext' },
                         { text: "Delivery:", style: 'conditiontext' },
                         { text: "Remark:", style: 'conditiontext' },
+                        { text: "\n\nBest Regards,", style: 'text', margin: [-18,0,0,0] },
                     ],
                 },{
                     margin: [3,0,0,0],
@@ -258,18 +270,31 @@ router.get('/:QuotationId', async (req, res) => {
 
         // sign
         let signature = [
-            { width: '*', text:'' },
-            {
+            { 
+                width: '*',
+                margin: [6,0,0,0],
+                stack: [{
+                    margin: [-190,0,0,0],
+                    text: `         ${quotation.EmployeeFname}.          `,
+                    style: 'sign'
+                }, {
+                    text: `${quotation.EmployeeName}`,
+                    style: 'text'
+                }, {
+                    text: `${quotation.EmployeePosition}`,
+                    style: 'text'
+                }] 
+            }, {
                 width: 'auto', 
                 stack: [{
-                    margin: [3,0,0,0],
-                    text: "  For customer :\n   To accept this quotation, sign here and\n   return by Email : Kittanan.w@privainnotech.com",
+                    margin: [4,0,0,0],
+                    text: "For customer :\nTo accept this quotation, sign here and\nreturn by Email : Kittanan.w@privainnotech.com",
                 }, {
-                    text: "\n\n__________________________________________________",
+                    text: "\n\n\n______________________________________",
                     bold: true,
                     color: "#000000"
                 }, {
-                    text: "  COMPANY CHOP & AUTHORIZED SIGNATURE",
+                    text: "COMPANY CHOP & AUTHORIZED SIGNATURE",
                     alignment: 'center'
                 }],
                 style: 'text'
@@ -277,7 +302,7 @@ router.get('/:QuotationId', async (req, res) => {
         ]
 
         // item table
-        let table = {
+        let itemtable = {
             headerRows: 1,
             widths: ['10%','*','10%','10%','15%'],
             style: 'text',
@@ -292,6 +317,8 @@ router.get('/:QuotationId', async (req, res) => {
             ]
         }
 
+        // get item
+
         let i = 1;
         const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
         for(let Item of Items.recordset) {
@@ -299,7 +326,7 @@ router.get('/:QuotationId', async (req, res) => {
             if (ItemPrice == 'null') ItemPrice = 0;
             if (ItemQty == 'null') ItemQty = 0
             let LineTotal = ItemPrice * ItemQty
-            table['body'].push([
+            itemtable['body'].push([
                 {text: `${i}`, style: 'btext', alignment: 'center', border: [true, false, true, false]},
                 {text: `${ItemName}`, style: 'btext', border: [true, false, true, false]},
                 {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right', border: [true, false, true, false]},
@@ -316,7 +343,7 @@ router.get('/:QuotationId', async (req, res) => {
                     SubItemQty = "";
                     SubItemUnit = "";
                 } 
-                table['body'].push([
+                itemtable['body'].push([
                     {text:"", border: [true, false, true, false]},
                     {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext', border: [true, false, true, false]},
                     {text:"", border: [true, false, true, false]},
@@ -327,23 +354,22 @@ router.get('/:QuotationId', async (req, res) => {
             }
             i++;
         }
-        // for (let i =0; i<2;i++) 
-            table['body'].push([
-                {text:"", border: [true, false, true, true]},
-                {text:" ", border: [true, false, true, true]},
-                {text:"", border: [true, false, true, true]},
-                {text:"", border: [true, false, true, true]},
-                {text:"", border: [true, false, true, true]}
-            ])
+        itemtable['body'].push([
+            {text:"", border: [true, false, true, true]},
+            {text:" ", border: [true, false, true, true]},
+            {text:"", border: [true, false, true, true]},
+            {text:"", border: [true, false, true, true]},
+            {text:"", border: [true, false, true, true]}
+        ])
 
         let doc = {
-            pageMargins: [68, 100, 72, 54],
+            pageMargins: [60, 100, 60, 54],
             pageSize: 'LETTER',
             header: {
                 stack: [{
                     alignment: 'left',
                     image: 'assets/logo.png',
-                    margin: [68, 54, 0, 54],
+                    margin: [60, 54, 0, 54],
                     height: 42,
                     width: 130
                 }]
@@ -355,14 +381,15 @@ router.get('/:QuotationId', async (req, res) => {
                 blacktext: { color: '#000000'},
                 btext: { bold: true},
                 bitext: { bold: true, italics: true},
-                condition: { fontSize: 11, bold: true, italics: true, decoration: 'underline', color: '#808080', alignment: 'left'},
+                condition: { fontSize: 10, bold: true, italics: true, decoration: 'underline', color: '#808080', alignment: 'left'},
                 conditiontext: { bold: true, color: '#808080', alignment: 'left'},
-                bahttext: {bold: true, color: '#808080', alignment: 'left'},
-                thead: { bold: true, italics: true, alignment: 'center'}
+                bahttext: { bold: true, color: '#808080', alignment: 'left'},
+                thead: { bold: true, italics: true, alignment: 'center'},
+                sign: {  fontSize: 10, decoration: 'underline', alignment: 'center'},
             },
             defaultStyle: {
                 font: "Tahoma",
-                fontSize: 9
+                fontSize: 8
             }
         }
 
@@ -372,12 +399,8 @@ router.get('/:QuotationId', async (req, res) => {
             { columns: quotationHead },
             { text: "\n" },
             { columns: subject },
-            { text: "\n" }, [
-                { 
-                    // layout: 'noBorders',
-                    table: table 
-                },
-            ],
+            { text: "\n" }, 
+            { table: itemtable },
             { columns: price },
             { columns: condition },
             { text: "\n\n"},
