@@ -46,7 +46,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         let PayTermFilter = QuotationPayTerm.replace(/'/g, "''");
         let DeliveryFilter = QuotationDelivery.replace(/'/g, "''");
         let RemarkFilter = QuotationRemark.replace(/'/g, "''");
-        if (QuotationStatus !== 1 && QuotationStatus !== 5 ) { // not pre&cancel status
+        if (QuotationStatus !== 1 || QuotationStatus !== 5 ) { // not pre&cancel status
             // InsertQuotationRevised
             let newRevise = QuotationRevised+1;
             console.log(newRevise)

@@ -31,6 +31,33 @@ const fonts = {
     }
 };
 
+let customLayouts = {
+    priceLayout: {
+        
+        hLineWidth: function (i, node) {
+            console.log(node.table)
+            if (i < node.table.body.length-2) { return 0; }
+            return (i === node.table.body.length) ? 2 : 1;
+        },
+        vLineWidth: function (i) { return 0; },
+        hLineColor: function (i) { return '#808080'; },
+        paddingLeft: function (i) { return 0; },
+        paddingRight: function (i) { return 0; },
+        paddingTop: function(i) { return 1; },
+		paddingBottom: function(i) { return 1; },
+    },
+    itemLayout: {
+        hLineWidth: function (i, node) {
+            if (i <= node.table.headerRows || i === node.table.body.length) { return 1; }
+            return 0;
+        },
+        vLineWidth: function (i) { return 1; },
+        hLineColor: function (i) { return '#000'; },
+        paddingTop: function(i) { return 1; },
+		paddingBottom: function(i) { return 1; },
+    }
+}
+
 moneyFormat = (x) => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
@@ -189,43 +216,34 @@ router.get('/:QuotationId', async (req, res) => {
             },
             {
                 width: '40%',
-                columns: [{
-                    width: '*',
-                    stack: [
-                        { text: "Sub Total for the above:" },
-                        { text: "Discount:" },
-                        { text: "Price after discount:" },
-                        { text: "VAT Including 7%:" },
-                        { text: "Net Total:" }
-                    ],
-                    alignment: 'right',
-                    style: 'bitext',
-                    color: "#808080"
-                },{
-                    margin: [3,0,0,0],
-                    width: '40%',
-                    layout: 'lightHorizontalLines',
-                    table: {
-                        headerRows: 0,
-                        widths: ['*'],
-                        body: [
-                            [{ text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}`,alignment: 'right', style: 'blacktext', border: [false, false, false, false]}],
-                            [{ text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}`,alignment: 'right', style: 'blacktext', border: [false, false, false, false]}],
-                            [{ text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}`,alignment: 'right', style: 'blacktext'}],
-                            [{ text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}`,alignment: 'right', style: 'blacktext'}],
-                            [{ text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}`,alignment: 'right', style: 'blacktext'}]
+                layout: 'priceLayout',
+                table: {
+                    headerRows: 0,
+                    widths: ['*','40%'],
+                    heights: 1,
+                    body: [
+                        [
+                            { text: "Sub Total for the above:", style: 'pricetext',color: "#808080" },
+                            { text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}`, style: 'price'}
+                        ],
+                        [
+                            { text: "Discount:", style: 'pricetext',color: "#808080" },
+                            { text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}`, style: 'price'}
+                        ],
+                        [
+                            { text: "Price after discount:", style: 'pricetext',color: "#808080", border: [false, false, false, false] },
+                            { text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}`, style: 'price'}
+                        ],
+                        [
+                            { text: "VAT Including 7%:", style: 'pricetext',color: "#808080", border: [false, false, false, false] },
+                            { text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}`, style: 'price'}
+                        ],
+                        [
+                            { text: "Net Total:", style: 'pricetext',color: "#808080", border: [false, false, false, false] },
+                            { text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}`, style: 'price'}
                         ]
-                    },
-                    // stack: [
-                    //     { text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}` },
-                    //     { text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}` },
-                    //     { text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}` },
-                    //     { text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}` },
-                    //     { text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}` }
-                    // ],
-                    // alignment: 'right',
-                    // style: 'blacktext',
-                }]
+                    ]
+                },
             }
         ]
 
@@ -288,7 +306,10 @@ router.get('/:QuotationId', async (req, res) => {
                 width: 'auto', 
                 stack: [{
                     margin: [4,0,0,0],
-                    text: "For customer :\nTo accept this quotation, sign here and\nreturn by Email : Kittanan.w@privainnotech.com",
+                    text: "For customer :\nTo accept this quotation, sign here and\nreturn by Email : Kittanan.w@privainnotech.com,",
+                }, {
+                    margin: [39,0,0,0],
+                    text: "Email : Parichart.m@privainnotech.com",
                 }, {
                     text: "\n\n\n______________________________________",
                     bold: true,
@@ -308,17 +329,16 @@ router.get('/:QuotationId', async (req, res) => {
             style: 'text',
             body: [
                 [
-                    { text: 'Item', style: 'thead', border: [true, true, true, true] },
-                    { text: 'Description', style: 'thead', border: [true, true, true, true] },
-                    { text: 'Unit Price', style: 'thead', border: [true, true, true, true] },
-                    { text: 'Qty', style: 'thead', border: [true, true, true, true] },
-                    { text: 'Line Total', style: 'thead', border: [true, true, true, true] }
+                    { text: 'Item', style: 'thead'},
+                    { text: 'Description', style: 'thead'},
+                    { text: 'Unit Price', style: 'thead'},
+                    { text: 'Qty', style: 'thead'},
+                    { text: 'Line Total', style: 'thead'}
                 ],
             ]
         }
 
         // get item
-
         let i = 1;
         const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
         for(let Item of Items.recordset) {
@@ -327,11 +347,11 @@ router.get('/:QuotationId', async (req, res) => {
             if (ItemQty == 'null') ItemQty = 0
             let LineTotal = ItemPrice * ItemQty
             itemtable['body'].push([
-                {text: `${i}`, style: 'btext', alignment: 'center', border: [true, false, true, false]},
-                {text: `${ItemName}`, style: 'btext', border: [true, false, true, false]},
-                {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right', border: [true, false, true, false]},
-                {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'center', border: [true, false, true, false]},
-                {text: `${moneyFormat(LineTotal.toFixed(2))}`, style: 'blacktext', alignment: 'right', border: [true, false, true, false]}
+                {text: `${i}`, style: 'btext', alignment: 'center'},
+                {text: `${ItemName}`, style: 'btext'},
+                {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
+                {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'center'},
+                {text: `${moneyFormat(LineTotal.toFixed(2))}`, style: 'blacktext', alignment: 'right'}
             ])
             const SubItems = await pool.request().query(`SELECT * FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
@@ -339,28 +359,16 @@ router.get('/:QuotationId', async (req, res) => {
             let j = 1;
             for(let SubItem of SubItems.recordset) {
                 let {SubItemQty, SubItemUnit, ProductName} = SubItem
-                if (SubItemQty == 'null'){
+                if (SubItemQty == 'null' || SubItemUnit == "undefined"){
                     SubItemQty = "";
                     SubItemUnit = "";
                 } 
-                itemtable['body'].push([
-                    {text:"", border: [true, false, true, false]},
-                    {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext', border: [true, false, true, false]},
-                    {text:"", border: [true, false, true, false]},
-                    {text:"", border: [true, false, true, false]},
-                    {text:"", border: [true, false, true, false]}
-                ])
+                itemtable['body'].push(["", {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext'},"","",""])
                 j++;
             }
             i++;
         }
-        itemtable['body'].push([
-            {text:"", border: [true, false, true, true]},
-            {text:" ", border: [true, false, true, true]},
-            {text:"", border: [true, false, true, true]},
-            {text:"", border: [true, false, true, true]},
-            {text:"", border: [true, false, true, true]}
-        ])
+        itemtable['body'].push([""," ","","",""])
 
         let doc = {
             pageMargins: [60, 100, 60, 54],
@@ -378,7 +386,8 @@ router.get('/:QuotationId', async (req, res) => {
             content: [],
             styles: {
                 text: { color: '#808080'},
-                blacktext: { color: '#000000'},
+                price: { color: '#000000', alignment: 'right'},
+                pricetext: { bold: true, italics: true, alignment: 'right' },
                 btext: { bold: true},
                 bitext: { bold: true, italics: true},
                 condition: { fontSize: 10, bold: true, italics: true, decoration: 'underline', color: '#808080', alignment: 'left'},
@@ -386,6 +395,7 @@ router.get('/:QuotationId', async (req, res) => {
                 bahttext: { bold: true, color: '#808080', alignment: 'left'},
                 thead: { bold: true, italics: true, alignment: 'center'},
                 sign: {  fontSize: 10, decoration: 'underline', alignment: 'center'},
+
             },
             defaultStyle: {
                 font: "Tahoma",
@@ -400,7 +410,10 @@ router.get('/:QuotationId', async (req, res) => {
             { text: "\n" },
             { columns: subject },
             { text: "\n" }, 
-            { table: itemtable },
+            [{
+                layout: 'itemLayout',
+                table: itemtable,
+            }],
             { columns: price },
             { columns: condition },
             { text: "\n\n"},
@@ -408,7 +421,7 @@ router.get('/:QuotationId', async (req, res) => {
         )
 
         console.log('check creating')
-        let pdfDoc = pdfCreator.createPdfKitDocument(doc);
+        let pdfDoc = pdfCreator.createPdfKitDocument(doc, {tableLayouts: customLayouts});
         console.log('check created')
         pdfDoc.pipe(fs.createWriteStream('public/report/quotation/test.pdf'));
         pdfDoc.end();

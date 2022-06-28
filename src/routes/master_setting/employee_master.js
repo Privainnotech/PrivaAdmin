@@ -5,7 +5,7 @@ const { dbconfig } = require('../../../config');
 
 router.get('/data', async (req, res, next) => {
     try{
-        let SelectEmployee = `SELECT row_number() over(order by EmployeeFname) as 'index', * FROM MasterEmployee ORDER BY EmployeeFname`;
+        let SelectEmployee = `SELECT row_number() over(order by EmployeeFname) as 'index', *, EmployeeTitle+EmployeeFname+EmployeeLname EmployeeName FROM MasterEmployee ORDER BY EmployeeFname`;
         let pool = await sql.connect(dbconfig);
         let Employee = await pool.request().query(SelectEmployee);
         res.status(200).send(JSON.stringify(Employee.recordset));
