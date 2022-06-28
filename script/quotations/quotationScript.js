@@ -272,15 +272,23 @@ $(document).ready(function () {
             $("#modalEditProject").unbind();
             $("#modalEditProject").click(function () {
                 
+                
                     let QuotationSubject = $.trim($('#PJ_Name').val());
                     let QuotationDiscount = $.trim($('#PJ_Discount').val());
                     let EndCustomer = $.trim($('#PJ_End_Customer').val());
                     let QuotationValidityDate = $.trim($('#PJ_Validity').val());
-                    let QuotationPayTerm = $.trim($('#PJ_Payment').val());
+                    let QuotationPayTerm1 = $.trim($('#PJ_Payment1').val());
+                    let QuotationPayTerm2 = $.trim($('#PJ_Payment2').val());
+                    let QuotationPayTerm3 = $.trim($('#PJ_Payment3').val());
                     let QuotationDelivery = $.trim($('#PJ_Delivery').val());
                     let QuotationRemark = $.trim($('#PJ_Remark').val());
                     let EmployeeApproveId = $.trim($('#PJ_Approve').val());
-    
+                    let QuotationPayTerm = {
+                        "QuotationPayTerm1": QuotationPayTerm1,
+                        "QuotationPayTerm2": QuotationPayTerm2,
+                        "QuotationPayTerm3": QuotationPayTerm3
+                    }
+                    console.log(QuotationPayTerm)
                     $.ajax({
                         url: "/quotation/edit_quotation/" + QuotationId,
                         method: 'put',
