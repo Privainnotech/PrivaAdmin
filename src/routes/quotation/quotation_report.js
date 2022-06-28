@@ -33,9 +33,7 @@ const fonts = {
 
 let customLayouts = {
     priceLayout: {
-        
         hLineWidth: function (i, node) {
-            console.log(node.table)
             if (i < node.table.body.length-2) { return 0; }
             return (i === node.table.body.length) ? 2 : 1;
         },
@@ -73,38 +71,15 @@ router.get('/:QuotationId', async (req, res) => {
         } else {
             Revised = getRevise.recordset[0].QuotationRevised.toString()
         }
-        let getQuotation = `SELECT
-            b.QuotationNoId,
-            b.QuotationNo,
-            a.QuotationRevised,
-            b.QuotationNo + '_${Revised}' QuotationNo_Revised,
-            a.QuotationStatus,
-            d.StatusName,
-            c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
-            c.CustomerTitle,
-            c.CustomerFname,
-            c.CustomerLname,
-            c.CustomerEmail,
-            f.CompanyName,
-            f.CompanyAddress,
-            a.QuotationId,
-            a.QuotationSubject,
-            a.QuotationDate,
-            a.QuotationUpdatedDate,
-            a.QuotationTotalPrice,
-            a.QuotationDiscount,
-            a.QuotationNet,
-            a.QuotationVat,
-            a.QuotationNetVat,
-            a.QuotationValidityDate,
-            a.QuotationPayTerm,
-            a.QuotationDelivery,
+        let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised, c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
+            c.CustomerEmail, f.CompanyName, f.CompanyAddress, a.EndCustomer, a.QuotationSubject, a.QuotationDate,
+            a.QuotationTotalPrice, a.QuotationDiscount, a.QuotationNet, a.QuotationVat, a.QuotationNetVat,
+            CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate',
+            CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
+            CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
             CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
-            a.EmployeeApproveId,
             e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
-            e.EmployeeFname,
-            e.EmployeeEmail,
-            e.EmployeePosition
+            e.EmployeeFname, e.EmployeeLname, e.EmployeeEmail, e.EmployeePosition
             FROM [Quotation] a
             LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
             LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
@@ -114,18 +89,19 @@ router.get('/:QuotationId', async (req, res) => {
             WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotation);
         let quotation = quotations.recordset[0];
+        let quotationNo = ""
+        if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
+        else  quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
 
 
-        console.log('check init')
         let pdfCreator = new pdfMake(fonts);
-        console.log('check inited')
 
         // head
         let head = [
             {
                 width: '*',
                 text: "528/2 Soi Ramkhamhang 39 (Theplila 1)\nWangthonglang, Wangthonglang, Bangkok 10310\nTel : 098-655-3926, 02-539-3766\nEmail : sale@privainnotech.com",
-                fontSize: 7,
+                fontSize: 5,
                 color: '#808080'
             },
             {
@@ -134,7 +110,7 @@ router.get('/:QuotationId', async (req, res) => {
                 font: 'Centaur',
                 // bold: true,
                 alignment: 'right',
-                fontSize: 28,
+                fontSize: 24,
                 color: '#A6A6A6'
             },
         ]
@@ -156,8 +132,8 @@ router.get('/:QuotationId', async (req, res) => {
                 },{
                     margin: [3,0,50,0],
                     width: '*',
-                    stack: [{ text: `${quotation.CustomerName}`, decoration: 'underline' },
-                        { text: `${quotation.CustomerEmail}`, decoration: 'underline' },
+                    stack: [{ text: `${quotation.CustomerName}` },
+                        { text: `${quotation.CustomerEmail}` },
                         { text: `${quotation.CompanyName}` },
                         { text: `${quotation.CompanyAddress}` }
                     ], style: 'blacktext',
@@ -169,13 +145,12 @@ router.get('/:QuotationId', async (req, res) => {
                     width: '*',
                     stack: [{ text: "Date:" },
                         { text: "Quotation no." }
-                    ], fontSize: 8
+                    ]
                 }, {
                     width: '*',
                     stack: [{ text: `${quotation.QuotationDate}` },
-                        { text: `${quotation.QuotationNo_Revised}` }
+                        { text: `${quotationNo}` }
                     ],
-                    fontSize: 8,
                     alignment: 'right'
                 }
                 ]
@@ -187,26 +162,33 @@ router.get('/:QuotationId', async (req, res) => {
                 width: '*',
                 columns: [{
                     width: '15%',
-                    text: "Subject:",
+                    stack: [{ text: "Subject:", },
+                        { text: "End customer:", }
+                    ],
                     alignment: 'right',
                     style: 'bitext',
                     color: "#808080"
                 },{
                     margin: [3,0,0,0],
                     width: '*',
-                    text: `${quotation.QuotationSubject}`,
+                    stack: [{ text: `${quotation.QuotationSubject}`, },
+                        { text: `${quotation.EndCustomer}`, }
+                    ],
                     style: 'blacktext',
                     // color: "#808080"
                 }],
                 // color: "#808080"
             },
             {
-                width: '30%',
+                width: '25%',
                 text: ""
             }]
 
         console.log(bahttext(quotation.QuotationNetVat.toFixed(2)))
         // price
+        let discount = ""
+        if (quotation.QuotationDiscount == 0) discount = "-"
+        else discount = moneyFormat(quotation.QuotationDiscount.toFixed(2))
         let price = [
             {
                 width: '*',
@@ -228,7 +210,7 @@ router.get('/:QuotationId', async (req, res) => {
                         ],
                         [
                             { text: "Discount:", style: 'pricetext',color: "#808080" },
-                            { text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}`, style: 'price'}
+                            { text: `${discount}`, style: 'price'}
                         ],
                         [
                             { text: "Price after discount:", style: 'pricetext',color: "#808080", border: [false, false, false, false] },
@@ -286,14 +268,21 @@ router.get('/:QuotationId', async (req, res) => {
 
         ]
 
+        const applySpacing = (name) => {
+            let spacebar = ""
+            for(let i=0;i<name.length/2;i++){
+                spacebar = spacebar + " "
+            }
+            return spacebar;
+        }
+        let space = applySpacing(quotation.EmployeeFname+quotation.EmployeeLname)
         // sign
         let signature = [
             { 
-                width: '*',
-                margin: [6,0,0,0],
+                width: 'auto',
+                margin: [15,0,0,0],
                 stack: [{
-                    margin: [-190,0,0,0],
-                    text: `         ${quotation.EmployeeFname}.          `,
+                    text: `${space}${quotation.EmployeeFname}.${space}`,
                     style: 'sign'
                 }, {
                     text: `${quotation.EmployeeName}`,
@@ -303,22 +292,8 @@ router.get('/:QuotationId', async (req, res) => {
                     style: 'text'
                 }] 
             }, {
-                width: 'auto', 
-                stack: [{
-                    margin: [4,0,0,0],
-                    text: "For customer :\nTo accept this quotation, sign here and\nreturn by Email : Kittanan.w@privainnotech.com,",
-                }, {
-                    margin: [39,0,0,0],
-                    text: "Email : Parichart.m@privainnotech.com",
-                }, {
-                    text: "\n\n\n______________________________________",
-                    bold: true,
-                    color: "#000000"
-                }, {
-                    text: "COMPANY CHOP & AUTHORIZED SIGNATURE",
-                    alignment: 'center'
-                }],
-                style: 'text'
+                width: '*',
+                text: ""
             }
         ]
 
@@ -340,6 +315,7 @@ router.get('/:QuotationId', async (req, res) => {
 
         // get item
         let i = 1;
+        let line = 0;
         const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
         for(let Item of Items.recordset) {
             let { ItemName, ItemPrice, ItemQty } = Item
@@ -365,41 +341,68 @@ router.get('/:QuotationId', async (req, res) => {
                 } 
                 itemtable['body'].push(["", {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext'},"","",""])
                 j++;
+                line++;
             }
             i++;
+            line++;
         }
-        itemtable['body'].push([""," ","","",""])
+        let maxline = 25
+        if (line<maxline) for (;line<maxline;line++) itemtable['body'].push([""," ","","",""])
 
         let doc = {
-            pageMargins: [60, 100, 60, 54],
+            pageMargins: [60, 95, 60, 54],
             pageSize: 'LETTER',
             header: {
                 stack: [{
                     alignment: 'left',
                     image: 'assets/logo.png',
                     margin: [60, 54, 0, 54],
-                    height: 42,
-                    width: 130
+                    height: 35,
+                    width: 108
                 }]
-                
+            },
+            footer: {
+                columns: [{
+                width: '*',
+                text: ""
+            }, {
+                width: 'auto',
+                margin: [0,-100,60,0],
+                stack: [{
+                    margin: [4,0,0,0],
+                    text: "For customer :\nTo accept this quotation, sign here and\nreturn by Email : Kittanan.w@privainnotech.com,",
+                }, {
+                    margin: [30,0,0,0],
+                    text: "Email : Parichart.m@privainnotech.com",
+                }, {
+                    text: "\n\n\n______________________________________",
+                    bold: true,
+                    color: "#000000"
+                }, {
+                    text: "COMPANY CHOP & AUTHORIZED SIGNATURE",
+                    alignment: 'center'
+                }],
+                style: 'text'
+            }]
             },
             content: [],
             styles: {
                 text: { color: '#808080'},
-                price: { color: '#000000', alignment: 'right'},
-                pricetext: { bold: true, italics: true, alignment: 'right' },
+                price: { color: '#000000', alignment: 'right', lineHeight: 1.2},
+                pricetext: { bold: true, italics: true, alignment: 'right', lineHeight: 1.2 },
                 btext: { bold: true},
                 bitext: { bold: true, italics: true},
-                condition: { fontSize: 10, bold: true, italics: true, decoration: 'underline', color: '#808080', alignment: 'left'},
-                conditiontext: { bold: true, color: '#808080', alignment: 'left'},
+                condition: { fontSize: 8, bold: true, italics: true, decoration: 'underline', color: '#808080', alignment: 'left', lineHeight: 1.3},
+                conditiontext: { bold: true, color: '#808080', alignment: 'left', lineHeight: 1.3},
                 bahttext: { bold: true, color: '#808080', alignment: 'left'},
                 thead: { bold: true, italics: true, alignment: 'center'},
-                sign: {  fontSize: 10, decoration: 'underline', alignment: 'center'},
+                sign: {  fontSize: 8, decoration: 'underline', alignment: 'center', lineHeight: 1.4},
 
             },
             defaultStyle: {
                 font: "Tahoma",
-                fontSize: 8
+                fontSize: 6,
+                lineHeight: 1.1
             }
         }
 
