@@ -313,10 +313,8 @@ $(document).ready(function () {
     }
     //clickTableQuotation
     $('#tableQuo tbody' ).on('click', 'tr', function ()  {
-        // $(".modal-title").text("Edit Quotation");
         rows = $(this).closest("tr");
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
-        // console.log('Main =',QuotationId)
         ShowPro(QuotationId)
         fill_item(QuotationId)
 
@@ -598,71 +596,85 @@ $(document).ready(function () {
     $(document).on("click", "#btnEditSubItem", function () {
         $("#formSub").trigger("reset");
         $(".modal-title").text("Edit SubItem");
-
             rows = $(this).closest('tr');
-            let ProductId = tableSubItem.rows(rows).data()[0].ProductId;
-            let SubItemName = tableSubItem.rows(rows).data()[0].SubItemName;
-            let SubItemPrice = tableSubItem.rows(rows).data()[0].SubItemPrice;
-            let ProductType = tableSubItem.rows(rows).data()[0].ProductType;
-            let SubItemQty = tableSubItem.rows(rows).data()[0].SubItemQty;
-            let SubItemUnit = tableSubItem.rows(rows).data()[0].SubItemUnit;
+            let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
+            console.log(SubItemId)
 
-            $('#modalInpProduct').val(ProductId);
-            $('#modalInpSubName').val(SubItemName);
-            $('#modalInpSubPrice').val(SubItemPrice);
-            $('#modalInpSubType').val(ProductType);
-            $('#modalInpSubQty').val(SubItemQty);
-            $('#modalInpSubUnit').val(SubItemUnit);
+            $.ajax({
+                url: "/quotation/subitem/" + SubItemId,
+                method: 'get',
+                cache: false,
+                success:function(response){
+                    var obj = JSON.parse(response);
 
-            $("#modalSaveSub").unbind();
-            $("#modalSaveSub").click(function () {
-                console.log(ItemId)
-                let ProductId = $.trim($('#modalInpProduct').val());
-                let SubItemName = $.trim($('#modalInpSubName').val());
-                let SubItemPrice = $.trim($('#modalInpSubPrice').val());
-                let ProductType = $.trim($('#modalInpSubType').val());
-                let SubItemQty = $.trim($('#modalInpSubQty').val());
-                let SubItemUnit = $.trim($('#modalInpSubUnit').val());
+                        let ProductId = obj.ProductId;
+                        let SubItemName = obj.SubItemName;
+                        let SubItemPrice = obj.SubItemPrice;
+                        let ProductType = obj.ProductType;
+                        let SubItemQty = obj.SubItemQty;
+                        let SubItemUnit = obj.SubItemUnit;
 
-                $.ajax({
-                    url: "/quotation/edit_subitem/" + ItemId,
-                    method: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        ProductId: ProductId,
-                        SubItemName: SubItemName,
-                        SubItemPrice: SubItemPrice,
-                        ProductType: ProductType,
-                        SubItemQty: SubItemQty,
-                        SubItemUnit: SubItemUnit
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Created',
-                            text: 'SubItem have been created',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableSubItem.ajax.reload(null, false);
-                        $('#modalSubMaster').modal('hide');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
+                        $('#modalInpProduct').val(ProductId);
+                        $('#modalInpSubName').val(SubItemName);
+                        $('#modalInpSubPrice').val(SubItemPrice);
+                        $('#modalInpSubType').val(ProductType);
+                        $('#modalInpSubQty').val(SubItemQty);
+                        $('#modalInpSubUnit').val(SubItemUnit);
                     }
-                });
-            })
-        })
+                })
+            
+
+            
+
+            // $("#modalSaveSub").unbind();
+            // $("#modalSaveSub").click(function () {
+            //     console.log(ItemId)
+            //     let ProductId = $.trim($('#modalInpProduct').val());
+            //     let SubItemName = $.trim($('#modalInpSubName').val());
+            //     let SubItemPrice = $.trim($('#modalInpSubPrice').val());
+            //     let ProductType = $.trim($('#modalInpSubType').val());
+            //     let SubItemQty = $.trim($('#modalInpSubQty').val());
+            //     let SubItemUnit = $.trim($('#modalInpSubUnit').val());
+
+            //     $.ajax({
+            //         url: "/quotation/edit_subitem/" + ItemId,
+            //         method: 'post',
+            //         contentType: 'application/json',
+            //         data: JSON.stringify({
+            //             ProductId: ProductId,
+            //             SubItemName: SubItemName,
+            //             SubItemPrice: SubItemPrice,
+            //             ProductType: ProductType,
+            //             SubItemQty: SubItemQty,
+            //             SubItemUnit: SubItemUnit
+            //         }),
+            //         success: function () {
+            //             Swal.fire({
+            //                 position: 'center',
+            //                 icon: 'success',
+            //                 title: 'Created',
+            //                 text: 'SubItem have been created',
+            //                 showConfirmButton: false,
+            //                 timer: 1500
+            //             })
+            //             tableSubItem.ajax.reload(null, false);
+            //             $('#modalSubMaster').modal('hide');
+            //         },
+            //         error: function (err) {
+            //             errorText = err.responseJSON.message;
+            //             Swal.fire({
+            //                 position: 'center',
+            //                 icon: 'warning',
+            //                 title: 'Warning',
+            //                 text: errorText,
+            //                 showConfirmButton: true,
+            //                 confirmButtonText: 'OK',
+            //                 confirmButtonColor: '#FF5733'
+            //             });
+            //         }
+            //     });
+            // })
+    })
 
 
 
