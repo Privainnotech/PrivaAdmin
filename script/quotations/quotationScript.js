@@ -81,7 +81,7 @@ $(document).ready(function () {
                     "data": "ItemQty"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-success p-1 m-2' id='addSubItem' data-toggle='modal' data-target='#modalSubItemMaster'>Add</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-primary p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;''><i class='fa fa-plus-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -120,7 +120,7 @@ $(document).ready(function () {
                     "data": "SubItemQtyUnit"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -187,7 +187,7 @@ $(document).ready(function () {
 
     // Revised
     $(document).on("click", "#btnRevisedQuotation", function () {
-        // $(".modal-title").text("Edit Quotation");
+        $(".modal-title").text("Revised Quotation");
         rows = $(this).closest("tr");
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         $.ajax({
@@ -373,51 +373,57 @@ $(document).ready(function () {
         })
 
         // Create Item
-        $("#addItem").click(function () {
+        // $("#addItem").click(function () {
+        //     $("#formAddItem").trigger("reset");
+                // console.log('item = ',QuotationId)
+
+        $(document).on("click", "#addItem", function (){
             $("#formAddItem").trigger("reset");
-            // console.log('item = ',QuotationId)
+            $(".modal-title").text("Add Item ");    
             $("#modalAddItem").unbind();
-        $("#modalAddItem").click(function () {
-                let ItemName = $.trim($('#modalInpAddItemName').val());
-                let ItemQty = $.trim($('#modalInpAddQty').val());
-                let ItemDescription = $.trim($('#modalInpAddDetails').val());
-            if (ItemName !== null) {
-                $.ajax({
-                    url: "/quotation/add_item/" + QuotationId,
-                    method: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        ItemName: ItemName,
-                        ItemQty: ItemQty,
-                        ItemDescription: ItemDescription
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Created',
-                            text: 'Item have been created',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableItem.ajax.reload(null, false);
-                        $('#modalAddItemMaster').modal('hide');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
-                    }
-                });
-            }
-        })
+            $("#modalAddItem").click(function () {
+                // console.log(QuotationId)
+
+                    let ItemName = $.trim($('#modalInpAddItemName').val());
+                    let ItemQty = $.trim($('#modalInpAddQty').val());
+                    let ItemDescription = $.trim($('#modalInpAddDetails').val());
+                if (ItemName !== null) {
+                    $.ajax({
+                        url: "/quotation/add_item/" + QuotationId,
+                        method: 'post',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            ItemName: ItemName,
+                            ItemQty: ItemQty,
+                            ItemDescription: ItemDescription
+                        }),
+                        success: function () {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Created',
+                                text: 'Item have been created',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            tableItem.ajax.reload(null, false);
+                            $('#modalAddItemMaster').modal('hide');
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
+                            });
+                        }
+                    });
+                }
+            })
             
         })
     });
@@ -507,14 +513,162 @@ $(document).ready(function () {
         })
     });
 
+    $("#modalInpProduct").click(function () {
+        let ProductId = $.trim($('#modalInpProduct').val())
+        // console.log(ProductId)
+        if (ProductId !== "null") {
+            $.ajax({
+                url: "/dropdown/product/" + ProductId,
+                method: 'get',
+                cache: false,
+                success:function(response){
+                        var obj = JSON.parse(response);
+                        $('#modalInpSubName').val(obj.ProductName);
+                        $('#modalInpSubPrice').val(obj.ProductPrice);
+                        $('#modalInpSubType').val(obj.ProductType);
+                }
+            })
+        }
+    });
+
 
     //clickTableItem
     $('#tableItem tbody' ).on('click', 'tr', function ()  {
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
-        console.log(ItemId)
+        let ItemName = tableItem.rows(rows).data()[0].ItemName;
         fill_subitem(ItemId)
+        
+        //Add Sub
+        $(document).on("click", "#btnSubItem", function (){
+        $("#formSub").trigger("reset");
+        $(".modal-title").text("Add SubItem in " + ItemName);
+            $("#modalSaveSub").unbind();
+            $("#modalSaveSub").click(function () {
+                console.log(ItemId)
+                let ProductId = $.trim($('#modalInpProduct').val());
+                let SubItemName = $.trim($('#modalInpSubName').val());
+                let SubItemPrice = $.trim($('#modalInpSubPrice').val());
+                let ProductType = $.trim($('#modalInpSubType').val());
+                let SubItemQty = $.trim($('#modalInpSubQty').val());
+                let SubItemUnit = $.trim($('#modalInpSubUnit').val());
+
+                $.ajax({
+                    url: "/quotation/add_subitem/" + ItemId,
+                    method: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        ProductId: ProductId,
+                        SubItemName: SubItemName,
+                        SubItemPrice: SubItemPrice,
+                        ProductType: ProductType,
+                        SubItemQty: SubItemQty,
+                        SubItemUnit: SubItemUnit
+                    }),
+                    success: function () {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Created',
+                            text: 'SubItem have been created',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableSubItem.ajax.reload(null, false);
+                        $('#modalSubMaster').modal('hide');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
+                    }
+                });
+            })
+        })
     });
+
+    //Edit Sub
+    $(document).on("click", "#btnEditSubItem", function () {
+        $("#formSub").trigger("reset");
+        $(".modal-title").text("Edit SubItem");
+
+            rows = $(this).closest('tr');
+            let ProductId = tableSubItem.rows(rows).data()[0].ProductId;
+            let SubItemName = tableSubItem.rows(rows).data()[0].SubItemName;
+            let SubItemPrice = tableSubItem.rows(rows).data()[0].SubItemPrice;
+            let ProductType = tableSubItem.rows(rows).data()[0].ProductType;
+            let SubItemQty = tableSubItem.rows(rows).data()[0].SubItemQty;
+            let SubItemUnit = tableSubItem.rows(rows).data()[0].SubItemUnit;
+
+            $('#modalInpProduct').val(ProductId);
+            $('#modalInpSubName').val(SubItemName);
+            $('#modalInpSubPrice').val(SubItemPrice);
+            $('#modalInpSubType').val(ProductType);
+            $('#modalInpSubQty').val(SubItemQty);
+            $('#modalInpSubUnit').val(SubItemUnit);
+
+            $("#modalSaveSub").unbind();
+            $("#modalSaveSub").click(function () {
+                console.log(ItemId)
+                let ProductId = $.trim($('#modalInpProduct').val());
+                let SubItemName = $.trim($('#modalInpSubName').val());
+                let SubItemPrice = $.trim($('#modalInpSubPrice').val());
+                let ProductType = $.trim($('#modalInpSubType').val());
+                let SubItemQty = $.trim($('#modalInpSubQty').val());
+                let SubItemUnit = $.trim($('#modalInpSubUnit').val());
+
+                $.ajax({
+                    url: "/quotation/edit_subitem/" + ItemId,
+                    method: 'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        ProductId: ProductId,
+                        SubItemName: SubItemName,
+                        SubItemPrice: SubItemPrice,
+                        ProductType: ProductType,
+                        SubItemQty: SubItemQty,
+                        SubItemUnit: SubItemUnit
+                    }),
+                    success: function () {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Created',
+                            text: 'SubItem have been created',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableSubItem.ajax.reload(null, false);
+                        $('#modalSubMaster').modal('hide');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
+                    }
+                });
+            })
+        })
+
+
+
+    
+
+    
     
 });
 

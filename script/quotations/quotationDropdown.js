@@ -37,6 +37,17 @@ async function LoadDropDown() {
             });
         }
     })
+    $.ajax({
+        url: "/dropdown/product",
+        method: 'get',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            response.forEach(Product => {
+                $("#modalInpProduct").append("<option value=" + Product.ProductId + "><span>" + Product.ProductName + "</span></option>");
+            });
+        }
+    })
 }
 
 LoadDropDown();

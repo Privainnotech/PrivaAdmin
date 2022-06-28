@@ -77,7 +77,13 @@ router.get('/:QuotationId', async (req, res) => {
 
         let pdfmake = new Pdfmake(fonts);
 
-        const getItem = await pool.request().query(`select`)
+        let quotationItem = [];
+        let i = 1;
+
+        const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${quotation.QuotationId}`)
+        for(let Item of Items.recordset) {
+            table[body].push([`${i}`,])
+        }
 
         let table = {
             headerRows: 1,
@@ -85,12 +91,12 @@ router.get('/:QuotationId', async (req, res) => {
 
             body: [
                 [
-                    { text: 'Item' },
+                    { text: 'Item', rowSpan: 16 },
                     { text: 'Description' },
                     { text: 'Unit Price' },
                     { text: 'Qty' },
                     { text: 'Line Total' }
-                ]
+                ],
             ]
         }
 
