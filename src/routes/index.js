@@ -34,4 +34,13 @@ router.get('/quotation', (req, res, next) => {
     res.render('quotation')
 });
 
+// Home page
+router.get('/index', (req, res, next) => {
+    res.render('index')
+});
+
+// Employee page
+router.get('/employee', (req, res, next) => {
+    res.render('employee')
+});
 module.exports = router

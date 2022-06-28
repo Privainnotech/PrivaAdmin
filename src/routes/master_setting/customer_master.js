@@ -8,7 +8,7 @@ router.get('/data/:CompanyId', async (req, res, next) => {
         let CompanyId = req.params.CompanyId;
         console.log(CompanyId);
         let SelectCustomer = `SELECT row_number() over(order by CustomerFname) as 'index',
-            a.CustomerId, a.CustomerTitle + a.CustomerFname + ' ' + a.CustomerLname CustomerName,
+            a.CustomerId, a.CustomerTitle, a.CustomerFname, a.CustomerLname, a.CustomerTitle + a.CustomerFname + ' ' + a.CustomerLname CustomerName,
             a.CustomerEmail, a.CustomerTel, a.CompanyId, b.CompanyName
             FROM MasterCustomer a
             LEFT JOIN MasterCompany b ON a.CompanyId = b.CompanyId

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/quotation.css">
 
     
@@ -30,16 +31,16 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link " aria-current="page" href="#">Home</a>
+                <a class="nav-link " aria-current="page" href="/index">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Customer</a>
+                <a class="nav-link" href="/customer">Customer</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Employee</a>
+                <a class="nav-link" href="/employee">Employee</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="#">Quotation</a>
+                <a class="nav-link active" href="/quotation">Quotation</a>
               </li>
             </ul>
           </div>
@@ -184,23 +185,38 @@
       </div>
 
 
-       
+       <!-- form delete -->
+       <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Confirm Delete</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Are you sure to delete?</p>
+                </div>
+                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes" type="button">Yes</button></div>
+            </div>
+        </div>
+      </div>
 
 
-        <!-- form delete -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
+        <!-- form revised -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="modalRevisedConfirm">
           <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h4 class="modal-title">Confirm Delete</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      <h4 class="modal-title">Confirm Revised</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                   </div>
                   <div class="modal-body text-center">
-                      <p>Are you sure to delete?</p>
+                      <p>Are you sure to Revised?</p>
                   </div>
-                  <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes" type="button">Yes</button></div>
+                  <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnREYes" type="button">Yes</button></div>
               </div>
           </div>
         </div>
+
+
         <div class="form-row my-2">
           <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
           <!-- Table Quotation -->
@@ -225,7 +241,7 @@
                   </thead>
                   <tbody>
                       <tr>
-                          <td colspan="9">Error...</td>
+                          <td colspan="9">Loading...</td>
                       </tr>
                   </tbody>
                 </table>
@@ -237,7 +253,7 @@
             <div class="container2">
               <!-- <div id="TitleProject"></div> -->
               <div class="title">
-                <input id="ProNo" class="no-bor-title " value="PojectNo"><button type="button" class="btn btn-dark" id="btnRevised" data-toggle="modal">Revised</button>
+                <input id="ProNo" class="no-bor-title " value="PojectNo"><button type="button" class="btn btn-dark" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
               </div>
               <div class="title">
                 <span class="w-700">Customer:</span>
@@ -260,8 +276,12 @@
               <div class="input-group">
                 <span class="input-group-text textbox">Project Name:</span>
                 <input type="text" class="form-control" id="PJ_Name">
-                <span class="input-group-text textbox2">Discout: </span>
-                <input type="text" class="form-control" id="PJ_Discout">
+                <span class="input-group-text textbox2">Discount: </span>
+                <input type="text" class="form-control" id="PJ_Discount">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text textbox">End Customer:</span>
+                <input type="text" class="form-control" id="PJ_End_Customer">
               </div>
               <div class="input-group">
                 <span class="input-group-text textbox">Validity:</span>
@@ -280,16 +300,28 @@
                   </select>
               </div>
               <div class="input-group">
-                <span class="input-group-text">Term of Payment:</span>
-                <textarea class="form-control" id="PJ_Payment"></textarea>
-              </div><br>
+                <span class="input-group-text textbox4">Term of Payment:</span>
+                <input type="text" class="form-control" id="PJ_Payment1">
+
+                <!-- <textarea class="form-control" id="PJ_Payment"></textarea> -->
+              </div>
+              <div class="input-group">
+                <span class="input-group-text textbox4">.</span>
+                <input type="text" class="form-control" id="PJ_Payment2">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text textbox4">.</span>
+                <input type="text" class="form-control" id="PJ_Payment3">
+              </div>
               <div class="btn-group btn-position" role="group" aria-label="Basic mixed styles example">
                 <button type="button" class="btn btn-danger">Cancel</button>
                 <button type="button" class="btn btn-warning">Quotation</button>
                 <button type="button" class="btn btn-secondary">Book</button>
                 <button type="button" class="btn btn-info">Lost</button>
-                <button type="button" class="btn btn-success" id="modalEditProject" >Edit</button>
+                <!-- <button type="button" class="btn btn-success" id="modalEditProject" >Edit</button> -->
               </div>
+              <button type="button" class="btn btn-success " id="modalEditProject" >Edit</button>
+
         <div class="form-row my-2">
               <!-- TableItem -->
           <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
@@ -309,7 +341,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4">Error...</td>
+                            <td colspan="4">Loading...</td>
                         </tr>
                     </tbody>
                   </table>
@@ -333,7 +365,7 @@
                       </thead>
                       <tbody>
                           <tr>
-                              <td colspan="4">Error...</td>
+                              <td colspan="4">Loading...</td>
                           </tr>
                       </tbody>
                     </table>

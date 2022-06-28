@@ -49,7 +49,9 @@ $(document).ready(function () {
                     "data": "QuotationId"
                 }
 
-            ],"columnDefs":[
+            ],
+            lengthMenu: [10],
+            "columnDefs":[
                 {
                     "targets": [9],
                     "visible": false
@@ -63,7 +65,7 @@ $(document).ready(function () {
         // console.log(Id)
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
-            "scrollY": "250px",
+            "scrollY": "220px",
             "scrollCollapse": true,
             // "paging": false,
             "ajax": {
@@ -81,7 +83,10 @@ $(document).ready(function () {
                     "data": "ItemQty"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-warning p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;''><i class='fa fa-plus-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-warning p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 3rem; font-size:0.3rem; ''>Add Sub</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+
+
+                    
                 }
                 ,
                 {
@@ -102,7 +107,7 @@ $(document).ready(function () {
         // console.log(Id)
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
-            "scrollY": "250px",
+            "scrollY": "220px",
             "scrollCollapse": true,
             // "paging": false,
             "ajax": {
@@ -236,105 +241,80 @@ $(document).ready(function () {
                     $('#Adress').val(obj.CompanyAddress);
 
                     $('#PJ_Name').val(obj.QuotationSubject);
-      				$('#PJ_Discout').val(obj.QuotationDiscount);
+      				$('#PJ_Discount').val(obj.QuotationDiscount);
                     $('#PJ_Validity').val(obj.QuotationValidityDate);
                     $('#PJ_Payment').val(obj.QuotationPayTerm);
                     $('#PJ_Delivery').val(obj.QuotationDelivery);
                     $('#PJ_Remark').val(obj.QuotationRemark);
+                    $('#PJ_End_Customer').val(obj.EndCustomer);
                     $('#PJ_Approve').val(obj.EmployeeApproveId);
 			}
         })
 
     }
+
+
     //clickTableQuotation
     $('#tableQuo tbody' ).on('click', 'tr', function ()  {
         rows = $(this).closest("tr");
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
-        ShowPro(QuotationId)
-        fill_item(QuotationId)
 
-        $("#modalEditProject").unbind();
-        $("#modalEditProject").click(function () {
-            
-                let QuotationSubject = $.trim($('#PJ_Name').val());
-                let QuotationDiscount = $.trim($('#PJ_Discout').val());
-                let QuotationValidityDate = $.trim($('#PJ_Validity').val());
-                let QuotationPayTerm = $.trim($('#PJ_Payment').val());
-                let QuotationDelivery = $.trim($('#PJ_Delivery').val());
-                let QuotationRemark = $.trim($('#PJ_Remark').val());
-                let EmployeeApproveId = $.trim($('#PJ_Approve').val());
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+        }
+        else{
+            $('#tableQuo tr').removeClass('selected');
+            $(this).toggleClass('selected');
 
-                $.ajax({
-                    url: "/quotation/edit_quotation/" + QuotationId,
-                    method: 'put',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        QuotationSubject: QuotationSubject,
-                        QuotationDiscount: QuotationDiscount,
-                        QuotationValidityDate: QuotationValidityDate,
-                        QuotationPayTerm: QuotationPayTerm,
-                        QuotationDelivery: QuotationDelivery,
-                        QuotationRemark: QuotationRemark,
-                        EmployeeApproveId: EmployeeApproveId
-
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Created',
-                            text: 'Quotation data have been Edited',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableQuo.ajax.reload(null, false);
-                        $('#modalQuotationEditMaster').modal('hide');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
+            ShowPro(QuotationId)
+            fill_item(QuotationId)
+    
+            $("#modalEditProject").unbind();
+            $("#modalEditProject").click(function () {
+                
+                
+                    let QuotationSubject = $.trim($('#PJ_Name').val());
+                    let QuotationDiscount = $.trim($('#PJ_Discount').val());
+                    let EndCustomer = $.trim($('#PJ_End_Customer').val());
+                    let QuotationValidityDate = $.trim($('#PJ_Validity').val());
+                    let QuotationPayTerm1 = $.trim($('#PJ_Payment1').val());
+                    let QuotationPayTerm2 = $.trim($('#PJ_Payment2').val());
+                    let QuotationPayTerm3 = $.trim($('#PJ_Payment3').val());
+                    let QuotationDelivery = $.trim($('#PJ_Delivery').val());
+                    let QuotationRemark = $.trim($('#PJ_Remark').val());
+                    let EmployeeApproveId = $.trim($('#PJ_Approve').val());
+                    let QuotationPayTerm = {
+                        "QuotationPayTerm1": QuotationPayTerm1,
+                        "QuotationPayTerm2": QuotationPayTerm2,
+                        "QuotationPayTerm3": QuotationPayTerm3
                     }
-                });
-        })
-
-        // Create Item
-        $(document).on("click", "#addItem", function (){
-            $("#formAddItem").trigger("reset");
-            $(".modal-title").text("Add Item ");    
-            $("#modalAddItem").unbind();
-            $("#modalAddItem").click(function () {
-                    let ItemName = $.trim($('#modalInpAddItemName').val());
-                    let ItemQty = $.trim($('#modalInpAddQty').val());
-                    let ItemDescription = $.trim($('#modalInpAddDetails').val());
-                if (ItemName !== null) {
+                    console.log(QuotationPayTerm)
                     $.ajax({
-                        url: "/quotation/add_item/" + QuotationId,
-                        method: 'post',
+                        url: "/quotation/edit_quotation/" + QuotationId,
+                        method: 'put',
                         contentType: 'application/json',
                         data: JSON.stringify({
-                            ItemName: ItemName,
-                            ItemQty: ItemQty,
-                            ItemDescription: ItemDescription
+                            QuotationSubject: QuotationSubject,
+                            QuotationDiscount: QuotationDiscount,
+                            QuotationValidityDate: QuotationValidityDate,
+                            QuotationPayTerm: QuotationPayTerm,
+                            QuotationDelivery: QuotationDelivery,
+                            QuotationRemark: QuotationRemark,
+                            EndCustomer: EndCustomer,
+                            EmployeeApproveId: EmployeeApproveId
+    
                         }),
                         success: function () {
                             Swal.fire({
                                 position: 'center',
                                 icon: 'success',
                                 title: 'Created',
-                                text: 'Item have been created',
+                                text: 'Quotation data have been Edited',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
-                            tableItem.ajax.reload(null, false);
-                            $('#modalAddItemMaster').modal('hide');
+                            tableQuo.ajax.reload(null, false);
+                            $('#modalQuotationEditMaster').modal('hide');
                         },
                         error: function (err) {
                             errorText = err.responseJSON.message;
@@ -349,63 +329,38 @@ $(document).ready(function () {
                             });
                         }
                     });
-                }
             })
-            
-        })
-
-        // Revised
-        $("#btnRevised").click(function () {
-            $.ajax({
-                url: "/quotation/" + QuotationId,
-                method: 'get',
-                cache: false,
-                success:function(response){
-                    var obj = JSON.parse(response);
-
-                        let QuotationNoId = obj.QuotationNoId;
-                        let QuotationRevised = obj.QuotationRevised;
-                        let QuotationStatus = obj.QuotationStatus;
-                        let QuotationSubject = obj.QuotationSubject;
-                        let QuotationTotalPrice = obj.QuotationTotalPrice;
-                        let QuotationDiscount = obj.QuotationDiscount;
-                        let QuotationValidityDate = obj.QuotationValidityDate;
-                        let QuotationPayTerm = obj.QuotationPayTerm;
-                        let QuotationDelivery = obj.QuotationDelivery;
-                        let QuotationRemark = obj.QuotationRemark;
-                        let EmployeeApproveId = obj.EmployeeApproveId;
-
-                        
-
+    
+            // Create Item
+            $(document).on("click", "#addItem", function (){
+                $("#formAddItem").trigger("reset");
+                $(".modal-title").text("Add Item ");    
+                $("#modalAddItem").unbind();
+                $("#modalAddItem").click(function () {
+                        let ItemName = $.trim($('#modalInpAddItemName').val());
+                        let ItemQty = $.trim($('#modalInpAddQty').val());
+                        let ItemDescription = $.trim($('#modalInpAddDetails').val());
+                    if (ItemName !== null) {
                         $.ajax({
-                            url: "/quotation_set/revise/" + QuotationId,
+                            url: "/quotation/add_item/" + QuotationId,
                             method: 'post',
                             contentType: 'application/json',
                             data: JSON.stringify({
-                                QuotationNoId: QuotationNoId,
-                                QuotationRevised: QuotationRevised,
-                                QuotationStatus: QuotationStatus,
-                                QuotationSubject: QuotationSubject,
-                                QuotationTotalPrice: QuotationTotalPrice,
-                                QuotationDiscount: QuotationDiscount,
-                                QuotationValidityDate: QuotationValidityDate,
-                                QuotationPayTerm: QuotationPayTerm,
-                                QuotationDelivery: QuotationDelivery,
-                                QuotationRemark: QuotationRemark,
-                                EmployeeApproveId: EmployeeApproveId
-            
-                                
+                                ItemName: ItemName,
+                                ItemQty: ItemQty,
+                                ItemDescription: ItemDescription
                             }),
                             success: function () {
                                 Swal.fire({
                                     position: 'center',
                                     icon: 'success',
                                     title: 'Created',
-                                    text: 'Quotation data have been Edited',
+                                    text: 'Item have been created',
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
-                                tableQuo.ajax.reload(null, false);
+                                tableItem.ajax.reload(null, false);
+                                $('#modalAddItemMaster').modal('hide');
                             },
                             error: function (err) {
                                 errorText = err.responseJSON.message;
@@ -419,10 +374,87 @@ $(document).ready(function () {
                                     confirmButtonColor: '#FF5733'
                                 });
                             }
-                      });
-                } 
+                        });
+                    }
+                })
+                
             })
-        });
+    
+            // Revised
+            // $("#btnRevised").click(
+            $(document).on("click", "#btnRevised",function () {
+                $.ajax({
+                    url: "/quotation/" + QuotationId,
+                    method: 'get',
+                    cache: false,
+                    success:function(response){
+                        var obj = JSON.parse(response);
+    
+                            let QuotationNoId = obj.QuotationNoId;
+                            let QuotationRevised = obj.QuotationRevised;
+                            let QuotationStatus = obj.QuotationStatus;
+                            let QuotationSubject = obj.QuotationSubject;
+                            let QuotationTotalPrice = obj.QuotationTotalPrice;
+                            let QuotationDiscount = obj.QuotationDiscount;
+                            let QuotationValidityDate = obj.QuotationValidityDate;
+                            let QuotationPayTerm = obj.QuotationPayTerm;
+                            let QuotationDelivery = obj.QuotationDelivery;
+                            let QuotationRemark = obj.QuotationRemark;
+                            let EmployeeApproveId = obj.EmployeeApproveId;
+    
+                            
+                            $("#btnREYes").unbind("click");
+                            $(".btnYes").click(function () {
+                            $.ajax({
+                                url: "/quotation_set/revise/" + QuotationId,
+                                method: 'post',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    QuotationNoId: QuotationNoId,
+                                    QuotationRevised: QuotationRevised,
+                                    QuotationStatus: QuotationStatus,
+                                    QuotationSubject: QuotationSubject,
+                                    QuotationTotalPrice: QuotationTotalPrice,
+                                    QuotationDiscount: QuotationDiscount,
+                                    QuotationValidityDate: QuotationValidityDate,
+                                    QuotationPayTerm: QuotationPayTerm,
+                                    QuotationDelivery: QuotationDelivery,
+                                    QuotationRemark: QuotationRemark,
+                                    EmployeeApproveId: EmployeeApproveId
+                
+    
+                                }),
+                                success: function () {
+                                    Swal.fire({
+                                        position: 'center',
+                                        icon: 'success',
+                                        title: 'Created',
+                                        text: 'Quotation data have been Edited',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    tableQuo.ajax.reload(null, false);
+                                },
+                                error: function (err) {
+                                    errorText = err.responseJSON.message;
+                                    Swal.fire({
+                                        position: 'center',
+                                        icon: 'warning',
+                                        title: 'Warning',
+                                        text: errorText,
+                                        showConfirmButton: true,
+                                        confirmButtonText: 'OK',
+                                        confirmButtonColor: '#FF5733'
+                                        });
+                                    }
+                                });
+                            })
+                    } 
+                })
+            });
+        }
+
+        
     });
 
 
