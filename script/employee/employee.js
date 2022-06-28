@@ -1,7 +1,7 @@
 $(document).ready(function () {
     //MOSTRAR
     function fill_employee() {
-        tableCompany = $('#tableEmploy').DataTable({
+        tableEmploy = $('#tableEmploy').DataTable({
             "bDestroy": true,
             "ajax": {
                 "url": '/employee_master/data',
@@ -24,7 +24,7 @@ $(document).ready(function () {
                     "data": "EmployeeTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCompany' data-toggle='modal'  data-target='#modalCompanyMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCompany' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditEmploy' data-toggle='modal'  data-target='#modalEmployeeMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelEmploy' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -47,12 +47,13 @@ $(document).ready(function () {
         $(".modal-title").text("Add Employee");
         $("#modalSaveEmployee").unbind();
         $("#modalSaveEmployee").click(function () {
-                let EmployeeTitle = $.trim($('#EmployeeTitle').val());
-                let EmployeeFname = $.trim($('#EmployeeFname').val());
-                let EmployeeLname = $.trim($('#EmployeeLname').val());
+                let EmployeeTitle = $.trim($('#modalInpEmployTitle').val());
+                let EmployeeFname = $.trim($('#modalInpEmployFname').val());
+                let EmployeeLname = $.trim($('#modalInpEmployLname').val());
                 let EmployeePosition = $.trim($('#modalInpEmployPosition').val());
                 let EmployeeEmail = $.trim($('#modalInpEmployEmail').val());
                 let EmployeeTel = $.trim($('#modalInpEmployTel').val());
+                console.log(EmployeeTitle)
                 $.ajax({
                     url: "/employee_master/add",
                     method: 'post',
@@ -95,39 +96,47 @@ $(document).ready(function () {
     });
 
     //Edit
-    $(document).on("click", "#btnEditCompany", function () {
+    $(document).on("click", "#btnEditEmploy", function () {
         // $("#formCompany").trigger("reset");
         $(".modal-title").text("Edit Company");
-        // console.log("save0");
         rows = $(this).closest("tr");
-        let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
-        let CompanyName = tableCompany.rows(rows).data()[0].CompanyName;
-        let CompanyAddress = tableCompany.rows(rows).data()[0].CompanyAddress;
-        let CompanyEmail = tableCompany.rows(rows).data()[0].CompanyEmail;
-        let CompanyTel = tableCompany.rows(rows).data()[0].CompanyTel;
-        console.log(tableCompany.rows(rows).data()[0]);
-        $('#modalInpCompanyName').val(CompanyName);
-        $('#modalInpCompanyAddress').val(CompanyAddress);
-        $('#modalInpCompanyEmail').val(CompanyEmail);
-        $('#modalInpCompanyTel').val(CompanyTel);
+        let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
+        let EmployeeTitle = tableEmploy.rows(rows).data()[0].EmployeeTitle;
+        let EmployeeFname = tableEmploy.rows(rows).data()[0].EmployeeFname;
+        let EmployeeLname = tableEmploy.rows(rows).data()[0].EmployeeLname;
+        let EmployeePosition = tableEmploy.rows(rows).data()[0].EmployeePosition;
+        let EmployeeEmail = tableEmploy.rows(rows).data()[0].EmployeeEmail;
+        let EmployeeTel = tableEmploy.rows(rows).data()[0].EmployeeTel;
 
-        $("#modalSaveCompany").unbind();
-        $("#modalSaveCompany").click(function () {
+        
+        $('#modalInpEmployTitle').val(EmployeeTitle);
+        $('#modalInpEmployFname').val(EmployeeFname);
+        $('#modalInpEmployLname').val(EmployeeLname);
+        $('#modalInpEmployPosition').val(EmployeePosition);
+        $('#modalInpEmployEmail').val(EmployeeEmail);
+        $('#modalInpEmployTel').val(EmployeeTel);
+
+        $("#modalSaveEmployee").unbind();
+        $("#modalSaveEmployee").click(function () {
             
-                let CompanyName = $.trim($('#modalInpCompanyName').val());
-                let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
-                let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
-                let CompanyTel = $.trim($('#modalInpCompanyTel').val());
+                let EmployeeTitle = $.trim($('#modalInpEmployTitle').val());
+                let EmployeeFname = $.trim($('#modalInpEmployFname').val());
+                let EmployeeLname = $.trim($('#modalInpEmployLname').val());
+                let EmployeePosition = $.trim($('#modalInpEmployPosition').val());
+                let EmployeeEmail = $.trim($('#modalInpEmployEmail').val());
+                let EmployeeTel = $.trim($('#modalInpEmployTel').val());
 
                 $.ajax({
-                    url: "/company_master/edit/" + CompanyId,
+                    url: "/employee_master/edit/" + EmployeeId,
                     method: 'put',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        CompanyName: CompanyName,
-                        CompanyAddress: CompanyAddress,
-                        CompanyEmail: CompanyEmail,
-                        CompanyTel: CompanyTel
+                        EmployeeTitle: EmployeeTitle,
+                        EmployeeFname: EmployeeFname,
+                        EmployeeLname: EmployeeLname,
+                        EmployeePosition: EmployeePosition,
+                        EmployeeEmail: EmployeeEmail,
+                        EmployeeTel: EmployeeTel
                     }),
                     success: function () {
                         Swal.fire({
@@ -138,8 +147,8 @@ $(document).ready(function () {
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        tableCompany.ajax.reload(null, false);
-                        $('#modalCompanyMaster').modal('hide');
+                        tableEmploy.ajax.reload(null, false);
+                        $('#modalEmployeeMaster').modal('hide');
                     },
                     error: function (err) {
                         errorText = err.responseJSON.message;
@@ -159,14 +168,15 @@ $(document).ready(function () {
     });
     
     //Delete
-    $(document).on("click", "#btnDelCompany", function () {
+    $(document).on("click", "#btnDelEmploy", function () {
         rows = $(this).closest('tr');
-        let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
+        let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
         $(".modal-title").text("Confirm Delete");
+
         $("#btnYes").unbind("click");
         $(".btnYes").click(function () {
             $.ajax({
-                url: "/company_master/delete/" + CompanyId,
+                url: "/employee_master/delete/" + EmployeeId,
                 method: 'delete',
                 contentType: 'application/json',
                 success: function () {
@@ -178,7 +188,7 @@ $(document).ready(function () {
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    tableCompany.ajax.reload(null, false);
+                    tableEmploy.ajax.reload(null, false);
                 }
             })
             $('#modalDeleteConfirm').modal('hide');

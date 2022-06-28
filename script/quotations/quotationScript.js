@@ -65,7 +65,7 @@ $(document).ready(function () {
         // console.log(Id)
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
-            "scrollY": "250px",
+            "scrollY": "220px",
             "scrollCollapse": true,
             // "paging": false,
             "ajax": {
@@ -107,7 +107,7 @@ $(document).ready(function () {
         // console.log(Id)
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
-            "scrollY": "250px",
+            "scrollY": "220px",
             "scrollCollapse": true,
             // "paging": false,
             "ajax": {
@@ -241,7 +241,7 @@ $(document).ready(function () {
                     $('#Adress').val(obj.CompanyAddress);
 
                     $('#PJ_Name').val(obj.QuotationSubject);
-      				$('#PJ_Discout').val(obj.QuotationDiscount);
+      				$('#PJ_Discount').val(obj.QuotationDiscount);
                     $('#PJ_Validity').val(obj.QuotationValidityDate);
                     $('#PJ_Payment').val(obj.QuotationPayTerm);
                     $('#PJ_Delivery').val(obj.QuotationDelivery);
@@ -272,7 +272,7 @@ $(document).ready(function () {
             $("#modalEditProject").click(function () {
                 
                     let QuotationSubject = $.trim($('#PJ_Name').val());
-                    let QuotationDiscount = $.trim($('#PJ_Discout').val());
+                    let QuotationDiscount = $.trim($('#PJ_Discount').val());
                     let QuotationValidityDate = $.trim($('#PJ_Validity').val());
                     let QuotationPayTerm = $.trim($('#PJ_Payment').val());
                     let QuotationDelivery = $.trim($('#PJ_Delivery').val());
