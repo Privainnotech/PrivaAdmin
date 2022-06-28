@@ -105,7 +105,7 @@ router.get('/:QuotationId', async (req, res) => {
             f.CompanyAddress,
             a.QuotationId,
             a.QuotationSubject,
-            a.EndCustomer
+            a.EndCustomer,
             a.QuotationDate,
             a.QuotationUpdatedDate,
             a.QuotationTotalPrice,
@@ -113,9 +113,9 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationNet,
             a.QuotationVat,
             a.QuotationNetVat,
-            a.QuotationValidityDate,
-            a.QuotationPayTerm,
-            a.QuotationDelivery,
+            CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate',
+            CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
+            CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
             CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
             a.EmployeeApproveId,
             e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
@@ -129,6 +129,8 @@ router.get('/:QuotationId', async (req, res) => {
             LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
             WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotation);
+        console.log(quotations.recordset[0].QuotationPayTerm)
+        console.log(Object.values(JSON.parse(quotations.recordset[0].QuotationPayTerm)))
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
     } catch(err){
         res.status(500).send({message: err});
@@ -423,8 +425,9 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             EmployeeApproveId,
             EndCustomer
         } = req.body;
+        let PayTerm = JSON.stringify(QuotationPayTerm)
         let ValidityDateFilter = QuotationValidityDate.replace(/'/g,"''");
-        let PayTermFilter = QuotationPayTerm.replace(/'/g,"''");
+        let PayTermFilter = PayTerm.replace(/'/g,"''");
         let DeliveryFilter = QuotationDelivery.replace(/'/g,"''"); 
         let RemarkFilter = QuotationRemark.replace(/'/g,"''");
         let EndCustomerFilter = EndCustomer.replace(/'/g,"''"); 
