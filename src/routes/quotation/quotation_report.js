@@ -22,6 +22,12 @@ const fonts = {
         bold: 'assets/fonts/THSarabunNew/THSarabunNew-Bold.ttf',
         italics: 'assets/fonts/THSarabunNew/THSarabunNew-Italic.ttf',
         bolditalics: 'assets/fonts/THSarabunNew/THSarabunNew-BoldItalic.ttf'
+    },
+    Tahoma: {
+        normal: 'assets/fonts/tahoma/tahoma.ttf',
+        bold: 'assets/fonts/tahoma/tahomabd.ttf',
+        italics: 'assets/fonts/tahoma/tahomait.ttf',
+        bolditalics: 'assets/fonts/tahoma/tahomabi.ttf'
     }
 };
 
@@ -176,7 +182,7 @@ router.get('/:QuotationId', async (req, res) => {
         let price = [
             {
                 width: '*',
-                margin: [5,8,0,0],
+                margin: [5,5,0,0],
                 text: `[THAI BAHT] :  ${bahttext(quotation.QuotationNetVat.toFixed(2))}`,
                 style: 'text',
                 color: "#808080"
@@ -231,9 +237,6 @@ router.get('/:QuotationId', async (req, res) => {
                         { text: "Delivery:", style: 'conditiontext' },
                         { text: "Remark:", style: 'conditiontext' },
                     ],
-                    alignment: 'right',
-                    style: 'bitext',
-                    color: "#808080"
                 },{
                     margin: [3,0,0,0],
                     width: '*',
@@ -243,10 +246,7 @@ router.get('/:QuotationId', async (req, res) => {
                         { text: `${payTerm}`, style: 'conditiontext'},
                         { text: `${delivery}`, style: 'conditiontext'},
                         { text: `${remark}`, style: 'conditiontext'},
-                    ],
-                    // alignment: 'left',
-                    style: 'text',
-                    // color: "#808080"
+                    ]
                 }]
             },
             {
@@ -361,7 +361,7 @@ router.get('/:QuotationId', async (req, res) => {
                 thead: { bold: true, italics: true, alignment: 'center'}
             },
             defaultStyle: {
-                font: "THSarabunNew",
+                font: "Tahoma",
                 fontSize: 9
             }
         }

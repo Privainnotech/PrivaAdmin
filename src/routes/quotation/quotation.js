@@ -152,7 +152,7 @@ router.get('/item/:QuotationId', async (req, res) => {
     }
 })
 
-router.get('/subitem/:ItemId', async (req, res) => {
+router.get('/subitem_byitem/:ItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let ItemId = req.params.ItemId
@@ -167,7 +167,7 @@ router.get('/subitem/:ItemId', async (req, res) => {
     }
 })
 
-router.get('/subitem/:SubItemId', async (req, res) => {
+router.get('/subitem_bysubitem/:SubItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let SubItemId = req.params.SubItemId
