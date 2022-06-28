@@ -246,6 +246,7 @@ $(document).ready(function () {
                     $('#PJ_Payment').val(obj.QuotationPayTerm);
                     $('#PJ_Delivery').val(obj.QuotationDelivery);
                     $('#PJ_Remark').val(obj.QuotationRemark);
+                    $('#PJ_End_Customer').val(obj.EndCustomer);
                     $('#PJ_Approve').val(obj.EmployeeApproveId);
 			}
         })
@@ -273,6 +274,7 @@ $(document).ready(function () {
                 
                     let QuotationSubject = $.trim($('#PJ_Name').val());
                     let QuotationDiscount = $.trim($('#PJ_Discount').val());
+                    let EndCustomer = $.trim($('#PJ_End_Customer').val());
                     let QuotationValidityDate = $.trim($('#PJ_Validity').val());
                     let QuotationPayTerm = $.trim($('#PJ_Payment').val());
                     let QuotationDelivery = $.trim($('#PJ_Delivery').val());
@@ -290,6 +292,7 @@ $(document).ready(function () {
                             QuotationPayTerm: QuotationPayTerm,
                             QuotationDelivery: QuotationDelivery,
                             QuotationRemark: QuotationRemark,
+                            EndCustomer: EndCustomer,
                             EmployeeApproveId: EmployeeApproveId
     
                         }),

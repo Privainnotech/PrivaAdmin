@@ -105,7 +105,7 @@ router.get('/:QuotationId', async (req, res) => {
             f.CompanyAddress,
             a.QuotationId,
             a.QuotationSubject,
-            a.EndCustomer
+            a.EndCustomer,
             a.QuotationDate,
             a.QuotationUpdatedDate,
             a.QuotationTotalPrice,
