@@ -38,20 +38,25 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             QuotationPayTerm,
             QuotationDelivery,
             QuotationRemark,
-            EmployeeApproveId
+            EmployeeApproveId,
+            EndCustomer
         } = req.body
+        if (!EndCustomer) EndCustomer="";
+        if (!QuotationValidityDate) QuotationValidityDate="";
         if (!QuotationPayTerm) QuotationPayTerm="";
         if (!QuotationDelivery) QuotationDelivery="";
         if (!QuotationRemark) QuotationRemark="";
+        let ValidityDateFilter = QuotationValidityDate.replace(/'/g, "''");
         let PayTermFilter = QuotationPayTerm.replace(/'/g, "''");
         let DeliveryFilter = QuotationDelivery.replace(/'/g, "''");
         let RemarkFilter = QuotationRemark.replace(/'/g, "''");
+        let EndCustomerFilter = EndCustomer.replace(/'/g, "''");
         if (QuotationStatus !== 1 || QuotationStatus !== 5 ) { // not pre&cancel status
             // InsertQuotationRevised
             let newRevise = QuotationRevised+1;
             console.log(newRevise)
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationUpdatedDate, EmployeeApproveId)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', N'${checkDate()}', ${EmployeeApproveId})
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationUpdatedDate, EmployeeApproveId, EndCustomer)
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${ValidityDateFilter}', N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', N'${checkDate()}', ${EmployeeApproveId}, N'${EndCustomerFilter}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             console.log('insert quo')

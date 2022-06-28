@@ -105,6 +105,7 @@ router.get('/:QuotationId', async (req, res) => {
             f.CompanyAddress,
             a.QuotationId,
             a.QuotationSubject,
+            a.EndCustomer
             a.QuotationDate,
             a.QuotationUpdatedDate,
             a.QuotationTotalPrice,
@@ -419,9 +420,14 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             QuotationPayTerm,
             QuotationDelivery,
             QuotationRemark,
-            EmployeeApproveId
+            EmployeeApproveId,
+            EndCustomer
         } = req.body;
+        let ValidityDateFilter = QuotationValidityDate.replace(/'/g,"''");
+        let PayTermFilter = QuotationPayTerm.replace(/'/g,"''");
+        let DeliveryFilter = QuotationDelivery.replace(/'/g,"''"); 
         let RemarkFilter = QuotationRemark.replace(/'/g,"''");
+        let EndCustomerFilter = EndCustomer.replace(/'/g,"''"); 
         if(CustomerId == 'null'){
             res.status(400).send({message: 'Please select Customer'});
             return;
@@ -445,11 +451,12 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             let UpdateQuotation = `UPDATE Quotation
             SET QuotationSubject = N'${QuotationSubject}',
                 QuotationDiscount = ${QuotationDiscount},
-                QuotationValidityDate = N'${QuotationValidityDate}', 
-                QuotationPayTerm = N'${QuotationPayTerm}',
-                QuotationDelivery = N'${QuotationDelivery}',
+                QuotationValidityDate = N'${ValidityDateFilter}', 
+                QuotationPayTerm = N'${PayTermFilter}',
+                QuotationDelivery = N'${DeliveryFilter}',
                 QuotationRemark = N'${RemarkFilter}',
-                EmployeeApproveId = ${EmployeeApproveId}
+                EmployeeApproveId = ${EmployeeApproveId},
+                EndCustomer = N'${EndCustomerFilter}'
             WHERE QuotationId = ${QuotationId}`;
             await pool.request().query(UpdateQuotation);
             res.status(201).send({message: 'Successfully Edit Quotation'});
