@@ -73,59 +73,118 @@
         </div>
       </div>
 
-        <!-- form Edit Quatation -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="modalQuotationEditMaster">
+      <!-- form Add item -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalAddItemMaster">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form id="formAddItem" action="/Setting/AddEditRecpName">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row my-2">
+                            <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>ItemName:&nbsp;</span></div>
+                            <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpAddItemName" style="width: 100%;" required=""></div>
+                        </div>
+                        <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpAddQty" style="width: 100%;" required=""></div>
+                        </div>
+                        <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Details:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><textarea class="form-control" type="text" id="modalInpAddDetails" style="width: 100%;" required=""></textarea></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary" id="modalAddItem" type="button">Save</button></div>
+                </form>
+            </div>
+        </div>
+      </div>
+
+        <!-- form Edit item -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="modalItemMaster">
           <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
               <div class="modal-content">
-                  <form id="formQuotationEdit" action="/Setting/AddEditRecpName">
+                  <form id="formEditItem" action="/Setting/AddEditRecpName">
                       <div class="modal-header">
-                          <h4 class="modal-title" id="modalHeaderAddPart">Edit Project:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                          <h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                       </div>
-                        <div class="modal-body" id="mybody">
-                            <div class="form-row my-2">
-                                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Project Name:&nbsp;</span></div>
-                                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalEditProjectName" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Discout:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalEditDiscout" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Validity:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalEditValidity" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Term of Payment:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><textarea  class="form-control" aria-label="With textarea" id="modalEditPayment" style="width: 100%;" ></textarea></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Delivery:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalEditDelivery" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Remark:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input  class="form-control" type="text" id="modalEditRemark" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Approve By:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-                                <select class="form-select" id="modalEditApprove">
-                                      <option value="null" selected="">-</option>
-                                </select>
-                              </div>
-                            </div>
-                            <!-- <div class="form-row my-2">
-                              <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
-                              </div>
-                              <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
-                              </div>
-                            </div> -->
-                        </div>
-                      <div class="modal-footer"><button class="btn btn-primary" id="modalEditProject" type="button">Save</button></div>
+                      <div class="modal-body">
+                          <div class="form-row my-2">
+                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>ItemName:&nbsp;</span></div>
+                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpItemName" style="width: 100%;" required=""></div>
+                          </div>
+                          
+                          <div class="form-row my-2">
+                            <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span></div>
+                            <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpQty" style="width: 100%;" required=""></div>
+                          </div>
+                      </div>
+                      <div class="modal-footer"><button class="btn btn-primary" id="modalEditItem" type="button">Save</button></div>
                   </form>
               </div>
           </div>
         </div>
+
+        <!-- form Add Sub -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalSubMaster">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form id="formSub" action="/Setting/AddEditRecpName">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalHeaderAddPart">Add SubItem:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Product Name:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                            <select class="form-select" id="modalInpProduct">
+                                  <option value="null" selected="">-</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-row my-2">
+                            <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Project Name:&nbsp;</span></div>
+                            <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpSubName" style="width: 100%;" required=""></div>
+                        </div>
+                        <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpSubPrice" style="width: 100%;" required=""></div>
+                        </div>
+                        <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Type:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                            <select class="form-select" id="modalInpSubType">
+                                  <option value="Labor" selected="">Labor</option>
+                                  <option value="Material" selected="">Material</option>
+                                  <option value="Intenal" selected="">Intenal</option>
+                                  <option value="Unknown" selected="">Unknown</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpSubQty" style="width: 100%;" required=""></div>
+                        </div>
+                        <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Unit:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                            <select class="form-select" id="modalInpSubUnit">
+                                  <option value="Pc" selected="">Pc</option>
+                                  <option value="Lot" selected="">Lot</option>
+                                  <option value="Set" selected="">Set</option>
+                            </select>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary" id="modalSaveSub" type="button">Save</button></div>
+                </form>
+            </div>
+        </div>
+      </div>
+
+
+       
 
 
         <!-- form delete -->
@@ -142,40 +201,152 @@
               </div>
           </div>
         </div>
+        <div class="form-row my-2">
+          <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+          <!-- Table Quotation -->
+              <div class="container1">
+                <div class="title">
+                <h1>Quotation List</h1><button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
+                </div>
+                <table id="tableQuo" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                  <thead  class="table-dark">
+                      <tr>
+                          <th style="width: 5%;">Index</th>
+                          <th>Quotation NO.</th>
+                          <th>Revised</th>
+                          <th>Project</th>
+                          <th>Customer</th>
+                          <th>Quotation Date</th>
+                          <th>Update Date</th>
+                          <th>Status</th>
+                          <th style="width: 10%;">Action</th>
+                          <th style="display: none;"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td colspan="9">Error...</td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-      <!-- Table Quotation -->
-      <div class="container1">
-          <div class="title">
-          <h1>Quotation List</h1><button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
+            <!-- Edit -->
+          <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+            <div class="container2">
+              <!-- <div id="TitleProject"></div> -->
+              <div class="title">
+                <input id="ProNo" class="no-bor-title " value="PojectNo"><button type="button" class="btn btn-dark" id="Revised" data-toggle="modal" data-target="#modalQuotationMaster">Revised</button>
+              </div>
+              <div class="title">
+                <span class="w-700">Customer:</span>
+                <input id="CusName" class="no-bor form-control" value="Customer Name">
+                <span class="w-700">Date:</span>
+                <input id="QDate" class="no-bor form-control" value="Quotation Date">
+              </div>
+              <div class="title">
+                <span class="w-700">Email:</span>
+                <input id="CusEmail" class="no-bor form-control" value="Customer Email">
+              </div>
+              <div class="title">
+                <span class="w-700">Company:</span>
+                <input id="ComName" class="no-bor form-control" value="Company Name">
+              </div>
+              <div class="title">
+                <span class="w-700">Adress:</span>
+                <input id="Adress" class="no-bor form-control" value="Adress">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text textbox">Project Name:</span>
+                <input type="text" class="form-control" id="PJ_Name">
+                <span class="input-group-text textbox2">Discout: </span>
+                <input type="text" class="form-control" id="PJ_Discout">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text textbox">Validity:</span>
+                <input type="text" class="form-control" id="PJ_Validity">
+                <span class="input-group-text textbox2">Delivery:</span>
+                <input type="text" class="form-control" id="PJ_Delivery">
+              </div>
+              <div class="input-group">
+                <span class="input-group-text textbox">Remark:</span>
+                <input type="text" class="form-control" id="PJ_Remark">
+              </div>
+              <div class="input-group ">
+                <label class="input-group-text textbox" for="PJ_Approve">Approve By:</label>
+                  <select class="form-select wd-select" id="PJ_Approve">
+                        <option value="null" selected="">-</option>
+                  </select>
+              </div>
+              <div class="input-group">
+                <span class="input-group-text">Term of Payment:</span>
+                <textarea class="form-control" id="PJ_Payment"></textarea>
+              </div><br>
+              <div class="btn-group btn-position" role="group" aria-label="Basic mixed styles example">
+                <button type="button" class="btn btn-danger">Cancel</button>
+                <button type="button" class="btn btn-warning">Quotation</button>
+                <button type="button" class="btn btn-secondary">Book</button>
+                <button type="button" class="btn btn-info">Lost</button>
+                <button type="button" class="btn btn-success" id="modalEditProject" >Edit</button>
+              </div>
+        <div class="form-row my-2">
+              <!-- TableItem -->
+          <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+            <div class="container min-h">
+              <div class="title">
+                <h1>Item</h1><button type="button" class="btn btn-success" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
+                </div>
+                  <table id="tableItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                    <thead  class="table-dark">
+                        <tr>
+                            <th>ItemName</th>
+                            <th>Unit Price</th>
+                            <th>Qty</th>
+                            <th style="width: 20%;">Action</th>
+                            <th style="display: none;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">Error...</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+                <div class="container min-h">
+                  <!-- TableSubItem -->
+                  <div class="title">
+                    <h1>Sub Item</h1>
+                    </div>
+                    <table id="tableSubItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                      <thead  class="table-dark">
+                          <tr>
+                              <th>ItemName</th>
+                              <th>Unit Price</th>
+                              <th>Qty</th>
+                              <th style="width: 20%;">Action</th>
+                              <th style="display: none;"></th>
+                              <th style="display: none;"></th>
+                              <th style="display: none;"></th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td colspan="4">Error...</td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <table id="tableQuo" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
-            <thead  class="table-dark">
-                <tr>
-                    <th style="width: 5%;">Index</th>
-                    <th>Quotation NO.</th>
-                    <th>Revised</th>
-                    <th>Project</th>
-                    <th>Customer</th>
-                    <th>Quotation Date</th>
-                    <th>Status</th>
-                    <th style="width: 10%;">Action</th>
-                    <th style="display: none;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td >Tiger Nixon</td>
-                    <td >Tiger Nixon</td>
-                    <td>Edinburgh</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>61</td>
-                    <td class="d-xl-flex justify-content-xl-center p-0"><button style="width: 30%;" class="btn btn-primary p-1 m-2" data-toggle="modal" data-target="#modalPartMaster" style="width: 2rem;">Edit</button><button style="width: 30%;" class="btn btn-danger p-1 m-2" data-toggle="modal" data-target="#modalDeleteConfirm" style="width: 2rem;">Del</button></td>
-                </tr>
-            </tbody>
-        </table>
+        </div>
       </div>
+      
 
       
 

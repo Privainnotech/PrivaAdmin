@@ -33,7 +33,18 @@ async function LoadDropDown() {
         dataType: 'json',
         success: function (response) {
             response.forEach(Employee => {
-                $("#modalEditApprove").append("<option value=" + Employee.EmployeeId + "><span>" + Employee.EmployeeName + "</span></option>");
+                $("#PJ_Approve").append("<option value=" + Employee.EmployeeId + "><span>" + Employee.EmployeeName + "</span></option>");
+            });
+        }
+    })
+    $.ajax({
+        url: "/dropdown/product",
+        method: 'get',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            response.forEach(Product => {
+                $("#modalInpProduct").append("<option value=" + Product.ProductId + "><span>" + Product.ProductName + "</span></option>");
             });
         }
     })
