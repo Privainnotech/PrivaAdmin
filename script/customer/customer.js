@@ -37,7 +37,12 @@ $(document).ready(function () {
                 }
                 ,
                 {
-                    "data": "CustomerId"
+                    "data": "CustomerId",
+                    "data": "CustomerTitle",
+                    "data": "CustomerFname",
+                    "data": "CustomerLname"
+
+
                 }
 
             ],"columnDefs":[
@@ -50,62 +55,6 @@ $(document).ready(function () {
     }
     // fill_customer(1)
 
-    //Create
-    $(document).on("click", "#addCustomer", function () {
-        $("#formCustomer").trigger("reset");
-        $(".modal-title").text("Add Customer");
-        console.log("save0");
-        $("#modalSaveCustomer").unbind();
-        $("#modalSaveCustomer").click(function () {
-                let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
-                let CustomerFname = $.trim($('#modalInpCustomerFname').val());
-                let CustomerLname = $.trim($('#modalInpCustomerLname').val());
-                let CustomerEmail = $.trim($('#modalInpCustomerEmail').val());
-                let CustomerTel = $.trim($('#modalInpCustomerTel').val());
-                let CompanyId = $.trim($('#modalInpCompanyId').val());
-
-            if (CustomerFname !== null) {
-                $.ajax({
-                    url: "/customer_master/add",
-                    method: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        CustomerTitle: CustomerTitle,
-                        CustomerFname: CustomerFname,
-                        CustomerLname: CustomerLname,
-                        CustomerEmail: CustomerEmail,
-                        CustomerTel: CustomerTel,
-                        CompanyId: CompanyId
-
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Created',
-                            text: 'Customer data have been created',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        // tableCustomer.ajax.reload(null, false);
-                        // $('#modalCustomerMaster').modal('hide');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
-                    }
-                });
-            }
-        })
-    });
 
     // Edit
     $(document).on("click", "#btnEditCustomer", function () {
@@ -220,6 +169,65 @@ $(document).ready(function () {
             $('#tableCompany tr').removeClass('selected');
             $(this).toggleClass('selected');
             fill_customer(CompanyId)
+
+            //Create
+            $(document).on("click", "#addCustomer", function () {
+                $("#formCustomer").trigger("reset");
+                $(".modal-title").text("Add Customer");
+
+                $('#modalInpCompanyId').val(CompanyId)
+
+                $("#modalSaveCustomer").unbind();
+                $("#modalSaveCustomer").click(function () {
+                        let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
+                        let CustomerFname = $.trim($('#modalInpCustomerFname').val());
+                        let CustomerLname = $.trim($('#modalInpCustomerLname').val());
+                        let CustomerEmail = $.trim($('#modalInpCustomerEmail').val());
+                        let CustomerTel = $.trim($('#modalInpCustomerTel').val());
+                        let CompanyId = $.trim($('#modalInpCompanyId').val());
+
+                    if (CustomerFname !== null) {
+                        $.ajax({
+                            url: "/customer_master/add",
+                            method: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                CustomerTitle: CustomerTitle,
+                                CustomerFname: CustomerFname,
+                                CustomerLname: CustomerLname,
+                                CustomerEmail: CustomerEmail,
+                                CustomerTel: CustomerTel,
+                                CompanyId: CompanyId
+
+                            }),
+                            success: function () {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Created',
+                                    text: 'Customer data have been created',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                tableCustomer.ajax.reload(null, false);
+                                // $('#modalCustomerMaster').modal('hide');
+                            },
+                            error: function (err) {
+                                errorText = err.responseJSON.message;
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'warning',
+                                    title: 'Warning',
+                                    text: errorText,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#FF5733'
+                                });
+                            }
+                        });
+                    }
+                })
+            });
         }
     })
 });
