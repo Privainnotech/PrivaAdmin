@@ -3,8 +3,9 @@ const router = express.Router();
 const sql = require('mssql');
 const { dbconfig } = require('../../../config');
 
+const { bahttext } = require('bahttext')
 const fs = require('fs');
-const Pdfmake = require('pdfmake');
+const pdfMake = require('pdfmake');
 
 const fonts = {
     Roboto: {
@@ -14,13 +15,18 @@ const fonts = {
         bolditalics: 'assets/fonts/roboto/Roboto-MediumItalic.ttf'
     },
     Centaur: {
-        normal: 'assets/fonts/CENTAUR.ttf',
-        bold: 'assets/fonts/centaur-bold.otf'
+        normal: 'assets/fonts/CENTAUR.ttf'
+    },
+    THSarabunNew: {
+        normal: 'assets/fonts/THSarabunNew/THSarabunNew.ttf',
+        bold: 'assets/fonts/THSarabunNew/THSarabunNew-Bold.ttf',
+        italics: 'assets/fonts/THSarabunNew/THSarabunNew-Italic.ttf',
+        bolditalics: 'assets/fonts/THSarabunNew/THSarabunNew-BoldItalic.ttf'
     }
 };
 
-Pdfmake.fonts = {
-
+moneyFormat = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 router.get('/:QuotationId', async (req, res) => {
@@ -75,192 +81,312 @@ router.get('/:QuotationId', async (req, res) => {
         let quotations = await pool.request().query(getQuotation);
         let quotation = quotations.recordset[0];
 
-        let pdfmake = new Pdfmake(fonts);
 
-        let quotationItem = [];
-        let i = 1;
+        console.log('check init')
+        let pdfCreator = new pdfMake(fonts);
+        console.log('check inited')
 
-        const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${quotation.QuotationId}`)
-        for(let Item of Items.recordset) {
-            table[body].push([`${i}`,])
-        }
+        // head
+        let head = [
+            {
+                width: '*',
+                text: "528/2 Soi Ramkhamhang 39 (Theplila 1)\nWangthonglang, Wangthonglang, Bangkok 10310\nTel : 098-655-3926, 02-539-3766\nEmail : sale@privainnotech.com",
+                fontSize: 8,
+                color: '#808080'
+            },
+            {
+                width: '*',
+                text: "QUOTATION",
+                font: 'Centaur',
+                // bold: true,
+                alignment: 'right',
+                fontSize: 28,
+                color: '#A6A6A6'
+            },
+        ]
 
+        let quotationHead = [
+            {
+                width: '*',
+                columns: [{
+                    width: '15%',
+                    stack: [
+                        { text: "To:" },
+                        { text: "Email:" },
+                        { text: "Company:" },
+                        { text: "Address:" }
+                    ],
+                    alignment: 'right',
+                    style: 'bitext',
+                    color: "#808080"
+                },{
+                    margin: [3,0,0,0],
+                    width: '*',
+                    stack: [{ text: `${quotation.CustomerName}`, decoration: 'underline' },
+                        { text: `${quotation.CustomerEmail}`, decoration: 'underline' },
+                        { text: `${quotation.CompanyName}` },
+                        { text: `${quotation.CompanyAddress}` }
+                    ], style: 'blacktext',
+                }]
+            },
+            {
+                width: '30%',
+                columns: [{
+                    width: '*',
+                    stack: [{ text: "Date:" },
+                        { text: "Quotation no." }
+                    ], fontSize: 9
+                }, {
+                    width: '*',
+                    stack: [{ text: `${quotation.QuotationDate}` },
+                        { text: `${quotation.QuotationNo_Revised}` }
+                    ],
+                    fontSize: 9,
+                    alignment: 'right'
+                }
+                ]
+            }]
+
+        // subject
+        let subject = [
+            {
+                width: '*',
+                columns: [{
+                    width: '15%',
+                    text: "Subject:",
+                    alignment: 'right',
+                    style: 'bitext',
+                    color: "#808080"
+                },{
+                    margin: [3,0,0,0],
+                    width: '*',
+                    text: `${quotation.QuotationSubject}`,
+                    style: 'blacktext',
+                    // color: "#808080"
+                }],
+                // color: "#808080"
+            },
+            {
+                width: '30%',
+                text: ""
+            }]
+
+        console.log(bahttext(quotation.QuotationNetVat.toFixed(2)))
+        // price
+        let price = [
+            {
+                width: '*',
+                margin: [5,8,0,0],
+                text: `[THAI BAHT] :  ${bahttext(quotation.QuotationNetVat.toFixed(2))}`,
+                style: 'text',
+                color: "#808080"
+
+            },
+            {
+                width: '40%',
+                columns: [{
+                    width: '*',
+                    stack: [
+                        { text: "Sub Total for the above:" },
+                        { text: "Discount:" },
+                        { text: "Price after discount:" },
+                        { text: "VAT Including 7%:" },
+                        { text: "Net Total:" }
+                    ],
+                    alignment: 'right',
+                    style: 'bitext',
+                    color: "#808080"
+                },{
+                    margin: [3,0,0,0],
+                    width: '40%',
+                    stack: [
+                        { text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}` },
+                        { text: `${moneyFormat(quotation.QuotationDiscount.toFixed(2))}` },
+                        { text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}` },
+                        { text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}` },
+                        { text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}` }
+                    ],
+                    alignment: 'right',
+                    style: 'blacktext',
+                }]
+            }
+        ]
+
+        // condition
+        let validityDate = quotation.QuotationValidityDate ? quotation.QuotationValidityDate : '-';
+        let payTerm = quotation.QuotationPayTerm ? quotation.QuotationPayTerm : '-';
+        let delivery = quotation.QuotationDelivery ? quotation.QuotationDelivery : '-';
+        let remark = quotation.QuotationRemark ? quotation.QuotationRemark : '-'
+
+        let condition = [
+            {
+                margin: [25,0,0,0],
+                width: '60%',
+                columns: [{
+                    width: '30%',
+                    stack: [
+                        { text: "CONDITION:", style: 'condition', margin: [-25,0,0,0]},
+                        { text: "Validity:", style: 'conditiontext'},
+                        { text: "Term of payment:", style: 'conditiontext' },
+                        { text: "Delivery:", style: 'conditiontext' },
+                        { text: "Remark:", style: 'conditiontext' },
+                    ],
+                    alignment: 'right',
+                    style: 'bitext',
+                    color: "#808080"
+                },{
+                    margin: [3,0,0,0],
+                    width: '*',
+                    stack: [
+                        { text: "\n", style: 'condition'},
+                        { text: `${validityDate}`, style: 'conditiontext'},
+                        { text: `${payTerm}`, style: 'conditiontext'},
+                        { text: `${delivery}`, style: 'conditiontext'},
+                        { text: `${remark}`, style: 'conditiontext'},
+                    ],
+                    // alignment: 'left',
+                    style: 'text',
+                    // color: "#808080"
+                }]
+            },
+            {
+                width: '*',
+                text: ""
+            }
+
+        ]
+
+        // sign
+        let signature = [
+            { width: '*', text:'' },
+            {
+                width: 'auto', 
+                stack: [{
+                    margin: [3,0,0,0],
+                    text: "  For customer :\n   To accept this quotation, sign here and\n   return by Email : Kittanan.w@privainnotech.com",
+                }, {
+                    text: "\n\n__________________________________________________",
+                    bold: true,
+                    color: "#000000"
+                }, {
+                    text: "  COMPANY CHOP & AUTHORIZED SIGNATURE",
+                    alignment: 'center'
+                }],
+                style: 'text'
+            }
+        ]
+
+        // item table
         let table = {
             headerRows: 1,
             widths: ['10%','*','10%','10%','15%'],
-
+            style: 'text',
             body: [
                 [
-                    { text: 'Item', rowSpan: 16 },
-                    { text: 'Description' },
-                    { text: 'Unit Price' },
-                    { text: 'Qty' },
-                    { text: 'Line Total' }
+                    { text: 'Item', style: 'thead', border: [true, true, true, true] },
+                    { text: 'Description', style: 'thead', border: [true, true, true, true] },
+                    { text: 'Unit Price', style: 'thead', border: [true, true, true, true] },
+                    { text: 'Qty', style: 'thead', border: [true, true, true, true] },
+                    { text: 'Line Total', style: 'thead', border: [true, true, true, true] }
                 ],
             ]
         }
+
+        let i = 1;
+        const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
+        for(let Item of Items.recordset) {
+            let { ItemName, ItemPrice, ItemQty } = Item
+            if (ItemPrice == 'null') ItemPrice = 0;
+            if (ItemQty == 'null') ItemQty = 0
+            let LineTotal = ItemPrice * ItemQty
+            table['body'].push([
+                {text: `${i}`, style: 'btext', alignment: 'center', border: [true, false, true, false]},
+                {text: `${ItemName}`, style: 'btext', border: [true, false, true, false]},
+                {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right', border: [true, false, true, false]},
+                {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'center', border: [true, false, true, false]},
+                {text: `${moneyFormat(LineTotal.toFixed(2))}`, style: 'blacktext', alignment: 'right', border: [true, false, true, false]}
+            ])
+            const SubItems = await pool.request().query(`SELECT * FROM [QuotationSubItem] a
+            LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
+            WHERE ItemId = ${Item.ItemId}`)
+            let j = 1;
+            for(let SubItem of SubItems.recordset) {
+                let {SubItemQty, SubItemUnit, ProductName} = SubItem
+                if (SubItemQty == 'null'){
+                    SubItemQty = "";
+                    SubItemUnit = "";
+                } 
+                table['body'].push([
+                    {text:"", border: [true, false, true, false]},
+                    {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext', border: [true, false, true, false]},
+                    {text:"", border: [true, false, true, false]},
+                    {text:"", border: [true, false, true, false]},
+                    {text:"", border: [true, false, true, false]}
+                ])
+                j++;
+            }
+            i++;
+        }
+        // for (let i =0; i<2;i++) 
+            table['body'].push([
+                {text:"", border: [true, false, true, true]},
+                {text:" ", border: [true, false, true, true]},
+                {text:"", border: [true, false, true, true]},
+                {text:"", border: [true, false, true, true]},
+                {text:"", border: [true, false, true, true]}
+            ])
 
         let doc = {
             pageMargins: [68, 100, 72, 54],
             pageSize: 'LETTER',
             header: {
-                alignment: 'left',
-                image: 'assets/logo.png',
-                margin: [68, 54, 0, 54],
-                height: 42,
-                width: 130
-            },
-            content: [{
-                columns: [
-                    {
-                        width: '*',
-                        text: "528/2 Soi Ramkhamhang 39 (Theplila 1)\nWangthonglang, Wangthonglang, Bangkok 10310\nTel : 098-655-3926, 02-539-3766\nEmail : sale@privainnotech.com",
-                        fontSize: 8,
-                        color: '#808080'
-                    },
-                    {
-                        width: '*',
-                        text: "QUOTATION",
-                        font: 'Centaur',
-                        // bold: true,
-                        alignment: 'right',
-                        fontSize: 28,
-                        color: '#A6A6A6'
-                    },
-                ]
-            }, {
-                text: "\n\n", style: 'text'
-            }, {
-                columns: [
-                {
-                    width: '*',
-                    columns: [{
-                        width: '15%',
-                        stack: [{
-                            text: "To:",
-                        },{
-                            text: "Email:"
-                        },{
-                            text: "Company:"
-                        },{
-                            text: "Address:"
-                        }],
-                        alignment: 'right',
-                        style: 'bitext',
-                        color: "#808080"
-                    },{
-                        margin: [3,0,0,0],
-                        width: '*',
-                        stack: [{
-                            text: `${quotation.CustomerName}`,
-                            decoration: 'underline'
-                        },{
-                            text: `${quotation.CustomerEmail}`,
-                            decoration: 'underline'
-                        },{
-                            text: `${quotation.CompanyName}`
-                        },{
-                            text: `${quotation.CompanyAddress}`
-                        }],
-                        style: 'text',
-                    }]
-                },
-                {
-                    width: '30%',
-                    columns: [{
-                        width: '*',
-                        stack: [{
-                            text: "Date:"
-                        },{
-                            text: "Quotation no."
-                        }],
-                        fontSize: 9
-                    }, {
-                        width: '*',
-                        stack: [{
-                            text: `${quotation.QuotationDate}`
-                        },{
-                            text: `${quotation.QuotationNo_Revised}`
-                        }],
-                        fontSize: 9,
-                        alignment: 'right'
-                    }
-                    ]
-                }]
-            }, {
-                text: "\n"
-            }, {
-                columns: [
-                {
-                    width: '*',
-                    columns: [{
-                        width: '15%',
-                        text: "Subject:",
-                        alignment: 'right',
-                        style: 'bitext',
-                        color: "#808080"
-                    },{
-                        margin: [3,0,0,0],
-                        width: '*',
-                        text: `${quotation.QuotationSubject}`,
-                        style: 'text',
-                        // color: "#808080"
-                    }],
-                    // color: "#808080"
-                },
-                {
-                    width: '30%',
-                    text: ""
-                }]
-            }, {
-                text: "\n"
-            }, {
-                columns: [
-                    { width: '*', text:'' },
-                    {
-                        width: 'auto', 
-                        stack: [{
-                            text: "  For customer :\n   To accept this quotation, sign here and\n   return by Email : Kittanan.w@privainnotech.com",
-                            style: 'footer'
-                        }, {
-                            text: "\n\n__________________________________________________",
-                            style: 'footer',
-                            bold: true,
-                            color: "#000000"
-                        }, {
-                            text: "  COMPANY CHOP & AUTHORIZED SIGNATURE",
-                            style: 'footer',
-                        }],
-                        style: 'footer'
-                    }
-                ]
-            } 
-            ],
-            styles: {
-                header: {
-                    margin: [0,20,0,0],
-                    fontSize: 34,
-                    bold: true,
-                    alignment: 'left'
-                },
-                footer: {
-                    fontSize: 9,
-                    alignment: 'justify',
-                    color: '#808080'
-                },
-                text: {
+                stack: [{
                     alignment: 'left',
-                    fontSize: 9,
-                },
-                bitext: {
-                    fontSize: 9,
-                    bold: true,
-                    italics: true
-                }
+                    image: 'assets/logo.png',
+                    margin: [68, 54, 0, 54],
+                    height: 42,
+                    width: 130
+                }]
+                
+            },
+            content: [],
+            styles: {
+                text: { color: '#808080'},
+                blacktext: { color: '#000000'},
+                btext: { bold: true},
+                bitext: { bold: true, italics: true},
+                condition: { fontSize: 11, bold: true, italics: true, decoration: 'underline', color: '#808080', alignment: 'left'},
+                conditiontext: { bold: true, color: '#808080', alignment: 'left'},
+                bahttext: {bold: true, color: '#808080', alignment: 'left'},
+                thead: { bold: true, italics: true, alignment: 'center'}
+            },
+            defaultStyle: {
+                font: "THSarabunNew",
+                fontSize: 9
             }
         }
 
-        let pdfDoc = pdfmake.createPdfKitDocument(doc, {});
+        doc['content'].push(
+            { columns: head },
+            { text: "\n\n"},
+            { columns: quotationHead },
+            { text: "\n" },
+            { columns: subject },
+            { text: "\n" }, [
+                { 
+                    // layout: 'noBorders',
+                    table: table 
+                },
+            ],
+            { columns: price },
+            { columns: condition },
+            { text: "\n\n"},
+            { columns: signature }
+        )
+
+        console.log('check creating')
+        let pdfDoc = pdfCreator.createPdfKitDocument(doc);
+        console.log('check created')
         pdfDoc.pipe(fs.createWriteStream('public/report/quotation/test.pdf'));
         pdfDoc.end();
 
