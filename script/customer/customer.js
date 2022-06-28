@@ -212,13 +212,13 @@ $(document).ready(function () {
         rows = $(this).closest("tr");
         let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
 
-        if($(this).hasClass('Myselected')){
-            $(this).removeClass('Myselected');
-            fill_resetTable();
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+            // fill_resetTable();
         }
         else{
-            $('#tableCompany tr').removeClass('Myselected');
-            $(this).toggleClass('Myselected');
+            $('#tableCompany tr').removeClass('selected');
+            $(this).toggleClass('selected');
             fill_customer(CompanyId)
         }
     })
