@@ -388,7 +388,8 @@ $(document).ready(function () {
                         let EmployeeApproveId = obj.EmployeeApproveId;
 
                         
-
+                        $("#btnREYes").unbind("click");
+                        $(".btnYes").click(function () {
                         $.ajax({
                             url: "/quotation_set/revise/" + QuotationId,
                             method: 'post',
@@ -429,12 +430,12 @@ $(document).ready(function () {
                                     showConfirmButton: true,
                                     confirmButtonText: 'OK',
                                     confirmButtonColor: '#FF5733'
-                                });
-                            }
-                      });
+                                    });
+                                }
+                            });
+                        })
                 } 
             })
-            QuotationId = null
         });
     });
 
