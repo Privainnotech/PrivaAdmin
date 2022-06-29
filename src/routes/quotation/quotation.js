@@ -207,7 +207,6 @@ router.post('/add_pre_quotation', async (req, res) => {
                 SELECT *
                 FROM QuotationNo
                 WHERE QuotationNo LIKE N'pre_${checkMonth()}%'`)
-            console.log(CheckQuotationNo.recordset.length)
             if (CheckQuotationNo.recordset.length<10) {
                 genQuotationNo = 'pre_'+checkMonth()+'0'+CheckQuotationNo.recordset.length
             } else {
@@ -337,7 +336,6 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
                     await pool.request().query(DeleteSubItem);
                 }
             }
-            console.log('check')
             let DeleteQuotation = `DECLARE @QuotationNoId bigint;
                 SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId =  ${QuotationId});
                 DELETE FROM QuotationItem WHERE QuotationId=${QuotationId}
@@ -345,7 +343,6 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
                 IF (SELECT COUNT(QuotationNoId) FROM Quotation WHERE QuotationNoId=@QuotationNoId) = 0
                     BEGIN DELETE FROM QuotationNo WHERE QuotationNoId=@QuotationNoId END`;
             await pool.request().query(DeleteQuotation);
-            console.log('check')
             res.status(200).send({message: 'Successfully delete pre-quotation'});
         } else {
             res.status(400).send({message: 'Cannot delete quotation'});

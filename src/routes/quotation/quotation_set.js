@@ -51,7 +51,12 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         let DeliveryFilter = QuotationDelivery.replace(/'/g, "''");
         let RemarkFilter = QuotationRemark.replace(/'/g, "''");
         let EndCustomerFilter = EndCustomer.replace(/'/g, "''");
-        if (QuotationStatus !== 1 || QuotationStatus !== 5 ) { // not pre&cancel status
+        console.log(QuotationStatus)
+        if (QuotationStatus == 1) { // not pre&cancel status
+            res.status(400).send({message: "Cannot revise pre-quotation"});
+        } else if(QuotationStatus == 5) {
+            res.status(400).send({message: "Cannot revise cancel quotation"});
+        } else {
             // InsertQuotationRevised
             let newRevise = QuotationRevised+1;
             console.log(newRevise)
@@ -80,8 +85,6 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             // Update old quotation status to cancel
             // await pool.request().query(`UPDATE Quotation SET QuotationStatus=5 WHERE QuotationId = ${OldQuotationId}`)
             res.status(200).send({message: 'Successfully revise quotation'});
-        } else {
-            res.status(400).send({message: "Cannot revise pre-quotation"});
         }
     } catch(err){
         res.status(500).send({message : `${err}`});
