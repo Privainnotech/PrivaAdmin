@@ -65,7 +65,7 @@ $(document).ready(function () {
         // console.log(Id)
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
-            "scrollY": "220px",
+            "scrollY": "190px",
             "scrollCollapse": true,
             // "paging": false,
             "ajax": {
@@ -107,7 +107,7 @@ $(document).ready(function () {
         // console.log(Id)
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
-            "scrollY": "220px",
+            "scrollY": "190px",
             "scrollCollapse": true,
             // "paging": false,
             "ajax": {
@@ -207,11 +207,12 @@ $(document).ready(function () {
                 method: 'delete',
                 contentType: 'application/json',
                 success: function () {
+                    
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Company have been deleted',
+                        text: 'Quotation have been deleted',
                         showConfirmButton: false,
                         timer: 1500
                     })

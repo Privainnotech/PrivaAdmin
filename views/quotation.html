@@ -219,6 +219,7 @@
 
         <div class="form-row my-2">
           <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+            
           <!-- Table Quotation -->
               <div class="container1">
                 <div class="title">
@@ -306,76 +307,77 @@
                 <!-- <textarea class="form-control" id="PJ_Payment"></textarea> -->
               </div>
               <div class="input-group">
-                <span class="input-group-text textbox4">.</span>
+                <span class="input-group-text textbox4">-</span>
                 <input type="text" class="form-control" id="PJ_Payment2">
               </div>
               <div class="input-group">
-                <span class="input-group-text textbox4">.</span>
+                <span class="input-group-text textbox4">-</span>
                 <input type="text" class="form-control" id="PJ_Payment3">
               </div>
-              <div class="btn-group btn-position" role="group" aria-label="Basic mixed styles example">
+              
+              <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                 <button type="button" class="btn btn-danger">Cancel</button>
                 <button type="button" class="btn btn-warning">Quotation</button>
                 <button type="button" class="btn btn-secondary">Book</button>
                 <button type="button" class="btn btn-info">Lost</button>
                 <!-- <button type="button" class="btn btn-success" id="modalEditProject" >Edit</button> -->
               </div>
-              <button type="button" class="btn btn-success " id="modalEditProject" >Edit</button>
-
-        <div class="form-row my-2">
-              <!-- TableItem -->
-          <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
-            <div class="container min-h">
-              <div class="title">
-                <h1>Item</h1><button type="button" class="btn btn-success" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
-                </div>
-                  <table id="tableItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
-                    <thead  class="table-dark">
-                        <tr>
-                            <th>ItemName</th>
-                            <th>Unit Price</th>
-                            <th>Qty</th>
-                            <th style="width: 20%;">Action</th>
-                            <th style="display: none;"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="4">Loading...</td>
-                        </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
-                <div class="container min-h">
-                  <!-- TableSubItem -->
-                  <div class="title">
-                    <h1>Sub Item</h1>
+              <button type="button" class="btn btn-success btn-position" id="modalEditProject" >Edit</button>
+              <br>
+              <div class="form-row my-2">
+                    <!-- TableItem -->
+                <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+                  <div class="container min-h">
+                    <div class="title">
+                      <h1>Item</h1><button type="button" class="btn btn-success" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
+                      </div>
+                        <table id="tableItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                          <thead  class="table-dark">
+                              <tr>
+                                  <th>ItemName</th>
+                                  <th>Unit Price</th>
+                                  <th>Qty</th>
+                                  <th style="width: 20%;">Action</th>
+                                  <th style="display: none;"></th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td colspan="4">Loading...</td>
+                              </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                    <table id="tableSubItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
-                      <thead  class="table-dark">
-                          <tr>
-                              <th>ItemName</th>
-                              <th>Unit Price</th>
-                              <th>Qty</th>
-                              <th style="width: 20%;">Action</th>
-                              <th style="display: none;"></th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td colspan="4">Loading...</td>
-                          </tr>
-                      </tbody>
-                    </table>
+                    <div class="col-xl-6 d-xl-flex justify-content-xl-end align-items-xl-center">
+                      <div class="container min-h">
+                        <!-- TableSubItem -->
+                        <div class="title">
+                          <h1>Sub Item</h1>
+                          </div>
+                          <table id="tableSubItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
+                            <thead  class="table-dark">
+                                <tr>
+                                    <th>ItemName</th>
+                                    <th>Unit Price</th>
+                                    <th>Qty</th>
+                                    <th style="width: 20%;">Action</th>
+                                    <th style="display: none;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4">Loading...</td>
+                                </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
       
 
       

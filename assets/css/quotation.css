@@ -78,8 +78,8 @@ nav{
 .container1 {
 	display: flexbox;
 	padding: 10px;
-	min-height: 100vh;
-	max-height: 100vh;
+	min-height: 105vh;
+	max-height: 105vh;
 	padding-bottom: 0;
 	justify-content: center;
 	align-items: center;
@@ -95,8 +95,8 @@ nav{
 	display: flexbox;
 	padding: 10px;
 	width: 100%;
-	min-height: 100vh;
-	max-height: 100vh;
+	min-height: 105vh;
+	max-height: 105vh;
 	padding-bottom: 0;
 	justify-content: center;
 	/* align-items: center; */
@@ -176,6 +176,11 @@ nav{
 
 mg-20{
 	padding: 20px;
+}
+
+.btn-position{
+	position: relative;
+	left: 630px;
 }
 
 
