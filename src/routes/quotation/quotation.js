@@ -250,7 +250,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         } else{
             let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemQty}, N'${DescriptionFilter}')`;
             await pool.request().query(InsertItem);
-            res.status(201).send({message: 'Item has been added'});
+            res.status(201).send({message: 'Successfully add Item'});
         }
     } catch(err){
         res.status(500).send({message: err});
@@ -296,7 +296,7 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
                 let InsertSubItem = `INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemQty, SubItemUnit) VALUES(${ItemId}, ${newProduct.recordset[0].Id}, N'${SubItemQty}', N'${SubItemUnit}')`
                 await pool.request().query(InsertSubItem);
                 updatePriceI(ItemId);
-                res.status(201).send({message: 'Sub-item has been added'});
+                res.status(201).send({message: 'Successfully add Sub-item'});
             }
         } else { // Already have product
             let CheckSubItem = await pool.request().query(`SELECT CASE

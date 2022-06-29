@@ -104,7 +104,7 @@ $(document).ready(function () {
                             position: 'center',
                             icon: 'success',
                             title: 'Created',
-                            text: 'Customer data have been created',
+                            text: 'Successfully edit customer',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -144,7 +144,7 @@ $(document).ready(function () {
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Company have been deleted',
+                        text: 'Successfully delete customer',
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -205,7 +205,7 @@ $(document).ready(function () {
                                     position: 'center',
                                     icon: 'success',
                                     title: 'Created',
-                                    text: 'Customer data have been created',
+                                    text: 'Successfully add customer',
                                     showConfirmButton: false,
                                     timer: 1500
                                 })

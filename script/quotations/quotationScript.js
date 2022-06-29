@@ -62,12 +62,10 @@ $(document).ready(function () {
 
     //Item table
     function fill_item(Id) {
-        // console.log(Id)
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
             "scrollY": "190px",
             "scrollCollapse": true,
-            // "paging": false,
             "ajax": {
                 "url": `/quotation/item/` + Id,
                 "dataSrc": ""
@@ -104,12 +102,10 @@ $(document).ready(function () {
 
      //Item Sub Table
      function fill_subitem(Id) {
-        // console.log(Id)
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
             "scrollY": "190px",
             "scrollCollapse": true,
-            // "paging": false,
             "ajax": {
                 "url": `/quotation/subitem_byitem/` + Id,
                 "dataSrc": ""
@@ -150,7 +146,6 @@ $(document).ready(function () {
     $(document).on("click", "#addProject", function () {
         $("#formQuotation").trigger("reset");
         $(".modal-title").text("Add Project");
-        // console.log("save0");
         $("#modalSaveProject").unbind();
         $("#modalSaveProject").click(function () {
                 let ProjectName = $.trim($('#modalInpProjectName').val());
@@ -169,7 +164,7 @@ $(document).ready(function () {
                             position: 'center',
                             icon: 'success',
                             title: 'Created',
-                            text: 'Project have been created',
+                            text: 'Successfully add Quotation',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -212,7 +207,7 @@ $(document).ready(function () {
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Quotation have been deleted',
+                        text: 'Successfully delete pre-quotation',
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -230,10 +225,7 @@ $(document).ready(function () {
             method: 'get',
             cache: false,
 			success:function(response){
-				// console.log(QuotationId);
 				var obj = JSON.parse(response);
-                // QuotationNo_Revised
-                    console.log(obj.QuotationPayTerm.QuotationPayTerm1)
                     $('#ProNo').val(obj.QuotationNo_Revised);
                     $('#CusName').val(obj.CustomerName);
                     $('#QDate').val(obj.QuotationDate);
@@ -291,7 +283,6 @@ $(document).ready(function () {
                         "QuotationPayTerm2": QuotationPayTerm2,
                         "QuotationPayTerm3": QuotationPayTerm3
                     }
-                    console.log(QuotationPayTerm)
                     $.ajax({
                         url: "/quotation/edit_quotation/" + QuotationId,
                         method: 'put',
@@ -312,7 +303,7 @@ $(document).ready(function () {
                                 position: 'center',
                                 icon: 'success',
                                 title: 'Created',
-                                text: 'Quotation data have been Edited',
+                                text: 'Successfully Edit Quotation',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
@@ -358,7 +349,7 @@ $(document).ready(function () {
                                     position: 'center',
                                     icon: 'success',
                                     title: 'Created',
-                                    text: 'Item have been created',
+                                    text: 'Successfully add Item',
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
@@ -384,7 +375,6 @@ $(document).ready(function () {
             })
     
             // Revised
-            // $("#btnRevised").click(
             $(document).on("click", "#btnRevised",function () {
                 $.ajax({
                     url: "/quotation/" + QuotationId,
@@ -432,7 +422,7 @@ $(document).ready(function () {
                                         position: 'center',
                                         icon: 'success',
                                         title: 'Created',
-                                        text: 'Quotation data have been Edited',
+                                        text: 'Successfully revise quotation',
                                         showConfirmButton: false,
                                         timer: 1500
                                     })
@@ -455,6 +445,39 @@ $(document).ready(function () {
                     } 
                 })
             });
+
+            //btn-quotation
+            $(document).on('click','#btn-quotation',function() {
+                $.ajax({
+                    url: "/quotation_set/quotation/" + QuotationId,
+                    method: 'get',
+                    cache: false,
+                    success:function(response){
+                        console.log(QuotationId)
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Created',
+                            text: 'Successfully to set quotation',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableQuo.ajax.reload(null, false);
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                            });
+                    }
+                })
+            })
         }
 
         
@@ -494,7 +517,7 @@ $(document).ready(function () {
                             position: 'center',
                             icon: 'success',
                             title: 'Edit',
-                            text: 'Item have been edited',
+                            text: 'Successfully Edit Item',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -534,7 +557,7 @@ $(document).ready(function () {
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Company have been deleted',
+                        text: 'Successfully delete Item',
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -547,7 +570,6 @@ $(document).ready(function () {
 
     $("#modalInpProduct").click(function () {
         let ProductId = $.trim($('#modalInpProduct').val())
-        // console.log(ProductId)
         if (ProductId !== "null") {
             $.ajax({
                 url: "/dropdown/product/" + ProductId,
@@ -577,7 +599,6 @@ $(document).ready(function () {
         $(".modal-title").text("Add SubItem in " + ItemName);
             $("#modalSaveSub").unbind();
             $("#modalSaveSub").click(function () {
-                // console.log(ItemId)
                 let ProductId = $.trim($('#modalInpProduct').val());
                 let SubItemName = $.trim($('#modalInpSubName').val());
                 let SubItemPrice = $.trim($('#modalInpSubPrice').val());
@@ -602,11 +623,12 @@ $(document).ready(function () {
                             position: 'center',
                             icon: 'success',
                             title: 'Created',
-                            text: 'SubItem have been created',
+                            text: 'Successfully add Sub-item',
                             showConfirmButton: false,
                             timer: 1500
                         })
                         tableSubItem.ajax.reload(null, false);
+                        tableItem.ajax.reload(null, false);
                         $('#modalSubMaster').modal('hide');
                     },
                     error: function (err) {
@@ -648,7 +670,6 @@ $(document).ready(function () {
 
             $("#modalSaveSub").unbind();
             $("#modalSaveSub").click(function () {
-                console.log(SubItemId)
                 let ProductId = $.trim($('#modalInpProduct').val());
                 let SubItemName = $.trim($('#modalInpSubName').val());
                 let SubItemPrice = $.trim($('#modalInpSubPrice').val());
@@ -672,8 +693,8 @@ $(document).ready(function () {
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Created',
-                            text: 'SubItem have been created',
+                            title: 'Edited',
+                            text: 'Successfully Edit Sub-Item',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -712,7 +733,7 @@ $(document).ready(function () {
                             position: 'center',
                             icon: 'success',
                             title: 'Deleted',
-                            text: 'Company have been deleted',
+                            text: 'Successfully delete Sub-item',
                             showConfirmButton: false,
                             timer: 1500
                         })
