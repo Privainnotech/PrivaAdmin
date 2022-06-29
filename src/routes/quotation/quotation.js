@@ -56,12 +56,8 @@ router.get('/list', async (req, res, next) => {
         a.QuotationStatus,
         b.QuotationNo,
         a.QuotationRevised,
-        b.QuotationNo + '_0' + CONVERT(nvarchar(5), a.QuotationRevised) QuotationNo_Revised,
         a.QuotationSubject,
         c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
-        a.QuotationTotalPrice,
-        a.QuotationDiscount,
-        a.QuotationNetVat,
         a.QuotationDate,
         a.QuotationUpdatedDate,
         d.StatusName,
@@ -113,9 +109,9 @@ router.get('/:QuotationId', async (req, res) => {
             a.QuotationNet,
             a.QuotationVat,
             a.QuotationNetVat,
-            a.QuotationValidityDate,
-            a.QuotationPayTerm,
-            a.QuotationDelivery,
+            CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate',
+            CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
+            CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
             CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
             a.EmployeeApproveId,
             e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
@@ -129,6 +125,11 @@ router.get('/:QuotationId', async (req, res) => {
             LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
             WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotation);
+        if (typeof quotations.recordset[0].QuotationPayTerm == 'object' || !quotations.recordset[0].QuotationPayTerm.includes("QuotationPayTerm")) {
+            quotations.recordset[0].QuotationPayTerm = "";
+        } else {
+            quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
+        }
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
     } catch(err){
         res.status(500).send({message: err});
@@ -205,7 +206,6 @@ router.post('/add_pre_quotation', async (req, res) => {
                 SELECT *
                 FROM QuotationNo
                 WHERE QuotationNo LIKE N'pre_${checkMonth()}%'`)
-            console.log(CheckQuotationNo.recordset.length)
             if (CheckQuotationNo.recordset.length<10) {
                 genQuotationNo = 'pre_'+checkMonth()+'0'+CheckQuotationNo.recordset.length
             } else {
@@ -335,7 +335,6 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
                     await pool.request().query(DeleteSubItem);
                 }
             }
-            console.log('check')
             let DeleteQuotation = `DECLARE @QuotationNoId bigint;
                 SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId =  ${QuotationId});
                 DELETE FROM QuotationItem WHERE QuotationId=${QuotationId}
@@ -343,7 +342,6 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
                 IF (SELECT COUNT(QuotationNoId) FROM Quotation WHERE QuotationNoId=@QuotationNoId) = 0
                     BEGIN DELETE FROM QuotationNo WHERE QuotationNoId=@QuotationNoId END`;
             await pool.request().query(DeleteQuotation);
-            console.log('check')
             res.status(200).send({message: 'Successfully delete pre-quotation'});
         } else {
             res.status(400).send({message: 'Cannot delete quotation'});
@@ -423,8 +421,9 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             EmployeeApproveId,
             EndCustomer
         } = req.body;
+        let PayTerm = JSON.stringify(QuotationPayTerm)
         let ValidityDateFilter = QuotationValidityDate.replace(/'/g,"''");
-        let PayTermFilter = QuotationPayTerm.replace(/'/g,"''");
+        let PayTermFilter = PayTerm.replace(/'/g,"''");
         let DeliveryFilter = QuotationDelivery.replace(/'/g,"''"); 
         let RemarkFilter = QuotationRemark.replace(/'/g,"''");
         let EndCustomerFilter = EndCustomer.replace(/'/g,"''"); 
