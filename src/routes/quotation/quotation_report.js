@@ -6,6 +6,7 @@ const { dbconfig } = require('../../../config');
 const { bahttext } = require('bahttext')
 const fs = require('fs');
 const pdfMake = require('pdfmake');
+const { compareSync } = require('bcryptjs');
 
 const fonts = {
     Roboto: {
@@ -223,6 +224,8 @@ router.get('/:QuotationId', async (req, res) => {
             }
         ]
 
+
+
         // condition
         let payTerm = "";
         let validityDate = quotation.QuotationValidityDate ? quotation.QuotationValidityDate : '-';
@@ -296,9 +299,11 @@ router.get('/:QuotationId', async (req, res) => {
                 }] 
             }, {
                 width: '*',
-                text: ""
+                text: "",
+                pageBreak: 'after'
             }
         ]
+        
 
         // item table
         let itemtable = {
@@ -315,43 +320,47 @@ router.get('/:QuotationId', async (req, res) => {
                 ],
             ]
         }
-
+        
         // get item
         let i = 1;
         let line = 0;
         const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
-        for(let Item of Items.recordset) {
-            let { ItemName, ItemPrice, ItemQty } = Item
-            if (ItemPrice == 'null') ItemPrice = 0;
-            if (ItemQty == 'null') ItemQty = 0
-            let LineTotal = ItemPrice * ItemQty
-            itemtable['body'].push([
-                {text: `${i}`, style: 'btext', alignment: 'center'},
-                {text: `${ItemName}`, style: 'btext'},
-                {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
-                {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
-                {text: `${moneyFormat(LineTotal.toFixed(2))}`, style: 'blacktext', alignment: 'right'}
-            ])
-            const SubItems = await pool.request().query(`SELECT * FROM [QuotationSubItem] a
-            LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
-            WHERE ItemId = ${Item.ItemId}`)
-            let j = 1;
-            for(let SubItem of SubItems.recordset) {
-                let {SubItemQty, SubItemUnit, ProductName} = SubItem
-                if (SubItemQty == 'null' || SubItemUnit == "undefined"){
-                    SubItemQty = "";
-                    SubItemUnit = "";
-                } 
-                itemtable['body'].push(["", {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext'},"","",""])
-                j++;
+        if (Items.recordset.length){
+            for(let Item of Items.recordset) {
+                let { ItemName, ItemPrice, ItemQty } = Item
+                if (ItemPrice == 'null' || typeof ItemPrice == 'object') ItemPrice = 0;
+                if (ItemQty == 'null' || typeof ItemQty == 'object') ItemQty = 0
+                let LineTotal = ItemPrice * ItemQty
+                itemtable['body'].push([
+                    {text: `${i}`, style: 'btext', alignment: 'center'},
+                    {text: `${ItemName}`, style: 'btext'},
+                    {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
+                    {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
+                    {text: `${moneyFormat(LineTotal.toFixed(2))}`, style: 'blacktext', alignment: 'right'}
+                ])
+                let j = 1;
+                const SubItems = await pool.request().query(`SELECT * FROM [QuotationSubItem] a
+                LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
+                WHERE ItemId = ${Item.ItemId}`)
+                if (SubItems.recordset.length){
+                    for(let SubItem of SubItems.recordset) {
+                        let {SubItemQty, SubItemUnit, ProductName} = SubItem
+                        if (SubItemQty == 'null' || SubItemUnit == "undefined"){
+                            SubItemQty = "";
+                            SubItemUnit = "";
+                        } 
+                        itemtable['body'].push(["", {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext'},"","",""])
+                        j++;
+                        line++;
+                    }
+                }
+                i++;
                 line++;
             }
-            i++;
-            line++;
         }
         let maxline = 25
         if (line<maxline) for (;line<maxline;line++) itemtable['body'].push([""," ","","",""])
-
+        
         let doc = {
             pageMargins: [60, 95, 60, 54],
             pageSize: 'LETTER',
@@ -409,6 +418,8 @@ router.get('/:QuotationId', async (req, res) => {
             }
         }
 
+        
+
         doc['content'].push(
             { columns: head },
             { text: "\n\n"},
@@ -423,7 +434,10 @@ router.get('/:QuotationId', async (req, res) => {
             { columns: price },
             { columns: condition },
             { text: "\n\n"},
-            { columns: signature }
+            { columns: signature },
+            // new page
+            { text: `Quotation No. : ${quotationNo}`}
+
         )
 
         console.log('check creating')
