@@ -231,6 +231,11 @@ router.get('/:QuotationId', async (req, res) => {
 
         // condition
         let validityDate = quotation.QuotationValidityDate ? quotation.QuotationValidityDate : '-';
+        if (typeof quotations.recordset[0].QuotationPayTerm == 'object' || !quotations.recordset[0].QuotationPayTerm.includes("QuotationPayTerm")) {
+            quotations.recordset[0].QuotationPayTerm = "";
+        } else {
+            quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
+        }
         let payTerm = quotation.QuotationPayTerm ? quotation.QuotationPayTerm : '-';
         let delivery = quotation.QuotationDelivery ? quotation.QuotationDelivery : '-';
         let remark = quotation.QuotationRemark ? quotation.QuotationRemark : '-'

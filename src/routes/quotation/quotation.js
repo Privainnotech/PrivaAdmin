@@ -56,12 +56,8 @@ router.get('/list', async (req, res, next) => {
         a.QuotationStatus,
         b.QuotationNo,
         a.QuotationRevised,
-        b.QuotationNo + '_0' + CONVERT(nvarchar(5), a.QuotationRevised) QuotationNo_Revised,
         a.QuotationSubject,
         c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
-        a.QuotationTotalPrice,
-        a.QuotationDiscount,
-        a.QuotationNetVat,
         a.QuotationDate,
         a.QuotationUpdatedDate,
         d.StatusName,
@@ -129,8 +125,11 @@ router.get('/:QuotationId', async (req, res) => {
             LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
             WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotation);
-        console.log(quotations.recordset[0].QuotationPayTerm)
-        console.log(Object.values(JSON.parse(quotations.recordset[0].QuotationPayTerm)))
+        if (typeof quotations.recordset[0].QuotationPayTerm == 'object' || !quotations.recordset[0].QuotationPayTerm.includes("QuotationPayTerm")) {
+            quotations.recordset[0].QuotationPayTerm = "";
+        } else {
+            quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
+        }
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
     } catch(err){
         res.status(500).send({message: err});
