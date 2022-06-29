@@ -68,7 +68,7 @@ $(document).ready(function () {
                             position: 'center',
                             icon: 'success',
                             title: 'Created',
-                            text: 'Company data have been created',
+                            text: 'Successfully add company',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -131,8 +131,8 @@ $(document).ready(function () {
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Created',
-                            text: 'Company data have been created',
+                            title: 'Edited',
+                            text: 'Successfully edit company',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -172,7 +172,7 @@ $(document).ready(function () {
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Company have been deleted',
+                        text: 'Successfully delete company',
                         showConfirmButton: false,
                         timer: 1500
                     })
