@@ -43,4 +43,10 @@ router.get('/index', (req, res, next) => {
 router.get('/employee', (req, res, next) => {
     res.render('employee')
 });
+
+// Test page
+router.get('/test', (req, res, next) => {
+    res.render('test')
+});
+
 module.exports = router
