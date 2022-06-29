@@ -288,7 +288,6 @@ $(document).ready(function () {
                         "QuotationPayTerm2": QuotationPayTerm2,
                         "QuotationPayTerm3": QuotationPayTerm3
                     }
-                    
                     console.log(QuotationPayTerm)
                     $.ajax({
                         url: "/quotation/edit_quotation/" + QuotationId,
