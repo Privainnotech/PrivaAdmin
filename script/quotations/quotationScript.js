@@ -233,7 +233,7 @@ $(document).ready(function () {
 				// console.log(QuotationId);
 				var obj = JSON.parse(response);
                 // QuotationNo_Revised
-                    
+                    console.log(obj.QuotationPayTerm.QuotationPayTerm1)
                     $('#ProNo').val(obj.QuotationNo_Revised);
                     $('#CusName').val(obj.CustomerName);
                     $('#QDate').val(obj.QuotationDate);
@@ -244,7 +244,9 @@ $(document).ready(function () {
                     $('#PJ_Name').val(obj.QuotationSubject);
       				$('#PJ_Discount').val(obj.QuotationDiscount);
                     $('#PJ_Validity').val(obj.QuotationValidityDate);
-                    $('#PJ_Payment').val(obj.QuotationPayTerm);
+                    $('#PJ_Payment1').val(obj.QuotationPayTerm.QuotationPayTerm1);
+                    $('#PJ_Payment2').val(obj.QuotationPayTerm.QuotationPayTerm2);
+                    $('#PJ_Payment3').val(obj.QuotationPayTerm.QuotationPayTerm3);
                     $('#PJ_Delivery').val(obj.QuotationDelivery);
                     $('#PJ_Remark').val(obj.QuotationRemark);
                     $('#PJ_End_Customer').val(obj.EndCustomer);
