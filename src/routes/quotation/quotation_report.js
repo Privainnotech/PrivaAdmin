@@ -51,6 +51,7 @@ let customLayouts = {
         },
         vLineWidth: function (i) { return 1; },
         hLineColor: function (i) { return '#000'; },
+        paddingLeft: function(i) { return 1; },
         paddingTop: function(i) { return 1; },
 		paddingBottom: function(i) { return 1; },
     }
@@ -64,13 +65,6 @@ router.get('/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        let getRevise = await pool.request().query(`SELECT QuotationRevised FROM Quotation WHERE QuotationId = ${QuotationId}`)
-        let Revised = '';
-        if (getRevise.recordset[0].QuotationRevised<10){
-            Revised = '0'+getRevise.recordset[0].QuotationRevised.toString()
-        } else {
-            Revised = getRevise.recordset[0].QuotationRevised.toString()
-        }
         let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised, c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
             c.CustomerEmail, f.CompanyName, f.CompanyAddress, a.EndCustomer, a.QuotationSubject, a.QuotationDate,
             a.QuotationTotalPrice, a.QuotationDiscount, a.QuotationNet, a.QuotationVat, a.QuotationNetVat,
@@ -230,13 +224,17 @@ router.get('/:QuotationId', async (req, res) => {
         ]
 
         // condition
+        let payTerm = "";
         let validityDate = quotation.QuotationValidityDate ? quotation.QuotationValidityDate : '-';
-        if (typeof quotations.recordset[0].QuotationPayTerm == 'object' || !quotations.recordset[0].QuotationPayTerm.includes("QuotationPayTerm")) {
-            quotations.recordset[0].QuotationPayTerm = "";
+        if (typeof quotation.QuotationPayTerm == 'object' || !quotation.QuotationPayTerm.includes("QuotationPayTerm")) {
+            quotation.QuotationPayTerm = "-";
         } else {
-            quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
+            quotation.QuotationPayTerm = JSON.parse(quotation.QuotationPayTerm)
+            let payTerms = Object.values(quotation.QuotationPayTerm)
+            payTerms.map(term => {
+                payTerm = payTerm + term + "\n"
+            })
         }
-        let payTerm = quotation.QuotationPayTerm ? quotation.QuotationPayTerm : '-';
         let delivery = quotation.QuotationDelivery ? quotation.QuotationDelivery : '-';
         let remark = quotation.QuotationRemark ? quotation.QuotationRemark : '-'
 
@@ -249,7 +247,7 @@ router.get('/:QuotationId', async (req, res) => {
                     stack: [
                         { text: "CONDITION:", style: 'condition', margin: [-22,0,0,0]},
                         { text: "Validity:", style: 'conditiontext'},
-                        { text: "Term of payment:", style: 'conditiontext' },
+                        { text: "Term of payment:\n\n\n", style: 'conditiontext' },
                         { text: "Delivery:", style: 'conditiontext' },
                         { text: "Remark:", style: 'conditiontext' },
                         { text: "\n\nBest Regards,", style: 'text', margin: [-18,0,0,0] },
@@ -331,7 +329,7 @@ router.get('/:QuotationId', async (req, res) => {
                 {text: `${i}`, style: 'btext', alignment: 'center'},
                 {text: `${ItemName}`, style: 'btext'},
                 {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
-                {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'center'},
+                {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
                 {text: `${moneyFormat(LineTotal.toFixed(2))}`, style: 'blacktext', alignment: 'right'}
             ])
             const SubItems = await pool.request().query(`SELECT * FROM [QuotationSubItem] a
