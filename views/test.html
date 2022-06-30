@@ -1,219 +1,355 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http:////cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-    
-    <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/test.css">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+	<meta name="author" content="AdminKit">
+	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+
+	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+	<title>Quotation</title>
+
+	<link href="css/app.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     
-    <title>Test</title>
-  </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#"><h1>PrivaAdmin</h1></a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link " aria-current="page" href="/index">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/customer">Customer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/employee">Employee</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="/quotation">Quotation</a>
-              </li>
-            </ul>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http:////cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+  <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/fonts/font-awesome.min.css">
+  <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/quotation.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<nav id="sidebar" class="sidebar js-sidebar">
+			<div class="sidebar-content js-simplebar">
+				<a class="sidebar-brand" href="index.html">
+          <span class="align-middle">Pages</span>
+        </a>
+
+				<ul class="sidebar-nav">
+					<li class="sidebar-item active">
+						<a class="sidebar-link" href="index.html">
+              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="pages-profile.html">
+              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="pages-sign-in.html">
+              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="pages-sign-up.html">
+              <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign Up</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="pages-blank.html">
+              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+            </a>
+					</li>
+
+				</ul>
+			</div>
+		</nav>
+
+    <!-- form Add Quatation -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="modalQuotationMaster">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <form id="formQuotation" action="/Setting/AddEditRecpName">
+                  <div class="modal-header">
+                      <h4 class="modal-title" id="modalHeaderAddPart">Add Project:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Project Name:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpProjectName" style="width: 100%;" required=""></div>
+                      </div>
+                      <div class="form-row my-2">
+                        <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Customer Name:&nbsp;</span></div>
+                        <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                          <select class="form-select" id="modalInpCustomerId">
+                                <option value="null" selected="">-</option>
+                          </select>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer"><button class="btn btn-primary" id="modalSaveProject" type="button">Save</button></div>
+              </form>
           </div>
-        </div>
-      </nav>
+      </div>
+    </div>
 
-      <div class="container-fluid text-center">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="container bg-w">
-                    <div class="title">
-                    <h1>Quotation List</h1><button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
+    <!-- form Add item -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="modalAddItemMaster">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <form id="formAddItem" action="/Setting/AddEditRecpName">
+                  <div class="modal-header">
+                      <h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="form-row my-2">
+                          <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>ItemName:&nbsp;</span></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpAddItemName" style="width: 100%;" required=""></div>
+                      </div>
+                      <div class="form-row my-2">
+                        <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span></div>
+                        <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpAddQty" style="width: 100%;" required=""></div>
+                      </div>
+                      <div class="form-row my-2">
+                        <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Details:&nbsp;</span></div>
+                        <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><textarea class="form-control" type="text" id="modalInpAddDetails" style="width: 100%;" required=""></textarea></div>
+                      </div>
+                  </div>
+                  <div class="modal-footer"><button class="btn btn-primary" id="modalAddItem" type="button">Save</button></div>
+              </form>
+          </div>
+      </div>
+    </div>
+
+		<div class="main">
+			<nav class="navbar navbar-expand navbar-light navbar-bg sticky-top">
+				<a class="sidebar-toggle js-sidebar-toggle">
+          <i class="hamburger align-self-center"></i>
+        </a>
+
+				<div class="navbar-collapse collapse">
+					<div class="navbar-nav navbar-align">
+						<h1 class="">PrivaAdmin</h1>
+					</div>
+				</div>
+			</nav>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+					<div class="row">
+						<div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xxl-9">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card flex-fill">
+                    <div class="card-header title">
+                      <!-- <h5 class="card-title mb-0">Quotation List</h5> -->
+                      <h1>Quotation List</h1><button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
                     </div>
-                    <table id="tableQuo" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
-                      <thead  class="table-dark">
-                          <tr>
-                              <th style="width: 5%;">Index</th>
-                              <th>Quotation NO.</th>
-                              <th>Revised</th>
-                              <th>Project</th>
-                              <th>Customer</th>
-                              <th>Quotation Date</th>
-                              <th>Update Date</th>
-                              <th>Status</th>
-                              <th style="width: 10%;">Action</th>
-                              <th style="display: none;"></th>
-                          </tr>
+                    <table id="tableQuo" class="table table-hover my-0">
+                      <thead>
+                        <tr>
+                          <th style="width: 5%;">Index</th>
+                          <th>Quotation NO.</th> <!-- class="d-none d-xl-table-cell" -->
+                          <th class="d-none d-xl-table-cell">Revised</th>
+                          <th>Project</th>
+                          <th>Customer</th> <!-- class="d-none d-md-table-cell" -->
+                          <th class="d-none d-xl-table-cell">Quotation Date</th>
+                          <th class="d-none d-xl-table-cell">Update Date</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                          <th style="display: none;"></th>
+                        </tr>
                       </thead>
                       <tbody>
-                          <tr>
-                              <td colspan="9">Loading...</td>
-                          </tr>
+                        <tr>
+                          <td colspan="9">Loading...</td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
-            </div>
-            <div class="col-md-6">
-                <div class="container bg-w">
-                    <div class="title">
-                      <input id="ProNo" class="no-bor-title " value="PojectNo"><button type="button" class="btn btn-dark" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 d-flex">
+                  <div class="card flex-fill">
+                    <div class="card-header title">
+                      <h1>Item</h1><button type="button" class="btn btn-success " id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
                     </div>
-                    <div class="title">
-                      <span class="w-700">Customer:</span>
-                      <input id="CusName" class="no-bor form-control" value="Customer Name">
-                      <span class="w-700">Date:</span>
-                      <input id="QDate" class="no-bor form-control" value="Quotation Date">
+                      <table id="tableItem" class="table table-hover my-0" style="width:100%">
+                        <thead >
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Unit Price</th>
+                                <th>Qty</th>
+                                <th style="width: 20%;">Action</th>
+                                <th style="display: none;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">Loading...</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                </div>
+                <div class="col-6 d-flex">
+                  <div class="card flex-fill">
+                    <div class="card-header title">
+                      <h1>Sub-Item</h1>
                     </div>
-                    <div class="title">
-                      <span class="w-700">Email:</span>
-                      <input id="CusEmail" class="no-bor form-control" value="Customer Email">
+                      <table id="tableSubItem" class="table table-hover my-0" style="width:100%">
+                        <thead >
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Unit Price</th>
+                                <th>Qty</th>
+                                <th style="width: 20%;">Action</th>
+                                <th style="display: none;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4">Loading...</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                  </div>
+                </div>
+              </div>
+							
+
+              
+
+						</div>
+						<div class="col-12 col-lg-4 col-xxl-3 d-flex">
+							<div class="card flex-fill w-100">
+								<div class="card-header title2">
+									<!-- <h5 class="card-title mb-0">Monthly Sales</h5> -->
+                  <input id="ProNo" class="no-bor-title " disabled value="PojectNo"><button type="button" class="btn btn-dark" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
+
+								</div>
+								<div class="card-body w-100">
+									<div class="align-self-center chart chart-lg">
+										<!-- set -->
+                    <div class="title mg-0">
+                      <span class="w-700 mg-0">Customer:</span>
+                      <input id="CusName" class="no-bor form-control" disabled  value="Customer Name">
+                      <span class="w-700 mg-0">Date:</span>
+                      <input id="QDate" class="no-bor form-control disabled" disabled value="Quotation Date">
                     </div>
-                    <div class="title">
-                      <span class="w-700">Company:</span>
-                      <input id="ComName" class="no-bor form-control" value="Company Name">
+
+                    <div class="title mg-0">
+                      <span class="w-700 mg-0">Email:</span>
+                      <input id="CusEmail" class="no-bor form-control mg-0" disabled value="Customer Email">
                     </div>
-                    <div class="title">
-                      <span class="w-700">Adress:</span>
-                      <input id="Adress" class="no-bor form-control" value="Adress">
+
+                    <div class="title mg-0">
+                      <span class="w-700 mg-0">Company:</span>
+                      <input id="ComName" class="no-bor form-control mg-0" disabled value="Company Name">
                     </div>
-                    <div class="input-group">
-                      <span class="input-group-text textbox">Project Name:</span>
-                      <input type="text" class="form-control" id="PJ_Name">
-                      <span class="input-group-text textbox2">Discount: </span>
-                      <input type="text" class="form-control" id="PJ_Discount">
+
+                    <div class="title mg-0">
+                      <span class="w-700 mg-0">Address:</span>
+                      <input id="Adress" class="no-bor form-control mg-0" disabled value="Adress">
                     </div>
-                    <div class="input-group">
-                      <span class="input-group-text textbox">End Customer:</span>
-                      <input type="text" class="form-control" id="PJ_End_Customer">
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-text textbox">Validity:</span>
-                      <input type="text" class="form-control" id="PJ_Validity">
-                      <span class="input-group-text textbox2">Delivery:</span>
-                      <input type="text" class="form-control" id="PJ_Delivery">
-                    </div>
-                    <div class="input-group">
-                      <span class="input-group-text textbox">Remark:</span>
-                      <input type="text" class="form-control" id="PJ_Remark">
-                    </div>
+
                     <div class="input-group ">
-                      <label class="input-group-text textbox" for="PJ_Approve">Approve By:</label>
-                        <select class="form-select wd-select" id="PJ_Approve">
+                      <span class="input-group-text textbox f-9">Project Name:</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Name" disabled>
+                      <span class="input-group-text textbox2 f-9">Discount: </span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Discount" disabled>
+                    </div>
+
+                    <div class="input-group">
+                      <span class="input-group-text textbox f-9">End Customer:</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_End_Customer" disabled>
+                    </div>
+
+                    <div class="input-group">
+                      <span class="input-group-text textbox f-9">Validity:</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Validity" disabled>
+                      <span class="input-group-text textbox2 f-9">Delivery:</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Delivery" disabled>
+                    </div>
+
+                    <div class="input-group">
+                      <span class="input-group-text textbox f-9">Remark:</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Remark" disabled>
+                    </div>
+
+                    <div class="input-group ">
+                      <label class="input-group-text textbox f-9" for="PJ_Approve">Approve By:</label>
+                        <select class="form-select wd-select edit f-9" id="PJ_Approve" disabled>
                               <option value="null" selected="">-</option>
                         </select>
                     </div>
+
                     <div class="input-group">
-                      <span class="input-group-text textbox4">Term of Payment:</span>
-                      <input type="text" class="form-control" id="PJ_Payment1">
+                      <span class="input-group-text textbox4 f-9">Term of Payment:</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled>
                     </div>
+
                     <div class="input-group">
-                      <span class="input-group-text textbox4">-</span>
-                      <input type="text" class="form-control" id="PJ_Payment2">
+                      <span class="input-group-text textbox4 f-9">-</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Payment2" disabled>
                     </div>
+
                     <div class="input-group">
-                      <span class="input-group-text textbox4">-</span>
-                      <input type="text" class="form-control" id="PJ_Payment3">
+                      <span class="input-group-text textbox4 f-9">-</span>
+                      <input type="text" class="form-control edit f-9" id="PJ_Payment3" disabled>
                     </div>
-                    
-                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                      <button type="button" class="btn btn-danger" id="btn-cancel">Cancel</button>
-                      <button type="button" class="btn btn-warning" id="btn-quotation">Quotation</button>
-                      <button type="button" class="btn btn-secondary" id="btn-book">Book</button>
-                      <button type="button" class="btn btn-info" id="btn-lost">Lost</button>
-                      <!-- <button type="button" class="btn btn-success" id="modalEditProject" >Edit</button> -->
-                    </div>
-                    <button type="button" class="btn btn-success btn-position" id="modalEditProject" >Edit</button>
-                    <br>
-                    <!-- TableItem -->
-                    <div class="row">    
-                      <div class="col-md-6">
-                        <div class="container">
-                          <div class="title">
-                            <h1>Item</h1><button type="button" class="btn btn-success" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
-                            </div>
-                              <table id="tableItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
-                                <thead  class="table-dark">
-                                    <tr>
-                                        <th>Item Name</th>
-                                        <th>Unit Price</th>
-                                        <th>Qty</th>
-                                        <th style="width: 20%;">Action</th>
-                                        <th style="display: none;"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="4">Loading...</td>
-                                    </tr>
-                                </tbody>
-                              </table>
-                            </div>
+
+                    <div class="input-group-footer">
+                      <div class="row">
+                        <div class="col-10">
+                          <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                            <button type="button" class="btn btn-danger " id="btn-cancel">Cancel</button>
+                            <button type="button" class="btn btn-warning " id="btn-quotation">Quotation</button>
+                            <button type="button" class="btn btn-secondary " id="btn-book">Book</button>
+                            <button type="button" class="btn btn-info " id="btn-lost">Loss</button>
                           </div>
-                          <!-- TableSubItem -->
-                          <div class="col-md-6">
-                            <div class="container">
-                              <div class="title">
-                                <h1>Sub-Item</h1>
-                                </div>
-                                <table id="tableSubItem" class="table table-hover table-bordered display dataTables_wrapper" style="width:100%">
-                                  <thead  class="table-dark">
-                                      <tr>
-                                          <th>Sub-Item Name</th>
-                                          <th>Unit Price</th>
-                                          <th>Qty</th>
-                                          <th style="width: 20%;">Action</th>
-                                          <th style="display: none;"></th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td colspan="4">Loading...</td>
-                                      </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
+                        </div>
+                        <div class="col-2">
+                          <button type="button" class="btn btn-success" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
                         </div>
                       </div>
                     </div>
-            </div>
-        </div>
-    </div>
-      
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="/js/jquery.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
-    <script src="/quotations/quotationScript.js"></script>
-    <script src="/quotations/quotationDropdown.js"></script>
+				</div>
+			</main>
 
-  </body>
+		</div>
+	</div>
+
+	<script src="js/app.js"></script>
+
+	
+	
+	
+	
+	
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/bootstrap/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+
+  <script src="/quotations/quotationScript.js"></script>
+  <script src="/quotations/quotationDropdown.js"></script>
+</body>
+
 </html>
