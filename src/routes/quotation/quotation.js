@@ -139,13 +139,9 @@ router.get('/item/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription,
-            ( SELECT CONVERT(nvarchar(20), b.SubItemId) + ','
-                    FROM [QuotationSubItem] b
-                    LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId
-                    WHERE b.ItemId = a.ItemId 
-                    FOR XML PATH('')) AS SubItemId
+        getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription, b.QuotationStatus
             FROM [QuotationItem] a
+            LEFT JOIN [Quotation] b on a.QuotationId = b.QuotationId
             WHERE QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotationItem);
         res.status(200).send(JSON.stringify(quotations.recordset));

@@ -129,7 +129,8 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation
             SET QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
-            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5`
+            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
+                WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(CancelQuotation);
             res.status(200).send({message: 'Successfully set quotation'});
@@ -152,7 +153,7 @@ router.get('/booking/:QuotationId', async (req, res) => {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
             let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
-                WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5`
+                WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(CancelQuotation);
             res.status(200).send({message: 'Successfully set quotation'});
@@ -175,7 +176,7 @@ router.get('/loss/:QuotationId', async (req, res) => {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 4, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
             let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
-                WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5`
+                WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(CancelQuotation);
             res.status(200).send({message: 'Successfully set quotation'});
