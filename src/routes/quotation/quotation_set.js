@@ -65,26 +65,22 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${ValidityDateFilter}', N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', N'${checkDate()}', ${EmployeeApproveId}, N'${EndCustomerFilter}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
-            console.log('insert quo')
             let NewQuotationId = Quotation.recordset[0].Id
             // Copy Item
             let selectOldItem = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${OldQuotationId}`)
-            console.log('select old item')
             for(const item of selectOldItem.recordset){
-                console.log('copy item')
                 let newItem = await pool.request().query(`INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)
                 VALUES(${NewQuotationId}, N'${item.ItemName}', ${item.ItemPrice}, ${item.ItemQty}, N'${item.ItemDescription}')
                 SELECT SCOPE_IDENTITY() AS Id`)
                 let NewItemId = newItem.recordset[0].Id
                 let selectOldSubItem = await pool.request().query(`SELECT * FROM QuotationSubItem WHERE ItemId = ${item.ItemId}`)
                 for(const subitem of selectOldSubItem.recordset){
-                    console.log('copy subitem')
+                    
                     await pool.request().query(`INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemQty, SubItemUnit)
                     VALUES(${NewItemId}, ${subitem.ProductId}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`)
                 }
             }
-            // Update old quotation status to cancel
-            // await pool.request().query(`UPDATE Quotation SET QuotationStatus=5 WHERE QuotationId = ${OldQuotationId}`)
+            console.log('copy success')
             res.status(200).send({message: 'Successfully revise quotation'});
         }
     } catch(err){
@@ -133,12 +129,79 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation
             SET QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
-            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId}`
+            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5`
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(CancelQuotation);
             res.status(200).send({message: 'Successfully set quotation'});
         } else {
             res.status(400).send({message: 'Already quotation'});
+        }
+    } catch(err){
+        res.status(500).send({message : `${err}`});
+    }
+})
+
+//set booking status
+router.get('/booking/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId;
+        let getQuotation = await pool.request().query(`SELECT QuotationNoId, QuotationStatus FROM Quotation WHERE QuotationId = ${QuotationId}`)
+        let {QuotationNoId, QuotationStatus} = getQuotation.recordset[0];
+        if (QuotationStatus != 1) {
+            // Update Quotation NoId, Status & Delete pre-quotation no
+            let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
+            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
+                WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5`
+            await pool.request().query(UpdateQuotationStatus);
+            await pool.request().query(CancelQuotation);
+            res.status(200).send({message: 'Successfully set quotation'});
+        } else {
+            res.status(400).send({message: 'Cannot booking pre-quotation'});
+        }
+    } catch(err){
+        res.status(500).send({message : `${err}`});
+    }
+})
+
+//set loss status
+router.get('/loss/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId;
+        let getQuotation = await pool.request().query(`SELECT QuotationNoId, QuotationStatus FROM Quotation WHERE QuotationId = ${QuotationId}`)
+        let {QuotationNoId, QuotationStatus} = getQuotation.recordset[0];
+        if (QuotationStatus != 1) {
+            // Update Quotation NoId, Status & Delete pre-quotation no
+            let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 4, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
+            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
+                WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5`
+            await pool.request().query(UpdateQuotationStatus);
+            await pool.request().query(CancelQuotation);
+            res.status(200).send({message: 'Successfully set quotation'});
+        } else {
+            res.status(400).send({message: 'Cannot loss pre-quotation'});
+        }
+    } catch(err){
+        res.status(500).send({message : `${err}`});
+    }
+})
+
+//set cancel status
+router.get('/cancel/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId;
+        let getQuotation = await pool.request().query(`SELECT QuotationStatus FROM Quotation WHERE QuotationId = ${QuotationId}`)
+        let {QuotationStatus} = getQuotation.recordset[0];
+        if (QuotationStatus != 5 && QuotationStatus != 1) {
+            // Update Quotation NoId, Status & Delete pre-quotation no
+            let UpdateQuotationStatus = `Update Quotation
+            SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
+            await pool.request().query(UpdateQuotationStatus);
+            res.status(200).send({message: 'Successfully set quotation'});
+        } else {
+            res.status(400).send({message: 'Cannot cancel pre-quotation or canceled'});
         }
     } catch(err){
         res.status(500).send({message : `${err}`});

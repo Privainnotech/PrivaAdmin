@@ -18,7 +18,6 @@ const checkDate = () => {
     let yyyy = today.getFullYear();
     if (dd<10) { dd='0'+dd; }
     if (mm<10) { mm='0'+mm; }
-    // yyyy = yyyy[3]+yyyy[4]
     return dd+'-'+mm+'-'+yyyy;
 }
 
@@ -142,7 +141,8 @@ router.get('/item/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId
         getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription,
             ( SELECT CONVERT(nvarchar(20), b.SubItemId) + ','
-                    FROM [QuotationSubItem] b LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId
+                    FROM [QuotationSubItem] b
+                    LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId
                     WHERE b.ItemId = a.ItemId 
                     FOR XML PATH('')) AS SubItemId
             FROM [QuotationItem] a
@@ -189,6 +189,10 @@ router.post('/add_pre_quotation', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let { QuotationSubject, CustomerId } = req.body
+        if(CustomerId == 'null'){
+            res.status(400).send({message: 'Please select Customer'});
+            return;
+        }
         let CheckQuotation = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
              SELECT *
@@ -202,16 +206,32 @@ router.post('/add_pre_quotation', async (req, res) => {
         } else{
             // Generate QuotationNo
             let genQuotationNo = '';
-            let CheckQuotationNo = await pool.request().query(`
+            let SearchQuotationNo = await pool.request().query(`
                 SELECT *
                 FROM QuotationNo
                 WHERE QuotationNo LIKE N'pre_${checkMonth()}%'`)
-            if (CheckQuotationNo.recordset.length<10) {
-                genQuotationNo = 'pre_'+checkMonth()+'0'+CheckQuotationNo.recordset.length
-            } else {
-                genQuotationNo = 'pre_'+checkMonth()+CheckQuotationNo.recordset.length
-            }
-            console.log("Gen QuotationNo: " + genQuotationNo)
+            // Check QuotationNo
+            let duplicateNo = true;
+            let Number = SearchQuotationNo.recordset.length
+            do {
+                if (Number<10) {
+                    genQuotationNo = 'pre_'+checkMonth()+'0'+Number
+                } else {
+                    genQuotationNo = 'pre_'+checkMonth()+Number
+                }
+                let CheckQuotationNo = await pool.request().query(`SELECT CASE
+                WHEN EXISTS(
+                     SELECT *
+                     FROM QuotationNo
+                     WHERE QuotationNo = N'${genQuotationNo}'
+                )
+                THEN CAST (1 AS BIT)
+                ELSE CAST (0 AS BIT) END AS 'check'`);
+                duplicateNo = CheckQuotationNo.recordset[0].check
+                if (duplicateNo) {
+                    Number++;
+                }
+            } while (duplicateNo);
             // Insert QuotationNo
             let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
                 SELECT SCOPE_IDENTITY() AS Id`;
@@ -412,7 +432,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId
         let {
             QuotationSubject,
-            CustomerId,
             QuotationDiscount,
             QuotationValidityDate,
             QuotationPayTerm,
@@ -427,10 +446,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         let DeliveryFilter = QuotationDelivery.replace(/'/g,"''"); 
         let RemarkFilter = QuotationRemark.replace(/'/g,"''");
         let EndCustomerFilter = EndCustomer.replace(/'/g,"''"); 
-        if(CustomerId == 'null'){
-            res.status(400).send({message: 'Please select Customer'});
-            return;
-        }
         if(EmployeeApproveId == 'null'){
             res.status(400).send({message: 'Please select Employee'});
             return;
