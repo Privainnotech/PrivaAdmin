@@ -276,7 +276,7 @@ $(document).ready(function () {
     //clickTableQuotation
     $('#tableQuo tbody' ).on('click', 'tr', function ()  {
 
-        
+       
         fill_resetSubTable()
         $("#btn-text").text("Edit");
         $("#PJ_Name").attr("disabled", "disabled"); 
@@ -289,6 +289,11 @@ $(document).ready(function () {
         $("#PJ_Delivery").attr("disabled", "disabled"); 
         $("#PJ_Remark").attr("disabled", "disabled"); 
         $("#PJ_Approve").attr("disabled", "disabled");
+        $("#btn-cancel").attr("disabled", "disabled");
+        $("#btn-quotation").attr("disabled", "disabled");
+        $("#btn-book").attr("disabled", "disabled");
+        $("#btn-loss").attr("disabled", "disabled");
+
         $("#modalEditProject").removeClass('save');
         $("#modalEditProject").removeAttr("data-toggle");
         $("#modalEditProject").removeAttr("data-target");
@@ -298,6 +303,9 @@ $(document).ready(function () {
         rows = $(this).closest("tr");
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
+
+        console.log(QuotationStatus)
+        console.log(typeof(QuotationStatus))
 
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
@@ -316,6 +324,9 @@ $(document).ready(function () {
                 $("#modalEditProject").removeClass('visually-hidden');
                 //Show AddItem Button
                 $("#addItem").removeClass('visually-hidden');
+                //Show Quotation Button
+                $("#btn-quotation").removeAttr("disabled");
+
 
                 $(document).on("click", "#modalEditProject",function () {
                     if($("#modalEditProject").hasClass('save')){
@@ -420,8 +431,10 @@ $(document).ready(function () {
                     }
                 })
 
-            } 
-            else{
+            }
+
+            // Status Quotation
+            if (QuotationStatus === "2") {
                 $("#btn-text").text("Edit");
                 //Eidt button
                 $("#modalEditProject").removeClass('visually-hidden');
@@ -433,8 +446,98 @@ $(document).ready(function () {
                 $("#addItem").removeClass('visually-hidden');
                 $("#addItem").toggleClass('visually-hidden');
 
+                $("#btn-loss").removeAttr("disabled");
+                $("#btn-book").removeAttr("disabled");
+                $("#btn-cancel").removeAttr("disabled");
+
+
                 
             }
+
+            // Status booking
+            if (QuotationStatus === "3") {
+                $("#btn-text").text("Edit");
+                //Eidt button
+                $("#modalEditProject").removeClass('visually-hidden');
+                $("#modalEditProject").toggleClass('visually-hidden');
+                $("#modalEditProject").removeAttr("data-toggle");
+                $("#modalEditProject").removeAttr("data-target");
+
+                //AddItem button
+                $("#addItem").removeClass('visually-hidden');
+                $("#addItem").toggleClass('visually-hidden');
+
+                $("#btn-loss").removeAttr("disabled");
+                $("#btn-quotation").removeAttr("disabled");
+                $("#btn-cancel").removeAttr("disabled");
+            }
+
+            // Status loss
+            if (QuotationStatus === "4") {
+                $("#btn-text").text("Edit");
+                //Eidt button
+                $("#modalEditProject").removeClass('visually-hidden');
+                $("#modalEditProject").toggleClass('visually-hidden');
+                $("#modalEditProject").removeAttr("data-toggle");
+                $("#modalEditProject").removeAttr("data-target");
+
+                //AddItem button
+                $("#addItem").removeClass('visually-hidden');
+                $("#addItem").toggleClass('visually-hidden');
+
+                $("#btn-book").removeAttr("disabled");
+                $("#btn-quotation").removeAttr("disabled");
+                $("#btn-cancel").removeAttr("disabled");
+            }
+
+            // Status cancel
+            if (QuotationStatus === "5") {
+                $("#btn-text").text("Edit");
+                //Eidt button
+                $("#modalEditProject").removeClass('visually-hidden');
+                $("#modalEditProject").toggleClass('visually-hidden');
+                $("#modalEditProject").removeAttr("data-toggle");
+                $("#modalEditProject").removeAttr("data-target");
+
+                //AddItem button
+                $("#addItem").removeClass('visually-hidden');
+                $("#addItem").toggleClass('visually-hidden');
+
+                $("#btn-book").removeAttr("disabled");
+                $("#btn-quotation").removeAttr("disabled");
+                $("#btn-loss").removeAttr("disabled");
+            }
+            // else{
+            //     $("#btn-text").text("Edit");
+            //     //Eidt button
+            //     $("#modalEditProject").removeClass('visually-hidden');
+            //     $("#modalEditProject").toggleClass('visually-hidden');
+            //     $("#modalEditProject").removeClass('save');
+            //     $("#modalEditProject").removeAttr("data-toggle");
+            //     $("#modalEditProject").removeAttr("data-target");
+                
+
+            //     //AddItem button
+            //     $("#addItem").removeClass('visually-hidden');
+            //     $("#addItem").toggleClass('visually-hidden');
+
+            //     $("#PJ_Name").attr("disabled", "disabled"); 
+            //     $("#PJ_Discount").attr("disabled", "disabled"); 
+            //     $("#PJ_End_Customer").attr("disabled", "disabled"); 
+            //     $("#PJ_Validity").attr("disabled", "disabled"); 
+            //     $("#PJ_Payment1").attr("disabled", "disabled"); 
+            //     $("#PJ_Payment2").attr("disabled", "disabled"); 
+            //     $("#PJ_Payment3").attr("disabled", "disabled"); 
+            //     $("#PJ_Delivery").attr("disabled", "disabled"); 
+            //     $("#PJ_Remark").attr("disabled", "disabled"); 
+            //     $("#PJ_Approve").attr("disabled", "disabled");
+            //     $("#btn-cancel").attr("disabled", "disabled");
+            //     $("#btn-quotation").attr("disabled", "disabled");
+            //     $("#btn-book").attr("disabled", "disabled");
+            //     $("#btn-loss").attr("disabled", "disabled");
+
+                
+            // }
            
             
     
@@ -569,7 +672,6 @@ $(document).ready(function () {
                         contentType: 'application/json',
                         success: function () {
                             window.open("/quotation_report/" + QuotationId)
-                            QuotationId.val('');
                         },
                         error: function (err) {
                             errorText = err.responseJSON.message;
@@ -607,7 +709,7 @@ $(document).ready(function () {
                                 timer: 1500
                             })
                             tableQuo.ajax.reload(null, false);
-                            QuotationId.val('');
+                            
     
                         },
                         error: function (err) {
@@ -621,7 +723,7 @@ $(document).ready(function () {
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#FF5733'
                                 });
-                            QuotationId.val('');
+                            
                         }
                     })
                 })
@@ -648,7 +750,7 @@ $(document).ready(function () {
                                 timer: 1500
                             })
                             tableQuo.ajax.reload(null, false);
-                            QuotationId.val('');
+                            
     
                         },
                         error: function (err) {
@@ -662,7 +764,7 @@ $(document).ready(function () {
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#FF5733'
                                 });
-                            QuotationId.val('');
+                            
                         }
                     })
                 })
@@ -689,7 +791,7 @@ $(document).ready(function () {
                                 timer: 1500
                             })
                             tableQuo.ajax.reload(null, false);
-                            QuotationId.val('');
+                            
     
                         },
                         error: function (err) {
@@ -703,7 +805,7 @@ $(document).ready(function () {
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#FF5733'
                                 });
-                            QuotationId.val('');
+                            
                         }
                     })
                 })
@@ -730,8 +832,6 @@ $(document).ready(function () {
                                 timer: 1500
                             })
                             tableQuo.ajax.reload(null, false);
-                            QuotationId.val('');
-    
                         },
                         error: function (err) {
                             errorText = err.responseJSON.message;
@@ -744,7 +844,6 @@ $(document).ready(function () {
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#FF5733'
                                 });
-                            QuotationId.val('');
                         }
                     })
                 })
