@@ -75,18 +75,12 @@ nav{
 	background: #fff;
 	border-radius: 8px;
 }
-.dataTables_wrapper {
-	/* margin-top: 2em; */
-	margin-bottom: 2em;
-}
 
-.title{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 2px;
-	margin-bottom: 10px;
-}
+
+
+
+
+
 .title h1{
 	font-size: 35px;
 	padding: 9px;
