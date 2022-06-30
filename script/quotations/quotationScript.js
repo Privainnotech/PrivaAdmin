@@ -1,4 +1,19 @@
 $(document).ready(function () {
+    function fill_resetTable() {
+        var trHTML = ''; 
+        trHTML += '<tr>'
+        trHTML +=  '<td colspan="6">Loading...</td>'
+        trHTML +=  '</tr>' 
+        document.getElementById("showTable").innerHTML = trHTML;
+    }
+    function fill_resetSubTable() {
+        var trHTML = ''; 
+        trHTML += '<tr>'
+        trHTML +=  '<td colspan="6">Loading...</td>'
+        trHTML +=  '</tr>' 
+        document.getElementById("showSubTable").innerHTML = trHTML;
+    }
+
     function fill_quotation() {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
@@ -67,6 +82,10 @@ $(document).ready(function () {
             "bDestroy": true,
             "scrollY": "145px",
             "scrollCollapse": true,
+            "searching": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "bLengthChange": false,
             "ajax": {
                 "url": `/quotation/item/` + Id,
                 "dataSrc": ""
@@ -107,6 +126,10 @@ $(document).ready(function () {
             "bDestroy": true,
             "scrollY": "145px",
             "scrollCollapse": true,
+            "searching": false,
+            "bPaginate": false,
+            "bInfo": false,
+            "bLengthChange": false,
             "ajax": {
                 "url": `/quotation/subitem_byitem/` + Id,
                 "dataSrc": ""
@@ -227,7 +250,8 @@ $(document).ready(function () {
             cache: false,
 			success:function(response){
 				var obj = JSON.parse(response);
-                    $('#ProNo').val(obj.QuotationNo_Revised);
+                console.log(obj.CompanyName)
+                    $('#ProNo').text(obj.QuotationNo_Revised);
                     $('#CusName').val(obj.CustomerName);
                     $('#QDate').val(obj.QuotationDate);
                     $('#CusEmail').val(obj.CustomerEmail);
@@ -252,6 +276,9 @@ $(document).ready(function () {
 
     //clickTableQuotation
     $('#tableQuo tbody' ).on('click', 'tr', function ()  {
+
+        
+        fill_resetSubTable()
         $("#btn-text").text("Edit");
         $("#PJ_Name").attr("disabled", "disabled"); 
         $("#PJ_Discount").attr("disabled", "disabled"); 
@@ -275,37 +302,45 @@ $(document).ready(function () {
 
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
+            fill_resetTable() 
+
         }
         else{
             $('#tableQuo tr').removeClass('selected');
             $(this).toggleClass('selected');
-                
+            
+            
             ShowPro(QuotationId)
             fill_item(QuotationId)
 
             if (QuotationStatus === "1") {
-                $("#modalEditProject").removeClass('disabled');
+                //Show Edit Button
+                $("#modalEditProject").removeClass('visually-hidden');
+                //Show AddItem Button
+                $("#addItem").removeClass('visually-hidden');
+
                 $(document).on("click", "#modalEditProject",function () {
                     if($("#modalEditProject").hasClass('save')){
                         $(".save#modalEditProject").removeClass('save');
                         $("#modalEditProject").removeAttr("data-toggle");
                         $("#modalEditProject").removeAttr("data-target");
     
-                        $("#btn-text").text("Edit");
-                        
-                        $("#PJ_Name").attr("disabled", "disabled"); 
-                        $("#PJ_Discount").attr("disabled", "disabled"); 
-                        $("#PJ_End_Customer").attr("disabled", "disabled"); 
-                        $("#PJ_Validity").attr("disabled", "disabled"); 
-                        $("#PJ_Payment1").attr("disabled", "disabled"); 
-                        $("#PJ_Payment2").attr("disabled", "disabled"); 
-                        $("#PJ_Payment3").attr("disabled", "disabled"); 
-                        $("#PJ_Delivery").attr("disabled", "disabled"); 
-                        $("#PJ_Remark").attr("disabled", "disabled"); 
-                        $("#PJ_Approve").attr("disabled", "disabled"); 
+                         
 
                         $("#btnEditYes").unbind("click");
                         $(".btnYes").click(function () {
+                            $("#btn-text").text("Edit");
+                            $("#PJ_Name").attr("disabled", "disabled"); 
+                            $("#PJ_Discount").attr("disabled", "disabled"); 
+                            $("#PJ_End_Customer").attr("disabled", "disabled"); 
+                            $("#PJ_Validity").attr("disabled", "disabled"); 
+                            $("#PJ_Payment1").attr("disabled", "disabled"); 
+                            $("#PJ_Payment2").attr("disabled", "disabled"); 
+                            $("#PJ_Payment3").attr("disabled", "disabled"); 
+                            $("#PJ_Delivery").attr("disabled", "disabled"); 
+                            $("#PJ_Remark").attr("disabled", "disabled"); 
+                            $("#PJ_Approve").attr("disabled", "disabled");
+
                             let QuotationSubject = $.trim($('#PJ_Name').val());
                             let QuotationDiscount = $.trim($('#PJ_Discount').val());
                             let EndCustomer = $.trim($('#PJ_End_Customer').val());
@@ -390,14 +425,18 @@ $(document).ready(function () {
             } 
             else{
                 $("#btn-text").text("Edit");
-                $("#modalEditProject").removeClass('disabled');
-                $("#modalEditProject").toggleClass('disabled');
-
+                //Eidt button
+                $("#modalEditProject").removeClass('visually-hidden');
+                $("#modalEditProject").toggleClass('visually-hidden');
                 $("#modalEditProject").removeAttr("data-toggle");
                 $("#modalEditProject").removeAttr("data-target");
+
+                //AddItem button
+                $("#addItem").removeClass('visually-hidden');
+                $("#addItem").toggleClass('visually-hidden');
+
+                
             }
-            //edit Pro
-            // $(document).on("click", ".save#modalEditProject",function ()
            
             
     
@@ -668,7 +707,18 @@ $(document).ready(function () {
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
-        fill_subitem(ItemId)
+
+        if($(this).hasClass('selected')){
+            $(this).removeClass('selected');
+            fill_resetSubTable()
+
+        }
+        else{
+            $('#tableItem tr').removeClass('selected');
+            $(this).toggleClass('selected');
+            fill_subitem(ItemId)
+        }
+        
         
         //Add Sub
         $(document).on("click", "#btnSubItem", function (){
@@ -776,6 +826,8 @@ $(document).ready(function () {
                             timer: 1500
                         })
                         tableSubItem.ajax.reload(null, false);
+                        tableItem.ajax.reload(null, false);
+
                         $('#modalSubMaster').modal('hide');
                     },
                     error: function (err) {
@@ -815,6 +867,8 @@ $(document).ready(function () {
                             timer: 1500
                         })
                         tableSubItem.ajax.reload(null, false);
+                        tableItem.ajax.reload(null, false);
+
                     }
                 })
                 $('#modalDeleteConfirm').modal('hide');

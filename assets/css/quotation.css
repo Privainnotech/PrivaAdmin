@@ -23,25 +23,16 @@ nav{
 	padding: 5px;
 	padding-right: 10px;
 
-	/* margin-bottom: 10px; */
 }
 
-.title2{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 10px;
-	padding-right: 10px;
 
-	/* margin-bottom: 10px; */
-}
 .title h1{
 	font-size: 35px;
 	padding: 9px;
 	border-radius: 7px;
-	/* color: #fff; */
 	font-weight: 700;
 }
+
 
 .textbox{
 	width: 125px;
@@ -69,21 +60,22 @@ nav{
 .no-bor{
 	border: none;
 	background: white;
+	font-size: 0.9rem;
+	
 }
 
-.w-700{
+
+
+
+.input-group-text.mg-0{
+	background-color: #fff;
+	border: 0;
+	text-align: left;
+	font-size: 0.9rem;
 	font-weight: 700;
-}
-
-a.nav-link{
-	font-size: 1rem;
-}
-
-
-
-.mg-0{
 	margin: 0;
-	font-size: 1rem;
+
+	margin-bottom: 5px;
 }
 
 
@@ -103,6 +95,15 @@ mg-20{
 	padding: 20px;
 }
 
+#tableItem_wrapper{
+	padding-bottom: 10px;
+	padding-bottom: 20px;
+}
+
+#tableSubItem_wrapper{
+	padding-bottom: 10px;
+	padding-bottom: 20px;
+}
 
 
 
@@ -148,10 +149,7 @@ mg-20{
 }
 
 
-#btnRevised{
-	position: relative;
-	right: 41px;
-}
+
 
 
 #modalEditProject h3{
