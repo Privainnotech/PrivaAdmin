@@ -204,7 +204,6 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
         }
     ]
 
-    
     // condition
     let getPayTerm = (QuotationPayTerm) => {
         if (typeof QuotationPayTerm == 'object' || !QuotationPayTerm.includes("QuotationPayTerm")) {
@@ -223,7 +222,6 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
     let validityDate = quotation.QuotationValidityDate ? quotation.QuotationValidityDate : '-';
     let delivery = quotation.QuotationDelivery ? quotation.QuotationDelivery : '-';
     let remark = quotation.QuotationRemark ? quotation.QuotationRemark : '-'
-
     let condition = [
         {
             margin: [25,0,0,0],
@@ -279,8 +277,7 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
             pageBreak: 'after'
         }
     ]
-    
-    
+
     // item table
     let itemtable = {
         headerRows: 1,
@@ -312,8 +309,9 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
     if (Items.recordset.length){
         for(let Item of Items.recordset) {
             let { ItemName, ItemPrice, ItemQty, ItemDescription } = Item
-            if (ItemPrice == 'null' || typeof ItemPrice == 'object') ItemPrice = 0;
-            if (ItemQty == 'null' || typeof ItemQty == 'object') ItemQty = 0
+            if (ItemPrice == 'undefined' || typeof ItemPrice == 'object') ItemPrice = 0;
+            if (ItemQty == 'undefined' || typeof ItemQty == 'object') ItemQty = 0
+            if (ItemDescription == 'undefined' || typeof ItemDescription == 'object') ItemDescription = ""
             let LineTotal = ItemPrice * ItemQty
             itemtable['body'].push([
                 {text: `${i}`, style: 'btext', alignment: 'center'},
@@ -482,7 +480,6 @@ router.get('/:QuotationId', async (req, res) => {
         let creating = pdfDoc.pipe(fs.createWriteStream(quotationPath));
         pdfDoc.end();
         creating.on('finish', () => {
-            console.log('check')
             const fileOption = {
                 headers: {
                     'x-timestamp': Date.now(),
