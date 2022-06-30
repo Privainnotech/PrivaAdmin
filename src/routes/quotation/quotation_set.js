@@ -125,7 +125,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(DeletePreQuotationNo);
             res.status(200).send({message: 'Successfully set quotation'});
-        } else if (QuotationStatus == 1 && QuotationRevised > 0) {
+        } else if ((QuotationStatus == 1 && QuotationRevised > 0) || QuotationStatus == 5 ) {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation
             SET QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
