@@ -58,7 +58,7 @@
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="/quotation">
-              <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Quotaion</span>
+              <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Quotation</span>
             </a>
 					</li>
 
@@ -240,6 +240,21 @@
       </div>
     </div>
 
+    <!-- form Confirm Print -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="modalPrintConfirm">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h4 class="modal-title">Confirm Print</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body text-center">
+                  <p>Are you sure to go to Print page?</p>
+              </div>
+              <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnPrintYes" type="button">Yes</button></div>
+          </div>
+      </div>
+    </div>
+
     <!-- form confirm Edit -->
     <div class="modal fade" role="dialog" tabindex="-1" id="modalEditConfirm">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -361,8 +376,8 @@
 								<div class="card-header title">
                   <h1 id="ProNo" >ProjectNo</h1>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-dark" id="btnPrint" data-toggle="modal" data-target="#">Print</button>
-                      <button type="button" class="btn btn-dark" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
+                      <button type="button" class="btn btn-dark btn-rad" id="btnPrint" data-toggle="modal" data-target="#modalPrintConfirm">Print</button>
+                      <button type="button" class="btn btn-dark btn-rad" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
                     </div>
                   </div>
 								<div class="card-body w-100">
@@ -443,7 +458,7 @@
                             <button type="button" class="btn btn-danger " id="btn-cancel">Cancel</button>
                             <button type="button" class="btn btn-warning " id="btn-quotation">Quotation</button>
                             <button type="button" class="btn btn-secondary " id="btn-book">Book</button>
-                            <button type="button" class="btn btn-info " id="btn-lost">Loss</button>
+                            <button type="button" class="btn btn-info " id="btn-loss">Loss</button>
                           </div>
                         </div>
                         <div class="col-2">

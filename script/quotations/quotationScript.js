@@ -250,7 +250,6 @@ $(document).ready(function () {
             cache: false,
 			success:function(response){
 				var obj = JSON.parse(response);
-                console.log(obj.CompanyName)
                     $('#ProNo').text(obj.QuotationNo_Revised);
                     $('#CusName').val(obj.CustomerName);
                     $('#QDate').val(obj.QuotationDate);
@@ -303,7 +302,6 @@ $(document).ready(function () {
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
             fill_resetTable() 
-
         }
         else{
             $('#tableQuo tr').removeClass('selected');
@@ -561,6 +559,34 @@ $(document).ready(function () {
                 })
             });
 
+            // Print
+            $(document).on("click", "#btnPrint",function () {
+                $("#btnPrintYes").unbind("click");
+                $(".btnYes").click(function () {
+                    $.ajax({
+                        url: "/quotation_report/" + QuotationId,
+                        method: 'get',
+                        contentType: 'application/json',
+                        success: function () {
+                            window.open("/quotation_report/" + QuotationId)
+                            QuotationId.val('');
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
+                                });
+                            }
+                    });
+                })
+            });
+
             //btn-quotation
             $(document).on('click','#btn-quotation',function() {
                 $.ajax({
@@ -568,16 +594,17 @@ $(document).ready(function () {
                     method: 'get',
                     cache: false,
                     success:function(response){
-                        console.log(QuotationId)
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Created',
-                            text: 'Successfully to set quotation',
+                            title: 'Set Status',
+                            text: 'Successfully set Quotation',
                             showConfirmButton: false,
                             timer: 1500
                         })
                         tableQuo.ajax.reload(null, false);
+                        QuotationId.val('');
+
                     },
                     error: function (err) {
                         errorText = err.responseJSON.message;
@@ -590,9 +617,117 @@ $(document).ready(function () {
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#FF5733'
                             });
+                        QuotationId.val('');
+                        
                     }
                 })
             })
+
+            //btn-cancel
+            $(document).on('click','#btn-cancel',function() {
+                $.ajax({
+                    url: "/quotation_set/cancel/" + QuotationId,
+                    method: 'get',
+                    cache: false,
+                    success:function(response){
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Set Status',
+                            text: 'Successfully set Quotation',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableQuo.ajax.reload(null, false);
+                        QuotationId.val('');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                            });
+                        QuotationId.val('');
+                        
+                    }
+                })
+            })
+
+            //btn-Book
+            $(document).on('click','#btn-book',function() {
+                $.ajax({
+                    url: "/quotation_set/book/" + QuotationId,
+                    method: 'get',
+                    cache: false,
+                    success:function(response){
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Set Status',
+                            text: 'Successfully set Quotation',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableQuo.ajax.reload(null, false);
+                        QuotationId.val('');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                            });
+                        QuotationId.val('');
+                        
+                    }
+                })
+            })
+
+            //btn-Loss
+            $(document).on('click','#btn-loss',function() {
+                $.ajax({
+                    url: "/quotation_set/loss/" + QuotationId,
+                    method: 'get',
+                    cache: false,
+                    success:function(response){
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Set Status',
+                            text: 'Successfully set Quotation',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableQuo.ajax.reload(null, false);
+                        QuotationId.val('');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                            });
+                        QuotationId.val('');
+                        
+                    }
+                })
+            })
+
         }
 
         
