@@ -589,143 +589,166 @@ $(document).ready(function () {
 
             //btn-quotation
             $(document).on('click','#btn-quotation',function() {
-                $.ajax({
-                    url: "/quotation_set/quotation/" + QuotationId,
-                    method: 'get',
-                    cache: false,
-                    success:function(response){
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Set Status',
-                            text: 'Successfully set Quotation',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableQuo.ajax.reload(null, false);
-                        QuotationId.val('');
+                $(".modal-title").text("Confirm Quotation");    
 
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                            });
-                        QuotationId.val('');
-                        
-                    }
+                $("#btnSetYes").unbind("click");
+                $(".btnYes").click(function () {
+                    $.ajax({
+                        url: "/quotation_set/quotation/" + QuotationId,
+                        method: 'get',
+                        cache: false,
+                        success:function(response){
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Set Status',
+                                text: 'Successfully set Quotation',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            tableQuo.ajax.reload(null, false);
+                            QuotationId.val('');
+    
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
+                                });
+                            QuotationId.val('');
+                        }
+                    })
                 })
+                
             })
 
             //btn-cancel
             $(document).on('click','#btn-cancel',function() {
-                $.ajax({
-                    url: "/quotation_set/cancel/" + QuotationId,
-                    method: 'get',
-                    cache: false,
-                    success:function(response){
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Set Status',
-                            text: 'Successfully set Quotation',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableQuo.ajax.reload(null, false);
-                        QuotationId.val('');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                            });
-                        QuotationId.val('');
-                        
-                    }
+                $(".modal-title").text("Confirm Cancel");    
+
+                $("#btnSetYes").unbind("click");
+                $(".btnYes").click(function () {
+                    $.ajax({
+                        url: "/quotation_set/cancel/" + QuotationId,
+                        method: 'get',
+                        cache: false,
+                        success:function(response){
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Set Status',
+                                text: 'Successfully set Quotation',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            tableQuo.ajax.reload(null, false);
+                            QuotationId.val('');
+    
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
+                                });
+                            QuotationId.val('');
+                        }
+                    })
                 })
+                
             })
 
-            //btn-Book
+            //btn-book
             $(document).on('click','#btn-book',function() {
-                $.ajax({
-                    url: "/quotation_set/book/" + QuotationId,
-                    method: 'get',
-                    cache: false,
-                    success:function(response){
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Set Status',
-                            text: 'Successfully set Quotation',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableQuo.ajax.reload(null, false);
-                        QuotationId.val('');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                            });
-                        QuotationId.val('');
-                        
-                    }
+                $(".modal-title").text("Confirm Book");    
+
+                $("#btnSetYes").unbind("click");
+                $(".btnYes").click(function () {
+                    $.ajax({
+                        url: "/quotation_set/booking/" + QuotationId,
+                        method: 'get',
+                        cache: false,
+                        success:function(response){
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Set Status',
+                                text: 'Successfully set Quotation',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            tableQuo.ajax.reload(null, false);
+                            QuotationId.val('');
+    
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
+                                });
+                            QuotationId.val('');
+                        }
+                    })
                 })
+                
             })
 
-            //btn-Loss
+            //btn-loss
             $(document).on('click','#btn-loss',function() {
-                $.ajax({
-                    url: "/quotation_set/loss/" + QuotationId,
-                    method: 'get',
-                    cache: false,
-                    success:function(response){
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Set Status',
-                            text: 'Successfully set Quotation',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableQuo.ajax.reload(null, false);
-                        QuotationId.val('');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                            });
-                        QuotationId.val('');
-                        
-                    }
+                $(".modal-title").text("Confirm loss");    
+
+                $("#btnSetYes").unbind("click");
+                $(".btnYes").click(function () {
+                    $.ajax({
+                        url: "/quotation_set/loss/" + QuotationId,
+                        method: 'get',
+                        cache: false,
+                        success:function(response){
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Set Status',
+                                text: 'Successfully set Quotation',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            tableQuo.ajax.reload(null, false);
+                            QuotationId.val('');
+    
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
+                                });
+                            QuotationId.val('');
+                        }
+                    })
                 })
+                
             })
 
         }
