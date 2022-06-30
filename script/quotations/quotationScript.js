@@ -18,6 +18,9 @@ $(document).ready(function () {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
             "scrollY": "25vh",
+            "bPaginate": false,
+            "bInfo": false,
+            "bLengthChange": false,
             "ajax": {
                 "url": "/quotation/list",
                 "dataSrc": ""
@@ -77,7 +80,7 @@ $(document).ready(function () {
     }
 
     //Item table
-    function fill_item(Id) {
+    function fill_item(Id,status) {
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
             "scrollY": "145px",
@@ -101,14 +104,24 @@ $(document).ready(function () {
                     "data": "ItemQty"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-warning p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 3rem; font-size:0.3rem; ''>Add Sub</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "data": "Action",
+                    "render": function () {
+ 
+                        if ( status === '1') {
+                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-warning p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 3rem; font-size:0.3rem; ''>Add Sub</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            ;}
+                            // disabled
+                                        else {
+                                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;'' disabled><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-warning p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 3rem; font-size:0.3rem; '' disabled>Add Sub</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                            ;}
+                    }
 
-
-                    
                 }
                 ,
                 {
-                    "data": "ItemId"
+                    "data": "ItemId",
+                    "data": "QuotationStatus"
+                    
                 }
 
             ],"columnDefs":[
@@ -121,7 +134,7 @@ $(document).ready(function () {
     }
 
      //Item Sub Table
-     function fill_subitem(Id) {
+     function fill_subitem(Id,status) {
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
             "scrollY": "145px",
@@ -145,7 +158,17 @@ $(document).ready(function () {
                     "data": "SubItemQtyUnit"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "data": "Action",
+                    "render": function () {
+ 
+                        if ( status === '1') {
+                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            ;}
+                            // disabled
+                                        else {
+                                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;'' disabled><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                            ;}
+                    }
                 }
                 ,
                 {
@@ -304,6 +327,7 @@ $(document).ready(function () {
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
 
+        
         console.log(QuotationStatus)
         console.log(typeof(QuotationStatus))
 
@@ -317,7 +341,7 @@ $(document).ready(function () {
             
             
             ShowPro(QuotationId)
-            fill_item(QuotationId)
+            fill_item(QuotationId,QuotationStatus)
 
             if (QuotationStatus === "1") {
                 //Show Edit Button
@@ -964,6 +988,8 @@ $(document).ready(function () {
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
+        let StatusName = tableItem.rows(rows).data()[0].status;
+
 
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
@@ -973,7 +999,7 @@ $(document).ready(function () {
         else{
             $('#tableItem tr').removeClass('selected');
             $(this).toggleClass('selected');
-            fill_subitem(ItemId)
+            fill_subitem(ItemId,StatusName)
         }
         
         
