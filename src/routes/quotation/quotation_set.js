@@ -145,4 +145,30 @@ router.get('/quotation/:QuotationId', async (req, res) => {
     }
 })
 
+//set booking status
+router.get('/booking/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId;
+        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId, a.QuotationRevised, a.QuotationStatus, b.CustomerId
+        FROM [Quotation] a
+        LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+        WHERE QuotationId = ${QuotationId}`)
+        let {QuotationNoId, QuotationRevised, QuotationStatus, CustomerId} = getQuotation.recordset[0];
+        if (QuotationStatus == 2) {
+            // Update Quotation NoId, Status & Delete pre-quotation no
+            let UpdateQuotationStatus = `Update Quotation
+            SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
+            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5`
+            await pool.request().query(UpdateQuotationStatus);
+            await pool.request().query(CancelQuotation);
+            res.status(200).send({message: 'Successfully set quotation'});
+        } else {
+            res.status(400).send({message: 'Already quotation'});
+        }
+    } catch(err){
+        res.status(500).send({message : `${err}`});
+    }
+})
+
 module.exports = router

@@ -18,7 +18,6 @@ const checkDate = () => {
     let yyyy = today.getFullYear();
     if (dd<10) { dd='0'+dd; }
     if (mm<10) { mm='0'+mm; }
-    // yyyy = yyyy[3]+yyyy[4]
     return dd+'-'+mm+'-'+yyyy;
 }
 
@@ -142,7 +141,8 @@ router.get('/item/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId
         getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription,
             ( SELECT CONVERT(nvarchar(20), b.SubItemId) + ','
-                    FROM [QuotationSubItem] b LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId
+                    FROM [QuotationSubItem] b
+                    LEFT JOIN [MasterProduct] c ON b.ProductId = c.ProductId
                     WHERE b.ItemId = a.ItemId 
                     FOR XML PATH('')) AS SubItemId
             FROM [QuotationItem] a
@@ -442,7 +442,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         } = req.body;
         let PayTerm = JSON.stringify(QuotationPayTerm)
         let ValidityDateFilter = QuotationValidityDate.replace(/'/g,"''");
-        console.log(PayTerm)
         let PayTermFilter = PayTerm.replace(/'/g,"''");
         let DeliveryFilter = QuotationDelivery.replace(/'/g,"''"); 
         let RemarkFilter = QuotationRemark.replace(/'/g,"''");
