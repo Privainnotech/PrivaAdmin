@@ -148,7 +148,7 @@ router.get('/booking/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId;
         let getQuotation = await pool.request().query(`SELECT QuotationNoId, QuotationStatus FROM Quotation WHERE QuotationId = ${QuotationId}`)
         let {QuotationNoId, QuotationStatus} = getQuotation.recordset[0];
-        if (QuotationStatus != 1) {
+        if (QuotationStatus != 3 && QuotationStatus != 1) {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
             let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
@@ -171,7 +171,7 @@ router.get('/loss/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId;
         let getQuotation = await pool.request().query(`SELECT QuotationNoId, QuotationStatus FROM Quotation WHERE QuotationId = ${QuotationId}`)
         let {QuotationNoId, QuotationStatus} = getQuotation.recordset[0];
-        if (QuotationStatus != 1) {
+        if (QuotationStatus != 4 && QuotationStatus != 1) {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 4, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
             let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
