@@ -120,7 +120,9 @@ $(document).ready(function () {
                 ,
                 {
                     "data": "ItemId",
+                    "data": "QuotationId",
                     "data": "QuotationStatus"
+
                     
                 }
 
@@ -290,6 +292,12 @@ $(document).ready(function () {
                     $('#PJ_Remark').val(obj.QuotationRemark);
                     $('#PJ_End_Customer').val(obj.EndCustomer);
                     $('#PJ_Approve').val(obj.EmployeeApproveId);
+
+                    $('#TotalPrice').val(obj.QuotationTotalPrice);
+                    $('#PriceAfter').val(obj.QuotationNet);
+                    $('#Vat').val(obj.QuotationVat);
+                    $('#NetTotal').val(obj.QuotationNetVat);
+
 			}
         })
 
@@ -569,6 +577,9 @@ $(document).ready(function () {
                 $(".modal-title").text("Add Item ");    
                 $("#modalAddItem").unbind();
                 $("#modalAddItem").click(function () {
+                        rows = $(this).closest("tr");
+                        let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
+
                         let ItemName = $.trim($('#modalInpAddItemName').val());
                         let ItemQty = $.trim($('#modalInpAddQty').val());
                         let ItemPrice = $.trim($('#modalInpAddItemPrice').val());
@@ -594,6 +605,7 @@ $(document).ready(function () {
                                     timer: 1500
                                 })
                                 tableItem.ajax.reload(null, false);
+                                ShowPro(QuotationId);
                                 $('#modalAddItemMaster').modal('hide');
                             },
                             error: function (err) {
@@ -893,6 +905,8 @@ $(document).ready(function () {
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
         let ItemPrice = tableItem.rows(rows).data()[0].ItemPrice;
         let ItemQty = tableItem.rows(rows).data()[0].ItemQty;
+        let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
+
         
         $('#modalInpItemName').val(ItemName);
         $('#modalInpItemPrice').val(ItemPrice);
@@ -923,6 +937,7 @@ $(document).ready(function () {
                             timer: 1500
                         })
                         tableItem.ajax.reload(null, false);
+                        ShowPro(QuotationId);
                         $('#modalItemMaster').modal('hide');
                     },
                     error: function (err) {
@@ -946,6 +961,7 @@ $(document).ready(function () {
     $(document).on("click", "#btnDelItem", function () {
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
+        let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
         $(".modal-title").text("Confirm Delete");
         $("#btnYes").unbind("click");
         $(".btnYes").click(function () {
@@ -962,7 +978,8 @@ $(document).ready(function () {
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    tableItem.ajax.reload(null, false);   
+                    tableItem.ajax.reload(null, false);
+                    ShowPro(QuotationId);   
                 }
             })
             $('#modalDeleteConfirm').modal('hide');
