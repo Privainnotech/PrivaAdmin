@@ -175,9 +175,10 @@ router.get('/subitem_byitem/:ItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let ItemId = req.params.ItemId
-        getQuotationSubItem = `SELECT a.SubItemId, b.ProductId, b.ProductType, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
+        getQuotationSubItem = `SELECT c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
             FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
+            LEFT JOIN [QuotationItem] c ON a.ItemId = c.ItemId
             WHERE a.ItemId = ${ItemId}`;
         let quotations = await pool.request().query(getQuotationSubItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
@@ -190,9 +191,10 @@ router.get('/subitem_bysubitem/:SubItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let SubItemId = req.params.SubItemId
-        getQuotationSubItem = `SELECT a.SubItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+a.SubItemUnit SubItemQtyUnit, b.ProductType
+        getQuotationSubItem = `SELECT c.QuotationId, a.SubItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+a.SubItemUnit SubItemQtyUnit, b.ProductType
             FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
+            LEFT JOIN [QuotationItem] c ON a.ItemId = c.ItemId
             WHERE a.SubItemId = ${SubItemId}`;
         let quotations = await pool.request().query(getQuotationSubItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
