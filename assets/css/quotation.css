@@ -74,9 +74,7 @@ nav{
 	border: none;
 }
 
-.wd-select{
-	height: 33.39px;
-}
+
 
 mg-20{
 	padding: 20px;
@@ -93,11 +91,18 @@ mg-20{
 }
 
 
-
+.title h2{
+	font-size: 25px;
+	padding: 9px;
+	border-radius: 7px;
+	font-weight: 700;
+}
 
 
 .input-group-footer{
 	padding-top: 30px;
+	display: flex;
+	justify-content: space-between;
 }
 
 .form-control.edit{
@@ -133,6 +138,12 @@ mg-20{
 
 .f-9{
 	font-size: 0.8rem;
+	height: 30.99px;
+}
+
+.f-91{
+	font-size: 0.8rem;
+	height: 33.39px;
 }
 
 
@@ -141,5 +152,7 @@ mg-20{
 
 #modalEditProject h3{
 	color: #fff;
+	font-size: 1rem;
+	margin: 0;
 }
 

@@ -1,147 +1,201 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    
-    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http:////cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-    
-    <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+	<meta name="author" content="AdminKit">
+	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
-    <link rel="stylesheet" href="/css/main.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
 
+	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+	<title>Employee</title>
+
+	<!-- <link href="css/app.css" rel="stylesheet"> -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     
-    <title>CUSTOMER</title>
-  </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#"><h1>PrivaAdmin</h1></a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link " aria-current="page" href="/index">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/customer">Customer</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="/employee">Employee</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/quotation">Quotation</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http:////cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
+  <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/fonts/font-awesome.min.css">
+  <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+
+  <link rel="stylesheet" href="/css/customer.css">
+</head>
+
+<body>
+	<div class="wrapper">
+		<nav id="sidebar" class="sidebar js-sidebar ">
+			<div class="sidebar-content js-simplebar sticky-top">
+				<a class="sidebar-brand" href="">
+          <span class="align-middle">Pages</span>
+        </a>
+
+				<ul class="sidebar-nav">
+					<li class="sidebar-item ">
+						<a class="sidebar-link" href="/index">
+              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Home</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/customer">
+              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Customer</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item active">
+						<a class="sidebar-link" href="/employee">
+              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Employee</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/quotation">
+              <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Quotation</span>
+            </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="pages-blank.html">
+              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+            </a>
+					</li>
+
+				</ul>
+			</div>
+		</nav>
+
     <!-- form Add Company -->
-          <div class="modal fade" role="dialog" tabindex="-1" id="modalEmployeeMaster">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <form id="formEmployee" action="/Setting/AddEditRecpName">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="modalHeaderAddPart">Add Employee:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Title:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-                                <select class="form-select" id="modalInpEmployTitle">
-                                      <option value="null" selected="">-</option>
-                                      <option value="Mr.">Mr.</option>
-                                      <option value="Mrs.">Mrs.</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Fisrt Name:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpEmployFname" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Last Name:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpEmployLname" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Position:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpEmployPosition" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Email:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpEmployEmail" style="width: 100%;" required=""></div>
-                            </div>
-                            <div class="form-row my-2">
-                              <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Tel:&nbsp;</span></div>
-                              <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpEmployTel" style="width: 100%;" required=""></div>
-                            </div>
-                        </div>
-                        <div class="modal-footer"><button class="btn btn-primary" id="modalSaveEmployee" type="button">Save</button></div>
-                    </form>
+    <div class="modal fade" role="dialog" tabindex="-1" id="modalEmployeeMaster">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form id="formEmployee" action="/Setting/AddEditRecpName">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalHeaderAddPart">Add Employee:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Title:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpEmployTitle">
+                          <option value="null" selected="">-</option>
+                          <option value="Mr.">Mr.</option>
+                          <option value="Mrs.">Mrs.</option>
+                          <option value="Miss">Miss.</option>
+                          <option value="K.">K.</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Fisrt Name:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpEmployFname" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Last Name:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpEmployLname" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Position:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpEmployPosition" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Email:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpEmployEmail" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Tel:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpEmployTel" style="width: 100%;" required=""></div>
                 </div>
             </div>
+            <div class="modal-footer"><button class="btn btn-primary" id="modalSaveEmployee" type="button">Save</button></div>
+          </form>
         </div>
-        <!-- form delete -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Confirm Delete</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body text-center">
-                        <p>Are you sure to delete?</p>
-                    </div>
-                    <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes" type="button">Yes</button></div>
-                </div>
-            </div>
-        </div>
-  
-        <!-- Table Employee -->
-        <div class="container1">
-          <div class="title">
-          <h1>Employee</h1><button type="button" class="btn btn-success" id="addEmploy" data-toggle="modal" data-target="#modalEmployeeMaster">ADD Employee</button>
-          </div>
-          <table id="tableEmploy" class="table table-hover display table-bordered dataTables_wrapper" style="width:100%">
-            <thead  class="table-dark">
-                <tr>
-                    <th>Index</th>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Email</th>
-                    <th>Tel.</th>
-                    <th style="width: 15%;">Action</th>
-                    <!-- <th style="display: none;"></th> -->
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td colspan="6">1</td>
-                </tr>
-            </tbody>
-          </table>
-        </div>
-          
+      </div>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="/js/jquery.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
-    
-    <script src="/employee/employee.js"></script>
-    <!-- <script src="/customer/customer.js"></script>
-    <script src="/customer/customerDropdown.js"></script>  -->
-    
-  </body>
+    <!-- form delete -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirm Delete</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body text-center">
+            <p>Are you sure to delete?</p>
+          </div>
+          <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes" type="button">Yes</button></div>
+        </div>
+      </div>
+    </div>
+
+		<div class="main">
+			<nav class="navbar navbar-expand navbar-light navbar-bg sticky-top">
+				<a class="sidebar-toggle js-sidebar-toggle">
+          <i class="hamburger align-self-center"></i>
+        </a>
+
+				<div class="navbar-collapse collapse">
+					<div class="navbar-nav navbar-align">
+						<h1 class="">PrivaAdmin</h1>
+					</div>
+				</div>
+			</nav>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+					<div class="row">
+						<div class="col-12 d-flex">
+              <div class="card flex-fill">
+                <div class="card-header title">
+                  <h1>Employee</h1><button type="button" class="btn btn-success" id="addEmploy" data-toggle="modal" data-target="#modalEmployeeMaster">ADD</button>
+                </div>
+                <table id="tableEmploy" class="table table-hover my-0" style="width:100%">
+                  <thead >
+                      <tr>
+                        <th>Index</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                        <th>Tel.</th>
+                        <th style="width: 15%;">Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td colspan="6">Error...</td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+						</div>
+					</div>
+
+				</div>
+			</main>
+
+		</div>
+	</div>
+
+	<script src="/js/app.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/bootstrap/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+
+  <script src="/employee/employee.js"></script>
+
+</body>
+
 </html>

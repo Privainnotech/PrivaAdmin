@@ -58,7 +58,7 @@ $(document).ready(function () {
 
     // Edit
     $(document).on("click", "#btnEditCustomer", function () {
-        // $("#formCompany").trigger("reset");
+        $("#formCustomer").trigger("reset");
         $(".modal-title").text("Edit Customer");
         // console.log("save0");
         rows = $(this).closest("tr");
