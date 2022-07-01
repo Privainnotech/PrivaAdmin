@@ -171,7 +171,7 @@ router.get('/item/:QuotationId', async (req, res) => {
     }
 })
 
-router.get('/subitem_byitem/:ItemId', async (req, res) => {
+router.get('/subitem/:ItemId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let ItemId = req.params.ItemId
@@ -186,23 +186,6 @@ router.get('/subitem_byitem/:ItemId', async (req, res) => {
         res.status(500).send({message: err});
     }
 })
-
-router.get('/subitem_bysubitem/:SubItemId', async (req, res) => {
-    try{
-        let pool = await sql.connect(dbconfig);
-        let SubItemId = req.params.SubItemId
-        getQuotationSubItem = `SELECT c.QuotationId, a.SubItemId, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+a.SubItemUnit SubItemQtyUnit, b.ProductType
-            FROM [QuotationSubItem] a
-            LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
-            LEFT JOIN [QuotationItem] c ON a.ItemId = c.ItemId
-            WHERE a.SubItemId = ${SubItemId}`;
-        let quotations = await pool.request().query(getQuotationSubItem);
-        res.status(200).send(JSON.stringify(quotations.recordset));
-    } catch(err){
-        res.status(500).send({message: err});
-    }
-})
-
 
 router.post('/add_pre_quotation', async (req, res) => {
     try{
