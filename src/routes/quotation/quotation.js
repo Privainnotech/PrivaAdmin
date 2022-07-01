@@ -21,6 +21,32 @@ const checkDate = () => {
     return dd+'-'+mm+'-'+yyyy;
 }
 
+const updatePriceS = async (SubItemId) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let UpdatePrice = `
+            DECLARE @QuotationId bigint, @ItemId bigint
+            SET @ItemId = (SELECT ItemId FROM QuotationSubItem WHERE SubItemId = ${SubItemId})
+            SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = @ItemId)
+
+            UPDATE QuotationItem
+            SET ItemPrice = (SELECT SUM(a.SubItemQty * b.ProductPrice) 
+                FROM QuotationSubItem a
+                LEFT JOIN MasterProduct b on a.ProductId = b.ProductId
+                WHERE ItemId = @ItemId)
+            WHERE ItemId = @ItemId
+
+            UPDATE Quotation
+            SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
+                FROM QuotationItem 
+                WHERE QuotationId = @QuotationId)
+            WHERE QuotationId = @QuotationId`;
+        await pool.request().query(UpdatePrice);
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+}
+
 const updatePriceI = async (ItemId) => {
     try{
         let pool = await sql.connect(dbconfig);
@@ -34,6 +60,24 @@ const updatePriceI = async (ItemId) => {
                 LEFT JOIN MasterProduct b on a.ProductId = b.ProductId
                 WHERE ItemId = ${ItemId})
             WHERE ItemId = ${ItemId}
+
+            UPDATE Quotation
+            SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
+                FROM QuotationItem 
+                WHERE QuotationId = @QuotationId)
+            WHERE QuotationId = @QuotationId`;
+        await pool.request().query(UpdatePrice);
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+}
+
+const updatePriceQ = async (ItemId) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let UpdatePrice = `
+            DECLARE @QuotationId bigint
+            SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = ${ItemId})
 
             UPDATE Quotation
             SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
@@ -85,37 +129,14 @@ router.get('/:QuotationId', async (req, res) => {
             Revised = getRevise.recordset[0].QuotationRevised.toString()
         }
         let getQuotation = `SELECT
-            b.QuotationNoId,
-            b.QuotationNo,
-            a.QuotationRevised,
-            b.QuotationNo + '_${Revised}' QuotationNo_Revised,
-            a.QuotationStatus,
-            d.StatusName,
-            c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
-            c.CustomerTitle,
-            c.CustomerFname,
-            c.CustomerLname,
-            c.CustomerEmail,
-            f.CompanyName,
-            f.CompanyAddress,
-            a.QuotationId,
-            a.QuotationSubject,
-            a.EndCustomer,
-            a.QuotationDate,
-            a.QuotationUpdatedDate,
-            a.QuotationTotalPrice,
-            a.QuotationDiscount,
-            a.QuotationNet,
-            a.QuotationVat,
-            a.QuotationNetVat,
-            CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate',
-            CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
-            CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
-            CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
-            a.EmployeeApproveId,
-            e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
-            e.EmployeeEmail,
-            e.EmployeePosition
+                b.QuotationNoId, b.QuotationNo, a.QuotationRevised, b.QuotationNo + '_${Revised}' QuotationNo_Revised,
+                a.QuotationStatus, d.StatusName, c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
+                c.CustomerTitle, c.CustomerFname, c.CustomerLname, c.CustomerEmail, f.CompanyName, f.CompanyAddress,
+                a.QuotationId, a.QuotationSubject, a.EndCustomer, a.QuotationDate, a.QuotationUpdatedDate, a.QuotationTotalPrice,
+                a.QuotationDiscount, a.QuotationNet, a.QuotationVat, a.QuotationNetVat,
+                CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate', CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
+                CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery', CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
+                a.EmployeeApproveId, e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName, e.EmployeeEmail, e.EmployeePosition
             FROM [Quotation] a
             LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
             LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
@@ -264,8 +285,10 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         if(CheckQuotationItem.recordset[0].check){
             res.status(400).send({message: 'Duplicate item in quotation'});
         } else{
-            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}, N'${DescriptionFilter}')`;
-            await pool.request().query(InsertItem);
+            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}, N'${DescriptionFilter}')
+            SELECT SCOPE_IDENTITY() AS Id`;
+            let Item = await pool.request().query(InsertItem);
+            updatePriceQ(Item.recordset[0].Id);
             res.status(201).send({message: 'Successfully add Item'});
         }
     } catch(err){
@@ -446,31 +469,19 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             res.status(400).send({message: 'Please select Employee'});
             return;
         }
-        let CheckQuotation = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(
-             SELECT *
-             FROM Quotation
-             WHERE QuotationSubject = N'${QuotationSubject}' AND QuotationId = ${QuotationId}
-        )
-        THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`);
-        if(CheckQuotation.recordset[0].check){
-            res.status(400).send({message: 'Duplicate Quotation'});
-        } else{
-            // Insert Quotation with QuotationNoId
-            let UpdateQuotation = `UPDATE Quotation
-            SET QuotationSubject = N'${QuotationSubject}',
-                QuotationDiscount = ${QuotationDiscount},
-                QuotationValidityDate = N'${ValidityDateFilter}', 
-                QuotationPayTerm = N'${PayTermFilter}',
-                QuotationDelivery = N'${DeliveryFilter}',
-                QuotationRemark = N'${RemarkFilter}',
-                EmployeeApproveId = ${EmployeeApproveId},
-                EndCustomer = N'${EndCustomerFilter}'
-            WHERE QuotationId = ${QuotationId}`;
-            await pool.request().query(UpdateQuotation);
-            res.status(201).send({message: 'Successfully Edit Quotation'});
-        }
+        // Insert Quotation with QuotationNoId
+        let UpdateQuotation = `UPDATE Quotation
+        SET QuotationSubject = N'${QuotationSubject}',
+            QuotationDiscount = ${QuotationDiscount},
+            QuotationValidityDate = N'${ValidityDateFilter}', 
+            QuotationPayTerm = N'${PayTermFilter}',
+            QuotationDelivery = N'${DeliveryFilter}',
+            QuotationRemark = N'${RemarkFilter}',
+            EmployeeApproveId = ${EmployeeApproveId},
+            EndCustomer = N'${EndCustomerFilter}'
+        WHERE QuotationId = ${QuotationId}`;
+        await pool.request().query(UpdateQuotation);
+        res.status(201).send({message: 'Successfully Edit Quotation'});
     } catch(err){
         res.status(500).send({message: err});
     }
@@ -501,6 +512,7 @@ router.put('/edit_item/:ItemId', async (req, res) => {
             SET ItemName = N'${ItemName}', ItemPrice = ${ItemPrice}, ItemQty = ${ItemQty}, ItemDescription =N'${ItemDescription}'
             WHERE ItemId = ${ItemId}`;
             await pool.request().query(UpdateQuotationItem);
+            updatePriceQ(ItemId);
             res.status(200).send({message: 'Successfully Edit Item'});
         // }
     } catch(err){
@@ -520,6 +532,7 @@ router.put('/edit_subitem/:SubItemId', async (req, res) => {
         SET SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
         WHERE SubItemId = ${SubItemId}`;
         await pool.request().query(UpdateQuotationSubItem);
+        updatePriceS(SubItemId);
         res.status(200).send({message: 'Successfully Edit Sub-Item'});
     } catch(err){
         res.status(500).send({message: err});
