@@ -146,7 +146,7 @@ $(document).ready(function () {
             "bInfo": false,
             "bLengthChange": false,
             "ajax": {
-                "url": `/quotation/subitem_byitem/` + Id,
+                "url": `/quotation/subitem/` + Id,
                 "dataSrc": ""
             },
             "columns": [
@@ -175,6 +175,7 @@ $(document).ready(function () {
                 ,
                 {
                     "data": "SubItemId",
+                    "data": "QuotationId",
                     "data": "ProductId",
                     "data": "ProductType"
                 }
@@ -574,11 +575,12 @@ $(document).ready(function () {
             // Create Item
             $(document).on("click", "#addItem", function (){
                 $("#formAddItem").trigger("reset");
-                $(".modal-title").text("Add Item ");    
+                $(".modal-title").text("Add Item ");
+                
+               
                 $("#modalAddItem").unbind();
                 $("#modalAddItem").click(function () {
-                        rows = $(this).closest("tr");
-                        let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
+                        
 
                         let ItemName = $.trim($('#modalInpAddItemName').val());
                         let ItemQty = $.trim($('#modalInpAddQty').val());
@@ -905,8 +907,9 @@ $(document).ready(function () {
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
         let ItemPrice = tableItem.rows(rows).data()[0].ItemPrice;
         let ItemQty = tableItem.rows(rows).data()[0].ItemQty;
+        
         let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
-
+        
         
         $('#modalInpItemName').val(ItemName);
         $('#modalInpItemPrice').val(ItemPrice);
@@ -1011,6 +1014,7 @@ $(document).ready(function () {
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
         let QuotationStatus = tableItem.rows(rows).data()[0].QuotationStatus;
+        let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
 
 
         if($(this).hasClass('selected')){
@@ -1029,6 +1033,7 @@ $(document).ready(function () {
         $(document).on("click", "#btnSubItem", function (){
         $("#formSub").trigger("reset");
         $(".modal-title").text("Add SubItem in " + ItemName);
+        
             $("#modalSaveSub").unbind();
             $("#modalSaveSub").click(function () {
                 let ProductId = $.trim($('#modalInpProduct').val());
@@ -1061,6 +1066,7 @@ $(document).ready(function () {
                         })
                         tableSubItem.ajax.reload(null, false);
                         tableItem.ajax.reload(null, false);
+                        ShowPro(QuotationId)
                         $('#modalSubMaster').modal('hide');
                     },
                     error: function (err) {
@@ -1092,6 +1098,8 @@ $(document).ready(function () {
             let ProductType = tableSubItem.rows(rows).data()[0].ProductType;
             let SubItemQty = tableSubItem.rows(rows).data()[0].SubItemQty;
             let SubItemUnit = tableSubItem.rows(rows).data()[0].SubItemUnit;
+            let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
+            console.log(tableSubItem.rows(rows).data()[0])
 
             $('#modalInpProduct').val(ProductId);
             $('#modalInpSubName').val(SubItemName);
@@ -1132,7 +1140,7 @@ $(document).ready(function () {
                         })
                         tableSubItem.ajax.reload(null, false);
                         tableItem.ajax.reload(null, false);
-
+                        ShowPro(QuotationId);
                         $('#modalSubMaster').modal('hide');
                     },
                     error: function (err) {
@@ -1155,6 +1163,7 @@ $(document).ready(function () {
         $(document).on("click", "#btnDelSubItem", function () {
             rows = $(this).closest('tr');
             let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
+            let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
             $(".modal-title").text("Confirm Delete");
             $("#btnYes").unbind("click");
             $(".btnYes").click(function () {
@@ -1173,6 +1182,7 @@ $(document).ready(function () {
                         })
                         tableSubItem.ajax.reload(null, false);
                         tableItem.ajax.reload(null, false);
+                        ShowPro(QuotationId)
 
                     }
                 })
