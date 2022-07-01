@@ -54,7 +54,10 @@ table {
 	border-spacing: 0;
 }
 
-
+.dataTables_wrapper {
+	padding: 10px;
+	padding-right: 15px;
+}
 
 nav h1{
 	font-size: 40px;
@@ -92,4 +95,25 @@ nav a.sidebar-brand {
 nav a.sidebar-link {
 	font-size: 18px;
 	font-weight: 500;
+}
+
+.title{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 5px;
+	padding-right: 10px;
+	
+}
+
+
+.title h1{
+	font-size: 35px;
+	padding: 9px;
+	border-radius: 7px;
+	font-weight: 700;
+}
+
+label input,label select{
+	margin-bottom: 5px;
 }

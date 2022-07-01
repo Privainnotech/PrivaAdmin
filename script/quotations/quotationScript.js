@@ -988,7 +988,7 @@ $(document).ready(function () {
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
-        let StatusName = tableItem.rows(rows).data()[0].status;
+        let QuotationStatus = tableItem.rows(rows).data()[0].QuotationStatus;
 
 
         if($(this).hasClass('selected')){
@@ -999,7 +999,7 @@ $(document).ready(function () {
         else{
             $('#tableItem tr').removeClass('selected');
             $(this).toggleClass('selected');
-            fill_subitem(ItemId,StatusName)
+            fill_subitem(ItemId,QuotationStatus)
         }
         
         

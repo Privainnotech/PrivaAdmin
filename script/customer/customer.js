@@ -12,6 +12,8 @@ $(document).ready(function () {
         // console.log(Id)
         tableCustomer = $('#tableCustomer').DataTable({
             "bDestroy": true,
+            "scrollY": "300px",
+            "scrollCollapse": true,
             "ajax": {
                 "url": `/customer_master/data/` + Id,
                 "dataSrc": ""
@@ -23,9 +25,7 @@ $(document).ready(function () {
                 {
                     "data":  "CustomerName" 
                 },
-                {
-                    "data": "CompanyId"
-                },
+                
                 {
                     "data": "CustomerEmail"
                 },
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
             ],"columnDefs":[
                 {
-                    "targets": [6],
+                    "targets": [5],
                     "visible": false
                 },
             ],
@@ -163,7 +163,7 @@ $(document).ready(function () {
 
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
-            // fill_resetTable();
+            fill_resetTable();
         }
         else{
             $('#tableCompany tr').removeClass('selected');

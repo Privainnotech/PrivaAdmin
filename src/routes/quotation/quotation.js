@@ -142,7 +142,7 @@ router.get('/item/:QuotationId', async (req, res) => {
         getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription, b.QuotationStatus
             FROM [QuotationItem] a
             LEFT JOIN [Quotation] b on a.QuotationId = b.QuotationId
-            WHERE QuotationId = ${QuotationId}`;
+            WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotationItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){

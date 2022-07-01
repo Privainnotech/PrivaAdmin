@@ -3,6 +3,8 @@ $(document).ready(function () {
     function fill_company() {
         tableCompany = $('#tableCompany').DataTable({
             "bDestroy": true,
+            "scrollY": "300px",
+            "scrollCollapse": true,
             "ajax": {
                 "url": '/company_master/data',
                 "dataSrc": ""
