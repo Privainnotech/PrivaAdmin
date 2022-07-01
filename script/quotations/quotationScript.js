@@ -328,8 +328,6 @@ $(document).ready(function () {
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
 
         
-        console.log(QuotationStatus)
-        console.log(typeof(QuotationStatus))
 
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
@@ -573,6 +571,7 @@ $(document).ready(function () {
                 $("#modalAddItem").click(function () {
                         let ItemName = $.trim($('#modalInpAddItemName').val());
                         let ItemQty = $.trim($('#modalInpAddQty').val());
+                        let ItemPrice = $.trim($('#modalInpAddItemPrice').val());
                         let ItemDescription = $.trim($('#modalInpAddDetails').val());
                     if (ItemName !== null) {
                         $.ajax({
@@ -581,6 +580,7 @@ $(document).ready(function () {
                             contentType: 'application/json',
                             data: JSON.stringify({
                                 ItemName: ItemName,
+                                ItemPrice: ItemPrice,
                                 ItemQty: ItemQty,
                                 ItemDescription: ItemDescription
                             }),
@@ -887,17 +887,21 @@ $(document).ready(function () {
         $("#formEditItem").trigger("reset");
         $(".modal-title").text("Edit Item");
 
+        
         rows = $(this).closest("tr");
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
+        let ItemPrice = tableItem.rows(rows).data()[0].ItemPrice;
         let ItemQty = tableItem.rows(rows).data()[0].ItemQty;
         
         $('#modalInpItemName').val(ItemName);
+        $('#modalInpItemPrice').val(ItemPrice);
         $('#modalInpQty').val(ItemQty);
 
         $("#modalEditItem").unbind();
         $("#modalEditItem").click(function () {
                 let ItemName = $.trim($('#modalInpItemName').val());
+                let ItemPrice = $.trim($('#modalInpItemPrice').val());
                 let ItemQty = $.trim($('#modalInpQty').val());
             if (ItemName !== null) {
                 $.ajax({
@@ -906,6 +910,7 @@ $(document).ready(function () {
                     contentType: 'application/json',
                     data: JSON.stringify({
                         ItemName: ItemName,
+                        ItemPrice: ItemPrice,
                         ItemQty: ItemQty
                     }),
                     success: function () {
