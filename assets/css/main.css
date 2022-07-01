@@ -84,7 +84,9 @@ a:hover{
 }
 
 
-
+nav.navbar{
+	margin-bottom: 0;
+}
 
 
 nav a.sidebar-brand {
@@ -95,6 +97,10 @@ nav a.sidebar-brand {
 nav a.sidebar-link {
 	font-size: 18px;
 	font-weight: 500;
+}
+
+main{
+	background: #ededed;
 }
 
 .title{

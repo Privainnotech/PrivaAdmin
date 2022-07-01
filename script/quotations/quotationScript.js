@@ -268,7 +268,7 @@ $(document).ready(function () {
         })
     });
 
-    //ShowPro
+    //Show Project
     function ShowPro(QuotationId) {
         $.ajax({
             url: "/quotation/" + QuotationId,
@@ -301,6 +301,36 @@ $(document).ready(function () {
 
 			}
         })
+
+    }
+
+    //Reset Project
+    function RePro() {
+        
+                    $('#ProNo').text('Project NO.');
+                    $('#CusName').val('');
+                    $('#QDate').val('');
+                    $('#CusEmail').val('');
+                    $('#ComName').val('');
+                    $('#Adress').val('');
+
+                    $('#PJ_Name').val('');
+      				$('#PJ_Discount').val('');
+                    $('#PJ_Validity').val('');
+                    $('#PJ_Payment1').val('');
+                    $('#PJ_Payment2').val('');
+                    $('#PJ_Payment3').val('');
+                    $('#PJ_Delivery').val('');
+                    $('#PJ_Remark').val('');
+                    $('#PJ_End_Customer').val('');
+                    $('#PJ_Approve').val('');
+
+                    $('#TotalPrice').val('');
+                    $('#PriceAfter').val('');
+                    $('#Vat').val('');
+                    $('#NetTotal').val('');
+
+		
 
     }
 
@@ -341,6 +371,7 @@ $(document).ready(function () {
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
             fill_resetTable() 
+            RePro()
         }
         else{
             $('#tableQuo tr').removeClass('selected');
@@ -421,6 +452,7 @@ $(document).ready(function () {
                                         timer: 1500
                                     })
                                     tableQuo.ajax.reload(null, false);
+                                    ShowPro(QuotationId)
                                     $('#modalEditConfirm').modal('hide');
                                 },
                                 error: function (err) {

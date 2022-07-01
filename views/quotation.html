@@ -315,7 +315,7 @@
 			<main class="content">
 				<div class="container-fluid p-0">
 					<div class="row">
-						<div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xxl-7">
+						<div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xxl-7">
               <div class="row">
                 <div class="col-12">
                   <div class="card flex-fill">
@@ -348,7 +348,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-6 d-flex">
+                <div class="col-6 col-sm-12 col-md-12 col-lg-12 col-xxl-6 d-flex">
                   <div class="card flex-fill">
                     <div class="card-header title">
                       <h1>Item</h1><button type="button" class="btn btn-success visually-hidden" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
@@ -371,7 +371,7 @@
                       </table>
                   </div>
                 </div>
-                <div class="col-6 d-flex">
+                <div class="col-6  col-sm-12 col-md-12 col-lg-12 col-xxl-6 d-flex">
                   <div class="card flex-fill">
                     <div class="card-header title">
                       <h1>Product</h1>
@@ -400,10 +400,10 @@
               
 
 						</div>
-						<div class="col-12 col-lg-5 col-xxl-5 d-flex">
+						<div class="col-12 col-lg-4 col-xxl-5 d-flex">
 							<div class="card flex-fill w-100">
 								<div class="card-header title">
-                  <h2 id="ProNo" >ProjectNo</h2>
+                  <h2 id="ProNo" >Project No.</h2>
                     <div class="btn-group" role="group" aria-label="Basic example">
                       <button type="button" class="btn btn-dark btn-rad" id="btnPrint" data-toggle="modal" data-target="#modalPrintConfirm">Print</button>
                       <button type="button" class="btn btn-dark btn-rad" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
@@ -412,6 +412,11 @@
 								<div class="card-body w-100">
 									<div class="align-self-center chart chart-lg">
 										<!-- set -->
+                    <div class="input-group">
+                      <span class="input-group-text group-title mg-0 f-9">Project Name:</span>
+                      <input type="text" class="form-control group-title edit f-9" id="PJ_Name" disabled>
+                    </div>
+
                     <div class="input-group ">
                       <span class="input-group-text mg-0">Customer:</span>
                       <input id="CusName" class="no-bor form-control" disabled  >
@@ -430,64 +435,60 @@
                     </div>
 
                     <div class="input-group ">
-                      <span class="input-group-text mg-0">Address:</span>
-                      <input id="Adress" class="no-bor form-control" disabled >
-                    </div>
-
-                    <div class="input-group ">
-                      <span class="input-group-text textbox f-9">Project Name:</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Name" disabled>
-                      <!-- <span class="input-group-text textbox2 f-9">Discount: </span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Discount" disabled> -->
+                      <textarea style="width: 94px;" class="input-group-text mg-0" rows="1" cols="1" disabled>Address:</textarea>
+                      <textarea  id="Adress" class="no-bor form-control" disabled ></textarea>
                     </div>
 
                     <div class="input-group">
-                      <span class="input-group-text textbox f-9">End Customer:</span>
+                      <span class="input-group-text textbox mg-0 f-9">End Customer:</span>
                       <input type="text" class="form-control edit f-9" id="PJ_End_Customer" disabled>
                     </div>
-
-                    <div class="input-group">
-                      <span class="input-group-text textbox f-9">Validity:</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Validity" disabled>
-                      <span class="input-group-text textbox2 f-9">Delivery:</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Delivery" disabled>
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-text textbox f-9">Remark:</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Remark" disabled>
-                    </div>
-
-                    <div class="input-group ">
-                      <label class="input-group-text textbox f-91" for="PJ_Approve">Approve By:</label>
-                        <select class="form-select edit f-91" id="PJ_Approve" disabled>
-                              <option value="null" selected="">-</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-text textbox4 f-9">Term of Payment:</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled>
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-text textbox4 f-9">-</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Payment2" disabled>
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-text textbox4 f-9">-</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_Payment3" disabled>
-                    </div>
-
+                    <hr>
+                      <span class="input-group-text group-title mg-0 f-9">Condition</span>
+                      
                     <div class="input-box">
+                      
+                      
+
+                      <div class="input-group">
+                        <span class="input-group-text textbox mg-0 f-9">Validity:</span>
+                        <input type="text" class="form-control edit  f-9" id="PJ_Validity" disabled>
+                        <span class="input-group-text textbox2 mg-0 f-9">Delivery:</span>
+                        <input type="text" class="form-control edit f-9" id="PJ_Delivery" disabled>
+                      </div>
+        
+                      <div class="input-group">
+                        <span class="input-group-text textbox4 mg-0 f-9">Term of Payment:</span>
+                        <input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled>
+                      </div>
+  
+                      <div class="input-group">
+                        <span class="input-group-text textbox4 mg-0 f-9"></span>
+                        <input type="text" class="form-control edit f-9" id="PJ_Payment2" disabled>
+                      </div>
+  
+                      <div class="input-group">
+                        <span class="input-group-text textbox4 mg-0 f-9"></span>
+                        <input type="text" class="form-control edit f-9" id="PJ_Payment3" disabled>
+                      </div>
+  
+                      <div class="input-group">
+                        <span class="input-group-text textbox mg-0 f-9">Remark:</span>
+                        <input type="text" class="form-control edit f-9" id="PJ_Remark" disabled>
+                      </div>
+
+                    </div>
+                    <hr>
+                    <div class="input-box">
+                      <span class="input-group-text group-title mg-0 f-9">Price</span>
+
                       <div class="input-group ">
                         <span class="input-group-text mg-0">Sub Total:</span>
                         <input id="TotalPrice" class="no-bor form-control" disabled >
                       </div>
   
                       <div class="input-group ">
-                        <span class="input-group-text textbox2 f-9">Discount: </span>
+                        <span class="input-group-text textbox2 mg-0 f-9">Discount: </span>
                         <input type="text" class="form-control edit f-9" id="PJ_Discount" disabled>
                       </div>
 
@@ -507,6 +508,13 @@
                       </div>
                     </div>
 
+                    <div class="input-group ">
+                      <label class="input-group-text textbox mg-0 f-91" for="PJ_Approve">Approve By:</label>
+                        <select class="form-select edit f-91" id="PJ_Approve" disabled>
+                              <option value="null" selected="">-</option>
+                        </select>
+                    </div>
+
                     
 
                     <div class="input-group-footer">
@@ -516,7 +524,7 @@
                             <button type="button" class="btn btn-secondary " id="btn-book" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Booking</button>
                             <button type="button" class="btn btn-info " id="btn-loss" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Loss</button>
                           </div>
-                          <button type="button" class="btn btn-success" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
+                          <button type="button" class="btn btn-success visually-hidden" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
                     </div>
 									</div>
 								</div>
