@@ -531,6 +531,7 @@ router.put('/edit_subitem/:SubItemId', async (req, res) => {
         UpdateQuotationSubItem = `UPDATE QuotationSubItem
         SET SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
         WHERE SubItemId = ${SubItemId}`;
+        await pool.request().query(UpdateProduct);
         await pool.request().query(UpdateQuotationSubItem);
         updatePriceS(SubItemId);
         res.status(200).send({message: 'Successfully Edit Sub-Item'});
