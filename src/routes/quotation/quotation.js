@@ -249,7 +249,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        let { ItemName, ItemQty, ItemDescription } = req.body
+        let { ItemName, ItemPrice, ItemQty, ItemDescription } = req.body
         if (!ItemDescription) ItemDescription="";
         let DescriptionFilter = ItemDescription.replace(/'/g, "''")
         //Unit = {Pc, Set, Lot} => Dropdown
@@ -264,7 +264,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         if(CheckQuotationItem.recordset[0].check){
             res.status(400).send({message: 'Duplicate item in quotation'});
         } else{
-            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemQty}, N'${DescriptionFilter}')`;
+            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}, N'${DescriptionFilter}')`;
             await pool.request().query(InsertItem);
             res.status(201).send({message: 'Successfully add Item'});
         }
@@ -450,7 +450,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         WHEN EXISTS(
              SELECT *
              FROM Quotation
-             WHERE QuotationSubject = N'${QuotationSubject} AND QuotationId = ${QuotationId}'
+             WHERE QuotationSubject = N'${QuotationSubject}' AND QuotationId = ${QuotationId}
         )
         THEN CAST (1 AS BIT)
         ELSE CAST (0 AS BIT) END AS 'check'`);
@@ -479,13 +479,30 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
 router.put('/edit_item/:ItemId', async (req, res) => {
     try{
         let ItemId = req.params.ItemId;
-        let { ItemName, ItemQty, ItemDescription} = req.body
+        let { ItemName, ItemPrice, ItemQty, ItemDescription} = req.body
         let pool = await sql.connect(dbconfig);
-        UpdateQuotationItem = `UPDATE QuotationItem
-        SET ItemName = N'${ItemName}', ItemQty = ${ItemQty}, ItemDescription =N'${ItemDescription}'
-        WHERE ItemId = ${ItemId}`;
-        await pool.request().query(UpdateQuotationItem);
-        res.status(200).send({message: 'Successfully Edit Item'});
+        // let CheckSubItem = await pool.request().query(`SELECT CASE
+        // WHEN EXISTS(
+        //      SELECT *
+        //      FROM QuotationSubItem
+        //      WHERE ItemId = ${ItemId}
+        // )
+        // THEN CAST (1 AS BIT)
+        // ELSE CAST (0 AS BIT) END AS 'check'`);
+        // if(CheckSubItem.recordset[0].check){
+        //     // if item have subitem get price from subitem
+        //     UpdateQuotationItem = `UPDATE QuotationItem
+        //     SET ItemName = N'${ItemName}', ItemPrice = ${ItemPrice}, ItemQty = ${ItemQty}, ItemDescription =N'${ItemDescription}'
+        //     WHERE ItemId = ${ItemId}`;
+        //     await pool.request().query(UpdateQuotationItem);
+        //     res.status(200).send({message: 'Successfully Edit Item'});
+        // } else {
+            UpdateQuotationItem = `UPDATE QuotationItem
+            SET ItemName = N'${ItemName}', ItemPrice = ${ItemPrice}, ItemQty = ${ItemQty}, ItemDescription =N'${ItemDescription}'
+            WHERE ItemId = ${ItemId}`;
+            await pool.request().query(UpdateQuotationItem);
+            res.status(200).send({message: 'Successfully Edit Item'});
+        // }
     } catch(err){
         res.status(500).send({message: err});
     }
