@@ -159,7 +159,7 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
             text: ""
         }]
 
-    console.log(bahttext(quotation.QuotationNetVat.toFixed(2)))
+    // console.log(bahttext(quotation.QuotationNetVat.toFixed(2)))
     // price
     let discount = ""
     if (quotation.QuotationDiscount == 0) discount = "-"
@@ -305,8 +305,12 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
     let i = 1;
     let line = 0;
     let pool = await sql.connect(dbconfig);
+    console.log('check')
     const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
+    console.log(Items.recordset.length)
     if (Items.recordset.length){
+        console.log('check')
+        
         for(let Item of Items.recordset) {
             let { ItemName, ItemPrice, ItemQty, ItemDescription } = Item
             if (ItemPrice == 'undefined' || typeof ItemPrice == 'object') ItemPrice = 0;
@@ -346,7 +350,7 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
     }
     let maxline = 25
     if (line<maxline) for (;line<maxline;line++) itemtable['body'].push([""," ","","",""])
-
+    
     let doc = {
         info: {
             title: `No. ${quotationNo}`,
@@ -440,7 +444,6 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
             lineHeight: 1.1
         }
     }
-
     return doc;
 }
 
@@ -466,6 +469,7 @@ router.get('/:QuotationId', async (req, res) => {
             WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotation);
         let quotation = quotations.recordset[0];
+        // console.log(quotation)
         let quotationNo = ""
         if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
         else  quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
