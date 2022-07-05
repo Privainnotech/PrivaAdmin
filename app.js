@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const logger = require('morgan');
 const path = require('path');
 const flash = require('express-flash');
 const session = require('express-session');
@@ -16,8 +17,9 @@ app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'script')));
 
-app.use(express.urlencoded({extended: false}));
+app.use(logger('dev'));
 app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 app.use(session({
     cookie: {
