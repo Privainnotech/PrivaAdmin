@@ -1,20 +1,13 @@
-nav h1{
-	font-size: 40px;
-	font-weight: 700;
-}
-nav{
-	margin-bottom: 15px;
-}
 
 .min-h {
 	min-height: 250px;
 }
 
 
-.dataTables_wrapper {
+/* .dataTables_wrapper {
 	padding: 10px;
 	padding-right: 15px;
-}
+} */
 
 
 
@@ -186,4 +179,12 @@ hr{
 
 .cardbody.w-100{
 	padding-top: 0;
+}
+
+.input-group-footer .btn-group button{
+	width: 95px;
+}
+
+#btnPrint,#btnRevised{
+	width: 79px;
 }

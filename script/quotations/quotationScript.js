@@ -108,11 +108,11 @@ $(document).ready(function () {
                     "render": function () {
  
                         if ( status === '1') {
-                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-warning p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 3rem; font-size:0.3rem; ''>Add Sub</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalStatusConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div>"
                             ;}
                             // disabled
                                         else {
-                                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditItem' data-toggle='modal'  data-target='#modalItemMaster'  style='width: 2rem;'' disabled><i class='fa fa-pencil-square-o'></i></button><button class='btn btn-warning p-1 m-2' id='btnSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 3rem; font-size:0.3rem; '' disabled>Add Sub</button><button  class='btn btn-danger p-1 m-2' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;' disabled><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalStatusConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div>"
                                             ;}
                     }
 
@@ -164,11 +164,11 @@ $(document).ready(function () {
                     "render": function () {
  
                         if ( status === '1') {
-                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div>"
                             ;}
                             // disabled
                                         else {
-                                            return  "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditSubItem' data-toggle='modal'  data-target='#modalSubMaster'  style='width: 2rem;'' disabled><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' disabled><i class='fa fa-remove'></i></button></div>"
                                             ;}
                     }
                 }
