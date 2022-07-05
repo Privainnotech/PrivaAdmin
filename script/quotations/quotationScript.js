@@ -73,7 +73,7 @@ $(document).ready(function () {
             lengthMenu: [10,15],
             "columnDefs":[
                 {
-                    "targets": [7],
+                    "targets": [9],
                     "visible": false
                 },
             ],
