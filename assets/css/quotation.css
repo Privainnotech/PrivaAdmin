@@ -1,20 +1,13 @@
-nav h1{
-	font-size: 40px;
-	font-weight: 700;
-}
-nav{
-	margin-bottom: 15px;
-}
 
 .min-h {
 	min-height: 250px;
 }
 
 
-.dataTables_wrapper {
+/* .dataTables_wrapper {
 	padding: 10px;
 	padding-right: 15px;
-}
+} */
 
 
 
@@ -152,7 +145,8 @@ mg-20{
 
 #modalEditProject h3{
 	color: #fff;
-	font-size: 1rem;
+	font-weight: 400;
+	font-size: 0.9rem;
 	margin: 0;
 }
 
@@ -186,4 +180,34 @@ hr{
 
 .cardbody.w-100{
 	padding-top: 0;
+}
+
+.input-group-footer .btn-group button{
+	width: 95px;
+}
+
+#btnPrint,#btnRevised,#modalEditProject{
+	width: 82px;
+	font-size: 0.9rem;
+	margin: 0;
+	font-weight: 400;
+}
+
+#CusName{
+	width: 250px;
+	margin: 0;
+}
+
+@media only screen and (max-width:1440px) {
+	img#logo{
+		width: 200px;
+		height: 50px;
+	}
+	#btnPrint,#btnRevised,#modalEditProject{
+		width: 65px;
+		font-size: 0.5rem;
+		margin: 0;
+		font-weight: 400;
+	}
+	
 }

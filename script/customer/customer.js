@@ -3,7 +3,7 @@ $(document).ready(function () {
     function fill_resetTable() {
         var trHTML = ''; 
         trHTML += '<tr>'
-        trHTML +=  '<td colspan="6">Choose Company...</td>'
+        trHTML +=  '<td colspan="6">Select Company on Company Table...</td>'
         trHTML +=  '</tr>' 
         document.getElementById("showTable").innerHTML = trHTML;
     }
@@ -33,7 +33,7 @@ $(document).ready(function () {
                     "data": "CustomerTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary p-1 m-2' id='btnEditCustomer' data-toggle='modal'  data-target='#modalCustomerMaster'  style='width: 2rem;''><i class='fa fa-pencil-square-o'></i></button><button  class='btn btn-danger p-1 m-2' id='btnDelCustomer' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditCustomer' style='width: 2rem;' data-toggle='modal' data-target='#modalCustomerMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelCustomer' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -163,11 +163,15 @@ $(document).ready(function () {
 
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
+            $("#addCustomer").removeClass('visually-hidden');
+            $("#addCustomer").toggleClass('visually-hidden');
             fill_resetTable();
         }
         else{
             $('#tableCompany tr').removeClass('selected');
             $(this).toggleClass('selected');
+            $("#addCustomer").removeClass('visually-hidden');
+
             fill_customer(CompanyId)
 
             //Create
