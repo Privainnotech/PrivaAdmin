@@ -9,8 +9,9 @@ async function LoadDropDown() {
             response.forEach(Company => {
                 $("#modalInpCompanyId").append("<option value=" + Company.CompanyId + "><span>" + Company.CompanyName + "</span></option>");
             });
-            console.log(response)
+            // console.log(response)
         }
     })
 }
 
+LoadDropDown();

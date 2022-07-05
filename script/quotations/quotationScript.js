@@ -38,12 +38,12 @@ $(document).ready(function () {
                 {
                     "data":  "QuotationSubject" 
                 },
-                // {
-                //     "data": "CustomerName"
-                // },
-                // {
-                //     "data": "QuotationDate" 
-                // },
+                {
+                    "data": "CustomerName"
+                },
+                {
+                    "data": "QuotationDate" 
+                },
                 {
                     "data": "QuotationUpdatedDate" 
                 },
@@ -65,9 +65,8 @@ $(document).ready(function () {
                 }
                 ,
                 {
-                    "data": "QuotationId",
-                    "data": "CustomerName",
-                    "data": "QuotationDate" 
+                    "data": "QuotationId"
+                    
                 }
 
             ],
@@ -114,7 +113,7 @@ $(document).ready(function () {
                             ;}
                             // disabled
                                         else {
-                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;' disabled><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
                                             ;}
                     }
 
