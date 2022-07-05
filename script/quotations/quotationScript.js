@@ -38,12 +38,12 @@ $(document).ready(function () {
                 {
                     "data":  "QuotationSubject" 
                 },
-                {
-                    "data": "CustomerName"
-                },
-                {
-                    "data": "QuotationDate" 
-                },
+                // {
+                //     "data": "CustomerName"
+                // },
+                // {
+                //     "data": "QuotationDate" 
+                // },
                 {
                     "data": "QuotationUpdatedDate" 
                 },
@@ -59,20 +59,22 @@ $(document).ready(function () {
                             ;}
                             
                                         else {
-                                            return  "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                            return  "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                                             ;}
                         }
                 }
                 ,
                 {
-                    "data": "QuotationId"
+                    "data": "QuotationId",
+                    "data": "CustomerName",
+                    "data": "QuotationDate" 
                 }
 
             ],
             lengthMenu: [10,15],
             "columnDefs":[
                 {
-                    "targets": [9],
+                    "targets": [7],
                     "visible": false
                 },
             ],
