@@ -200,7 +200,7 @@
                           <th>Address</th>
                           <th>Email</th>
                           <th>Phone</th>
-                          <th style="width: 15%;">Action</th>
+                          <th style="width: 10%;">Action</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -214,22 +214,22 @@
 						<div class="col-12 d-flex">
 							<div class="card flex-fill">
                 <div class="card-header title">
-                  <h1>Customer</h1><button type="button" class="btn btn-success" id="addCustomer" data-toggle="modal" data-target="#modalCustomerMaster">ADD</button>
+                  <h1>Customer</h1><button type="button" class="btn btn-success visually-hidden" id="addCustomer" data-toggle="modal" data-target="#modalCustomerMaster" onclick="LoadDropDown()" >ADD</button>
                 </div>
                 <table id="tableCustomer" class="table table-hover my-0" style="width:100%">
                   <thead >
                       <tr>
-                          <th style="width: 5%;">Index</th>
+                          <th>Index</th>
                           <th>Customer Name</th>
                           <th>Email</th>
                           <th>Phone</th>
-                          <th style="width: 15%;">Action</th>
+                          <th style="width: 5%;">Action</th>
                           <th style="display: none;"></th>
                       </tr>
                   </thead>
                   <tbody id="showTable">
                       <tr>
-                        <td colspan="6">Select Company...</td>
+                        <td colspan="6">Select Company on Company Table...</td>
                       </tr>
                   </tbody>
                 </table>

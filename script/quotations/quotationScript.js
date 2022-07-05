@@ -108,11 +108,11 @@ $(document).ready(function () {
                     "render": function () {
  
                         if ( status === '1') {
-                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalStatusConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div>"
+                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>"
                             ;}
                             // disabled
                                         else {
-                                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;' disabled><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalStatusConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div>"
+                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;' disabled><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
                                             ;}
                     }
 
@@ -164,11 +164,11 @@ $(document).ready(function () {
                     "render": function () {
  
                         if ( status === '1') {
-                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div>"
+                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
                             ;}
                             // disabled
                                         else {
-                                            return  "<div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' disabled><i class='fa fa-remove'></i></button></div>"
+                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' disabled><i class='fa fa-remove'></i></button></div></div>"
                                             ;}
                     }
                 }
@@ -570,37 +570,7 @@ $(document).ready(function () {
                 $("#btn-quotation").removeAttr("disabled");
                 $("#btn-loss").removeAttr("disabled");
             }
-            // else{
-            //     $("#btn-text").text("Edit");
-            //     //Eidt button
-            //     $("#modalEditProject").removeClass('visually-hidden');
-            //     $("#modalEditProject").toggleClass('visually-hidden');
-            //     $("#modalEditProject").removeClass('save');
-            //     $("#modalEditProject").removeAttr("data-toggle");
-            //     $("#modalEditProject").removeAttr("data-target");
-                
-
-            //     //AddItem button
-            //     $("#addItem").removeClass('visually-hidden');
-            //     $("#addItem").toggleClass('visually-hidden');
-
-            //     $("#PJ_Name").attr("disabled", "disabled"); 
-            //     $("#PJ_Discount").attr("disabled", "disabled"); 
-            //     $("#PJ_End_Customer").attr("disabled", "disabled"); 
-            //     $("#PJ_Validity").attr("disabled", "disabled"); 
-            //     $("#PJ_Payment1").attr("disabled", "disabled"); 
-            //     $("#PJ_Payment2").attr("disabled", "disabled"); 
-            //     $("#PJ_Payment3").attr("disabled", "disabled"); 
-            //     $("#PJ_Delivery").attr("disabled", "disabled"); 
-            //     $("#PJ_Remark").attr("disabled", "disabled"); 
-            //     $("#PJ_Approve").attr("disabled", "disabled");
-            //     $("#btn-cancel").attr("disabled", "disabled");
-            //     $("#btn-quotation").attr("disabled", "disabled");
-            //     $("#btn-book").attr("disabled", "disabled");
-            //     $("#btn-loss").attr("disabled", "disabled");
-
-                
-            // }
+            
            
             
     
