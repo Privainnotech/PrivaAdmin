@@ -356,6 +356,8 @@ $(document).ready(function () {
         $("#btn-book").attr("disabled", "disabled");
         $("#btn-loss").attr("disabled", "disabled");
 
+        
+
         $("#modalEditProject").removeClass('save');
         $("#modalEditProject").removeAttr("data-toggle");
         $("#modalEditProject").removeAttr("data-target");
@@ -370,6 +372,15 @@ $(document).ready(function () {
 
         if($(this).hasClass('selected')){
             $(this).removeClass('selected');
+
+            $("#addItem").removeClass('visually-hidden');
+            $("#addItem").toggleClass('visually-hidden');
+
+            $("#modalEditProject").removeClass('visually-hidden');
+            $("#modalEditProject").toggleClass('visually-hidden');
+            $("#modalEditProject").removeAttr("data-toggle");
+            $("#modalEditProject").removeAttr("data-target");
+
             fill_resetTable() 
             RePro()
         }
@@ -498,6 +509,7 @@ $(document).ready(function () {
 
             // Status Quotation
             if (QuotationStatus === "2") {
+                
                 $("#btn-text").text("Edit");
                 //Eidt button
                 $("#modalEditProject").removeClass('visually-hidden');
