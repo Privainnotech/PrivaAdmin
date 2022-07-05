@@ -34,20 +34,20 @@ app.use(session({
 
 app.use(flash());
 
-let indexRoute = require('./src/routes/index');
-let userRoute = require('./src/routes/user');
+let indexRoute = require('./routes/index');
+let userRoute = require('./routes/user');
 
 // path setting module
-let employeeRoute = require('./src/routes/master_setting/employee_master')
-let productRoute = require('./src/routes/master_setting/product_master')
-let companyRoute = require('./src/routes/master_setting/company_master')
-let customerRoute = require('./src/routes/master_setting/customer_master')
+let employeeRoute = require('./routes/master_setting/employee_master')
+let productRoute = require('./routes/master_setting/product_master')
+let companyRoute = require('./routes/master_setting/company_master')
+let customerRoute = require('./routes/master_setting/customer_master')
 
 // path main module
-let quotationRoute = require('./src/routes/quotation/quotation');
-let quotationStatusRoute = require('./src/routes/quotation/quotation_set');
-let quotationReportRoute = require('./src/routes/quotation/quotation_report')
-let dropdownRoute = require('./src/routes/main/dropdown')
+let quotationRoute = require('./routes/quotation/quotation');
+let quotationStatusRoute = require('./routes/quotation/quotation_set');
+let quotationReportRoute = require('./routes/quotation/quotation_report')
+let dropdownRoute = require('./routes/main/dropdown')
 
 app.use('/', indexRoute);
 app.use('/user', userRoute);

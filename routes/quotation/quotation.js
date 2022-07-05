@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
-const { dbconfig } = require('../../../config');
+const { dbconfig } = require('../../config');
 
 const checkMonth = () => {
     let today = new Date();
@@ -391,8 +391,8 @@ router.delete('/delete_item/:ItemId', async (req, res) => {
             WHERE QuotationId = @QuotationId;
             DELETE FROM QuotationItem WHERE ItemId=${ItemId}`;
         let DeleteSubItem = `DELETE FROM QuotationSubItem WHERE ItemId = ${ItemId}`;
-        await pool.request().query(DeleteItem);
         await pool.request().query(DeleteSubItem);
+        await pool.request().query(DeleteItem);
         updatePriceI(ItemId);
         res.status(200).send({message: 'Successfully delete Item'});
     } catch(err){

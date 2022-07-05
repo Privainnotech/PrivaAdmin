@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
-const { dbconfig } = require('../../../config');
+const { dbconfig } = require('../../config');
 
 // Show Dropdown
 router.get('/company', async (req, res) => {
