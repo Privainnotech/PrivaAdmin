@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const sql = require('mssql');
-const { dbconfig } = require('../../config');
+const { dbconfig } = require('../config');
 
 const ifLoggedIn = (req, res, next) => {
     if (req.session.isLoggedIn) {
