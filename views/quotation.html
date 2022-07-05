@@ -42,31 +42,25 @@
 				<ul class="sidebar-nav">
 					<li class="sidebar-item ">
 						<a class="sidebar-link" href="/index">
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Home</span>
+              <i class="fa fa-home" aria-hidden="true"></i> <span class="align-middle">Home</span>
             </a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="/customer">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Customer</span>
+              <i class="fa fa-building" aria-hidden="true"></i> <span class="align-middle">Customer</span>
             </a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="/employee">
-              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Employee</span>
+              <i class="fa fa-users" aria-hidden="true"></i> <span class="align-middle">Employee</span>
             </a>
 					</li>
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="/quotation">
-              <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Quotation</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+              <i class="fa fa-file-o" aria-hidden="true"></i> <span class="align-middle">Quotation</span>
             </a>
 					</li>
 
@@ -307,7 +301,7 @@
 
 				<div class="navbar-collapse collapse">
 					<div class="navbar-nav navbar-align">
-						<h1 class="">PrivaAdmin</h1>
+            <img id="logo" src="/logo.png" alt="">
 					</div>
 				</div>
 			</nav>
@@ -330,8 +324,8 @@
                           <th>Quotation NO.</th> <!-- class="d-none d-xl-table-cell" -->
                           <th class="d-none d-xl-table-cell">Revised</th>
                           <th>Project</th>
-                          <th>Customer</th> <!-- class="d-none d-md-table-cell" -->
-                          <th class="d-none d-xl-table-cell">Quotation Date</th>
+                          <!-- <th>Customer</th>  -->
+                          <!-- <th class="d-none d-xl-table-cell">Quotation Date</th> -->
                           <th class="d-none d-xl-table-cell">Update Date</th>
                           <th>Status</th>
                           <th>Action</th>
@@ -405,6 +399,7 @@
 								<div class="card-header title">
                   <h2 id="ProNo" >Project No.</h2>
                     <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-success visually-hidden" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
                       <button type="button" class="btn btn-dark btn-rad" id="btnPrint" data-toggle="modal" data-target="#modalPrintConfirm">Print</button>
                       <button type="button" class="btn btn-dark btn-rad" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
                     </div>
@@ -425,7 +420,7 @@
                     </div>
 
                     <div class="input-group ">
-                      <span class="input-group-text mg-0">Email:</span>
+                      <span class="input-group-text mg-0">Email:       </span>
                       <input id="CusEmail" class="no-bor form-control " disabled >
                     </div>
 
@@ -517,7 +512,7 @@
                             <button type="button" class="btn btn-secondary " id="btn-book" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Booking</button>
                             <button type="button" class="btn btn-info " id="btn-loss" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Loss</button>
                           </div>
-                          <button type="button" class="btn btn-success visually-hidden" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
+                          <!-- <button type="button" class="btn btn-success visually-hidden" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button> -->
                     </div>
 									</div>
 								</div>
