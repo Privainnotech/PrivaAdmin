@@ -4,9 +4,6 @@ const path = require('path');
 const flash = require('express-flash');
 const session = require('express-session');
 const cors = require('cors')
-require('dotenv').config();
-
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
@@ -62,4 +59,6 @@ app.use('/quotation_set', quotationStatusRoute)
 app.use('/quotation_report', quotationReportRoute)
 app.use('/dropdown', dropdownRoute)
 
-app.listen(PORT, () => console.log(`Server is listening on ${PORT}`))
+module.exports = app;
+
+
