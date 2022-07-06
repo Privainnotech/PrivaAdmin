@@ -38,10 +38,12 @@ router.post('/login', async (req, res) => {
                 }
                 res.redirect('/');
             } else {
+                console.log('password')
                 req.flash('error', 'Invalid Password')
                 res.redirect('/user/login')
             }
         } else {
+            console.log('username')
             req.flash('error', 'Invalid Username')
             res.redirect('/user/login')
         }
