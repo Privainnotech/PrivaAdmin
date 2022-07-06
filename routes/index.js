@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+// MIDDLEWARE
 const ifNotLoggedIn = (req, res, next) => {
     if (!req.session.isLoggedIn) {
         return res.redirect('/user/login');
@@ -10,39 +11,41 @@ const ifNotLoggedIn = (req, res, next) => {
 
 const isAuth = (req, res, next) => {
     if(!req.session.isAuth) {
-        return res.send('Not allow')
+        return res.send({message: 'Not allow'})
     }
     next()
 }
 
-// home page
-router.get('/', (req, res, next) => {
-    res.render('index')
-});
+// PAGE
 
 router.get('/', ifNotLoggedIn, (req , res, next) => {
-    res.redirect('index');
-  })
+    res.render('index')
+})
 
 // customer page
-router.get('/customer', (req, res, next) => {
+router.get('/customer', ifNotLoggedIn, (req, res, next) => {
     res.render('customer')
 });
 
 // quotation page
-router.get('/quotation', (req, res, next) => {
+router.get('/quotation', ifNotLoggedIn, (req, res, next) => {
     res.render('quotation')
 });
 
 // Home page
-router.get('/index', (req, res, next) => {
+router.get('/index', ifNotLoggedIn, (req, res, next) => {
     res.render('index')
 });
 
 // Employee page
-router.get('/employee', (req, res, next) => {
+router.get('/employee', ifNotLoggedIn, (req, res, next) => {
     res.render('employee')
 });
+
+// User page
+router.get('/users', ifNotLoggedIn, isAuth, (req, res, next) => {
+    res.render('users')
+})
 
 // Test page
 router.get('/test', (req, res, next) => {

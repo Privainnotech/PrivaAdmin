@@ -12,6 +12,7 @@ app.use(cors());
 app.set('views', path.join(__dirname, "views"));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
+// app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'assets')));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -23,7 +24,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(session({
     cookie: {
-        maxAge: 60000
+        maxAge: 1000 * 60
     },
     store: new session.MemoryStore,
     saveUninitialized: true,
