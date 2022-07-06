@@ -212,8 +212,13 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
             QuotationPayTerm = JSON.parse(QuotationPayTerm)
             let payTerms = Object.values(QuotationPayTerm)
             let payTerm = "";
+            let i = 1;
+            // console.log(payTerms)
             payTerms.map(term => {
+                // console.log(term)
+                if (i==1 && term=='') term = "-"
                 payTerm = payTerm + term + "\n"
+                i++;
             })
             return payTerm
         }
@@ -305,12 +310,8 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
     let i = 1;
     let line = 0;
     let pool = await sql.connect(dbconfig);
-    console.log('check')
     const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
-    console.log(Items.recordset.length)
     if (Items.recordset.length){
-        console.log('check')
-        
         for(let Item of Items.recordset) {
             let { ItemName, ItemPrice, ItemQty, ItemDescription } = Item
             if (ItemPrice == 'undefined' || typeof ItemPrice == 'object') ItemPrice = 0;
@@ -347,10 +348,14 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
             i++;
             line++;
         }
+    } else {
+        detail['body'].push(
+            [{ text: ``, style: 'btext'},"",""],
+            [{ margin: [7,0,0,0], text: ``, style: 'blacktext'},"",""]
+        )
     }
     let maxline = 25
     if (line<maxline) for (;line<maxline;line++) itemtable['body'].push([""," ","","",""])
-    
     let doc = {
         info: {
             title: `No. ${quotationNo}`,
@@ -477,9 +482,9 @@ router.get('/:QuotationId', async (req, res) => {
         
 
         let pdfCreator = new pdfMake(fonts);
-        console.log('check creating')
+        console.log('Creating quotation....')
         let pdfDoc = pdfCreator.createPdfKitDocument(quotationPdf, {tableLayouts: customLayouts});
-        console.log('check created')
+        console.log('Quotation created')
         let quotationPath = path.join(process.cwd(), `/public/report/quotation/${quotationNo}.pdf`)
         let creating = pdfDoc.pipe(fs.createWriteStream(quotationPath));
         pdfDoc.end();
@@ -494,6 +499,7 @@ router.get('/:QuotationId', async (req, res) => {
             // res.status(200).send({message: 'Successfully create quotation report'});
         })
     } catch(err){
+        console.log(err)
         res.status(500).send({message: err});
     }
 })
