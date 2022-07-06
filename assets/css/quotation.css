@@ -205,22 +205,15 @@ hr{
 	margin: 0;
 }
 
-@media only screen and (max-width:1440px) {
-	img#logo{
-		width: 200px;
-		height: 50px;
-	}
-	#btnPrint,#btnRevised,#modalEditProject{
-		width: 65px;
-		font-size: 0.5rem;
-		margin: 0;
-		font-weight: 400;
-	}
-	
-}
-
 .btn:disabled{
 	background-color: rgba(0, 0, 0, 0.7);
 	border: rgba(0, 0, 0, 0.7);
 
+}
+
+@media only screen and (max-width:768px) {
+	img#logo{
+		width: 150px;
+		height: 35px;
+	}
 }

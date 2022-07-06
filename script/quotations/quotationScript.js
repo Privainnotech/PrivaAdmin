@@ -18,6 +18,7 @@ $(document).ready(function () {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
             "scrollY": "25vh",
+            "scrollX": true,
             "bPaginate": false,
             "bInfo": false,
             "bLengthChange": false,
@@ -85,6 +86,7 @@ $(document).ready(function () {
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
             "scrollY": "145px",
+            "scrollX": true,
             "scrollCollapse": true,
             "searching": false,
             "bPaginate": false,
@@ -141,6 +143,7 @@ $(document).ready(function () {
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
             "scrollY": "145px",
+            "scrollX": true,
             "scrollCollapse": true,
             "searching": false,
             "bPaginate": false,
