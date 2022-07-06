@@ -49,4 +49,12 @@ router.get('/test', (req, res, next) => {
     res.render('test')
 });
 
+router.get('/sign-in', (req, res, next) => {
+    res.render('sign-in')
+});
+
+router.get('/sign-up', (req, res, next) => {
+    res.render('sign-up')
+});
+
 module.exports = router
