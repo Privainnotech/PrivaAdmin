@@ -55,7 +55,7 @@
 	font-weight: 700;
 	margin: 0;
 
-	margin-bottom: 5px;
+	/* margin-bottom: 5px; */
 }
 
 
@@ -100,9 +100,13 @@ mg-20{
 
 .form-control:disabled{
 	background-color: #fff;
+	border: 0;
+
 }
 .form-select:disabled{
 	background-color: #fff;
+	border: 0;
+
 }
 
 select:disabled{
@@ -189,6 +193,10 @@ hr{
 	padding-top: 0;
 }
 
+.btn-group{
+	text-align:right
+}
+
 .input-group-footer .btn-group button{
 	width: 95px;
 }
@@ -201,8 +209,13 @@ hr{
 }
 
 #CusName{
-	width: 250px;
+	/* width: 250px; */
 	margin: 0;
+}
+
+.right {
+	display: flex;
+ 	justify-content: center;
 }
 
 .btn:disabled{
@@ -212,6 +225,10 @@ hr{
 }
 
 @media only screen and (max-width:1980px) {
+	body{
+		font-size: 0.7rem;
+	}
+	
 	.title.v-2{
 		display: block;
 		margin-bottom: 5px;
@@ -219,9 +236,13 @@ hr{
 	
 	#btnPrint,#btnRevised,#modalEditProject{
 		min-width: 82px;
-		font-size: 90%;
+		font-size: 0.7rem;
 		margin: 0;
-		font-weight: 400;
+		font-weight: 500;
+	}
+	#modalEditProject h3{
+		font-size: 0.7rem;
+		font-weight: 500;
 	}
 
 	span.group-title.input-group-text.mg-0{
@@ -233,9 +254,15 @@ hr{
 		font-size: 1rem;
 	}
 
+	.input-group-text.mg-0{
+		font-size: 0.8rem;
+	}
+	.no-bor{
+		font-size: 0.8rem;
+	}
+
 	#CusName{
-		margin-bottom: 5px;
-		margin-right: 25px;
+		margin: 0;
 	}
 
 	.input-group-footer .btn-group button{
@@ -243,4 +270,7 @@ hr{
 		font-size: 77%;
 		border: 0;
 	}
+
+	
+	
 }

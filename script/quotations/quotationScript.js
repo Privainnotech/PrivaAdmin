@@ -17,19 +17,19 @@ $(document).ready(function () {
     function fill_quotation() {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
-            "scrollY": "25vh",
+            "scrollY": "40vh",
             "scrollX": true,
             "bPaginate": false,
-            "bInfo": false,
+            // "bInfo": false,
             "bLengthChange": false,
             "ajax": {
                 "url": "/quotation/list",
                 "dataSrc": ""
             },
             "columns": [
-                {
-                    "data": "index"
-                },
+                // {
+                //     "data": "index"
+                // },
                 {
                     "data":  "QuotationNo" 
                 },
@@ -74,7 +74,7 @@ $(document).ready(function () {
             lengthMenu: [10,15],
             "columnDefs":[
                 {
-                    "targets": [9],
+                    "targets": [8],
                     "visible": false
                 },
             ],
@@ -380,8 +380,8 @@ $(document).ready(function () {
             $("#addItem").removeClass('visually-hidden');
             $("#addItem").toggleClass('visually-hidden');
 
-            $("#modalEditProject").removeClass('visually-hidden');
-            $("#modalEditProject").toggleClass('visually-hidden');
+            $("#modalEditProject").removeClass('invisible');
+            $("#modalEditProject").toggleClass('invisible');
             $("#modalEditProject").removeAttr("data-toggle");
             $("#modalEditProject").removeAttr("data-target");
 
@@ -398,7 +398,7 @@ $(document).ready(function () {
 
             if (QuotationStatus === "1") {
                 //Show Edit Button
-                $("#modalEditProject").removeClass('visually-hidden');
+                $("#modalEditProject").removeClass('invisible');
                 //Show AddItem Button
                 $("#addItem").removeClass('visually-hidden');
                 //Show Quotation Button
@@ -516,8 +516,8 @@ $(document).ready(function () {
                 
                 $("#btn-text").text("Edit");
                 //Eidt button
-                $("#modalEditProject").removeClass('visually-hidden');
-                $("#modalEditProject").toggleClass('visually-hidden');
+                $("#modalEditProject").removeClass('invisible');
+                $("#modalEditProject").toggleClass('invisible');
                 $("#modalEditProject").removeAttr("data-toggle");
                 $("#modalEditProject").removeAttr("data-target");
 
@@ -537,8 +537,8 @@ $(document).ready(function () {
             if (QuotationStatus === "3") {
                 $("#btn-text").text("Edit");
                 //Eidt button
-                $("#modalEditProject").removeClass('visually-hidden');
-                $("#modalEditProject").toggleClass('visually-hidden');
+                $("#modalEditProject").removeClass('invisible');
+                $("#modalEditProject").toggleClass('invisible');
                 $("#modalEditProject").removeAttr("data-toggle");
                 $("#modalEditProject").removeAttr("data-target");
 
@@ -555,8 +555,8 @@ $(document).ready(function () {
             if (QuotationStatus === "4") {
                 $("#btn-text").text("Edit");
                 //Eidt button
-                $("#modalEditProject").removeClass('visually-hidden');
-                $("#modalEditProject").toggleClass('visually-hidden');
+                $("#modalEditProject").removeClass('invisible');
+                $("#modalEditProject").toggleClass('invisible');
                 $("#modalEditProject").removeAttr("data-toggle");
                 $("#modalEditProject").removeAttr("data-target");
 
@@ -573,8 +573,8 @@ $(document).ready(function () {
             if (QuotationStatus === "5") {
                 $("#btn-text").text("Edit");
                 //Eidt button
-                $("#modalEditProject").removeClass('visually-hidden');
-                $("#modalEditProject").toggleClass('visually-hidden');
+                $("#modalEditProject").removeClass('invisible');
+                $("#modalEditProject").toggleClass('invisible');
                 $("#modalEditProject").removeAttr("data-toggle");
                 $("#modalEditProject").removeAttr("data-target");
 

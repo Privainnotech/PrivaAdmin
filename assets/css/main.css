@@ -159,9 +159,20 @@ nav.navbar{
 }
 
 @media only screen and (max-width:1980px) {
+	
+	body{
+		font-size: 0.7rem;
+	}
+
 	img#logo{
 		width: 150px;
 		height: 35px;
+	}
+	nav a.sidebar-brand{
+		font-size: 25px;
+	}
+	nav a.sidebar-link{
+		font-size: 15px;
 	}
 
 }

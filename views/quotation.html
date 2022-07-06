@@ -238,7 +238,7 @@
                       </div>
                       <div class="form-row my-2">
                           <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Product Name:&nbsp;</span></div>
-                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpEdSubName" style="width: 100%;" required="" disabled></div>
+                          <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpEdSubName" style="width: 100%;"  required="" disabled></div>
                       </div>
                       <div class="form-row my-2">
                         <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span></div>
@@ -378,7 +378,7 @@
                     <table id="tableQuo" class="table table-hover my-0 ">
                       <thead>
                         <tr>
-                          <th style="width: 5%;">Index</th>
+                          <!-- <th style="width: 5%;">Index</th> -->
                           <th>Quotation NO.</th> <!-- class="d-none d-xl-table-cell" -->
                           <th >Revised</th>
                           <th>Project</th>
@@ -386,7 +386,7 @@
                           <th >Quotation Date</th>
                           <th >Update Date</th>
                           <th>Status</th>
-                          <th style="width: 20%;">Action</th>
+                          <th style="width: 10%;">Action</th>
                           <th style="display: none;"></th>
                         </tr>
                       </thead>
@@ -408,10 +408,10 @@
                       <table id="tableItem" class="table table-hover my-0" style="width:100%">
                         <thead >
                             <tr>
-                                <th>Item Name</th>
+                                <th style="width: 50%;">Item Name</th>
                                 <th>Unit Price</th>
                                 <th>Qty</th>
-                                <th style="width: 20%;">Action</th>
+                                <th style="width: 10%;">Action</th>
                                 <th style="display: none;"></th>
                             </tr>
                         </thead>
@@ -431,7 +431,7 @@
                       <table id="tableSubItem" class="table table-hover my-0" style="width:100%">
                         <thead >
                             <tr>
-                                <th style="width: 40%;">Product Name</th>
+                                <th style="width: 50%;">Product Name</th>
                                 <th>Unit Price</th>
                                 <th>Qty</th>
                                 <th style="width: 15%;">Action</th>
@@ -456,8 +456,8 @@
 							<div class="card flex-fill w-100">
 								<div class="card-header title v-2">
                   <h2 id="ProNo" >Project No.</h2>
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-success visually-hidden" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
+                    <div class="btn-group right" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-success invisible" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
                       <button type="button" class="btn btn-dark btn-rad" id="btnPrint" data-toggle="modal" data-target="#modalPrintConfirm">Print</button>
                       <button type="button" class="btn btn-dark btn-rad" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
                     </div>
@@ -470,9 +470,12 @@
                       <input type="text" class="form-control group-title edit f-9" id="PJ_Name" disabled>
                     </div>
 
-                    <div class="input-group v-2">
+                    <div class="input-group">
                       <span class="input-group-text mg-0">Customer:</span>
                       <input id="CusName" class="no-bor form-control" disabled  >
+                    </div>
+
+                    <div class="input-group">
                       <span class="input-group-text mg-0">Date:</span>
                       <input id="QDate" class="no-bor form-control disabled" disabled >
                     </div>
@@ -563,7 +566,7 @@
 
                     
 
-                    <div class="input-group-footer">
+                    <div class="input-group-footer right">
                           <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                             <button type="button" class="btn btn-danger " id="btn-cancel" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Cancel</button>
                             <button type="button" class="btn btn-warning " id="btn-quotation" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Quotation</button>
