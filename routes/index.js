@@ -1,16 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
+// MIDDLEWARE
 const ifNotLoggedIn = (req, res, next) => {
     if (!req.session.isLoggedIn) {
-        return res.redirect('/login');
-    }
-    next();
-}
-
-const ifLoggedIn = (req, res, next) => {
-    if (req.session.isLoggedIn) {
-        return res.redirect('/');
+        return res.redirect('/user/login');
     }
     next();
 }
@@ -22,13 +16,11 @@ const isAuth = (req, res, next) => {
     next()
 }
 
+// PAGE
+
 router.get('/', ifNotLoggedIn, (req , res, next) => {
     res.render('index')
 })
-
-router.get('/login', ifLoggedIn, (req, res, next) => {
-    res.render('login.ejs', {message: ''});
-});
 
 // customer page
 router.get('/customer', ifNotLoggedIn, (req, res, next) => {
