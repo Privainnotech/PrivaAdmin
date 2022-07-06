@@ -105,6 +105,13 @@ mg-20{
 	background-color: #fff;
 }
 
+select:disabled{
+	background-color: #fff;
+	border: 0;
+	
+}
+
+
 
 
 .form-control:disabled.f-9{
