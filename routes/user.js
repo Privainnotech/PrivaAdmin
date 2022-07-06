@@ -5,7 +5,8 @@ const sql = require('mssql');
 const { dbconfig } = require('../config');
 
 const ifLoggedIn = (req, res, next) => {
-    if (req.session.isLoggedIn) {
+    // if (req.session.isLoggedIn) {
+    if (false) {
         return res.redirect('/');
     }
     next();
