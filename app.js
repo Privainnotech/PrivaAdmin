@@ -9,7 +9,7 @@ const cors = require('cors')
 app.use(cors());
 
 // app.set('view engine', 'html');
-app.set('views', path.join(__dirname, "/views"));
+app.set('views', path.join(__dirname, "views"));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 // app.set('view engine', 'ejs');
@@ -24,7 +24,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(session({
     cookie: {
-        maxAge: 60000
+        maxAge: 1000 * 60
     },
     store: new session.MemoryStore,
     saveUninitialized: true,
