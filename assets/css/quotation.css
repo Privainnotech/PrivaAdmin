@@ -207,7 +207,7 @@ hr{
 
 .btn:disabled{
 	background-color: rgba(0, 0, 0, 0.7);
-	border: rgba(0, 0, 0, 0.7);
+	border: red;
 
 }
 
@@ -241,5 +241,6 @@ hr{
 	.input-group-footer .btn-group button{
 		width: 43%;
 		font-size: 77%;
+		border: 0;
 	}
 }
