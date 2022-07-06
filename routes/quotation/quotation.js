@@ -508,10 +508,11 @@ router.put('/edit_item/:ItemId', async (req, res) => {
 router.put('/edit_subitem/:SubItemId', async (req, res) => {
     try{
         let SubItemId = req.params.SubItemId;
-        let { ProductId, ProductName, ProductPrice, ProductType, SubItemQty, SubItemUnit} = req.body
+        console.log(req.body)
+        let { ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit} = req.body
         let pool = await sql.connect(dbconfig);
         UpdateProduct = `UPDATE MasterProduct
-        SET ProductName =N'${ProductName}, ProductPrice = ${ProductPrice}'
+        SET ProductName =N'${SubItemName}', ProductPrice = ${SubItemPrice}
         WHERE ProductId = ${ProductId}`;
         UpdateQuotationSubItem = `UPDATE QuotationSubItem
         SET SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
