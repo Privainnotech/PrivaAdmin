@@ -151,3 +151,9 @@ table.dataTable tbody tr.selected>* {
 	}
 
 }
+
+nav.navbar{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right: 0;
+}
