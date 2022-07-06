@@ -211,9 +211,35 @@ hr{
 
 }
 
-@media only screen and (max-width:768px) {
-	img#logo{
-		width: 150px;
-		height: 35px;
+@media only screen and (max-width:1980px) {
+	.title.v-2{
+		display: block;
+		margin-bottom: 5px;
+	}
+	
+	#btnPrint,#btnRevised,#modalEditProject{
+		min-width: 82px;
+		font-size: 90%;
+		margin: 0;
+		font-weight: 400;
+	}
+
+	span.group-title.input-group-text.mg-0{
+		font-size: 1rem;
+		
+	}
+
+	input.group-title{
+		font-size: 1rem;
+	}
+
+	#CusName{
+		margin-bottom: 5px;
+		margin-right: 25px;
+	}
+
+	.input-group-footer .btn-group button{
+		width: 43%;
+		font-size: 77%;
 	}
 }

@@ -144,16 +144,24 @@ table.dataTable tbody tr.selected>* {
     color: white;
 }
 
-@media only screen and (max-width:1440px) {
-	img#logo{
-		width: 200px;
-		height: 50px;
-	}
-
-}
 
 nav.navbar{
 	padding-top: 10px;
 	padding-bottom: 10px;
 	padding-right: 0;
+}
+
+@media only screen and (max-width:768px) {
+	img#logo{
+		width: 150px;
+		height: 35px;
+	}
+}
+
+@media only screen and (max-width:1980px) {
+	img#logo{
+		width: 150px;
+		height: 35px;
+	}
+
 }
