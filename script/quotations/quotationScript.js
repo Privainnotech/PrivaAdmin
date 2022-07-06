@@ -111,11 +111,11 @@ $(document).ready(function () {
                     "render": function () {
  
                         if ( status === '1') {
-                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>"
+                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>"
                             ;}
                             // disabled
                                         else {
-                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalSubMaster' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
                                             ;}
                     }
 
@@ -1085,7 +1085,7 @@ $(document).ready(function () {
                         tableSubItem.ajax.reload(null, false);
                         tableItem.ajax.reload(null, false);
                         ShowPro(QuotationId)
-                        $('#modalSubMaster').modal('hide');
+                        $('#modalAddSubMaster').modal('hide');
                     },
                     error: function (err) {
                         errorText = err.responseJSON.message;
@@ -1119,21 +1119,21 @@ $(document).ready(function () {
             let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
             console.log(tableSubItem.rows(rows).data()[0])
 
-            $('#modalInpProduct').val(ProductId);
-            $('#modalInpSubName').val(SubItemName);
-            $('#modalInpSubPrice').val(SubItemPrice);
-            $('#modalInpSubType').val(ProductType);
-            $('#modalInpSubQty').val(SubItemQty);
-            $('#modalInpSubUnit').val(SubItemUnit);
+            $('#modalInpEdProduct').val(ProductId);
+            $('#modalInpEdSubName').val(SubItemName);
+            $('#modalInpEdSubPrice').val(SubItemPrice);
+            $('#modalInpEdSubType').val(ProductType);
+            $('#modalInpEdSubQty').val(SubItemQty);
+            $('#modalInpEdSubUnit').val(SubItemUnit);
 
-            $("#modalSaveSub").unbind();
-            $("#modalSaveSub").click(function () {
-                let ProductId = $.trim($('#modalInpProduct').val());
-                let SubItemName = $.trim($('#modalInpSubName').val());
-                let SubItemPrice = $.trim($('#modalInpSubPrice').val());
-                let ProductType = $.trim($('#modalInpSubType').val());
-                let SubItemQty = $.trim($('#modalInpSubQty').val());
-                let SubItemUnit = $.trim($('#modalInpSubUnit').val());
+            $("#modalEdSaveSub").unbind();
+            $("#modalEdSaveSub").click(function () {
+                let ProductId = $.trim($('#modalInpEdProduct').val());
+                let SubItemName = $.trim($('#modalInpEdSubName').val());
+                let SubItemPrice = $.trim($('#modalInpEdSubPrice').val());
+                let ProductType = $.trim($('#modalInpEdSubType').val());
+                let SubItemQty = $.trim($('#modalInpEdSubQty').val());
+                let SubItemUnit = $.trim($('#modalInpEdSubUnit').val());
 
                 $.ajax({
                     url: "/quotation/edit_subitem/" + SubItemId,
@@ -1159,7 +1159,7 @@ $(document).ready(function () {
                         tableSubItem.ajax.reload(null, false);
                         tableItem.ajax.reload(null, false);
                         ShowPro(QuotationId);
-                        $('#modalSubMaster').modal('hide');
+                        // $('#modalSubMaster').modal('hide');
                     },
                     error: function (err) {
                         errorText = "err.responseJSON.message;"
