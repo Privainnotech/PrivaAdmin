@@ -167,7 +167,7 @@ nav.navbar{
 @media only screen and (min-width:1320px) {
 	
 	body{
-		font-size: 0.7rem;
+		font-size: 0.9rem;
 	}
 
 	img#logo{
@@ -186,3 +186,5 @@ nav.navbar{
 	}
 
 }
+
+	

@@ -1,0 +1,41 @@
+.container-error{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    flex-direction: column;
+}
+
+#error{
+    font-size: 5rem;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+main.content{
+    padding-top: 0px;
+    height: 100%;
+}
+
+.icon{
+    position: relative;
+    right: 165px;
+    font-size: 5rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 40px;
+}
+
+p{
+    font-size: 2rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+
+@media only screen and (min-width:960px) {
+	body{
+		font-size: 0.7rem;
+	}
+}
+

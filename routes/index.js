@@ -18,7 +18,8 @@ const ifLoggedIn = (req, res, next) => {
 
 const isAuth = (req, res, next) => {
     if(!req.session.isAuth) {
-        return res.status(401).send({message: 'Not allow'})
+        return res.redirect('/error');
+        // return res.status(401).send({message: 'Not allow'})
     }
     next()
 }
@@ -67,6 +68,10 @@ router.get('/users', ifNotLoggedIn, isAuth, (req, res, next) => {
 // Test page
 router.get('/test', (req, res, next) => {
     res.render('test')
+});
+
+router.get('/error', (req, res, next) => {
+    res.render('error')
 });
 
 router.get('/sign-in', (req, res, next) => {

@@ -24,7 +24,19 @@ $(document).ready(function () {
                     "data": "EmployeeTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;' data-toggle='modal' data-target='#modalEmployeeMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-success p-1' id='btnEditPass' style='width: 2rem;' data-toggle='modal' data-target='#modalPassMaster'><i class='fa fa-key' aria-hidden='true'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
+                    "data": "Authority",
+                    "render": function (data, type, row) {
+                        if (row.Authority == 1) {
+                            return " <div class='form-check'><input class='form-check-input' type='checkbox' value='1' id='flexCheckDefault' checked></div>"                    
+
+                        } else {
+                            return " <div class='form-check'><input class='form-check-input' type='checkbox' value='0' id='flexCheckDefault'></div>"                    
+                            
+                        }
+                    }
+                },
+                {
+                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;' data-toggle='modal' data-target='#modalEmployeeMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnEditPass' style='width: 2rem;' data-toggle='modal' data-target='#modalPassMaster'><i class='fa fa-key' aria-hidden='true'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -37,7 +49,7 @@ $(document).ready(function () {
 
             ],"columnDefs":[
                 {
-                    "targets": [6],
+                    "targets": [7],
                     "visible": false
                 },
             ],
@@ -191,27 +203,22 @@ $(document).ready(function () {
         rows = $(this).closest("tr");
         let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
 
-        // let Password = tableEmploy.rows(rows).data()[0].Password;
-        let Authority = tableEmploy.rows(rows).data()[0].Authority;
-        console.log(Authority)
-
-        
-        // $('#modalInpEdEmployPassword').val(Password);
-        $('#modalInpEdAut').val(Authority);
+        // let Authority = tableEmploy.rows(rows).data()[0].Authority;
+        // $('#modalInpEdAut').val(Authority);
 
         $("#modalSaveEdit").unbind();
         $("#modalSaveEdit").click(function () {
             
                 let Password = $.trim($('#modalInpEdEmployPassword').val());
-                let Authority = $.trim($('#modalInpEdAut').val());
+                // let Authority = $.trim($('#modalInpEdAut').val());
 
                 $.ajax({
                     url: "/employee_master/change_password/" + EmployeeId,
                     method: 'put',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        Password: Password,
-                        Authority: Authority,
+                        Password: Password
+                        // Authority: Authority,
                     }),
                     success: function () {
                         Swal.fire({
@@ -269,5 +276,72 @@ $(document).ready(function () {
             $('#modalDeleteConfirm').modal('hide');
         })
     });
+
+    $(document).on("click", "#flexCheckDefault", function () {
+        // let a =  $('#flexCheckDefault').val();
+        // console.log(a)
+        rows = $(this).closest("tr");
+        let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
+
+        if($(this).is(":checked")) {
+            // checkbox is checked -> do something
+            let Authority = 1
+            console.log(Authority);
+            console.log(EmployeeId);
+
+            $.ajax({
+                url: "/employee_master/change_authority/" + EmployeeId,
+                method: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    Authority: Authority
+                }),
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Edited',
+                        text: 'Successfully Change Authority',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableEmploy.ajax.reload(null, false);
+                    $('#modalPassMaster').modal('hide');
+                },
+                error: function (err) {
+                    tableEmploy.ajax.reload(null, false);
+                }
+            });
+
+        } else {
+            let Authority = 0
+            console.log(Authority);
+            console.log(EmployeeId);
+            // checkbox is not checked -> do something different
+            $.ajax({
+                url: "/employee_master/change_authority/" + EmployeeId,
+                method: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    Authority: Authority
+                }),
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Edited',
+                        text: 'Successfully Change Authority',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableEmploy.ajax.reload(null, false);
+                    $('#modalPassMaster').modal('hide');
+                },
+                error: function (err) {
+                    tableEmploy.ajax.reload(null, false);
+                }
+            });
+        }
+    })
 
 });

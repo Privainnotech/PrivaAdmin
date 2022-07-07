@@ -17,30 +17,30 @@ function ShowPro(QuotationId) {
         url: "/quotation/" + QuotationId,
         method: 'get',
         cache: false,
-        success:function(response){
+        success: function (response) {
             var obj = JSON.parse(response);
-                $('#ProNo').text(obj.QuotationNo_Revised);
-                $('#CusName').val(obj.CustomerName);
-                $('#QDate').val(obj.QuotationDate);
-                $('#CusEmail').val(obj.CustomerEmail);
-                $('#ComName').val(obj.CompanyName);
-                $('#Adress').val(obj.CompanyAddress);
+            $('#ProNo').text(obj.QuotationNo_Revised);
+            $('#CusName').val(obj.CustomerName);
+            $('#QDate').val(obj.QuotationDate);
+            $('#CusEmail').val(obj.CustomerEmail);
+            $('#ComName').val(obj.CompanyName);
+            $('#Adress').val(obj.CompanyAddress);
 
-                $('#PJ_Name').val(obj.QuotationSubject);
-                  $('#PJ_Discount').val(obj.QuotationDiscount);
-                $('#PJ_Validity').val(obj.QuotationValidityDate);
-                $('#PJ_Payment1').val(obj.QuotationPayTerm.QuotationPayTerm1);
-                $('#PJ_Payment2').val(obj.QuotationPayTerm.QuotationPayTerm2);
-                $('#PJ_Payment3').val(obj.QuotationPayTerm.QuotationPayTerm3);
-                $('#PJ_Delivery').val(obj.QuotationDelivery);
-                $('#PJ_Remark').val(obj.QuotationRemark);
-                $('#PJ_End_Customer').val(obj.EndCustomer);
-                $('#PJ_Approve').val(obj.EmployeeApproveId);
+            $('#PJ_Name').val(obj.QuotationSubject);
+            $('#PJ_Discount').val(obj.QuotationDiscount);
+            $('#PJ_Validity').val(obj.QuotationValidityDate);
+            $('#PJ_Payment1').val(obj.QuotationPayTerm.QuotationPayTerm1);
+            $('#PJ_Payment2').val(obj.QuotationPayTerm.QuotationPayTerm2);
+            $('#PJ_Payment3').val(obj.QuotationPayTerm.QuotationPayTerm3);
+            $('#PJ_Delivery').val(obj.QuotationDelivery);
+            $('#PJ_Remark').val(obj.QuotationRemark);
+            $('#PJ_End_Customer').val(obj.EndCustomer);
+            $('#PJ_Approve').val(obj.EmployeeApproveId);
 
-                $('#TotalPrice').val(obj.QuotationTotalPrice);
-                $('#PriceAfter').val(obj.QuotationNet);
-                $('#Vat').val(obj.QuotationVat);
-                $('#NetTotal').val(obj.QuotationNetVat);
+            $('#TotalPrice').val(obj.QuotationTotalPrice);
+            $('#PriceAfter').val(obj.QuotationNet);
+            $('#Vat').val(obj.QuotationVat);
+            $('#NetTotal').val(obj.QuotationNetVat);
 
         }
     })
@@ -62,7 +62,7 @@ function RePro() {
     $('#PJ_Validity').val('');
     $('#PJ_Payment1').val('');
     $('#PJ_Payment2').val('');
-                $('#PJ_Payment3').val('');
+    $('#PJ_Payment3').val('');
     $('#PJ_Delivery').val('');
     $('#PJ_Remark').val('');
     $('#PJ_End_Customer').val('');
@@ -76,17 +76,17 @@ function RePro() {
 
 $(document).ready(function () {
     function fill_resetTable() {
-        var trHTML = ''; 
+        var trHTML = '';
         trHTML += '<tr>'
-        trHTML +=  '<td colspan="6">Loading...</td>'
-        trHTML +=  '</tr>' 
+        trHTML += '<td colspan="6">Loading...</td>'
+        trHTML += '</tr>'
         document.getElementById("showTable").innerHTML = trHTML;
     }
     function fill_resetSubTable() {
-        var trHTML = ''; 
+        var trHTML = '';
         trHTML += '<tr>'
-        trHTML +=  '<td colspan="6">Loading...</td>'
-        trHTML +=  '</tr>' 
+        trHTML += '<td colspan="6">Loading...</td>'
+        trHTML += '</tr>'
         document.getElementById("showSubTable").innerHTML = trHTML;
     }
 
@@ -107,51 +107,53 @@ $(document).ready(function () {
                     "data": "index"
                 },
                 {
-                    "data": "QuotationNo" 
+                    "data": "QuotationNo"
                 },
                 {
-                    "data": "QuotationRevised" 
+                    "data": "QuotationRevised"
                 },
                 {
-                    "data": "QuotationSubject" 
+                    "data": "QuotationSubject"
                 },
                 {
                     "data": "CustomerName"
                 },
                 {
-                    "data": "QuotationDate" 
+                    "data": "QuotationDate"
                 },
                 {
-                    "data": "QuotationUpdatedDate" 
+                    "data": "QuotationUpdatedDate"
                 },
                 {
                     "data": "StatusName"
                 },
                 {
-                    "data": "EmployeeFname" 
+                    "data": "EmployeeFname"
                 },
                 {
                     "data": "Action",
                     "render": function (data, type, row) {
- 
-                        if ( row.StatusName === 'pre') {
-                            return  "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
-                            ;}
-                            
-                                        else {
-                                            return  "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
-                                            ;}
+
+                        if (row.StatusName === 'pre') {
+                            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                ;
                         }
+
+                        else {
+                            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                                ;
+                        }
+                    }
                 }
                 ,
                 {
                     "data": "QuotationId"
-                    
+
                 }
 
             ],
             // lengthMenu: [10,15],
-            "columnDefs":[
+            "columnDefs": [
                 {
                     "targets": [10],
                     "visible": false
@@ -161,7 +163,7 @@ $(document).ready(function () {
     }
 
     //Item table
-    function fill_item(Id,status) {
+    function fill_item(Id, status) {
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
             "scrollY": "28vh",
@@ -177,7 +179,7 @@ $(document).ready(function () {
             },
             "columns": [
                 {
-                    "data":  "ItemName" 
+                    "data": "ItemName"
                 },
                 {
                     "data": "ItemPrice"
@@ -188,14 +190,16 @@ $(document).ready(function () {
                 {
                     "data": "Action",
                     "render": function () {
- 
-                        if ( status === '1') {
-                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>"
-                            ;}
-                            // disabled
-                                        else {
-                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
-                                            ;}
+
+                        if (status === '1') {
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>"
+                                ;
+                        }
+                        // disabled
+                        else {
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                ;
+                        }
                     }
 
                 }
@@ -205,10 +209,10 @@ $(document).ready(function () {
                     "data": "QuotationId",
                     "data": "QuotationStatus"
 
-                    
+
                 }
 
-            ],"columnDefs":[
+            ], "columnDefs": [
                 {
                     "targets": [4],
                     "visible": false
@@ -217,8 +221,8 @@ $(document).ready(function () {
         });
     }
 
-     //Item Sub Table
-     function fill_subitem(Id,status) {
+    //Item Sub Table
+    function fill_subitem(Id, status) {
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
             "scrollY": "28vh",
@@ -234,7 +238,7 @@ $(document).ready(function () {
             },
             "columns": [
                 {
-                    "data":  "SubItemName" 
+                    "data": "SubItemName"
                 },
                 {
                     "data": "SubItemPrice"
@@ -245,14 +249,16 @@ $(document).ready(function () {
                 {
                     "data": "Action",
                     "render": function () {
- 
-                        if ( status === '1') {
-                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
-                            ;}
-                            // disabled
-                                        else {
-                                            return  "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' disabled><i class='fa fa-remove'></i></button></div></div>"
-                                            ;}
+
+                        if (status === '1') {
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
+                                ;
+                        }
+                        // disabled
+                        else {
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                ;
+                        }
                     }
                 }
                 ,
@@ -262,9 +268,9 @@ $(document).ready(function () {
                     "data": "ProductId",
                     "data": "ProductType"
                 }
-              
 
-            ],"columnDefs":[
+
+            ], "columnDefs": [
                 {
                     "targets": [4],
                     "visible": false
@@ -281,8 +287,8 @@ $(document).ready(function () {
         $(".modal-title").text("Add Project");
         $("#modalSaveProject").unbind();
         $("#modalSaveProject").click(function () {
-                let ProjectName = $.trim($('#modalInpProjectName').val());
-                let CustomerId = $.trim($('#modalInpCustomerId').val());
+            let ProjectName = $.trim($('#modalInpProjectName').val());
+            let CustomerId = $.trim($('#modalInpCustomerId').val());
             if (ProjectName !== null) {
                 $.ajax({
                     url: "/quotation/add_pre_quotation",
@@ -321,7 +327,7 @@ $(document).ready(function () {
         })
     });
 
-    
+
 
     //Delete
     $(document).on("click", "#btnDelProject", function () {
@@ -335,7 +341,7 @@ $(document).ready(function () {
                 method: 'delete',
                 contentType: 'application/json',
                 success: function () {
-                    
+
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -352,57 +358,57 @@ $(document).ready(function () {
     });
 
     //clickTableQuotation
-    $('#tableQuo tbody' ).on('click', 'tr', function ()  {
+    $('#tableQuo tbody').on('click', 'tr', function () {
 
-       
+
         fill_resetSubTable()
         $("#btn-text").text("Edit");
-        $("#PJ_Name").attr("disabled", "disabled"); 
-        $("#PJ_Discount").attr("disabled", "disabled"); 
-        $("#PJ_End_Customer").attr("disabled", "disabled"); 
-        $("#PJ_Validity").attr("disabled", "disabled"); 
-        $("#PJ_Payment1").attr("disabled", "disabled"); 
-        $("#PJ_Payment2").attr("disabled", "disabled"); 
-        $("#PJ_Payment3").attr("disabled", "disabled"); 
-        $("#PJ_Delivery").attr("disabled", "disabled"); 
-        $("#PJ_Remark").attr("disabled", "disabled"); 
+        $("#PJ_Name").attr("disabled", "disabled");
+        $("#PJ_Discount").attr("disabled", "disabled");
+        $("#PJ_End_Customer").attr("disabled", "disabled");
+        $("#PJ_Validity").attr("disabled", "disabled");
+        $("#PJ_Payment1").attr("disabled", "disabled");
+        $("#PJ_Payment2").attr("disabled", "disabled");
+        $("#PJ_Payment3").attr("disabled", "disabled");
+        $("#PJ_Delivery").attr("disabled", "disabled");
+        $("#PJ_Remark").attr("disabled", "disabled");
         $("#PJ_Approve").attr("disabled", "disabled");
         $("#btn-cancel").attr("disabled", "disabled");
         $("#btn-quotation").attr("disabled", "disabled");
         $("#btn-book").attr("disabled", "disabled");
         $("#btn-loss").attr("disabled", "disabled");
 
-        
+
 
         $("#modalEditProject").removeClass('save');
         $("#modalEditProject").removeAttr("data-toggle");
         $("#modalEditProject").removeAttr("data-target");
-        
 
-        
+
+
         rows = $(this).closest("tr");
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
 
-        
 
-        if($(this).hasClass('selected')){
+
+        if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
 
             hideAdd()
 
             hideEdit()
 
-            fill_resetTable() 
+            fill_resetTable()
             RePro()
         }
-        else{
+        else {
             $('#tableQuo tr').removeClass('selected');
             $(this).toggleClass('selected');
-            
-            
+
+
             ShowPro(QuotationId)
-            fill_item(QuotationId,QuotationStatus)
+            fill_item(QuotationId, QuotationStatus)
 
             if (QuotationStatus === "1") {
                 //Show Edit Button
@@ -413,26 +419,26 @@ $(document).ready(function () {
                 $("#btn-quotation").removeAttr("disabled");
 
 
-                $(document).on("click", "#modalEditProject",function () {
-                    if($("#modalEditProject").hasClass('save')){
+                $(document).on("click", "#modalEditProject", function () {
+                    if ($("#modalEditProject").hasClass('save')) {
                         $(".save#modalEditProject").removeClass('save');
                         $("#modalEditProject").removeAttr("data-toggle");
                         $("#modalEditProject").removeAttr("data-target");
-    
-                         
+
+
 
                         $("#btnEditYes").unbind("click");
                         $(".btnYes").click(function () {
                             $("#btn-text").text("Edit");
-                            $("#PJ_Name").attr("disabled", "disabled"); 
-                            $("#PJ_Discount").attr("disabled", "disabled"); 
-                            $("#PJ_End_Customer").attr("disabled", "disabled"); 
-                            $("#PJ_Validity").attr("disabled", "disabled"); 
-                            $("#PJ_Payment1").attr("disabled", "disabled"); 
-                            $("#PJ_Payment2").attr("disabled", "disabled"); 
-                            $("#PJ_Payment3").attr("disabled", "disabled"); 
-                            $("#PJ_Delivery").attr("disabled", "disabled"); 
-                            $("#PJ_Remark").attr("disabled", "disabled"); 
+                            $("#PJ_Name").attr("disabled", "disabled");
+                            $("#PJ_Discount").attr("disabled", "disabled");
+                            $("#PJ_End_Customer").attr("disabled", "disabled");
+                            $("#PJ_Validity").attr("disabled", "disabled");
+                            $("#PJ_Payment1").attr("disabled", "disabled");
+                            $("#PJ_Payment2").attr("disabled", "disabled");
+                            $("#PJ_Payment3").attr("disabled", "disabled");
+                            $("#PJ_Delivery").attr("disabled", "disabled");
+                            $("#PJ_Remark").attr("disabled", "disabled");
                             $("#PJ_Approve").attr("disabled", "disabled");
 
                             let QuotationSubject = $.trim($('#PJ_Name').val());
@@ -463,7 +469,7 @@ $(document).ready(function () {
                                     QuotationRemark: QuotationRemark,
                                     EndCustomer: EndCustomer,
                                     EmployeeApproveId: EmployeeApproveId
-            
+
                                 }),
                                 success: function () {
                                     Swal.fire({
@@ -492,28 +498,28 @@ $(document).ready(function () {
                                 }
                             });
                         })
-    
+
                     }
                     else {
                         $("#modalEditProject").removeClass('save');
                         $("#modalEditProject").toggleClass('save');
-                        $(".save#modalEditProject").attr("data-toggle","modal");
-                        $(".save#modalEditProject").attr("data-target","#modalEditConfirm");
+                        $(".save#modalEditProject").attr("data-toggle", "modal");
+                        $(".save#modalEditProject").attr("data-target", "#modalEditConfirm");
 
 
-    
+
                         $("#btn-text").text("Save");
-    
-                        $("#PJ_Name").removeAttr("disabled"); 
-                        $("#PJ_Discount").removeAttr("disabled"); 
-                        $("#PJ_End_Customer").removeAttr("disabled"); 
-                        $("#PJ_Validity").removeAttr("disabled"); 
-                        $("#PJ_Payment1").removeAttr("disabled"); 
-                        $("#PJ_Payment2").removeAttr("disabled"); 
-                        $("#PJ_Payment3").removeAttr("disabled"); 
-                        $("#PJ_Delivery").removeAttr("disabled"); 
-                        $("#PJ_Remark").removeAttr("disabled"); 
-                        $("#PJ_Approve").removeAttr("disabled"); 
+
+                        $("#PJ_Name").removeAttr("disabled");
+                        $("#PJ_Discount").removeAttr("disabled");
+                        $("#PJ_End_Customer").removeAttr("disabled");
+                        $("#PJ_Validity").removeAttr("disabled");
+                        $("#PJ_Payment1").removeAttr("disabled");
+                        $("#PJ_Payment2").removeAttr("disabled");
+                        $("#PJ_Payment3").removeAttr("disabled");
+                        $("#PJ_Delivery").removeAttr("disabled");
+                        $("#PJ_Remark").removeAttr("disabled");
+                        $("#PJ_Approve").removeAttr("disabled");
                     }
                 })
 
@@ -521,7 +527,7 @@ $(document).ready(function () {
 
             // Status Quotation
             if (QuotationStatus === "2") {
-                
+
                 $("#btn-text").text("Edit");
                 //Eidt button
                 hideEdit()
@@ -571,18 +577,18 @@ $(document).ready(function () {
                 $("#btn-quotation").removeAttr("disabled");
                 $("#btn-loss").removeAttr("disabled");
             }
-    
+
             // Create Item
-            $(document).on("click", "#addItem", function (){
+            $(document).on("click", "#addItem", function () {
                 $("#formAddItem").trigger("reset");
                 $(".modal-title").text("Add Item ");
-               
+
                 $("#modalAddItem").unbind();
                 $("#modalAddItem").click(function () {
-                        let ItemName = $.trim($('#modalInpAddItemName').val());
-                        let ItemQty = $.trim($('#modalInpAddQty').val());
-                        let ItemPrice = $.trim($('#modalInpAddItemPrice').val());
-                        let ItemDescription = $.trim($('#modalInpAddDetails').val());
+                    let ItemName = $.trim($('#modalInpAddItemName').val());
+                    let ItemQty = $.trim($('#modalInpAddQty').val());
+                    let ItemPrice = $.trim($('#modalInpAddItemPrice').val());
+                    let ItemDescription = $.trim($('#modalInpAddDetails').val());
                     if (ItemName !== null) {
                         $.ajax({
                             url: "/quotation/add_item/" + QuotationId,
@@ -623,15 +629,15 @@ $(document).ready(function () {
                     }
                 })
             })
-    
+
             // Revised
-            $(document).on("click", "#btnRevised",function () {
-                $(".modal-title").text("Confirm Revised");    
+            $(document).on("click", "#btnRevised", function () {
+                $(".modal-title").text("Confirm Revised");
                 $.ajax({
                     url: "/quotation/" + QuotationId,
                     method: 'get',
                     cache: false,
-                    success:function(response){
+                    success: function (response) {
                         var obj = JSON.parse(response);
                         let QuotationNoId = obj.QuotationNoId;
                         let QuotationRevised = obj.QuotationRevised;
@@ -644,7 +650,7 @@ $(document).ready(function () {
                         let QuotationDelivery = obj.QuotationDelivery;
                         let QuotationRemark = obj.QuotationRemark;
                         let EmployeeApproveId = obj.EmployeeApproveId;
-                        
+
                         $("#btnREYes").unbind("click");
                         $(".btnYes").click(function () {
                             $.ajax({
@@ -689,12 +695,12 @@ $(document).ready(function () {
                                 }
                             });
                         })
-                    } 
+                    }
                 })
             });
 
             // Print
-            $(document).on("click", "#btnPrint",function () {
+            $(document).on("click", "#btnPrint", function () {
                 $("#btnPrintYes").unbind("click");
                 $(".btnYes").click(function () {
                     $.ajax({
@@ -721,8 +727,8 @@ $(document).ready(function () {
             });
 
             //btn-quotation
-            $(document).on('click','#btn-quotation',function() {
-                $(".modal-title").text("Confirm Quotation");    
+            $(document).on('click', '#btn-quotation', function () {
+                $(".modal-title").text("Confirm Quotation");
 
                 $("#btnSetYes").unbind("click");
                 $(".btnYes").click(function () {
@@ -730,7 +736,7 @@ $(document).ready(function () {
                         url: "/quotation_set/quotation/" + QuotationId,
                         method: 'get',
                         cache: false,
-                        success:function(response){
+                        success: function (response) {
                             Swal.fire({
                                 position: 'center',
                                 icon: 'success',
@@ -758,15 +764,15 @@ $(document).ready(function () {
             })
 
             //btn-cancel
-            $(document).on('click','#btn-cancel',function() {
-                $(".modal-title").text("Confirm Cancel");    
+            $(document).on('click', '#btn-cancel', function () {
+                $(".modal-title").text("Confirm Cancel");
                 $("#btnSetYes").unbind("click");
                 $(".btnYes").click(function () {
                     $.ajax({
                         url: "/quotation_set/cancel/" + QuotationId,
                         method: 'get',
                         cache: false,
-                        success:function(response){
+                        success: function (response) {
                             Swal.fire({
                                 position: 'center',
                                 icon: 'success',
@@ -794,15 +800,15 @@ $(document).ready(function () {
             })
 
             //btn-book
-            $(document).on('click','#btn-book',function() {
-                $(".modal-title").text("Confirm Book");    
+            $(document).on('click', '#btn-book', function () {
+                $(".modal-title").text("Confirm Book");
                 $("#btnSetYes").unbind("click");
                 $(".btnYes").click(function () {
                     $.ajax({
                         url: "/quotation_set/booking/" + QuotationId,
                         method: 'get',
                         cache: false,
-                        success:function(response){
+                        success: function (response) {
                             Swal.fire({
                                 position: 'center',
                                 icon: 'success',
@@ -830,15 +836,15 @@ $(document).ready(function () {
             })
 
             //btn-loss
-            $(document).on('click','#btn-loss',function() {
-                $(".modal-title").text("Confirm loss");    
+            $(document).on('click', '#btn-loss', function () {
+                $(".modal-title").text("Confirm loss");
                 $("#btnSetYes").unbind("click");
                 $(".btnYes").click(function () {
                     $.ajax({
                         url: "/quotation_set/loss/" + QuotationId,
                         method: 'get',
                         cache: false,
-                        success:function(response){
+                        success: function (response) {
                             Swal.fire({
                                 position: 'center',
                                 icon: 'success',
@@ -863,36 +869,36 @@ $(document).ready(function () {
                         }
                     })
                 })
-                
+
             })
         }
     });
 
 
 
-     //======================== Item =============================//
+    //======================== Item =============================//
     //Edit
     $(document).on("click", "#btnEditItem", function () {
         $("#formEditItem").trigger("reset");
         $(".modal-title").text("Edit Item");
-        
+
         rows = $(this).closest("tr");
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
         let ItemPrice = tableItem.rows(rows).data()[0].ItemPrice;
         let ItemQty = tableItem.rows(rows).data()[0].ItemQty;
-        
+
         let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
-        
+
         $('#modalInpItemName').val(ItemName);
         $('#modalInpItemPrice').val(ItemPrice);
         $('#modalInpQty').val(ItemQty);
 
         $("#modalEditItem").unbind();
         $("#modalEditItem").click(function () {
-                let ItemName = $.trim($('#modalInpItemName').val());
-                let ItemPrice = $.trim($('#modalInpItemPrice').val());
-                let ItemQty = $.trim($('#modalInpQty').val());
+            let ItemName = $.trim($('#modalInpItemName').val());
+            let ItemPrice = $.trim($('#modalInpItemPrice').val());
+            let ItemQty = $.trim($('#modalInpQty').val());
             if (ItemName !== null) {
                 $.ajax({
                     url: "/quotation/edit_item/" + ItemId,
@@ -955,7 +961,7 @@ $(document).ready(function () {
                         timer: 1500
                     })
                     tableItem.ajax.reload(null, false);
-                    ShowPro(QuotationId);   
+                    ShowPro(QuotationId);
                 }
             })
             $('#modalDeleteConfirm').modal('hide');
@@ -969,11 +975,11 @@ $(document).ready(function () {
                 url: "/dropdown/product/" + ProductId,
                 method: 'get',
                 cache: false,
-                success:function(response){
-                        var obj = JSON.parse(response);
-                        $('#modalInpSubName').val(obj.ProductName);
-                        $('#modalInpSubPrice').val(obj.ProductPrice);
-                        $('#modalInpSubType').val(obj.ProductType);
+                success: function (response) {
+                    var obj = JSON.parse(response);
+                    $('#modalInpSubName').val(obj.ProductName);
+                    $('#modalInpSubPrice').val(obj.ProductPrice);
+                    $('#modalInpSubType').val(obj.ProductType);
                 }
             })
         }
@@ -981,28 +987,28 @@ $(document).ready(function () {
 
 
     //clickTableItem
-    $('#tableItem tbody' ).on('click', 'tr', function ()  {
+    $('#tableItem tbody').on('click', 'tr', function () {
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let ItemName = tableItem.rows(rows).data()[0].ItemName;
         let QuotationStatus = tableItem.rows(rows).data()[0].QuotationStatus;
         let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
 
-        if($(this).hasClass('selected')){
+        if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             fill_resetSubTable()
         }
-        else{
+        else {
             $('#tableItem tr').removeClass('selected');
             $(this).toggleClass('selected');
-            fill_subitem(ItemId,QuotationStatus)
+            fill_subitem(ItemId, QuotationStatus)
         }
-        
+
         //Add Sub
-        $(document).on("click", "#btnSubItem", function (){
-        $("#formSub").trigger("reset");
-        $(".modal-title").text("Add SubItem in " + ItemName);
-        
+        $(document).on("click", "#btnSubItem", function () {
+            $("#formSub").trigger("reset");
+            $(".modal-title").text("Add SubItem in " + ItemName);
+
             $("#modalSaveSub").unbind();
             $("#modalSaveSub").click(function () {
                 let ProductId = $.trim($('#modalInpProduct').val());
@@ -1059,108 +1065,108 @@ $(document).ready(function () {
     $(document).on("click", "#btnEditSubItem", function () {
         $("#formSub").trigger("reset");
         $(".modal-title").text("Edit SubItem");
-            rows = $(this).closest('tr');
-            let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
-            let ProductId = tableSubItem.rows(rows).data()[0].ProductId;
-            let SubItemName = tableSubItem.rows(rows).data()[0].SubItemName;
-            let SubItemPrice = tableSubItem.rows(rows).data()[0].SubItemPrice;
-            let ProductType = tableSubItem.rows(rows).data()[0].ProductType;
-            let SubItemQty = tableSubItem.rows(rows).data()[0].SubItemQty;
-            let SubItemUnit = tableSubItem.rows(rows).data()[0].SubItemUnit;
-            let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
+        rows = $(this).closest('tr');
+        let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
+        let ProductId = tableSubItem.rows(rows).data()[0].ProductId;
+        let SubItemName = tableSubItem.rows(rows).data()[0].SubItemName;
+        let SubItemPrice = tableSubItem.rows(rows).data()[0].SubItemPrice;
+        let ProductType = tableSubItem.rows(rows).data()[0].ProductType;
+        let SubItemQty = tableSubItem.rows(rows).data()[0].SubItemQty;
+        let SubItemUnit = tableSubItem.rows(rows).data()[0].SubItemUnit;
+        let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
 
-            $('#modalInpEdProduct').val(ProductId);
-            $('#modalInpEdSubName').val(SubItemName);
-            $('#modalInpEdSubPrice').val(SubItemPrice);
-            $('#modalInpEdSubType').val(ProductType);
-            $('#modalInpEdSubQty').val(SubItemQty);
-            $('#modalInpEdSubUnit').val(SubItemUnit);
+        $('#modalInpEdProduct').val(ProductId);
+        $('#modalInpEdSubName').val(SubItemName);
+        $('#modalInpEdSubPrice').val(SubItemPrice);
+        $('#modalInpEdSubType').val(ProductType);
+        $('#modalInpEdSubQty').val(SubItemQty);
+        $('#modalInpEdSubUnit').val(SubItemUnit);
 
-            $("#modalEdSaveSub").unbind();
-            $("#modalEdSaveSub").click(function () {
-                let ProductId = $.trim($('#modalInpEdProduct').val());
-                let SubItemName = $.trim($('#modalInpEdSubName').val());
-                let SubItemPrice = $.trim($('#modalInpEdSubPrice').val());
-                let ProductType = $.trim($('#modalInpEdSubType').val());
-                let SubItemQty = $.trim($('#modalInpEdSubQty').val());
-                let SubItemUnit = $.trim($('#modalInpEdSubUnit').val());
+        $("#modalEdSaveSub").unbind();
+        $("#modalEdSaveSub").click(function () {
+            let ProductId = $.trim($('#modalInpEdProduct').val());
+            let SubItemName = $.trim($('#modalInpEdSubName').val());
+            let SubItemPrice = $.trim($('#modalInpEdSubPrice').val());
+            let ProductType = $.trim($('#modalInpEdSubType').val());
+            let SubItemQty = $.trim($('#modalInpEdSubQty').val());
+            let SubItemUnit = $.trim($('#modalInpEdSubUnit').val());
 
-                $.ajax({
-                    url: "/quotation/edit_subitem/" + SubItemId,
-                    method: 'put',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        ProductId: ProductId,
-                        SubItemName: SubItemName,
-                        SubItemPrice: SubItemPrice,
-                        ProductType: ProductType,
-                        SubItemQty: SubItemQty,
-                        SubItemUnit: SubItemUnit
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Edited',
-                            text: 'Successfully Edit Sub-Item',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableSubItem.ajax.reload(null, false);
-                        tableItem.ajax.reload(null, false);
-                        ShowPro(QuotationId);
-                        // $('#modalSubMaster').modal('hide');
-                    },
-                    error: function (err) {
-                        errorText = "err.responseJSON.message;"
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
-                    }
-                });
-            })
+            $.ajax({
+                url: "/quotation/edit_subitem/" + SubItemId,
+                method: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    ProductId: ProductId,
+                    SubItemName: SubItemName,
+                    SubItemPrice: SubItemPrice,
+                    ProductType: ProductType,
+                    SubItemQty: SubItemQty,
+                    SubItemUnit: SubItemUnit
+                }),
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Edited',
+                        text: 'Successfully Edit Sub-Item',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableSubItem.ajax.reload(null, false);
+                    tableItem.ajax.reload(null, false);
+                    ShowPro(QuotationId);
+                    // $('#modalSubMaster').modal('hide');
+                },
+                error: function (err) {
+                    errorText = "err.responseJSON.message;"
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: errorText,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#FF5733'
+                    });
+                }
+            });
         })
+    })
 
-        //Delete
-        $(document).on("click", "#btnDelSubItem", function () {
-            rows = $(this).closest('tr');
-            let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
-            let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
-            $(".modal-title").text("Confirm Delete");
-            $("#btnYes").unbind("click");
-            $(".btnYes").click(function () {
-                $.ajax({
-                    url: "/quotation/delete_subitem/" + SubItemId,
-                    method: 'delete',
-                    contentType: 'application/json',
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Deleted',
-                            text: 'Successfully delete Sub-item',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableSubItem.ajax.reload(null, false);
-                        tableItem.ajax.reload(null, false);
-                        ShowPro(QuotationId)
+    //Delete
+    $(document).on("click", "#btnDelSubItem", function () {
+        rows = $(this).closest('tr');
+        let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
+        let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
+        $(".modal-title").text("Confirm Delete");
+        $("#btnYes").unbind("click");
+        $(".btnYes").click(function () {
+            $.ajax({
+                url: "/quotation/delete_subitem/" + SubItemId,
+                method: 'delete',
+                contentType: 'application/json',
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: 'Successfully delete Sub-item',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableSubItem.ajax.reload(null, false);
+                    tableItem.ajax.reload(null, false);
+                    ShowPro(QuotationId)
 
-                    }
-                })
-                $('#modalDeleteConfirm').modal('hide');
+                }
             })
-        });
+            $('#modalDeleteConfirm').modal('hide');
+        })
+    });
 
-    
 
-    
-    
+
+
+
 });
 
