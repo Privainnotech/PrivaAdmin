@@ -1,15 +1,6 @@
-
 .min-h {
 	min-height: 250px;
 }
-
-
-/* .dataTables_wrapper {
-	padding: 10px;
-	padding-right: 15px;
-} */
-
-
 
 .textbox{
 	width: 125px;
@@ -45,8 +36,6 @@
 	border-radius: 3px;
 }
 
-
-
 .input-group-text.mg-0{
 	background-color: #fff;
 	border: 0;
@@ -54,10 +43,7 @@
 	font-size: 0.9rem;
 	font-weight: 700;
 	margin: 0;
-
-	/* margin-bottom: 5px; */
 }
-
 
 .no-bor-title{
 	background: white;
@@ -65,12 +51,6 @@
 	color: black;
 	font-weight: 700;
 	border: none;
-}
-
-
-
-mg-20{
-	padding: 20px;
 }
 
 #tableItem_wrapper{
@@ -92,10 +72,14 @@ mg-20{
 }
 
 
-.input-group-footer{
+.footer{
 	padding-top: 30px;
-	display: flex;
-	justify-content: space-between;
+	font-size: 1rem;
+}
+
+.footer .btn-group button{
+	font-size: 0.7rem;
+	font-weight: 500;
 }
 
 .form-control:disabled{
@@ -115,9 +99,6 @@ select:disabled{
 	
 }
 
-
-
-
 .form-control:disabled.f-9{
 	background-color: #fff;
 	border: 0;
@@ -128,19 +109,11 @@ select:disabled{
 
 }
 
-
-
 .bg-w{
     background: white;
 	height: 90vh;
     padding: 20px;
     border-radius: 8px;
-}
-
-
-
-.save{
-	background-color: rebeccapurple;
 }
 
 .f-9{
@@ -154,28 +127,10 @@ select:disabled{
 }
 
 
-#modalEditProject h3{
-	color: #fff;
-	font-weight: 400;
-	font-size: 0.9rem;
-	margin: 0;
-}
-
-span.group-title.input-group-text.mg-0{
-	font-size: 1.3rem;
-	margin: 0;
-	padding-left: 0;
-
-	color: #111;
-}
-
-input.group-title{
-	font-size: 1.2rem;
-}
-
 hr{
 	margin: 8px 0px 13px 0px;
 }
+
 #ProNo{
 	padding-left: 0;
 }
@@ -197,19 +152,8 @@ hr{
 	text-align:right
 }
 
-.input-group-footer .btn-group button{
-	width: 95px;
-}
-
-#btnPrint,#btnRevised,#modalEditProject{
-	width: 82px;
-	font-size: 0.9rem;
-	margin: 0;
-	font-weight: 400;
-}
 
 #CusName{
-	/* width: 250px; */
 	margin: 0;
 }
 
@@ -224,7 +168,9 @@ hr{
 
 }
 
-@media only screen and (max-width:1980px) {
+
+
+@media only screen and (min-width:960px) {
 	body{
 		font-size: 0.7rem;
 	}
@@ -232,6 +178,10 @@ hr{
 	.title.v-2{
 		display: block;
 		margin-bottom: 5px;
+	}
+
+	.title.v{
+		margin-top: 40px;
 	}
 	
 	#btnPrint,#btnRevised,#modalEditProject{
@@ -261,19 +211,70 @@ hr{
 		font-size: 0.8rem;
 	}
 
-	#CusName{
-		margin: 0;
-	}
-
-	.input-group-footer .btn-group button{
-		width: 43%;
-		font-size: 77%;
-		border: 0;
-	}
-
 	.textbox{
 		width: 95px;
 	}
+
+	.h-20{
+		height: 73.3vh;
+	}
 	
+	
+}
+
+@media only screen and (min-width:1320px) {
+	body{
+		font-size: 0.9rem;
+	}
+	main.content{
+		padding-top: 38px;
+		padding-bottom: 0;
+	}
+	.h-20{
+		height: 47.4vh;
+	}
+
+	.title.v{
+		margin-top: 0;
+	}
+
+	#btnPrint,#btnRevised,#modalEditProject{
+		width: 82px;
+		font-size: 0.8rem;
+		margin: 0;
+		font-weight: 400;
+	}
+
+	.footer .btn-group button {
+		font-size: 0.8rem;
+		font-weight: 500;
+	}
+
+	#modalEditProject h3{
+		color: #fff;
+		font-weight: 400;
+		font-size: 0.9rem;
+		margin: 0;
+	}
+	
+	span.group-title.input-group-text.mg-0{
+		font-size: 1.3rem;
+		margin: 0;
+		padding-left: 0;
+	
+		color: #111;
+	}
+
+	.input-group-text.mg-0{
+		font-size: 0.9rem;
+	}
+	.no-bor{
+		font-size: 0.9rem;
+	}
+	
+	input.group-title{
+		font-size: 1.2rem;
+	}
+
 	
 }

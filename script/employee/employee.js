@@ -24,7 +24,7 @@ $(document).ready(function () {
                     "data": "EmployeeTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;' data-toggle='modal' data-target='#modalEmployeeMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-success p-1' id='btnEditPass' style='width: 2rem;' data-toggle='modal' data-target='#modalPassMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;' data-toggle='modal' data-target='#modalEmployeeMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-success p-1' id='btnEditPass' style='width: 2rem;' data-toggle='modal' data-target='#modalPassMaster'><i class='fa fa-key' aria-hidden='true'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -191,18 +191,19 @@ $(document).ready(function () {
         rows = $(this).closest("tr");
         let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
 
-        let Password = tableEmploy.rows(rows).data()[0].Password;
+        // let Password = tableEmploy.rows(rows).data()[0].Password;
         let Authority = tableEmploy.rows(rows).data()[0].Authority;
+        console.log(Authority)
 
         
-        $('#modalInpEmployPassword').val(Password);
-        $('#modalInpAut').val(Authority);
+        // $('#modalInpEdEmployPassword').val(Password);
+        $('#modalInpEdAut').val(Authority);
 
         $("#modalSaveEdit").unbind();
         $("#modalSaveEdit").click(function () {
             
-                let Password = $.trim($('#modalInpEmployPassword').val());
-                let Authority = $.trim($('#modalInpAut').val());
+                let Password = $.trim($('#modalInpEdEmployPassword').val());
+                let Authority = $.trim($('#modalInpEdAut').val());
 
                 $.ajax({
                     url: "/employee_master/change_password/" + EmployeeId,
