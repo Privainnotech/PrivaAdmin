@@ -105,11 +105,12 @@ router.get('/list', async (req, res, next) => {
         a.QuotationUpdatedDate,
         d.StatusName,
         a.EmployeeApproveId,
-        a.EmployeeEditId
+        e.EmployeeFname
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
-        LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId`;
+        LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
+        LEFT JOIN [MasterEmployee] e ON a.EmployeeEditId = e.EmployeeId`;
         let pool = await sql.connect(dbconfig);
         let quotations = await pool.request().query(getQuotationList);
         res.status(200).send(JSON.stringify(quotations.recordset));
