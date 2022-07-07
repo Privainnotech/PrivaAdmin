@@ -105,7 +105,7 @@ router.put('/change_password/:EmployeeId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let Hashpass = await bcrypt.hash(Password, 12)
         let UpdateEmployee = `UPDATE MasterEmployee
-            SET Password = N'${Hashpass}'}
+            SET Password = N'${Hashpass}'
             WHERE EmployeeId = ${EmployeeId}`;
         await pool.request().query(UpdateEmployee);
         res.status(200).send({message: `Successfully change password`});
