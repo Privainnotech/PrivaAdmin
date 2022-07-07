@@ -24,13 +24,12 @@ $(document).ready(function () {
                     "data": "EmployeeTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;' data-toggle='modal' data-target='#modalEmployeeMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;' data-toggle='modal' data-target='#modalEmployeeMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-success p-1' id='btnEditPass' style='width: 2rem;' data-toggle='modal' data-target='#modalPassMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
                     "data": "EmployeeId"
-                    // ,
-                    // "data": "Password"
+                    //,"data": "Password"
 
                 }
 
@@ -46,6 +45,9 @@ $(document).ready(function () {
 
     //Add Employee
     $(document).on("click", "#addEmploy", function () {
+        $("#passbox").removeClass('visually-hidden');
+        $("#Autbox").removeClass('visually-hidden');
+
         $("#formEmployee").trigger("reset");
         $(".modal-title").text("Add Employee");
         $("#modalSaveEmployee").unbind();
@@ -102,6 +104,9 @@ $(document).ready(function () {
 
     //Edit
     $(document).on("click", "#btnEditEmploy", function () {
+        $("#passbox").addClass('visually-hidden');
+        $("#Autbox").addClass('visually-hidden');
+
         $("#formCompany").trigger("reset");
         $(".modal-title").text("Edit Company");
         rows = $(this).closest("tr");

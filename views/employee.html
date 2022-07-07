@@ -97,8 +97,8 @@
                   <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Last Name:&nbsp;</span></div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="text" id="modalInpEmployLname" style="width: 100%;" required=""></div>
                 </div>
-                <div class="form-row my-2">
-                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Password:&nbsp;</span></div>
+                <div class="form-row my-2" id="passbox">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span >Password:&nbsp;</span></div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="password" id="modalInpEmployPassword" style="width: 100%;" required=""></div>
                 </div>
                 <div class="form-row my-2">
@@ -113,11 +113,40 @@
                   <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Tel:&nbsp;</span></div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center"><input class="form-control" type="text" id="modalInpEmployTel" style="width: 100%;" required=""></div>
                 </div>
+                <div class="form-row my-2" id="Autbox">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Aut:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center " id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpAut">
+                          <option value="0"  selected>No</option>
+                          <option value="1">Yes</option>
+                    </select>
+                  </div>
+                </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-primary" id="modalSaveEmployee" type="button">Save</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- form Edit Pass -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="modalPassMaster">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form id="formEmployee" action="/Setting/AddEditRecpName">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalHeaderAddPart">Edit Password:</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Password:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control" type="password" id="modalInpEdEmployPassword" style="width: 100%;" required=""></div>
+                </div>
                 <div class="form-row my-2">
                   <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Aut:&nbsp;</span></div>
-                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-                    <select class="form-select" id="modalInpAut">
-                          <option value="0" selected>No</option>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center " id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpEdAut">
+                          <option value="0"  selected>No</option>
                           <option value="1">Yes</option>
                     </select>
                   </div>
