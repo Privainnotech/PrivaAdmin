@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const sql = require('mssql');
 const { dbconfig } = require('../../config');
 
@@ -16,9 +17,12 @@ router.get('/data', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
     try{
-        let { EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition } = req.body
+        let { EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition, Password, Authority } = req.body
+        if (Password == '') {
+            res.status(400).send({message: 'Please enter Password'});
+            return;
+        }
         let pool = await sql.connect(dbconfig);
-        console.log('checked')
         let CheckEmployee = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
                 SELECT *
@@ -30,8 +34,9 @@ router.post('/add', async (req, res, next) => {
         if(CheckEmployee.recordset[0].check){
             res.status(400).send({message: 'Duplicate Employee Email'});  
         } else {
-            let InsertEmployee = `INSERT INTO MasterEmployee(EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition)
-                VALUES  (N'${EmployeeTitle}', N'${EmployeeFname}', N'${EmployeeLname}', N'${EmployeeTel}', N'${EmployeeEmail}', N'${EmployeePosition}')`;
+            let Hashpass = await bcrypt.hash(Password, 12)
+            let InsertEmployee = `INSERT INTO MasterEmployee(EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition, Password, Authority)
+                VALUES  (N'${EmployeeTitle}', N'${EmployeeFname}', N'${EmployeeLname}', N'${EmployeeTel}', N'${EmployeeEmail}', N'${EmployeePosition}', N'${Hashpass}', ${Authority})`;
             await pool.request().query(InsertEmployee);
             res.status(201).send({message: 'Successfully add Employee'});
         }
@@ -73,6 +78,26 @@ router.put('/edit/:EmployeeId', async (req, res) => {
     }
 })
 
+router.put('/change_password/:EmployeeId', async (req, res) => {
+    try{
+        let EmployeeId = req.params.EmployeeId;
+        let { Password, Authority } = req.body
+        if (Password == '') {
+            res.status(400).send({message: 'Please enter Password'});
+            return;
+        }
+        let pool = await sql.connect(dbconfig);
+        let Hashpass = await bcrypt.hash(Password, 12)
+        let UpdateEmployee = `UPDATE MasterEmployee
+            SET Password = N'${Hashpass}', Authority = ${Authority}
+            WHERE EmployeeId = ${EmployeeId}`;
+        await pool.request().query(UpdateEmployee);
+        res.status(200).send({message: `Successfully change password`});
+    } catch(err){
+        res.status(500).send({message: `${err}`});
+    }
+})
+
 router.delete('/delete/:EmployeeId', async (req, res) => {
     try{
         let EmployeeId = req.params.EmployeeId;
@@ -80,6 +105,8 @@ router.delete('/delete/:EmployeeId', async (req, res) => {
             WHERE EmployeeId = ${EmployeeId}`;
         let pool = await sql.connect(dbconfig);
         await pool.request().query(DeleteEmployee);
+        req.session.destroy()
+        req.isAuth = false;
         res.status(200).send({message: `Successfully delete Employee`});
     } catch(err){
         res.status(500).send({message: `${err}`});
