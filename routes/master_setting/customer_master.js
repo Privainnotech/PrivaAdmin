@@ -38,10 +38,15 @@ router.post('/add', async (req, res, next) => {
         } else {
             if(CheckCustomer.recordset[0].CustomerActive){
                 console.log('checked')
-                res.status(400).send({message: 'Duplicate Customer Email'});
+                res.status(400).send({message: 'Duplicate Customer'});
             } else{
                 let ActivateCustomer = `UPDATE MasterCustomer
                     SET
+                    CustomerTitle = N'${CustomerTitle}',
+                    CustomerFname = N'${CustomerFname}',
+                    CustomerLname = N'${CustomerLname}',
+                    CustomerTel = N'${CustomerTel}',
+                    CompanyId = ${CompanyId},
                     CustomerActive = 1
                     WHERE CustomerEmail = N'${CustomerEmail}'`;
                 await pool.request().query(ActivateCustomer);

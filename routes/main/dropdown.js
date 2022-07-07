@@ -40,7 +40,7 @@ router.get('/status', async (req, res) => {
 router.get('/employee', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let SelectEmployee = `Select *, EmployeeTitle+EmployeeFname+' '+EmployeeLname EmployeeName FROM MasterEmployee order by EmployeeFname`;
+        let SelectEmployee = `Select *, EmployeeTitle+EmployeeFname+' '+EmployeeLname EmployeeName FROM MasterEmployee WHERE EmployeeActive = 1 order by EmployeeFname`;
         let Employee = await pool.request().query(SelectEmployee);
         res.status(200).send(JSON.stringify(Employee.recordset));
     } catch(err){
