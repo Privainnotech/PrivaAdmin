@@ -1,5 +1,5 @@
 CREATE Table [Priva].[dbo].[Users](
-	UserId int IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	UserId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	AvatarPath NVARCHAR(255) NOT NULL DEFAULT N'./images/avatar/0.png',
 	Username NVARCHAR(50) NOT NULL,
 	Password NVARCHAR(255) NOT NULL,
@@ -75,10 +75,12 @@ CREATE Table [Priva].[dbo].[Quotation](
 	QuotationPayTerm NVARCHAR(MAX) NULL DEFAULT N'-',
 	QuotationDelivery NVARCHAR(255) NULL DEFAULT N'-',
 	QuotationRemark NVARCHAR(MAX) NULL DEFAULT N'-',
-	EmployeeApproveId bigint NULL
+	EmployeeApproveId bigint NULL,
+	UserId bigint NULL
 	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
 	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
-	FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId)
+	FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId),
+	FOREIGN KEY (UserId) REFERENCES Users(UserId)
 )
 
 CREATE Table [Priva].[dbo].[QuotationItem](

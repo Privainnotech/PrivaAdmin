@@ -25,7 +25,7 @@ router.post('/login', async (req, res) => {
     try {
         let { Username, Password } = req.body;
         let pool = await sql.connect(dbconfig);
-        let user = await pool.request().query(`SELECT * FROM Users WHERE Username = N'${Username}'`);
+        let user = await pool.request().query(`SELECT * FROM MasterEmployee WHERE EmployeeFname = N'${Username}'`);
         if (user.recordset.length) {
             let compared = await bcrypt.compare(Password, user.recordset[0].Password)
             if (compared) {
@@ -40,35 +40,48 @@ router.post('/login', async (req, res) => {
             } else {
                 console.log('password')
                 req.flash('error', 'Invalid Password')
-                res.redirect('/user/login')
+                res.redirect('/login')
             }
         } else {
             console.log('username')
             req.flash('error', 'Invalid Username')
-            res.redirect('/user/login')
+            res.redirect('/login')
         }
     } catch (err){
         res.status(500).send({message: err});
     }
 });
 
-router.post('/register', async (req, res) => {
+
+router.put('/edit/:UserId', async (req, res) => {
     try{
-        let { Username, Password, Role } = req.body;
+        let UserId = req.params.UserId;
+        let { Password, Role } = req.body;
         console.log(req.body)
         //role: admin, user
-        let pool = await sql.connect(dbconfig);
-        let user = await pool.request().query(`SELECT * FROM Users WHERE Username = N'${Username}'`);
-        console.log(user.recordset)
-        if (!user.recordset.length) {
-            let Hashpass = await bcrypt.hash(Password, 12)
-            console.log(Hashpass)
-            await pool.request().query(`INSERT Users(AvatarPath, Username, Password, Role)
-            VALUES(N'./images/avatar/0.png', N'${Username}', N'${Hashpass}', N'admin')`);
-            res.send('Your account has been created')
-        } else {
-            res.status(400).send({message: 'Duplicate Username'});
+        if (Password == '') {
+            res.status(400).send({message: 'Please enter Password'});
+            return;
         }
+        let pool = await sql.connect(dbconfig);
+        let Hashpass = await bcrypt.hash(Password, 12)
+        console.log(Hashpass)
+        await pool.request().query(`UPDATE Users
+        SET Password=N'${Hashpass}', Role=N'${Role}'
+        WHERE UserId = ${UserId}`);
+        res.send('Your account has been edited')
+    } catch(err){
+        res.status(500).send({message: err});
+    }
+});
+
+router.delete('/delete/:UserId', async (req, res) => {
+    try{
+        let UserId = req.params.UserId;
+        let DeleteUser = `DELETE FROM Users WHERE UserId = ${UserId}`;
+        let pool = await sql.connect(dbconfig);
+        await pool.request().query(DeleteUser);
+        res.status(200).send({message: `Successfully delete company`});
     } catch(err){
         res.status(500).send({message: err});
     }
