@@ -125,6 +125,9 @@ $(document).ready(function () {
                     "data": "QuotationUpdatedDate" 
                 },
                 {
+                    "data": "EmployeeFname" 
+                },
+                {
                     "data": "StatusName"
                 },
                 {
@@ -150,7 +153,7 @@ $(document).ready(function () {
             lengthMenu: [10,15],
             "columnDefs":[
                 {
-                    "targets": [9],
+                    "targets": [10],
                     "visible": false
                 },
             ],
