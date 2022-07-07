@@ -28,8 +28,10 @@ $(document).ready(function () {
                 }
                 ,
                 {
-                    "data": "EmployeeId"
-                    //,"data": "Password"
+                    "data": "EmployeeId",
+                    "data": "Password",
+                    "data": "Authority"
+
 
                 }
 
@@ -56,6 +58,7 @@ $(document).ready(function () {
                 let EmployeeFname = $.trim($('#modalInpEmployFname').val());
                 let EmployeeLname = $.trim($('#modalInpEmployLname').val());
                 let Password = $.trim($('#modalInpEmployPassword').val());
+                let Authority = $.trim($('#modalInpAut').val());
                 let EmployeePosition = $.trim($('#modalInpEmployPosition').val());
                 let EmployeeEmail = $.trim($('#modalInpEmployEmail').val());
                 let EmployeeTel = $.trim($('#modalInpEmployTel').val());
@@ -68,7 +71,8 @@ $(document).ready(function () {
                         EmployeeTitle: EmployeeTitle,
                         EmployeeFname: EmployeeFname,
                         EmployeeLname: EmployeeLname,
-                        // Password: Password,
+                        Password: Password,
+                        Authority: Authority,
                         EmployeePosition: EmployeePosition,
                         EmployeeEmail: EmployeeEmail,
                         EmployeeTel: EmployeeTel
@@ -114,7 +118,6 @@ $(document).ready(function () {
         let EmployeeTitle = tableEmploy.rows(rows).data()[0].EmployeeTitle;
         let EmployeeFname = tableEmploy.rows(rows).data()[0].EmployeeFname;
         let EmployeeLname = tableEmploy.rows(rows).data()[0].EmployeeLname;
-        // let Password = tableEmploy.rows(rows).data()[0].Password;
 
         let EmployeePosition = tableEmploy.rows(rows).data()[0].EmployeePosition;
         let EmployeeEmail = tableEmploy.rows(rows).data()[0].EmployeeEmail;
@@ -124,7 +127,6 @@ $(document).ready(function () {
         $('#modalInpEmployTitle').val(EmployeeTitle);
         $('#modalInpEmployFname').val(EmployeeFname);
         $('#modalInpEmployLname').val(EmployeeLname);
-        // $('#modalInpEmployPassword').val(Password);
         $('#modalInpEmployPosition').val(EmployeePosition);
         $('#modalInpEmployEmail').val(EmployeeEmail);
         $('#modalInpEmployTel').val(EmployeeTel);
@@ -148,7 +150,6 @@ $(document).ready(function () {
                         EmployeeTitle: EmployeeTitle,
                         EmployeeFname: EmployeeFname,
                         EmployeeLname: EmployeeLname,
-                        // Password: Password,
                         EmployeePosition: EmployeePosition,
                         EmployeeEmail: EmployeeEmail,
                         EmployeeTel: EmployeeTel
@@ -181,7 +182,65 @@ $(document).ready(function () {
             
         })
     });
-    
+
+    //Change Pass
+    $(document).on("click", "#btnEditPass", function () {
+        $("#formPass").trigger("reset");
+        $(".modal-title").text("Change Password");
+
+        rows = $(this).closest("tr");
+        let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
+
+        let Password = tableEmploy.rows(rows).data()[0].Password;
+        let Authority = tableEmploy.rows(rows).data()[0].Authority;
+
+        
+        $('#modalInpEmployPassword').val(Password);
+        $('#modalInpAut').val(Authority);
+
+        $("#modalSaveEdit").unbind();
+        $("#modalSaveEdit").click(function () {
+            
+                let Password = $.trim($('#modalInpEmployPassword').val());
+                let Authority = $.trim($('#modalInpAut').val());
+
+                $.ajax({
+                    url: "/employee_master/change_password/" + EmployeeId,
+                    method: 'put',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        Password: Password,
+                        Authority: Authority,
+                    }),
+                    success: function () {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Edited',
+                            text: 'Successfully Change Password',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        tableEmploy.ajax.reload(null, false);
+                        $('#modalPassMaster').modal('hide');
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
+                    }
+                });
+            
+        })
+    });
+
     //Delete
     $(document).on("click", "#btnDelEmploy", function () {
         rows = $(this).closest('tr');

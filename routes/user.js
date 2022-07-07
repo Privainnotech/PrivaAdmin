@@ -4,23 +4,6 @@ const bcrypt = require('bcryptjs');
 const sql = require('mssql');
 const { dbconfig } = require('../config');
 
-const ifLoggedIn = (req, res, next) => {
-    if (req.session.isLoggedIn) {
-        return res.redirect('/');
-    }
-    next();
-}
-
-router.get('/login', ifLoggedIn, (req, res, next) => {
-    res.render('login.ejs', {message: ''});
-});
-
-router.get('/logout', (req, res, next) => {
-    req.session = null;
-    req.isAuth = false;
-    res.redirect('/user/login');
-})
-
 router.post('/login', async (req, res) => {
     try {
         let { Username, Password } = req.body;
