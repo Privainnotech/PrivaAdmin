@@ -291,6 +291,12 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
         let { ProductId, ProductType, SubItemName, SubItemPrice, SubItemQty, SubItemUnit} = req.body;
         // ProductType = {Labor, Material, Internal, Unknown} => Dropdown
         // Unit = {Pc, Set, Lot} => Dropdown
+        if (SubItemName == '') {
+            res.status(400).send({message: 'Please enter product name'});
+            return;
+        }
+        if (SubItemPrice == '') SubItemPrice = 0;
+        if (SubItemQty == '') SubItemPrice = 0;
         if (ProductId == 'null'){ // Add new product
             let CheckProduct = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
