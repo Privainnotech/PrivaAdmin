@@ -92,10 +92,14 @@ mg-20{
 }
 
 
-.input-group-footer{
+.footer{
 	padding-top: 30px;
-	display: flex;
-	justify-content: space-between;
+	font-size: 1rem;
+}
+
+.footer .btn-group button{
+	font-size: 0.7rem;
+	font-weight: 500;
 }
 
 .form-control:disabled{
@@ -137,12 +141,6 @@ select:disabled{
     border-radius: 8px;
 }
 
-
-
-.save{
-	background-color: rebeccapurple;
-}
-
 .f-9{
 	font-size: 0.8rem;
 	height: 30.99px;
@@ -152,7 +150,6 @@ select:disabled{
 	font-size: 0.8rem;
 	height: 33.39px;
 }
-
 
 #modalEditProject h3{
 	color: #fff;
@@ -197,9 +194,6 @@ hr{
 	text-align:right
 }
 
-.input-group-footer .btn-group button{
-	width: 95px;
-}
 
 #btnPrint,#btnRevised,#modalEditProject{
 	width: 82px;
@@ -263,12 +257,6 @@ hr{
 
 	#CusName{
 		margin: 0;
-	}
-
-	.input-group-footer .btn-group button{
-		width: 43%;
-		font-size: 77%;
-		border: 0;
 	}
 
 	.textbox{
