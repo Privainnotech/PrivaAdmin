@@ -357,241 +357,247 @@
       </div>
     </div>
 
-		<div class="main">
-			<nav class="navbar navbar-expand navbar-light navbar-bg sticky-top">
-				<a class="sidebar-toggle js-sidebar-toggle">
-          <i class="hamburger align-self-center"></i>
-        </a>
-
-				<div class="navbar-collapse collapse">
-					<div class="navbar-nav navbar-align">
-            <img id="logo" src="/logo.png" alt="">
+	<div class="main">
+		<nav class="navbar navbar-expand navbar-light navbar-bg sticky-top">
+			<a class="sidebar-toggle js-sidebar-toggle">
+				<i class="hamburger align-self-center"></i>
+			</a>
+	
+			<div class="navbar-collapse collapse">
+				<div class="navbar-nav navbar-align">
+					<img id="logo" src="/logo.png" alt="">
+				</div>
+			</div>
+		</nav>
+	
+		<main class="content">
+			<div class="container-fluid p-0">
+				<div class="row">
+					<div class="col-12">
+						<div class="card flex-fill">
+							<div class="card-header title">
+								<h1>Quotation List</h1>
+								<button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
+							</div>
+							<table id="tableQuo" class="table table-hover my-0 ">
+								<thead>
+									<tr>
+										<th>Index</th>
+										<th>Quotation NO.</th>
+										<th>Revised</th>
+										<th>Project</th>
+										<th>Customer</th>
+										<th>Quotation Date</th>
+										<th>Update Date</th>
+										<th>Status</th>
+										<th>Editor</th>
+										<th>Action</th>
+										<th style="display: none;"></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colspan="9">Loading...</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
-			</nav>
-
-			<main class="content">
-				<div class="container-fluid p-0">
-					<div class="row">
-						<div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xxl-7">
-              <div class="row">
-                <div class="col-12">
-                  <div class="card flex-fill">
-                    <div class="card-header title">
-                      <!-- <h5 class="card-title mb-0">Quotation List</h5> -->
-                      <h1>Quotation List</h1><button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
-                    </div>
-                    <table id="tableQuo" class="table table-hover my-0 ">
-                      <thead>
-                        <tr>
-                          <th style="width: 5%;">Index</th>
-                          <th>Quotation NO.</th> 
-                          <th >Revised</th>
-                          <th>Project</th>
-                          <th>Customer</th> 
-                          <th >Quotation Date</th>
-                          <th >Update Date</th>
-                          <th>Status</th>
-                          <th>Editor</th>
-                          <th style="width: 10%;">Action</th>
-                          <th style="display: none;"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td colspan="9">Loading...</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-6 col-sm-12 col-md-12 col-lg-12 col-xxl-6 d-flex">
-                  <div class="card flex-fill">
-                    <div class="card-header title">
-                      <h1>Item</h1><button type="button" class="btn btn-success visually-hidden" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">Add Item</button>
-                    </div>
-                      <table id="tableItem" class="table table-hover my-0" style="width:100%">
-                        <thead >
-                            <tr>
-                                <th style="width: 50%;">Item Name</th>
-                                <th>Unit Price</th>
-                                <th>Qty</th>
-                                <th style="width: 10%;">Action</th>
-                                <th style="display: none;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="showTable">
-                            <tr>
-                                <td colspan="4">Loading...</td>
-                            </tr>
-                        </tbody>
-                      </table>
-                  </div>
-                </div>
-                <div class="col-6  col-sm-12 col-md-12 col-lg-12 col-xxl-6 d-flex">
-                  <div class="card flex-fill">
-                    <div class="card-header title">
-                      <h1>Product</h1>
-                    </div>
-                      <table id="tableSubItem" class="table table-hover my-0" style="width:100%">
-                        <thead >
-                            <tr>
-                                <th style="width: 50%;">Product Name</th>
-                                <th>Unit Price</th>
-                                <th>Qty</th>
-                                <th style="width: 15%;">Action</th>
-                                <th style="display: none;"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="showSubTable">
-                            <tr>
-                                <td colspan="4">Loading...</td>
-                            </tr>
-                        </tbody>
-                      </table>
-                  </div>
-                </div>
-              </div>
-							
-
-              
-
-						</div>
-						<div class="col-12 col-lg-4 col-xxl-5 d-flex">
-							<div class="card flex-fill w-100">
-								<div class="card-header title v-2">
-                  <h2 id="ProNo" >Project No.</h2>
-                    <div class="btn-group right" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-success invisible" id="modalEditProject" ><h3 id="btn-text">Edit</h3></button>
-                      <button type="button" class="btn btn-dark btn-rad" id="btnPrint" data-toggle="modal" data-target="#modalPrintConfirm">Print</button>
-                      <button type="button" class="btn btn-dark btn-rad" id="btnRevised" data-toggle="modal" data-target="#modalRevisedConfirm">Revised</button>
-                    </div>
-                  </div>
-								<div class="card-body w-100">
-									<div class="align-self-center chart chart-lg">
-										<!-- set -->
-                    <div class="input-group">
-                      <span class="input-group-text group-title mg-0 f-9">Project Name:</span>
-                      <input type="text" class="form-control group-title edit f-9" id="PJ_Name" disabled>
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-text mg-0">Customer:</span>
-                      <input id="CusName" class="no-bor form-control" disabled  >
-                    </div>
-
-                    <div class="input-group">
-                      <span class="input-group-text mg-0">Date:</span>
-                      <input id="QDate" class="no-bor form-control disabled" disabled >
-                    </div>
-
-                    <div class="input-group ">
-                      <span class="input-group-text mg-0">Email:       </span>
-                      <input id="CusEmail" class="no-bor form-control " disabled >
-                    </div>
-
-                    <div class="input-group ">
-                      <span class="input-group-text mg-0">Company:</span>
-                      <input id="ComName" class="no-bor form-control " disabled>
-                    </div>
-
-                    <div class="input-group ">
-                      <textarea style="width: 94px;" class="input-group-text mg-0" rows="1" cols="1" disabled>Address:</textarea>
-                      <textarea  id="Adress" class="no-bor form-control" disabled ></textarea>
-                    </div>
-                    <br>
-                    <div class="input-group">
-                      <span class="input-group-text textbox4 mg-0 f-9">End Customer:</span>
-                      <input type="text" class="form-control edit f-9" id="PJ_End_Customer" disabled>
-                    </div>
-                    <hr>
-                      <span class="input-group-text group-title mg-0 f-9">Condition</span>
-                      
-                      <div class="input-group">
-                        <span class="input-group-text textbox4 mg-0 f-9">Validity:</span>
-                        <input type="text" class="form-control edit  f-9" id="PJ_Validity" disabled>
-                        <span class="input-group-text textbox2 mg-0 f-9">Delivery:</span>
-                        <input type="text" class="form-control edit f-9" id="PJ_Delivery" disabled>
-                      </div>
-        
-                      <div class="input-group">
-                        <span class="input-group-text textbox4 mg-0 f-9">Term of Payment:</span>
-                        <input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled>
-                      </div>
-  
-                      <div class="input-group">
-                        <span class="input-group-text textbox4 mg-0 f-9"></span>
-                        <input type="text" class="form-control edit f-9" id="PJ_Payment2" disabled>
-                      </div>
-  
-                      <div class="input-group">
-                        <span class="input-group-text textbox4 mg-0 f-9"></span>
-                        <input type="text" class="form-control edit f-9" id="PJ_Payment3" disabled>
-                      </div>
-  
-                      <div class="input-group">
-                        <span class="input-group-text textbox4 mg-0 f-9">Remark:</span>
-                        <input type="text" class="form-control edit f-9" id="PJ_Remark" disabled>
-                      </div>
-
-                    <hr>
-                      <span class="input-group-text group-title mg-0 f-9">Price</span>
-
-                      <div class="input-group ">
-                        <span class="input-group-text mg-0">Sub Total:</span>
-                        <input id="TotalPrice" class="no-bor form-control" disabled >
-                      </div>
-  
-                      <div class="input-group ">
-                        <span class="input-group-text textbox2 mg-0 f-9">Discount: </span>
-                        <input type="text" class="form-control edit f-9" id="PJ_Discount" disabled>
-                      </div>
-
-                      <div class="input-group ">
-                        <span class="input-group-text mg-0">Price after discount:</span>
-                        <input id="PriceAfter" class="no-bor form-control" disabled >
-                      </div>
-
-                      <div class="input-group ">
-                        <span class="input-group-text mg-0">VAT Including 7%:</span>
-                        <input id="Vat" class="no-bor form-control" disabled >
-                      </div>
-
-                      <div class="input-group ">
-                        <span class="input-group-text mg-0">Net Total:</span>
-                        <input id="NetTotal" class="no-bor form-control" disabled >
-                      </div>
-
-                    <div class="input-group ">
-                      <label class="input-group-text textbox mg-0 f-91" for="PJ_Approve">Approve By:</label>
-                        <select class="form-select edit f-91" id="PJ_Approve" disabled>
-                              <option value="null" selected="">-</option>
-                        </select>
-                    </div>
-
-                    
-
-                    
-                    <div class="footer v-2">
-                        <div class="btn-group right" role="group" aria-label="Basic example">
-                          <button type="button" class="btn btn-danger " id="btn-cancel" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Cancel</button>
-                            <button type="button" class="btn btn-warning " id="btn-quotation" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Quotation</button>
-                            <button type="button" class="btn btn-success " id="btn-book" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Booking</button>
-                            <button type="button" class="btn btn-info " id="btn-loss" data-toggle="modal" data-target="#modalStatusConfirm" disabled>Loss</button>
-                        </div>
-                    </div>
+				<div class="row">
+					<div class="col-5 col-sm-12 col-md-12 col-lg-5 col-xxl-5">
+						<div class="card flex-fill w-100">
+							<div class="card-header title v-2">
+								<h2 id="ProNo">Project No.</h2>
+								<div class="btn-group right" role="group" aria-label="Basic example">
+									<button type="button" class="btn btn-success invisible" id="modalEditProject">
+										<h3 id="btn-text">Edit</h3>
+									</button>
+									<button type="button" class="btn btn-dark btn-rad" id="btnPrint" data-toggle="modal"
+										data-target="#modalPrintConfirm">Print</button>
+									<button type="button" class="btn btn-dark btn-rad" id="btnRevised" data-toggle="modal"
+										data-target="#modalRevisedConfirm">Revised</button>
+								</div>
+							</div>
+							<div class="card-body w-100">
+								<div class="align-self-center chart chart-lg">
+									<!-- set -->
+									<div class="input-group">
+										<span class="input-group-text group-title mg-0 f-9">Project Name:</span>
+										<input type="text" class="form-control group-title edit f-9" id="PJ_Name" disabled>
+									</div>
+	
+									<div class="input-group">
+										<span class="input-group-text mg-0">Customer:</span>
+										<input id="CusName" class="no-bor form-control" disabled>
+									</div>
+	
+									<div class="input-group">
+										<span class="input-group-text mg-0">Date:</span>
+										<input id="QDate" class="no-bor form-control disabled" disabled>
+									</div>
+	
+									<div class="input-group ">
+										<span class="input-group-text mg-0">Email: </span>
+										<input id="CusEmail" class="no-bor form-control " disabled>
+									</div>
+	
+									<div class="input-group ">
+										<span class="input-group-text mg-0">Company:</span>
+										<input id="ComName" class="no-bor form-control " disabled>
+									</div>
+	
+									<div class="input-group ">
+										<textarea style="width: 94px;" class="input-group-text mg-0" rows="1" cols="1"
+											disabled>Address:</textarea>
+										<textarea id="Adress" class="no-bor form-control" disabled></textarea>
+									</div>
+									<br>
+									<div class="input-group">
+										<span class="input-group-text textbox4 mg-0 f-9">End Customer:</span>
+										<input type="text" class="form-control edit f-9" id="PJ_End_Customer" disabled>
+									</div>
+									<hr>
+									<span class="input-group-text group-title mg-0 f-9">Condition</span>
+	
+									<div class="input-group">
+										<span class="input-group-text textbox4 mg-0 f-9">Validity:</span>
+										<input type="text" class="form-control edit  f-9" id="PJ_Validity" disabled>
+										<span class="input-group-text textbox2 mg-0 f-9">Delivery:</span>
+										<input type="text" class="form-control edit f-9" id="PJ_Delivery" disabled>
+									</div>
+	
+									<div class="input-group">
+										<span class="input-group-text textbox4 mg-0 f-9">Term of Payment:</span>
+										<input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled>
+									</div>
+	
+									<div class="input-group">
+										<span class="input-group-text textbox4 mg-0 f-9"></span>
+										<input type="text" class="form-control edit f-9" id="PJ_Payment2" disabled>
+									</div>
+	
+									<div class="input-group">
+										<span class="input-group-text textbox4 mg-0 f-9"></span>
+										<input type="text" class="form-control edit f-9" id="PJ_Payment3" disabled>
+									</div>
+	
+									<div class="input-group">
+										<span class="input-group-text textbox4 mg-0 f-9">Remark:</span>
+										<input type="text" class="form-control edit f-9" id="PJ_Remark" disabled>
+									</div>
+	
+									<hr>
+									<span class="input-group-text group-title mg-0 f-9">Price</span>
+	
+									<div class="input-group ">
+										<span class="input-group-text mg-0">Sub Total:</span>
+										<input id="TotalPrice" class="no-bor form-control" disabled>
+									</div>
+	
+									<div class="input-group ">
+										<span class="input-group-text textbox2 mg-0 f-9">Discount: </span>
+										<input type="text" class="form-control edit f-9" id="PJ_Discount" disabled>
+									</div>
+	
+									<div class="input-group ">
+										<span class="input-group-text mg-0">Price after discount:</span>
+										<input id="PriceAfter" class="no-bor form-control" disabled>
+									</div>
+	
+									<div class="input-group ">
+										<span class="input-group-text mg-0">VAT Including 7%:</span>
+										<input id="Vat" class="no-bor form-control" disabled>
+									</div>
+	
+									<div class="input-group ">
+										<span class="input-group-text mg-0">Net Total:</span>
+										<input id="NetTotal" class="no-bor form-control" disabled>
+									</div>
+	
+									<div class="input-group ">
+										<label class="input-group-text textbox mg-0 f-91" for="PJ_Approve">Approve
+											By:</label>
+										<select class="form-select edit f-91" id="PJ_Approve" disabled>
+											<option value="null" selected="">-</option>
+										</select>
+									</div>
+	
+									<div class="footer v-2">
+										<div class="btn-group right" role="group" aria-label="Basic example">
+											<button type="button" class="btn btn-danger " id="btn-cancel"
+												data-toggle="modal" data-target="#modalStatusConfirm"
+												disabled>Cancel</button>
+											<button type="button" class="btn btn-warning " id="btn-quotation"
+												data-toggle="modal" data-target="#modalStatusConfirm"
+												disabled>Quotation</button>
+											<button type="button" class="btn btn-success " id="btn-book" data-toggle="modal"
+												data-target="#modalStatusConfirm" disabled>Booking</button>
+											<button type="button" class="btn btn-info " id="btn-loss" data-toggle="modal"
+												data-target="#modalStatusConfirm" disabled>Loss</button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
+					<div class="col-7 col-sm-12 col-md-12 col-lg-7 col-xxl-7 ">
+						<div class="row">
+							<div class="col-12">
+								<div class="card flex-fill h-20">
+									<div class="card-header title v">
+										<h1>Item</h1><button type="button" class="btn btn-success visually-hidden" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">AddItem</button>
+									</div>
+									<table id="tableItem" class="table table-hover my-0" style="width:100%">
+										<thead>
+											<tr>
+												<th style="width: 50%;">Item Name</th>
+												<th>Unit Price</th>
+												<th>Qty</th>
+												<th style="width: 10%;">Action</th>
+												<th style="display: none;"></th>
+											</tr>
+										</thead>
+										<tbody id="showTable">
+											<tr>
+												<td colspan="4">Loading...</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12 ">
+								<div class="card flex-fill h-20">
+									<div class="card-header title v">
+										<h1>Product</h1>
+									</div>
+									<table id="tableSubItem" class="table table-hover my-0" style="width:100%">
+										<thead>
+											<tr>
+												<th style="width: 50%;">Product Name</th>
+												<th>Unit Price</th>
+												<th>Qty</th>
+												<th style="width: 15%;">Action</th>
+												<th style="display: none;"></th>
+											</tr>
+										</thead>
+										<tbody id="showSubTable">
+											<tr>
+												<td colspan="4">Loading...</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-			</main>
-
-		</div>
+			</div>
+		</main>
+	
+	</div>
 	</div>
 
 

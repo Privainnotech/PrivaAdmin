@@ -54,6 +54,10 @@ table {
 	border-spacing: 0;
 }
 
+nav.navbar{
+	margin-bottom: 0;
+}
+
 .dataTables_wrapper {
 	padding: 10px;
 	padding-right: 15px;
@@ -84,20 +88,7 @@ a:hover{
 }
 
 
-nav.navbar{
-	margin-bottom: 0;
-}
 
-
-nav a.sidebar-brand {
-	font-size: 30px;
-	font-weight: 700;
-}
-
-nav a.sidebar-link {
-	font-size: 18px;
-	font-weight: 500;
-}
 
 main{
 	background: #ededed;
@@ -124,10 +115,6 @@ label input,label select{
 	margin-bottom: 5px;
 }
 
-img#logo{
-	width: 170px;
-	height: 40px;
-}
 
 i{
 	width: 20px;
@@ -151,14 +138,14 @@ nav.navbar{
 	padding-right: 0;
 }
 
-@media only screen and (max-width:768px) {
+@media only screen and (min-width:768px) {
 	img#logo{
 		width: 150px;
 		height: 35px;
 	}
 }
 
-@media only screen and (max-width:1980px) {
+@media only screen and (min-width:960px) {
 	
 	body{
 		font-size: 0.7rem;
@@ -173,6 +160,29 @@ nav.navbar{
 	}
 	nav a.sidebar-link{
 		font-size: 15px;
+	}
+
+}
+
+@media only screen and (min-width:1320px) {
+	
+	body{
+		font-size: 0.7rem;
+	}
+
+	img#logo{
+		width: 170px;
+		height: 40px;
+	}
+	
+	nav a.sidebar-brand {
+		font-size: 30px;
+		font-weight: 700;
+	}
+	
+	nav a.sidebar-link {
+		font-size: 18px;
+		font-weight: 500;
 	}
 
 }

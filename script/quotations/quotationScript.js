@@ -94,7 +94,7 @@ $(document).ready(function () {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
             "scrollY": "40vh",
-            "scrollX": true,
+            // "scrollX": true,
             "bPaginate": false,
             // "bInfo": false,
             "bLengthChange": false,
@@ -107,13 +107,13 @@ $(document).ready(function () {
                     "data": "index"
                 },
                 {
-                    "data":  "QuotationNo" 
+                    "data": "QuotationNo" 
                 },
                 {
-                    "data":  "QuotationRevised" 
+                    "data": "QuotationRevised" 
                 },
                 {
-                    "data":  "QuotationSubject" 
+                    "data": "QuotationSubject" 
                 },
                 {
                     "data": "CustomerName"
@@ -125,10 +125,10 @@ $(document).ready(function () {
                     "data": "QuotationUpdatedDate" 
                 },
                 {
-                    "data": "EmployeeFname" 
+                    "data": "StatusName"
                 },
                 {
-                    "data": "StatusName"
+                    "data": "EmployeeFname" 
                 },
                 {
                     "data": "Action",
@@ -150,7 +150,7 @@ $(document).ready(function () {
                 }
 
             ],
-            lengthMenu: [10,15],
+            // lengthMenu: [10,15],
             "columnDefs":[
                 {
                     "targets": [10],
@@ -164,7 +164,7 @@ $(document).ready(function () {
     function fill_item(Id,status) {
         tableItem = $('#tableItem').DataTable({
             "bDestroy": true,
-            "scrollY": "145px",
+            "scrollY": "28vh",
             "scrollX": true,
             "scrollCollapse": true,
             "searching": false,
@@ -221,7 +221,7 @@ $(document).ready(function () {
      function fill_subitem(Id,status) {
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
-            "scrollY": "145px",
+            "scrollY": "28vh",
             "scrollX": true,
             "scrollCollapse": true,
             "searching": false,
