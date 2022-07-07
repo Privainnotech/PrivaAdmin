@@ -97,7 +97,7 @@ router.put('/edit/:EmployeeId', async (req, res) => {
 router.put('/change_password/:EmployeeId', async (req, res) => {
     try{
         let EmployeeId = req.params.EmployeeId;
-        let { Password, Authority } = req.body
+        let { Password } = req.body
         if (Password == '') {
             res.status(400).send({message: 'Please enter Password'});
             return;
@@ -105,7 +105,22 @@ router.put('/change_password/:EmployeeId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let Hashpass = await bcrypt.hash(Password, 12)
         let UpdateEmployee = `UPDATE MasterEmployee
-            SET Password = N'${Hashpass}', Authority = ${Authority}
+            SET Password = N'${Hashpass}'}
+            WHERE EmployeeId = ${EmployeeId}`;
+        await pool.request().query(UpdateEmployee);
+        res.status(200).send({message: `Successfully change password`});
+    } catch(err){
+        res.status(500).send({message: `${err}`});
+    }
+})
+
+router.put('/change_authority/:EmployeeId', async (req, res) => {
+    try{
+        let EmployeeId = req.params.EmployeeId;
+        let { Authority } = req.body
+        let pool = await sql.connect(dbconfig);
+        let UpdateEmployee = `UPDATE MasterEmployee
+            SET Authority = ${Authority}
             WHERE EmployeeId = ${EmployeeId}`;
         await pool.request().query(UpdateEmployee);
         res.status(200).send({message: `Successfully change password`});
