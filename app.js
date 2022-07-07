@@ -24,7 +24,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(session({
     cookie: {
-        maxAge: 1000 * 60
+        maxAge: 1000 * 60 * 60 * 24
     },
     store: new session.MemoryStore,
     saveUninitialized: true,
