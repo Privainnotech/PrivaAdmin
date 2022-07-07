@@ -18,7 +18,7 @@ router.get('/login', ifLoggedIn, (req, res, next) => {
 router.get('/logout', (req, res, next) => {
     req.session = null;
     req.isAuth = false;
-    req.redirect('/user/login');
+    res.redirect('/user/login');
 })
 
 router.post('/login', async (req, res) => {

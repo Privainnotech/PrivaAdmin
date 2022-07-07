@@ -29,6 +29,9 @@ $(document).ready(function () {
                 ,
                 {
                     "data": "EmployeeId"
+                    // ,
+                    // "data": "Password"
+
                 }
 
             ],"columnDefs":[
@@ -50,6 +53,7 @@ $(document).ready(function () {
                 let EmployeeTitle = $.trim($('#modalInpEmployTitle').val());
                 let EmployeeFname = $.trim($('#modalInpEmployFname').val());
                 let EmployeeLname = $.trim($('#modalInpEmployLname').val());
+                let Password = $.trim($('#modalInpEmployPassword').val());
                 let EmployeePosition = $.trim($('#modalInpEmployPosition').val());
                 let EmployeeEmail = $.trim($('#modalInpEmployEmail').val());
                 let EmployeeTel = $.trim($('#modalInpEmployTel').val());
@@ -62,6 +66,7 @@ $(document).ready(function () {
                         EmployeeTitle: EmployeeTitle,
                         EmployeeFname: EmployeeFname,
                         EmployeeLname: EmployeeLname,
+                        // Password: Password,
                         EmployeePosition: EmployeePosition,
                         EmployeeEmail: EmployeeEmail,
                         EmployeeTel: EmployeeTel
@@ -97,13 +102,15 @@ $(document).ready(function () {
 
     //Edit
     $(document).on("click", "#btnEditEmploy", function () {
-        // $("#formCompany").trigger("reset");
+        $("#formCompany").trigger("reset");
         $(".modal-title").text("Edit Company");
         rows = $(this).closest("tr");
         let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
         let EmployeeTitle = tableEmploy.rows(rows).data()[0].EmployeeTitle;
         let EmployeeFname = tableEmploy.rows(rows).data()[0].EmployeeFname;
         let EmployeeLname = tableEmploy.rows(rows).data()[0].EmployeeLname;
+        // let Password = tableEmploy.rows(rows).data()[0].Password;
+
         let EmployeePosition = tableEmploy.rows(rows).data()[0].EmployeePosition;
         let EmployeeEmail = tableEmploy.rows(rows).data()[0].EmployeeEmail;
         let EmployeeTel = tableEmploy.rows(rows).data()[0].EmployeeTel;
@@ -112,6 +119,7 @@ $(document).ready(function () {
         $('#modalInpEmployTitle').val(EmployeeTitle);
         $('#modalInpEmployFname').val(EmployeeFname);
         $('#modalInpEmployLname').val(EmployeeLname);
+        // $('#modalInpEmployPassword').val(Password);
         $('#modalInpEmployPosition').val(EmployeePosition);
         $('#modalInpEmployEmail').val(EmployeeEmail);
         $('#modalInpEmployTel').val(EmployeeTel);
@@ -122,6 +130,7 @@ $(document).ready(function () {
                 let EmployeeTitle = $.trim($('#modalInpEmployTitle').val());
                 let EmployeeFname = $.trim($('#modalInpEmployFname').val());
                 let EmployeeLname = $.trim($('#modalInpEmployLname').val());
+                // let Password = $.trim($('#modalInpEmployPassword').val());
                 let EmployeePosition = $.trim($('#modalInpEmployPosition').val());
                 let EmployeeEmail = $.trim($('#modalInpEmployEmail').val());
                 let EmployeeTel = $.trim($('#modalInpEmployTel').val());
@@ -134,6 +143,7 @@ $(document).ready(function () {
                         EmployeeTitle: EmployeeTitle,
                         EmployeeFname: EmployeeFname,
                         EmployeeLname: EmployeeLname,
+                        // Password: Password,
                         EmployeePosition: EmployeePosition,
                         EmployeeEmail: EmployeeEmail,
                         EmployeeTel: EmployeeTel
