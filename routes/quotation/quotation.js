@@ -104,7 +104,8 @@ router.get('/list', async (req, res, next) => {
         a.QuotationDate,
         a.QuotationUpdatedDate,
         d.StatusName,
-        a.EmployeeApproveId
+        a.EmployeeApproveId,
+        a.EmployeeEditId
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
@@ -190,6 +191,7 @@ router.get('/subitem/:ItemId', async (req, res) => {
 router.post('/add_pre_quotation', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
+        let UserId = req.session.UserId;
         let { QuotationSubject, CustomerId } = req.body
         if(CustomerId == 'null'){
             res.status(400).send({message: 'Please select Customer'});
@@ -240,7 +242,7 @@ router.post('/add_pre_quotation', async (req, res) => {
             let QuotationNo = await pool.request().query(InsertQuotationNo);
             let QuotationNoId = QuotationNo.recordset[0].Id
             // Insert Quotation with QuotationNoId
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject, QuotationUpdatedDate) VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkDate()}')
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject, QuotationUpdatedDate, EmployeeEditId) VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkDate()}', ${UserId})
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let QuotationId = Quotation.recordset[0].Id
@@ -433,6 +435,7 @@ router.delete('/delete_subitem/:SubItemId', async (req, res) => {
 router.put('/edit_quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
+        let UserId = req.session.UserId;
         let QuotationId = req.params.QuotationId
         let {
             QuotationSubject,
@@ -463,7 +466,8 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             QuotationDelivery = N'${DeliveryFilter}',
             QuotationRemark = N'${RemarkFilter}',
             EmployeeApproveId = ${EmployeeApproveId},
-            EndCustomer = N'${EndCustomerFilter}'
+            EndCustomer = N'${EndCustomerFilter}',
+            EmployeeEditId = ${UserId}
         WHERE QuotationId = ${QuotationId}`;
         await pool.request().query(UpdateQuotation);
         res.status(201).send({message: 'Successfully Edit Quotation'});

@@ -18,7 +18,7 @@ const ifLoggedIn = (req, res, next) => {
 
 const isAuth = (req, res, next) => {
     if(!req.session.isAuth) {
-        return res.send({message: 'Not allow'})
+        return res.status(401).send({message: 'Not allow'})
     }
     next()
 }
@@ -55,7 +55,7 @@ router.get('/index', ifNotLoggedIn, (req, res, next) => {
 });
 
 // Employee page
-router.get('/employee', ifNotLoggedIn, (req, res, next) => {
+router.get('/employee', ifNotLoggedIn, isAuth, (req, res, next) => {
     res.render('employee')
 });
 

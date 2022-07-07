@@ -6,7 +6,7 @@ const { dbconfig } = require('../../config');
 
 router.get('/data', async (req, res, next) => {
     try{
-        let SelectEmployee = `SELECT row_number() over(order by EmployeeFname) as 'index', *, EmployeeTitle+EmployeeFname+' '+EmployeeLname EmployeeName FROM MasterEmployee ORDER BY EmployeeFname`;
+        let SelectEmployee = `SELECT row_number() over(order by EmployeeFname) as 'index', *, EmployeeTitle+EmployeeFname+' '+EmployeeLname EmployeeName FROM MasterEmployee WHERE EmployeeActive = 1 ORDER BY EmployeeFname`;
         let pool = await sql.connect(dbconfig);
         let Employee = await pool.request().query(SelectEmployee);
         res.status(200).send(JSON.stringify(Employee.recordset));
@@ -23,22 +23,38 @@ router.post('/add', async (req, res, next) => {
             return;
         }
         let pool = await sql.connect(dbconfig);
-        let CheckEmployee = await pool.request().query(`SELECT CASE
-            WHEN EXISTS(
-                SELECT *
-                FROM MasterEmployee
-                WHERE EmployeeEmail = N'${EmployeeEmail}'
-            )
-            THEN CAST (1 AS BIT)
-            ELSE CAST (0 AS BIT) END AS 'check'`);
-        if(CheckEmployee.recordset[0].check){
-            res.status(400).send({message: 'Duplicate Employee Email'});  
-        } else {
+        let CheckEmployee = await pool.request().query(`SELECT *
+            FROM MasterEmployee
+            WHERE EmployeeEmail = N'${EmployeeEmail}'`);
+        if(!CheckEmployee.recordset.length) {
             let Hashpass = await bcrypt.hash(Password, 12)
             let InsertEmployee = `INSERT INTO MasterEmployee(EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition, Password, Authority)
                 VALUES  (N'${EmployeeTitle}', N'${EmployeeFname}', N'${EmployeeLname}', N'${EmployeeTel}', N'${EmployeeEmail}', N'${EmployeePosition}', N'${Hashpass}', ${Authority})`;
             await pool.request().query(InsertEmployee);
             res.status(201).send({message: 'Successfully add Employee'});
+        } else {
+            if(CheckEmployee.recordset[0].EmployeeActive){
+                res.status(400).send({message: 'Duplicate Employee'});
+            } else{
+                let ActivateEmployee = `UPDATE MasterEmployee
+                    SET
+                    EmployeeTitle = N'${EmployeeTitle}',
+                    EmployeeFname = N'${EmployeeFname}',
+                    EmployeeLname = N'${EmployeeLname}',
+                    EmployeeTel = N'${EmployeeTel}',
+                    EmployeePosition = N'${EmployeePosition}',
+                    Password = N'${Hashpass}',
+                    Authority = ${Authority},
+                    EmployeeActive = 1
+                    WHERE EmployeeEmail = N'${EmployeeEmail}'`;
+                await pool.request().query(ActivateEmployee);
+                res.status(201).send({message: 'Successfully add customer'});
+            }
+        }
+        if(CheckEmployee.recordset[0].check){
+            res.status(400).send({message: 'Duplicate Employee Email'});  
+        } else {
+            
         }
     } catch(err){
         res.status(500).send({message: err});
@@ -101,7 +117,8 @@ router.put('/change_password/:EmployeeId', async (req, res) => {
 router.delete('/delete/:EmployeeId', async (req, res) => {
     try{
         let EmployeeId = req.params.EmployeeId;
-        let DeleteEmployee = `DELETE FROM MasterEmployee
+        let DeleteEmployee = `UPDATE MasterEmployee
+            SET EmployeeActive = 0
             WHERE EmployeeId = ${EmployeeId}`;
         let pool = await sql.connect(dbconfig);
         await pool.request().query(DeleteEmployee);

@@ -70,7 +70,7 @@ const applySpacing = (name) => {
     return spacebar;
 }
 
-const createPdf = async (QuotationId, quotationNo, quotation) => {
+const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
     // head
     let head = [
         {
@@ -359,8 +359,9 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
     let doc = {
         info: {
             title: `No. ${quotationNo}`,
-            author: 'PRIVA INNOTECH CO., LTD',
-            subject: `${quotationNo}`
+            author: `${Author}`,
+            subject: `${quotationNo}`,
+            creator: 'PRIVA INNOTECH CO., LTD'
         },
         pageMargins: [60, 95, 60, 54],
         pageSize: 'LETTER',
@@ -455,6 +456,7 @@ const createPdf = async (QuotationId, quotationNo, quotation) => {
 router.get('/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
+        let UserId = req.session.UserId;
         let QuotationId = req.params.QuotationId
         let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised, c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
             c.CustomerEmail, f.CompanyName, f.CompanyAddress, a.EndCustomer, a.QuotationSubject, a.QuotationDate,
@@ -472,15 +474,16 @@ router.get('/:QuotationId', async (req, res) => {
             LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
             LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
             WHERE a.QuotationId = ${QuotationId}`;
+        let getUser = `SELECT EmployeeFname+' '+EmployeeLname as name FROM MasterEmployee WHERE EmployeeId = ${UserId}`
         let quotations = await pool.request().query(getQuotation);
+        let user = await pool.request().query(getUser)
         let quotation = quotations.recordset[0];
         // console.log(quotation)
         let quotationNo = ""
         if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
         else  quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
-        let quotationPdf = await createPdf(QuotationId, quotationNo, quotation);
+        let quotationPdf = await createPdf(QuotationId, quotationNo, quotation, user.recordset[0].name);
         
-
         let pdfCreator = new pdfMake(fonts);
         console.log('Creating quotation....')
         let pdfDoc = pdfCreator.createPdfKitDocument(quotationPdf, {tableLayouts: customLayouts});
