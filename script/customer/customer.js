@@ -1,10 +1,10 @@
 $(document).ready(function () {
     //MOSTRAR
     function fill_resetTable() {
-        var trHTML = ''; 
+        var trHTML = '';
         trHTML += '<tr>'
-        trHTML +=  '<td colspan="6">Select Company on Company Table...</td>'
-        trHTML +=  '</tr>' 
+        trHTML += '<td colspan="6">Select Company on Company Table...</td>'
+        trHTML += '</tr>'
         document.getElementById("showTable").innerHTML = trHTML;
     }
 
@@ -23,9 +23,9 @@ $(document).ready(function () {
                     "data": "index"
                 },
                 {
-                    "data":  "CustomerName" 
+                    "data": "CustomerName"
                 },
-                
+
                 {
                     "data": "CustomerEmail"
                 },
@@ -33,7 +33,7 @@ $(document).ready(function () {
                     "data": "CustomerTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditCustomer' style='width: 2rem;' data-toggle='modal' data-target='#modalCustomerMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelCustomer' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditCustomer' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelCustomer'><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
@@ -45,7 +45,7 @@ $(document).ready(function () {
 
                 }
 
-            ],"columnDefs":[
+            ], "columnDefs": [
                 {
                     "targets": [5],
                     "visible": false
@@ -53,14 +53,14 @@ $(document).ready(function () {
             ],
         });
     }
-    // fill_customer(1)
-
 
     // Edit
     $(document).on("click", "#btnEditCustomer", function () {
+        $('#modalCustomerMaster').modal('show');
+
         $("#formCustomer").trigger("reset");
         $(".modal-title").text("Edit Customer");
-        // console.log("save0");
+
         rows = $(this).closest("tr");
         let CompanyId = tableCustomer.rows(rows).data()[0].CompanyId;
         let CustomerId = tableCustomer.rows(rows).data()[0].CustomerId;
@@ -69,7 +69,7 @@ $(document).ready(function () {
         let CustomerLname = tableCustomer.rows(rows).data()[0].CustomerLname;
         let CustomerEmail = tableCustomer.rows(rows).data()[0].CustomerEmail;
         let CustomerTel = tableCustomer.rows(rows).data()[0].CustomerTel;
-        // console.log(tableCustomer.rows(rows).data()[0]);
+
         $('#modalInpCustomerTitle').val(CustomerTitle);
         $('#modalInpCustomerFname').val(CustomerFname);
         $('#modalInpCustomerLname').val(CustomerLname);
@@ -79,7 +79,6 @@ $(document).ready(function () {
 
         $("#modalSaveCustomer").unbind();
         $("#modalSaveCustomer").click(function () {
-            
             let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
             let CustomerFname = $.trim($('#modalInpCustomerFname').val());
             let CustomerLname = $.trim($('#modalInpCustomerLname').val());
@@ -87,49 +86,54 @@ $(document).ready(function () {
             let CustomerTel = $.trim($('#modalInpCustomerTel').val());
             let CompanyId = $.trim($('#modalInpCompanyId').val());
 
-                $.ajax({
-                    url: "/customer_master/edit/" + CustomerId,
-                    method: 'put',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        CustomerTitle: CustomerTitle,
-                        CustomerFname: CustomerFname,
-                        CustomerLname: CustomerLname,
-                        CustomerEmail: CustomerEmail,
-                        CustomerTel: CustomerTel,
-                        CompanyId: CompanyId
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Created',
-                            text: 'Successfully edit customer',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableCustomer.ajax.reload(null, false);
-                        $('#modalCustomerMaster').modal('hide');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
-                    }
-                });
-            
+            $.ajax({
+                url: "/customer_master/edit/" + CustomerId,
+                method: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    CustomerTitle: CustomerTitle,
+                    CustomerFname: CustomerFname,
+                    CustomerLname: CustomerLname,
+                    CustomerEmail: CustomerEmail,
+                    CustomerTel: CustomerTel,
+                    CompanyId: CompanyId
+                }),
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Created',
+                        text: 'Successfully edit customer',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableCustomer.ajax.reload(null, false);
+                    $('#modalCustomerMaster').modal('hide');
+                },
+                error: function (err) {
+                    errorText = err.responseJSON.message;
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: errorText,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#FF5733'
+                    });
+                    $('#modalCustomerMaster').modal('hide');
+                }
+            });
+        })
+        $(".close,.no").click(function () {
+            $('#modalCustomerMaster').modal('hide');
         })
     });
-    
+
     //Delete
     $(document).on("click", "#btnDelCustomer", function () {
+        $('#modalDeleteConfirm').modal('show');
+
         rows = $(this).closest('tr');
         let CustomerId = tableCustomer.rows(rows).data()[0].CustomerId;
         $(".modal-title").text("Confirm Delete");
@@ -153,21 +157,24 @@ $(document).ready(function () {
             })
             $('#modalDeleteConfirm').modal('hide');
         })
+        $(".close,.no").click(function () {
+            $('#modalDeleteConfirm').modal('hide');
+        })
     });
 
     //==================================================================================//
     // click on tableCompany Number table
-    $('#tableCompany tbody' ).on('click', 'tr', function () {
+    $('#tableCompany tbody').on('click', 'tr', function () {
         rows = $(this).closest("tr");
         let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
 
-        if($(this).hasClass('selected')){
+        if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             $("#addCustomer").removeClass('visually-hidden');
             $("#addCustomer").toggleClass('visually-hidden');
             fill_resetTable();
         }
-        else{
+        else {
             $('#tableCompany tr').removeClass('selected');
             $(this).toggleClass('selected');
             $("#addCustomer").removeClass('visually-hidden');
@@ -176,6 +183,8 @@ $(document).ready(function () {
 
             //Create
             $(document).on("click", "#addCustomer", function () {
+                $('#modalCustomerMaster').modal('show');
+
                 $("#formCustomer").trigger("reset");
                 $(".modal-title").text("Add Customer");
 
@@ -183,12 +192,12 @@ $(document).ready(function () {
 
                 $("#modalSaveCustomer").unbind();
                 $("#modalSaveCustomer").click(function () {
-                        let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
-                        let CustomerFname = $.trim($('#modalInpCustomerFname').val());
-                        let CustomerLname = $.trim($('#modalInpCustomerLname').val());
-                        let CustomerEmail = $.trim($('#modalInpCustomerEmail').val());
-                        let CustomerTel = $.trim($('#modalInpCustomerTel').val());
-                        let CompanyId = $.trim($('#modalInpCompanyId').val());
+                    let CustomerTitle = $.trim($('#modalInpCustomerTitle').val());
+                    let CustomerFname = $.trim($('#modalInpCustomerFname').val());
+                    let CustomerLname = $.trim($('#modalInpCustomerLname').val());
+                    let CustomerEmail = $.trim($('#modalInpCustomerEmail').val());
+                    let CustomerTel = $.trim($('#modalInpCustomerTel').val());
+                    let CompanyId = $.trim($('#modalInpCompanyId').val());
 
                     if (CustomerFname !== null) {
                         $.ajax({
@@ -214,7 +223,7 @@ $(document).ready(function () {
                                     timer: 1500
                                 })
                                 tableCustomer.ajax.reload(null, false);
-                                // $('#modalCustomerMaster').modal('hide');
+                                $('#modalCustomerMaster').modal('hide');
                             },
                             error: function (err) {
                                 errorText = err.responseJSON.message;
@@ -227,9 +236,13 @@ $(document).ready(function () {
                                     confirmButtonText: 'OK',
                                     confirmButtonColor: '#FF5733'
                                 });
+                                $('#modalCustomerMaster').modal('hide');
                             }
                         });
                     }
+                })
+                $(".close,.no").click(function () {
+                    $('#modalCustomerMaster').modal('hide');
                 })
             });
         }

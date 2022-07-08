@@ -292,7 +292,7 @@
               <div class="modal-body text-center">
                   <p>Are you sure to delete?</p>
               </div>
-              <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes" type="button">Yes</button></div>
+              <div class="modal-footer"><button class="btn btn-secondary no" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes" type="button">Yes</button></div>
           </div>
       </div>
     </div>
@@ -307,7 +307,7 @@
               <div class="modal-body text-center">
                   <p>Are you sure to Revised?</p>
               </div>
-              <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnREYes" type="button">Yes</button></div>
+              <div class="modal-footer"><button class="btn btn-secondary no" type="button" data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnREYes" type="button">Yes</button></div>
           </div>
       </div>
     </div>
@@ -322,7 +322,7 @@
               <div class="modal-body text-center">
                   <p>Are you sure to go to Print page?</p>
               </div>
-              <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnPrintYes" type="button">Yes</button></div>
+              <div class="modal-footer"><button class="btn btn-secondary no" type="button" data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnPrintYes" type="button">Yes</button></div>
           </div>
       </div>
     </div>
@@ -337,7 +337,7 @@
               <div class="modal-body text-center">
                   <p>Are you sure to Edit?</p>
               </div>
-              <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnEditYes" type="button">Yes</button></div>
+              <div class="modal-footer"><button class="btn btn-secondary no" type="button" data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnEditYes" type="button">Yes</button></div>
           </div>
       </div>
     </div>
@@ -352,7 +352,7 @@
               <div class="modal-body text-center">
                   <p>Are you sure set Status?</p>
               </div>
-              <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnSetYes" type="button">Yes</button></div>
+              <div class="modal-footer"><button class="btn btn-secondary no" type="button" data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnSetYes" type="button">Yes</button></div>
           </div>
       </div>
     </div>
@@ -377,7 +377,7 @@
 						<div class="card flex-fill">
 							<div class="card-header title">
 								<h1>Quotation List</h1>
-								<button type="button" class="btn btn-success" id="addProject" data-toggle="modal" data-target="#modalQuotationMaster">New Project</button>
+								<button type="button" class="btn btn-success" id="addProject">New Project</button>
 							</div>
 							<table id="tableQuo" class="table table-hover my-0 ">
 								<thead>
@@ -413,10 +413,8 @@
 									<button type="button" class="btn btn-success invisible" id="modalEditProject">
 										<h3 id="btn-text">Edit</h3>
 									</button>
-									<button type="button" class="btn btn-dark btn-rad" id="btnPrint" data-toggle="modal"
-										data-target="#modalPrintConfirm">Print</button>
-									<button type="button" class="btn btn-dark btn-rad" id="btnRevised" data-toggle="modal"
-										data-target="#modalRevisedConfirm">Revised</button>
+									<button type="button" class="btn btn-dark btn-rad" id="btnPrint">Print</button>
+									<button type="button" class="btn btn-dark btn-rad" id="btnRevised">Revised</button>
 								</div>
 							</div>
 							<div class="card-body w-100">
@@ -525,16 +523,10 @@
 	
 									<div class="footer v-2">
 										<div class="btn-group right" role="group" aria-label="Basic example">
-											<button type="button" class="btn btn-danger " id="btn-cancel"
-												data-toggle="modal" data-target="#modalStatusConfirm"
-												disabled>Cancel</button>
-											<button type="button" class="btn btn-warning " id="btn-quotation"
-												data-toggle="modal" data-target="#modalStatusConfirm"
-												disabled>Quotation</button>
-											<button type="button" class="btn btn-success " id="btn-book" data-toggle="modal"
-												data-target="#modalStatusConfirm" disabled>Booking</button>
-											<button type="button" class="btn btn-info " id="btn-loss" data-toggle="modal"
-												data-target="#modalStatusConfirm" disabled>Loss</button>
+											<button type="button" class="btn btn-danger " id="btn-cancel" disabled>Cancel</button>
+											<button type="button" class="btn btn-warning " id="btn-quotation" disabled>Quotation</button>
+											<button type="button" class="btn btn-success " id="btn-book" disabled>Booking</button>
+											<button type="button" class="btn btn-info " id="btn-loss" disabled>Loss</button>
 										</div>
 									</div>
 								</div>
@@ -546,7 +538,7 @@
 							<div class="col-12">
 								<div class="card flex-fill h-20">
 									<div class="card-header title v">
-										<h1>Item</h1><button type="button" class="btn btn-success visually-hidden" id="addItem" data-toggle="modal" data-target="#modalAddItemMaster">AddItem</button>
+										<h1>Item</h1><button type="button" class="btn btn-success visually-hidden" id="addItem">AddItem</button>
 									</div>
 									<table id="tableItem" class="table table-hover my-0" style="width:100%">
 										<thead>

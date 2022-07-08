@@ -26,14 +26,14 @@ $(document).ready(function () {
                     "data": "CompanyTel"
                 },
                 {
-                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditCompany' style='width: 2rem;' data-toggle='modal' data-target='#modalCompanyMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelCompany' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
+                    "defaultContent": "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditCompany' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelCompany'><i class='fa fa-remove'></i></button></div></div>"
                 }
                 ,
                 {
                     "data": "CompanyId"
                 }
 
-            ],"columnDefs":[
+            ], "columnDefs": [
                 {
                     "targets": [6],
                     "visible": false
@@ -45,15 +45,17 @@ $(document).ready(function () {
 
     //Create
     $(document).on("click", "#addCompany", function () {
+        $('#modalCompanyMaster').modal('show');
+
         $("#formCompany").trigger("reset");
         $(".modal-title").text("Add Company");
-        console.log("save0");
+
         $("#modalSaveCompany").unbind();
         $("#modalSaveCompany").click(function () {
-                let CompanyName = $.trim($('#modalInpCompanyName').val());
-                let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
-                let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
-                let CompanyTel = $.trim($('#modalInpCompanyTel').val());
+            let CompanyName = $.trim($('#modalInpCompanyName').val());
+            let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
+            let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
+            let CompanyTel = $.trim($('#modalInpCompanyTel').val());
             if (CompanyName !== null) {
                 $.ajax({
                     url: "/company_master/add",
@@ -88,24 +90,28 @@ $(document).ready(function () {
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#FF5733'
                         });
+                        $('#modalCompanyMaster').modal('hide');
                     }
                 });
             }
+        })
+        $(".close,.no").click(function () {
+            $('#modalCompanyMaster').modal('hide');
         })
     });
 
     //Edit
     $(document).on("click", "#btnEditCompany", function () {
-        // $("#formCompany").trigger("reset");
+        $('#modalCompanyMaster').modal('show');
+
         $(".modal-title").text("Edit Company");
-        // console.log("save0");
         rows = $(this).closest("tr");
         let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
         let CompanyName = tableCompany.rows(rows).data()[0].CompanyName;
         let CompanyAddress = tableCompany.rows(rows).data()[0].CompanyAddress;
         let CompanyEmail = tableCompany.rows(rows).data()[0].CompanyEmail;
         let CompanyTel = tableCompany.rows(rows).data()[0].CompanyTel;
-        console.log(tableCompany.rows(rows).data()[0]);
+
         $('#modalInpCompanyName').val(CompanyName);
         $('#modalInpCompanyAddress').val(CompanyAddress);
         $('#modalInpCompanyEmail').val(CompanyEmail);
@@ -113,53 +119,58 @@ $(document).ready(function () {
 
         $("#modalSaveCompany").unbind();
         $("#modalSaveCompany").click(function () {
-            
-                let CompanyName = $.trim($('#modalInpCompanyName').val());
-                let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
-                let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
-                let CompanyTel = $.trim($('#modalInpCompanyTel').val());
 
-                $.ajax({
-                    url: "/company_master/edit/" + CompanyId,
-                    method: 'put',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        CompanyName: CompanyName,
-                        CompanyAddress: CompanyAddress,
-                        CompanyEmail: CompanyEmail,
-                        CompanyTel: CompanyTel
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Edited',
-                            text: 'Successfully edit company',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        tableCompany.ajax.reload(null, false);
-                        $('#modalCompanyMaster').modal('hide');
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
-                    }
-                });
-            
+            let CompanyName = $.trim($('#modalInpCompanyName').val());
+            let CompanyAddress = $.trim($('#modalInpCompanyAddress').val());
+            let CompanyEmail = $.trim($('#modalInpCompanyEmail').val());
+            let CompanyTel = $.trim($('#modalInpCompanyTel').val());
+
+            $.ajax({
+                url: "/company_master/edit/" + CompanyId,
+                method: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    CompanyName: CompanyName,
+                    CompanyAddress: CompanyAddress,
+                    CompanyEmail: CompanyEmail,
+                    CompanyTel: CompanyTel
+                }),
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Edited',
+                        text: 'Successfully edit company',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    tableCompany.ajax.reload(null, false);
+                    $('#modalCompanyMaster').modal('hide');
+                },
+                error: function (err) {
+                    errorText = err.responseJSON.message;
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: errorText,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#FF5733'
+                    });
+                    $('#modalCompanyMaster').modal('hide');
+                }
+            });
+        })
+        $(".close,.no").click(function () {
+            $('#modalCompanyMaster').modal('hide');
         })
     });
-    
+
     //Delete
     $(document).on("click", "#btnDelCompany", function () {
+        $('#modalDeleteConfirm').modal('show');
+
         rows = $(this).closest('tr');
         let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
         $(".modal-title").text("Confirm Delete");
@@ -181,6 +192,9 @@ $(document).ready(function () {
                     tableCompany.ajax.reload(null, false);
                 }
             })
+            $('#modalDeleteConfirm').modal('hide');
+        })
+        $(".close,.no").click(function () {
             $('#modalDeleteConfirm').modal('hide');
         })
     });

@@ -2,8 +2,6 @@
 function hideEdit() {
     $("#modalEditProject").removeClass('invisible');
     $("#modalEditProject").toggleClass('invisible');
-    $("#modalEditProject").removeAttr("data-toggle");
-    $("#modalEditProject").removeAttr("data-target");
 }
 //Hide Add Item Button
 function hideAdd() {
@@ -135,12 +133,12 @@ $(document).ready(function () {
                     "render": function (data, type, row) {
 
                         if (row.StatusName === 'pre') {
-                            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                                 ;
                         }
 
                         else {
-                            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
+                            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>"
                                 ;
                         }
                     }
@@ -192,12 +190,12 @@ $(document).ready(function () {
                     "render": function () {
 
                         if (status === '1') {
-                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>"
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>"
                                 ;
                         }
                         // disabled
                         else {
-                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' data-toggle='modal' data-target='#modalItemMaster' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' data-toggle='modal' data-target='#modalAddSubMaster' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' data-toggle='modal' data-target='#modalDeleteConfirm' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>"
                                 ;
                         }
                     }
@@ -251,12 +249,12 @@ $(document).ready(function () {
                     "render": function () {
 
                         if (status === '1') {
-                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' ><i class='fa fa-remove'></i></button></div></div>"
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem'><i class='fa fa-remove'></i></button></div></div>"
                                 ;
                         }
                         // disabled
                         else {
-                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' data-toggle='modal' data-target='#modalSubMaster' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' data-toggle='modal' data-target='#modalDeleteConfirm' disabled><i class='fa fa-remove'></i></button></div></div>"
+                            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' disabled><i class='fa fa-remove'></i></button></div></div>"
                                 ;
                         }
                     }
@@ -283,6 +281,8 @@ $(document).ready(function () {
     //======================== Quotation =============================//
     //Create
     $(document).on("click", "#addProject", function () {
+        $('#modalQuotationMaster').modal('show');
+
         $("#formQuotation").trigger("reset");
         $(".modal-title").text("Add Project");
         $("#modalSaveProject").unbind();
@@ -308,7 +308,6 @@ $(document).ready(function () {
                             timer: 1500
                         })
                         tableQuo.ajax.reload(null, false);
-                        $('#modalQuotationMaster').modal('hide');
                     },
                     error: function (err) {
                         errorText = err.responseJSON.message;
@@ -323,14 +322,20 @@ $(document).ready(function () {
                         });
                     }
                 });
+                $('#modalQuotationMaster').modal('hide');
             }
         })
+        $(".close,.no").click(function () {
+            $('#modalQuotationMaster').modal('hide');
+        });
     });
 
 
 
     //Delete
     $(document).on("click", "#btnDelProject", function () {
+        $('#modalDeleteConfirm').modal('show');
+
         rows = $(this).closest('tr');
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         $(".modal-title").text("Confirm Delete");
@@ -354,7 +359,10 @@ $(document).ready(function () {
                 }
             })
             $('#modalDeleteConfirm').modal('hide');
-        })
+        });
+        $(".close,.no").click(function () {
+            $('#modalDeleteConfirm').modal('hide');
+        });
     });
 
     //clickTableQuotation
@@ -378,13 +386,7 @@ $(document).ready(function () {
         $("#btn-book").attr("disabled", "disabled");
         $("#btn-loss").attr("disabled", "disabled");
 
-
-
         $("#modalEditProject").removeClass('save');
-        $("#modalEditProject").removeAttr("data-toggle");
-        $("#modalEditProject").removeAttr("data-target");
-
-
 
         rows = $(this).closest("tr");
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
@@ -421,11 +423,9 @@ $(document).ready(function () {
 
                 $(document).on("click", "#modalEditProject", function () {
                     if ($("#modalEditProject").hasClass('save')) {
+                        $('#modalEditConfirm').modal('show');
+
                         $(".save#modalEditProject").removeClass('save');
-                        $("#modalEditProject").removeAttr("data-toggle");
-                        $("#modalEditProject").removeAttr("data-target");
-
-
 
                         $("#btnEditYes").unbind("click");
                         $(".btnYes").click(function () {
@@ -482,7 +482,6 @@ $(document).ready(function () {
                                     })
                                     tableQuo.ajax.reload(null, false);
                                     ShowPro(QuotationId)
-                                    $('#modalEditConfirm').modal('hide');
                                 },
                                 error: function (err) {
                                     errorText = err.responseJSON.message;
@@ -497,14 +496,18 @@ $(document).ready(function () {
                                     });
                                 }
                             });
+                            $('#modalEditConfirm').modal('hide');
+                        })
+                        $(".close,.no").click(function () {
+                            $('#modalEditConfirm').modal('hide');
                         })
 
                     }
                     else {
                         $("#modalEditProject").removeClass('save');
                         $("#modalEditProject").toggleClass('save');
-                        $(".save#modalEditProject").attr("data-toggle", "modal");
-                        $(".save#modalEditProject").attr("data-target", "#modalEditConfirm");
+                        // $(".save#modalEditProject").attr("data-toggle", "modal");
+                        // $(".save#modalEditProject").attr("data-target", "#modalEditConfirm");
 
 
 
@@ -580,6 +583,8 @@ $(document).ready(function () {
 
             // Create Item
             $(document).on("click", "#addItem", function () {
+                $('#modalAddItemMaster').modal('show');
+
                 $("#formAddItem").trigger("reset");
                 $(".modal-title").text("Add Item ");
 
@@ -626,12 +631,18 @@ $(document).ready(function () {
                                 });
                             }
                         });
+                        $('#modalAddItemMaster').modal('hide');
                     }
                 })
+                $(".close,.no").click(function () {
+                    $('#modalAddItemMaster').modal('hide');
+                });
             })
 
             // Revised
             $(document).on("click", "#btnRevised", function () {
+                $('#modalRevisedConfirm').modal('show');
+
                 $(".modal-title").text("Confirm Revised");
                 $.ajax({
                     url: "/quotation/" + QuotationId,
@@ -694,13 +705,21 @@ $(document).ready(function () {
                                     });
                                 }
                             });
+                            $('#modalRevisedConfirm').modal('hide');
                         })
+                        $(".close,.no").click(function () {
+                            $('#modalRevisedConfirm').modal('hide');
+                        });
                     }
                 })
+
+
             });
 
             // Print
             $(document).on("click", "#btnPrint", function () {
+                $('#modalPrintConfirm').modal('show');
+
                 $("#btnPrintYes").unbind("click");
                 $(".btnYes").click(function () {
                     $.ajax({
@@ -723,11 +742,17 @@ $(document).ready(function () {
                             });
                         }
                     });
+                    $('#modalPrintConfirm').modal('hide');
                 })
+                $(".close,.no").click(function () {
+                    $('#modalPrintConfirm').modal('hide');
+                });
             });
 
             //btn-quotation
             $(document).on('click', '#btn-quotation', function () {
+                $('#modalStatusConfirm').modal('show');
+
                 $(".modal-title").text("Confirm Quotation");
 
                 $("#btnSetYes").unbind("click");
@@ -760,11 +785,17 @@ $(document).ready(function () {
                             });
                         }
                     })
+                    $('#modalStatusConfirm').modal('hide');
                 })
+                $(".close,.no").click(function () {
+                    $('#modalStatusConfirm').modal('hide');
+                });
             })
 
             //btn-cancel
             $(document).on('click', '#btn-cancel', function () {
+                $('#modalStatusConfirm').modal('show');
+
                 $(".modal-title").text("Confirm Cancel");
                 $("#btnSetYes").unbind("click");
                 $(".btnYes").click(function () {
@@ -796,11 +827,17 @@ $(document).ready(function () {
                             });
                         }
                     })
+                    $('#modalStatusConfirm').modal('hide');
                 })
+                $(".close,.no").click(function () {
+                    $('#modalStatusConfirm').modal('hide');
+                });
             })
 
             //btn-book
             $(document).on('click', '#btn-book', function () {
+                $('#modalStatusConfirm').modal('show');
+
                 $(".modal-title").text("Confirm Book");
                 $("#btnSetYes").unbind("click");
                 $(".btnYes").click(function () {
@@ -832,11 +869,17 @@ $(document).ready(function () {
                             });
                         }
                     })
+                    $('#modalStatusConfirm').modal('hide');
                 })
+                $(".close,.no").click(function () {
+                    $('#modalStatusConfirm').modal('hide');
+                });
             })
 
             //btn-loss
             $(document).on('click', '#btn-loss', function () {
+                $('#modalStatusConfirm').modal('show');
+
                 $(".modal-title").text("Confirm loss");
                 $("#btnSetYes").unbind("click");
                 $(".btnYes").click(function () {
@@ -868,8 +911,11 @@ $(document).ready(function () {
                             });
                         }
                     })
+                    $('#modalStatusConfirm').modal('hide');
                 })
-
+                $(".close,.no").click(function () {
+                    $('#modalStatusConfirm').modal('hide');
+                });
             })
         }
     });
@@ -879,6 +925,8 @@ $(document).ready(function () {
     //======================== Item =============================//
     //Edit
     $(document).on("click", "#btnEditItem", function () {
+        $('#modalItemMaster').modal('show');
+
         $("#formEditItem").trigger("reset");
         $(".modal-title").text("Edit Item");
 
@@ -935,12 +983,19 @@ $(document).ready(function () {
                         });
                     }
                 });
+                $('#modalItemMaster').modal('hide');
+
             }
         })
+        $(".close").click(function () {
+            $('#modalItemMaster').modal('hide');
+        });
     });
 
     //Delete
     $(document).on("click", "#btnDelItem", function () {
+        $('#modalDeleteConfirm').modal('show');
+
         rows = $(this).closest('tr');
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
@@ -966,8 +1021,12 @@ $(document).ready(function () {
             })
             $('#modalDeleteConfirm').modal('hide');
         })
+        $(".close,.no").click(function () {
+            $('#modalDeleteConfirm').modal('hide');
+        });
     });
 
+    //dropdown Product
     $("#modalInpProduct").click(function () {
         let ProductId = $.trim($('#modalInpProduct').val())
         if (ProductId !== "null") {
@@ -1006,6 +1065,8 @@ $(document).ready(function () {
 
         //Add Sub
         $(document).on("click", "#btnSubItem", function () {
+            $('#modalAddSubMaster').modal('show');
+
             $("#formSub").trigger("reset");
             $(".modal-title").text("Add SubItem in " + ItemName);
 
@@ -1042,7 +1103,6 @@ $(document).ready(function () {
                         tableSubItem.ajax.reload(null, false);
                         tableItem.ajax.reload(null, false);
                         ShowPro(QuotationId)
-                        $('#modalAddSubMaster').modal('hide');
                     },
                     error: function (err) {
                         errorText = err.responseJSON.message;
@@ -1057,12 +1117,18 @@ $(document).ready(function () {
                         });
                     }
                 });
+                $('#modalAddSubMaster').modal('hide');
             })
+            $(".close").click(function () {
+                $('#modalAddSubMaster').modal('hide');
+            });
         })
     });
 
     //Edit Sub
     $(document).on("click", "#btnEditSubItem", function () {
+        $('#modalSubMaster').modal('show');
+
         $("#formSub").trigger("reset");
         $(".modal-title").text("Edit SubItem");
         rows = $(this).closest('tr');
@@ -1115,10 +1181,10 @@ $(document).ready(function () {
                     tableSubItem.ajax.reload(null, false);
                     tableItem.ajax.reload(null, false);
                     ShowPro(QuotationId);
-                    // $('#modalSubMaster').modal('hide');
+
                 },
                 error: function (err) {
-                    errorText = "err.responseJSON.message;"
+                    errorText = err.responseJSON.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'warning',
@@ -1130,11 +1196,17 @@ $(document).ready(function () {
                     });
                 }
             });
+            $('#modalSubMaster').modal('hide');
         })
+        $(".close").click(function () {
+            $('#modalSubMaster').modal('hide');
+        });
     })
 
     //Delete
     $(document).on("click", "#btnDelSubItem", function () {
+        $('#modalDeleteConfirm').modal('show');
+
         rows = $(this).closest('tr');
         let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
         let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
@@ -1162,6 +1234,9 @@ $(document).ready(function () {
             })
             $('#modalDeleteConfirm').modal('hide');
         })
+        $(".close,.no").click(function () {
+            $('#modalDeleteConfirm').modal('hide');
+        });
     });
 
 
