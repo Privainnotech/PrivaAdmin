@@ -89,12 +89,13 @@ $(document).ready(function () {
                         EmployeeEmail: EmployeeEmail,
                         EmployeeTel: EmployeeTel
                     }),
-                    success: function () {
+                    success: function (succ) {
+                        successText = succ.message;
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: 'Created',
-                            text: 'Successfully add Employee',
+                            text: successText,
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -166,12 +167,13 @@ $(document).ready(function () {
                         EmployeeEmail: EmployeeEmail,
                         EmployeeTel: EmployeeTel
                     }),
-                    success: function () {
+                    success: function (succ) {
+                        successText = succ.message;
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: 'Edited',
-                            text: 'Successfully edit Employee',
+                            text: successText,
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -220,12 +222,13 @@ $(document).ready(function () {
                         Password: Password
                         // Authority: Authority,
                     }),
-                    success: function () {
+                    success: function (succ) {
+                        successText = succ.message;
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Edited',
-                            text: 'Successfully Change Password',
+                            title: 'Change Success',
+                            text: successText,
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -261,12 +264,13 @@ $(document).ready(function () {
                 url: "/employee_master/delete/" + EmployeeId,
                 method: 'delete',
                 contentType: 'application/json',
-                success: function () {
+                success: function (succ) {
+                    successText = succ.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Successfully delete Employee',
+                        text: successText,
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -277,6 +281,7 @@ $(document).ready(function () {
         })
     });
 
+    //Change Authority
     $(document).on("click", "#flexCheckDefault", function () {
         // let a =  $('#flexCheckDefault').val();
         // console.log(a)
@@ -296,12 +301,13 @@ $(document).ready(function () {
                 data: JSON.stringify({
                     Authority: Authority
                 }),
-                success: function () {
+                success: function (succ) {
+                    successText = succ.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Edited',
-                        text: 'Successfully Change Authority',
+                        title: 'Change Authority',
+                        text: successText,
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -325,12 +331,13 @@ $(document).ready(function () {
                 data: JSON.stringify({
                     Authority: Authority
                 }),
-                success: function () {
+                success: function (succ) {
+                    successText = succ.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Edited',
-                        text: 'Successfully Change Authority',
+                        title: 'Change Authority',
+                        text: successText,
                         showConfirmButton: false,
                         timer: 1500
                     })

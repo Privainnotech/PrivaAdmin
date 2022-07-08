@@ -192,9 +192,12 @@ hr{
 	}
 	#modalEditProject h3{
 		font-size: 0.7rem;
+		margin: 0;
+		color: #fff;
 		font-weight: 500;
 	}
 
+	
 	span.group-title.input-group-text.mg-0{
 		font-size: 1rem;
 		
