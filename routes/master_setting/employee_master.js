@@ -118,7 +118,7 @@ router.put('/change_authority/:EmployeeId', async (req, res) => {
             SET Authority = ${Authority}
             WHERE EmployeeId = ${EmployeeId}`;
         await pool.request().query(UpdateEmployee);
-        res.status(200).send({message: `Successfully change password`});
+        res.status(200).send({message: `Successfully change authority`});
     } catch(err){
         res.status(500).send({message: `${err}`});
     }
