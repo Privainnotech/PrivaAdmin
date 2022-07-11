@@ -44,7 +44,8 @@ router.get('/logout', (req, res, next) => {
 
 // customer page
 router.get('/customer', ifNotLoggedIn, (req, res, next) => {
-    res.render('customer')
+    req.flash('page', 'customer')
+    res.render('customer.ejs')
 });
 
 // quotation page
