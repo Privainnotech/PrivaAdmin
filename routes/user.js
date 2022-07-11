@@ -25,13 +25,11 @@ router.post('/login', async (req, res) => {
                 }
                 res.redirect('/');
             } else {
-                console.log('password')
-                req.flash('login', 'Invalid Password')
+                req.flash('login', 'Invalid Email or Password')
                 res.redirect('/login')
             }
         } else {
-            console.log('username')
-            req.flash('login', 'Invalid Username')
+            req.flash('login', 'Invalid Email or Password')
             res.redirect('/login')
         }
     } catch (err){
