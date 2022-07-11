@@ -8,7 +8,7 @@
 }
 
 #error{
-    font-size: 5rem;
+    font-size: 3rem;
     font-weight: 900;
     color: rgba(0, 0, 0, 0.8);
 }
@@ -19,11 +19,14 @@ main.content{
 }
 
 .icon{
-    position: relative;
-    right: 165px;
-    font-size: 5rem;
+    /* position: relative; */
+    /* text-align: center; */
+    /* right: 185px; */
+    font-size: 4rem;
     color: rgba(0, 0, 0, 0.6);
-    margin-bottom: 40px;
+    margin: 0 auto;
+    transform: translateX(-100%);
+    /* margin-bottom: 40px; */
 }
 
 p{

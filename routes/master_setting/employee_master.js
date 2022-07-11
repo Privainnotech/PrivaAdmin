@@ -51,11 +51,6 @@ router.post('/add', async (req, res, next) => {
                 res.status(201).send({message: 'Successfully add customer'});
             }
         }
-        if(CheckEmployee.recordset[0].check){
-            res.status(400).send({message: 'Duplicate Employee Email'});  
-        } else {
-            
-        }
     } catch(err){
         res.status(500).send({message: err});
     }
@@ -70,7 +65,7 @@ router.put('/edit/:EmployeeId', async (req, res) => {
             WHEN EXISTS(
                 SELECT *
                 FROM MasterEmployee
-                WHERE EmployeeEmail = N'${EmployeeEmail}  AND NOT EmployeeId = ${EmployeeId}'
+                WHERE EmployeeEmail = N'${EmployeeEmail}' AND NOT EmployeeId = ${EmployeeId}
             )
             THEN CAST (1 AS BIT)
             ELSE CAST (0 AS BIT) END AS 'check'`);

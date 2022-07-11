@@ -6,9 +6,9 @@ const { dbconfig } = require('../config');
 
 router.post('/login', async (req, res) => {
     try {
-        let { Username, Password } = req.body;
+        let { Email, Password } = req.body;
         let pool = await sql.connect(dbconfig);
-        let user = await pool.request().query(`SELECT * FROM MasterEmployee WHERE EmployeeFname = N'${Username}'`);
+        let user = await pool.request().query(`SELECT * FROM MasterEmployee WHERE EmployeeEmail = N'${Email}'`);
         if (user.recordset.length) {
             if (!user.recordset[0].EmployeeActive) {
                 res.status(403).send({message: 'Account is not activate'});
@@ -26,12 +26,12 @@ router.post('/login', async (req, res) => {
                 res.redirect('/');
             } else {
                 console.log('password')
-                req.flash('error', 'Invalid Password')
+                req.flash('login', 'Invalid Password')
                 res.redirect('/login')
             }
         } else {
             console.log('username')
-            req.flash('error', 'Invalid Username')
+            req.flash('login', 'Invalid Username')
             res.redirect('/login')
         }
     } catch (err){

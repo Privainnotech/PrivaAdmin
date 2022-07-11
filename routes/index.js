@@ -18,7 +18,9 @@ const ifLoggedIn = (req, res, next) => {
 
 const isAuth = (req, res, next) => {
     if(!req.session.isAuth) {
-        return res.redirect('/error');
+        req.flash('status', 'Unauthorized')
+        req.flash('error', 'You are not allowed to access this page')
+        return res.status(401).render('error.ejs')
         // return res.status(401).send({message: 'Not allow'})
     }
     next()
@@ -70,16 +72,8 @@ router.get('/test', (req, res, next) => {
     res.render('test')
 });
 
-router.get('/error', (req, res, next) => {
-    res.render('error')
-});
-
-router.get('/sign-in', (req, res, next) => {
-    res.render('sign-in')
-});
-
-router.get('/sign-up', (req, res, next) => {
-    res.render('sign-up')
-});
+// router.get('/error', (req, res, next) => {
+//     res.render('error')
+// });
 
 module.exports = router

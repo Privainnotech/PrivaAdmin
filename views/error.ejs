@@ -91,14 +91,19 @@
 
         <main class="content">
             <div class="container-error">
-                    <h1 id="error">ERROR</h1>
+                    <h4 id="error">ERROR</h4>
+                    <% if (messages.status) { %>
+                      <h5 id="error"><%= messages.status %></h5>
+										<% } %>
                     <div class="icon">
                         <!-- <i class="fa fa-times fa-5x"></i> -->
                         <i class="fa fa-ban fa-5x" ></i>
                     </div>
 
+                    <% if (messages.error) { %>
+                      <p><%= messages.error %></p>
+										<% } %>
                     
-                    <p>You are not allowed to access this page</p>
             </div>
         </main>
       </div>

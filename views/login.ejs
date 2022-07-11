@@ -40,8 +40,8 @@
 									
 									<form action="/user/login" method="post">
 										<div class="mb-3">
-											<label class="form-label">Username</label>
-											<input class="form-control form-control-lg" type="text" name="Username" placeholder="Enter your username" />
+											<label class="form-label">Email</label>
+											<input class="form-control form-control-lg" type="text" name="Email" placeholder="Enter your email" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Password</label>
@@ -50,8 +50,8 @@
 										<div class="text-center mt-3">
 											<button type="submit" class="btn btn-lg btn-primary">Sign in</button>
 										</div>
-										<% if (messages.error) { %>
-											<div class="alert alert-danger mt-2" role="alert"><%= messages.error %></div>
+										<% if (messages.login) { %>
+											<div class="alert alert-danger mt-2" role="alert"><%= messages.login %></div>
 										<% } %>
 									</form>
 
