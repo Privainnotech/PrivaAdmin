@@ -279,7 +279,7 @@ $(document).ready(function () {
     fill_quotation()
 
     //======================== Quotation =============================//
-    //Create
+    //Create Project
     $(document).on("click", "#addProject", function () {
         $('#modalQuotationMaster').modal('show');
 
@@ -332,7 +332,7 @@ $(document).ready(function () {
 
 
 
-    //Delete
+    //Delete Project
     $(document).on("click", "#btnDelProject", function () {
         $('#modalDeleteConfirm').modal('show');
 
@@ -391,8 +391,6 @@ $(document).ready(function () {
         rows = $(this).closest("tr");
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
-
-
 
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
@@ -501,15 +499,10 @@ $(document).ready(function () {
                         $(".close,.no").click(function () {
                             $('#modalEditConfirm').modal('hide');
                         })
-
                     }
                     else {
                         $("#modalEditProject").removeClass('save');
                         $("#modalEditProject").toggleClass('save');
-                        // $(".save#modalEditProject").attr("data-toggle", "modal");
-                        // $(".save#modalEditProject").attr("data-target", "#modalEditConfirm");
-
-
 
                         $("#btn-text").text("Save");
 
@@ -631,7 +624,6 @@ $(document).ready(function () {
                                 });
                             }
                         });
-                        $('#modalAddItemMaster').modal('hide');
                     }
                 })
                 $(".close,.no").click(function () {
@@ -712,8 +704,6 @@ $(document).ready(function () {
                         });
                     }
                 })
-
-
             });
 
             // Print
@@ -983,8 +973,6 @@ $(document).ready(function () {
                         });
                     }
                 });
-                $('#modalItemMaster').modal('hide');
-
             }
         })
         $(".close").click(function () {
@@ -1103,6 +1091,8 @@ $(document).ready(function () {
                         tableSubItem.ajax.reload(null, false);
                         tableItem.ajax.reload(null, false);
                         ShowPro(QuotationId)
+                        $('#modalAddSubMaster').modal('hide');
+
                     },
                     error: function (err) {
                         errorText = err.responseJSON.message;
@@ -1117,7 +1107,6 @@ $(document).ready(function () {
                         });
                     }
                 });
-                $('#modalAddSubMaster').modal('hide');
             })
             $(".close").click(function () {
                 $('#modalAddSubMaster').modal('hide');
@@ -1181,7 +1170,7 @@ $(document).ready(function () {
                     tableSubItem.ajax.reload(null, false);
                     tableItem.ajax.reload(null, false);
                     ShowPro(QuotationId);
-
+                    $('#modalSubMaster').modal('hide');
                 },
                 error: function (err) {
                     errorText = err.responseJSON.message;
@@ -1196,7 +1185,6 @@ $(document).ready(function () {
                     });
                 }
             });
-            $('#modalSubMaster').modal('hide');
         })
         $(".close").click(function () {
             $('#modalSubMaster').modal('hide');
