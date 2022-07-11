@@ -36,7 +36,8 @@
 <body>
   <div class="wrapper">
     <%- include('./partials/sidebar'); %>
-
+    
+    <!-- Add From -->
     <!-- form Add Quatation -->
     <div class="modal fade" role="dialog" tabindex="-1" id="modalQuotationMaster">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -116,46 +117,7 @@
       </div>
     </div>
 
-    <!-- form Edit item -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="modalItemMaster">
-      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <form id="formEditItem" action="/Setting/AddEditRecpName">
-            <div class="modal-header">
-              <h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button" class="close"
-                data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <div class="form-row my-2">
-                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Item
-                    Name:&nbsp;</span></div>
-                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
-                    type="text" id="modalInpItemName" style="width: 100%;" required=""></div>
-              </div>
-
-              <div class="form-row my-2">
-                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span>
-                </div>
-                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
-                    type="text" id="modalInpItemPrice" style="width: 100%;" required=""></div>
-              </div>
-
-              <div class="form-row my-2">
-                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span>
-                </div>
-                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
-                    type="text" id="modalInpQty" style="width: 100%;" required=""></div>
-              </div>
-            </div>
-            <div class="modal-footer"><button class="btn btn-primary" id="modalEditItem" type="button">Save</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
     <!-- form Add Sub -->
-
     <div class="modal fade" role="dialog" tabindex="-1" id="modalAddSubMaster">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -217,6 +179,45 @@
               </div>
             </div>
             <div class="modal-footer"><button class="btn btn-primary" id="modalSaveSub" type="button">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit From -->
+    <!-- form Edit item -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="modalItemMaster">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form id="formEditItem" action="/Setting/AddEditRecpName">
+            <div class="modal-header">
+              <h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-row my-2">
+                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Item
+                    Name:&nbsp;</span></div>
+                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                    type="text" id="modalInpItemName" style="width: 100%;" required=""></div>
+              </div>
+
+              <div class="form-row my-2">
+                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span>
+                </div>
+                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                    type="text" id="modalInpItemPrice" style="width: 100%;" required=""></div>
+              </div>
+
+              <div class="form-row my-2">
+                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span>
+                </div>
+                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                    type="text" id="modalInpQty" style="width: 100%;" required=""></div>
+              </div>
+            </div>
+            <div class="modal-footer"><button class="btn btn-primary" id="modalEditItem" type="button">Save</button>
             </div>
           </form>
         </div>
@@ -291,6 +292,7 @@
       </div>
     </div>
 
+    <!-- Delete From -->
     <!-- form Confirm delete -->
     <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -309,6 +311,7 @@
       </div>
     </div>
 
+    <!-- Confirm From -->
     <!-- form Confirm revised -->
     <div class="modal fade" role="dialog" tabindex="-1" id="modalRevisedConfirm">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -326,7 +329,7 @@
         </div>
       </div>
     </div>
-
+    
     <!-- form Confirm Print -->
     <div class="modal fade" role="dialog" tabindex="-1" id="modalPrintConfirm">
       <div class="modal-dialog modal-dialog-centered" role="document">
