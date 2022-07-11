@@ -29,7 +29,8 @@ const isAuth = (req, res, next) => {
 // PAGE
 
 router.get('/', ifNotLoggedIn, (req , res, next) => {
-    res.render('index')
+    req.flash('page', 'home')
+    res.render('index.ejs')
 })
 
 router.get('/login', ifLoggedIn, (req, res, next) => {
@@ -50,27 +51,24 @@ router.get('/customer', ifNotLoggedIn, (req, res, next) => {
 
 // quotation page
 router.get('/quotation', ifNotLoggedIn, (req, res, next) => {
-    res.render('quotation')
-});
-
-// Home page
-router.get('/index', ifNotLoggedIn, (req, res, next) => {
-    res.render('index')
+    req.flash('page', 'quotation')
+    res.render('quotation.ejs')
 });
 
 // Employee page
 router.get('/employee', ifNotLoggedIn, isAuth, (req, res, next) => {
-    res.render('employee')
+    req.flash('page', 'employee')
+    res.render('employee.ejs')
 });
 
 // User page
 router.get('/users', ifNotLoggedIn, isAuth, (req, res, next) => {
-    res.render('users')
+    res.render('users.ejs')
 })
 
 // Test page
 router.get('/test', (req, res, next) => {
-    res.render('test')
+    res.render('test.ejs')
 });
 
 // router.get('/error', (req, res, next) => {
