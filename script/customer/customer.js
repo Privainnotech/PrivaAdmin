@@ -98,12 +98,13 @@ $(document).ready(function () {
                     CustomerTel: CustomerTel,
                     CompanyId: CompanyId
                 }),
-                success: function () {
+                success: function (success) {
+                    successText = success.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Created',
-                        text: 'Successfully edit customer',
+                        text: successText,
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -121,7 +122,6 @@ $(document).ready(function () {
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#FF5733'
                     });
-                    $('#modalCustomerMaster').modal('hide');
                 }
             });
         })
@@ -143,12 +143,13 @@ $(document).ready(function () {
                 url: "/customer_master/delete/" + CustomerId,
                 method: 'delete',
                 contentType: 'application/json',
-                success: function () {
+                success: function (success) {
+                    successText =success.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Successfully delete customer',
+                        text: successText,
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -213,12 +214,13 @@ $(document).ready(function () {
                                 CompanyId: CompanyId
 
                             }),
-                            success: function () {
+                            success: function (success) {
+                                successText = success.message;
                                 Swal.fire({
                                     position: 'center',
                                     icon: 'success',
                                     title: 'Created',
-                                    text: 'Successfully add customer',
+                                    text: successText,
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
@@ -236,7 +238,6 @@ $(document).ready(function () {
                                     confirmButtonText: 'OK',
                                     confirmButtonColor: '#FF5733'
                                 });
-                                $('#modalCustomerMaster').modal('hide');
                             }
                         });
                     }

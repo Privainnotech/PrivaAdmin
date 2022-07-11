@@ -116,7 +116,6 @@ $(document).ready(function () {
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#FF5733'
                     });
-                    $('#modalEmployeeMaster').modal('hide');
                 }
             });
         })
@@ -198,8 +197,6 @@ $(document).ready(function () {
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#FF5733'
                     });
-                    $('#modalEmployeeMaster').modal('hide');
-
                 }
             });
         })
@@ -255,9 +252,7 @@ $(document).ready(function () {
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#FF5733'
                     });
-                    $('#modalPassMaster').modal('hide');
                 }
-                
             });
         })
         $(".close,.no").click(function () {
@@ -301,13 +296,10 @@ $(document).ready(function () {
 
     //Change Authority
     $(document).on("click", "#flexCheckDefault", function () {
-        // let a =  $('#flexCheckDefault').val();
-        // console.log(a)
         rows = $(this).closest("tr");
         let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
 
         if ($(this).is(":checked")) {
-            // checkbox is checked -> do something
             let Authority = 1
             console.log(Authority);
             console.log(EmployeeId);

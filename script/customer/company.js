@@ -67,12 +67,13 @@ $(document).ready(function () {
                         CompanyEmail: CompanyEmail,
                         CompanyTel: CompanyTel
                     }),
-                    success: function () {
+                    success: function (success) {
+                        successText = success.message;
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: 'Created',
-                            text: 'Successfully add company',
+                            text: successText,
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -90,7 +91,6 @@ $(document).ready(function () {
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#FF5733'
                         });
-                        $('#modalCompanyMaster').modal('hide');
                     }
                 });
             }
@@ -135,12 +135,13 @@ $(document).ready(function () {
                     CompanyEmail: CompanyEmail,
                     CompanyTel: CompanyTel
                 }),
-                success: function () {
+                success: function (success) {
+                    successText = success.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Edited',
-                        text: 'Successfully edit company',
+                        text: successText,
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -158,7 +159,6 @@ $(document).ready(function () {
                         confirmButtonText: 'OK',
                         confirmButtonColor: '#FF5733'
                     });
-                    $('#modalCompanyMaster').modal('hide');
                 }
             });
         })
@@ -180,12 +180,13 @@ $(document).ready(function () {
                 url: "/company_master/delete/" + CompanyId,
                 method: 'delete',
                 contentType: 'application/json',
-                success: function () {
+                success: function (success) {
+                    successText = success.message;
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: 'Deleted',
-                        text: 'Successfully delete company',
+                        text: successText,
                         showConfirmButton: false,
                         timer: 1500
                     })
