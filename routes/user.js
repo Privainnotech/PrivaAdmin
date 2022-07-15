@@ -37,6 +37,12 @@ router.post('/login', async (req, res) => {
     }
 });
 
+router.get('/logout', (req, res, next) => {
+    req.session.destroy();
+    req.isAuth = false;
+    res.redirect('/login');
+})
+
 // User setting
 // router.put('/edit/:UserId', async (req, res) => {
 //     try{

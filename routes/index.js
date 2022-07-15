@@ -20,7 +20,7 @@ const isAuth = (req, res, next) => {
     if(!req.session.isAuth) {
         req.flash('status', 'Unauthorized')
         req.flash('error', 'You are not allowed to access this page')
-        return res.status(401).render('error.ejs')
+        return res.status(401).render('error')
         // return res.status(401).send({message: 'Not allow'})
     }
     next()
@@ -30,45 +30,39 @@ const isAuth = (req, res, next) => {
 
 router.get('/', ifNotLoggedIn, (req , res, next) => {
     req.flash('page', 'home')
-    res.render('index.ejs')
+    res.render('index')
 })
 
 router.get('/login', ifLoggedIn, (req, res, next) => {
-    res.render('login.ejs', {message: ''});
+    res.render('login', {message: ''});
 });
-
-router.get('/logout', (req, res, next) => {
-    req.session.destroy();
-    req.isAuth = false;
-    res.redirect('/login');
-})
 
 // customer page
 router.get('/customer', ifNotLoggedIn, (req, res, next) => {
     req.flash('page', 'customer')
-    res.render('customer.ejs')
+    res.render('customer')
 });
 
 // quotation page
 router.get('/quotation', ifNotLoggedIn, (req, res, next) => {
     req.flash('page', 'quotation')
-    res.render('quotation.ejs')
+    res.render('quotation')
 });
 
 // Employee page
 router.get('/employee', ifNotLoggedIn, isAuth, (req, res, next) => {
     req.flash('page', 'employee')
-    res.render('employee.ejs')
+    res.render('employee')
 });
 
 // User page
 router.get('/users', ifNotLoggedIn, isAuth, (req, res, next) => {
-    res.render('users.ejs')
+    res.render('users')
 })
 
 // Test page
 router.get('/test', (req, res, next) => {
-    res.render('test.ejs')
+    res.render('test')
 });
 
 // router.get('/error', (req, res, next) => {

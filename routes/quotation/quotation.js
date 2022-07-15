@@ -483,6 +483,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
     }
 })
 
+// FIX check duplicate item
 router.put('/edit_item/:ItemId', async (req, res) => {
     try{
         let ItemId = req.params.ItemId;
@@ -516,6 +517,7 @@ router.put('/edit_item/:ItemId', async (req, res) => {
     }
 })
 
+// FIX check duplicate subitem
 router.put('/edit_subitem/:SubItemId', async (req, res) => {
     try{
         let SubItemId = req.params.SubItemId;
