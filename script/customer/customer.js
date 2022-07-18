@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    //MOSTRAR
+    //Reset Table
     function fill_resetTable() {
         var trHTML = '';
         trHTML += '<tr>'
@@ -9,7 +9,7 @@ $(document).ready(function () {
     }
 
     function fill_customer(Id) {
-        // console.log(Id)
+        //Customer Table
         tableCustomer = $('#tableCustomer').DataTable({
             "bDestroy": true,
             "scrollY": "300px",
@@ -54,7 +54,7 @@ $(document).ready(function () {
         });
     }
 
-    // Edit
+    // Edit Customer
     $(document).on("click", "#btnEditCustomer", function () {
         $('#modalCustomerMaster').modal('show');
 
@@ -130,7 +130,7 @@ $(document).ready(function () {
         })
     });
 
-    //Delete
+    //Delete Customer
     $(document).on("click", "#btnDelCustomer", function () {
         $('#modalDeleteConfirm').modal('show');
 
@@ -182,7 +182,7 @@ $(document).ready(function () {
 
             fill_customer(CompanyId)
 
-            //Create
+            //Create Customer
             $(document).on("click", "#addCustomer", function () {
                 $('#modalCustomerMaster').modal('show');
 

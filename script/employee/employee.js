@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    //MOSTRAR
+    //Employee Table
     function fill_employee() {
         tableEmploy = $('#tableEmploy').DataTable({
             "bDestroy": true,
@@ -124,7 +124,7 @@ $(document).ready(function () {
         })
     });
 
-    //Edit
+    //Edit Employee
     $(document).on("click", "#btnEditEmploy", function () {
         $('#modalEmployeeMaster').modal('show');
 
@@ -260,7 +260,7 @@ $(document).ready(function () {
         })
     });
 
-    //Delete
+    //Delete Employee
     $(document).on("click", "#btnDelEmploy", function () {
         $('#modalDeleteConfirm').modal('show');
 

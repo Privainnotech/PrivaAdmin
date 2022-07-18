@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    //MOSTRAR
+    //Company Table
     function fill_company() {
         tableCompany = $('#tableCompany').DataTable({
             "bDestroy": true,
@@ -43,7 +43,7 @@ $(document).ready(function () {
     }
     fill_company()
 
-    //Create
+    //Create Company
     $(document).on("click", "#addCompany", function () {
         $('#modalCompanyMaster').modal('show');
 
@@ -100,7 +100,7 @@ $(document).ready(function () {
         })
     });
 
-    //Edit
+    //Edit Company
     $(document).on("click", "#btnEditCompany", function () {
         $('#modalCompanyMaster').modal('show');
 
@@ -167,7 +167,7 @@ $(document).ready(function () {
         })
     });
 
-    //Delete
+    //Delete Company
     $(document).on("click", "#btnDelCompany", function () {
         $('#modalDeleteConfirm').modal('show');
 

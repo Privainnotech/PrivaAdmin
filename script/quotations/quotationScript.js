@@ -73,6 +73,7 @@ function RePro() {
 }
 
 $(document).ready(function () {
+    //Reset Item Table
     function fill_resetTable() {
         var trHTML = '';
         trHTML += '<tr>'
@@ -80,6 +81,8 @@ $(document).ready(function () {
         trHTML += '</tr>'
         document.getElementById("showTable").innerHTML = trHTML;
     }
+
+    //Reset Sub-Item Table
     function fill_resetSubTable() {
         var trHTML = '';
         trHTML += '<tr>'
@@ -88,6 +91,7 @@ $(document).ready(function () {
         document.getElementById("showSubTable").innerHTML = trHTML;
     }
 
+    //Quotation Table
     function fill_quotation() {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
@@ -219,7 +223,7 @@ $(document).ready(function () {
         });
     }
 
-    //Item Sub Table
+    //Sub-Item Table
     function fill_subitem(Id, status) {
         tableSubItem = $('#tableSubItem').DataTable({
             "bDestroy": true,
@@ -329,8 +333,6 @@ $(document).ready(function () {
             $('#modalQuotationMaster').modal('hide');
         });
     });
-
-
 
     //Delete Project
     $(document).on("click", "#btnDelProject", function () {
@@ -521,6 +523,7 @@ $(document).ready(function () {
 
             }
 
+            //======================== Set Status =============================//
             // Status Quotation
             if (QuotationStatus === "2") {
 
@@ -573,64 +576,7 @@ $(document).ready(function () {
                 $("#btn-quotation").removeAttr("disabled");
                 $("#btn-loss").removeAttr("disabled");
             }
-
-            // Create Item
-            $(document).on("click", "#addItem", function () {
-                $('#modalAddItemMaster').modal('show');
-
-                $("#formAddItem").trigger("reset");
-                $(".modal-title").text("Add Item ");
-
-                $("#modalAddItem").unbind();
-                $("#modalAddItem").click(function () {
-                    let ItemName = $.trim($('#modalInpAddItemName').val());
-                    let ItemQty = $.trim($('#modalInpAddQty').val());
-                    let ItemPrice = $.trim($('#modalInpAddItemPrice').val());
-                    let ItemDescription = $.trim($('#modalInpAddDetails').val());
-                    if (ItemName !== null) {
-                        $.ajax({
-                            url: "/quotation/add_item/" + QuotationId,
-                            method: 'post',
-                            contentType: 'application/json',
-                            data: JSON.stringify({
-                                ItemName: ItemName,
-                                ItemPrice: ItemPrice,
-                                ItemQty: ItemQty,
-                                ItemDescription: ItemDescription
-                            }),
-                            success: function () {
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: 'Created',
-                                    text: 'Successfully add Item',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                tableItem.ajax.reload(null, false);
-                                ShowPro(QuotationId);
-                                $('#modalAddItemMaster').modal('hide');
-                            },
-                            error: function (err) {
-                                errorText = err.responseJSON.message;
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'warning',
-                                    title: 'Warning',
-                                    text: errorText,
-                                    showConfirmButton: true,
-                                    confirmButtonText: 'OK',
-                                    confirmButtonColor: '#FF5733'
-                                });
-                            }
-                        });
-                    }
-                })
-                $(".close,.no").click(function () {
-                    $('#modalAddItemMaster').modal('hide');
-                });
-            })
-
+            
             // Revised
             $(document).on("click", "#btnRevised", function () {
                 $('#modalRevisedConfirm').modal('show');
@@ -907,13 +853,71 @@ $(document).ready(function () {
                     $('#modalStatusConfirm').modal('hide');
                 });
             })
+
+            //======================== Item =============================//
+            // Create Item
+            $(document).on("click", "#addItem", function () {
+                $('#modalAddItemMaster').modal('show');
+
+                $("#formAddItem").trigger("reset");
+                $(".modal-title").text("Add Item ");
+
+                $("#modalAddItem").unbind();
+                $("#modalAddItem").click(function () {
+                    let ItemName = $.trim($('#modalInpAddItemName').val());
+                    let ItemQty = $.trim($('#modalInpAddQty').val());
+                    let ItemPrice = $.trim($('#modalInpAddItemPrice').val());
+                    let ItemDescription = $.trim($('#modalInpAddDetails').val());
+                    if (ItemName !== null) {
+                        $.ajax({
+                            url: "/quotation/add_item/" + QuotationId,
+                            method: 'post',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                ItemName: ItemName,
+                                ItemPrice: ItemPrice,
+                                ItemQty: ItemQty,
+                                ItemDescription: ItemDescription
+                            }),
+                            success: function () {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Created',
+                                    text: 'Successfully add Item',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                                tableItem.ajax.reload(null, false);
+                                ShowPro(QuotationId);
+                                $('#modalAddItemMaster').modal('hide');
+                            },
+                            error: function (err) {
+                                errorText = err.responseJSON.message;
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'warning',
+                                    title: 'Warning',
+                                    text: errorText,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#FF5733'
+                                });
+                            }
+                        });
+                    }
+                })
+                $(".close,.no").click(function () {
+                    $('#modalAddItemMaster').modal('hide');
+                });
+            })
         }
     });
 
 
 
     //======================== Item =============================//
-    //Edit
+    //Edit Item
     $(document).on("click", "#btnEditItem", function () {
         $('#modalItemMaster').modal('show');
 
@@ -980,7 +984,7 @@ $(document).ready(function () {
         });
     });
 
-    //Delete
+    //Delete Item
     $(document).on("click", "#btnDelItem", function () {
         $('#modalDeleteConfirm').modal('show');
 
@@ -1051,7 +1055,7 @@ $(document).ready(function () {
             fill_subitem(ItemId, QuotationStatus)
         }
 
-        //Add Sub
+        //Add Sub-Item
         $(document).on("click", "#btnSubItem", function () {
             $('#modalAddSubMaster').modal('show');
 
@@ -1114,7 +1118,7 @@ $(document).ready(function () {
         })
     });
 
-    //Edit Sub
+    //Edit Sub-Item
     $(document).on("click", "#btnEditSubItem", function () {
         $('#modalSubMaster').modal('show');
 
@@ -1191,7 +1195,7 @@ $(document).ready(function () {
         });
     })
 
-    //Delete
+    //Delete Sub-Item
     $(document).on("click", "#btnDelSubItem", function () {
         $('#modalDeleteConfirm').modal('show');
 
