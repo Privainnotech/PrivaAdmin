@@ -96,17 +96,25 @@
 select:disabled{
 	background-color: #fff;
 	border: 0;
-	
+}
+
+.form-control.f-9{
+	margin-bottom: 4px;
+}
+
+.form-select.f-91{
+	margin-bottom: 4px;
 }
 
 .form-control:disabled.f-9{
 	background-color: #fff;
+	margin-bottom: 4px;
 	border: 0;
 }
 .form-select:disabled.f-91{
 	background-color: #fff;
+	margin-bottom: 4px;
 	border: 0;
-
 }
 
 .bg-w{
@@ -167,8 +175,6 @@ hr{
 	border: red;
 
 }
-
-
 
 @media only screen and (min-width:960px) {
 	body{

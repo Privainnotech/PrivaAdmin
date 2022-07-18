@@ -18,6 +18,7 @@ const ifLoggedIn = (req, res, next) => {
 
 const isAuth = (req, res, next) => {
     if(!req.session.isAuth) {
+        req.flash('page', 'employee')
         req.flash('status', 'Unauthorized')
         req.flash('error', 'You are not allowed to access this page')
         return res.status(401).render('error')
