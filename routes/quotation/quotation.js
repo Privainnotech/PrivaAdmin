@@ -457,21 +457,20 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         // Insert Quotation with QuotationNoId
         let UpdateQuotation = `DECLARE @QuotationNoId bigint;
         SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId = ${QuotationId});
-        UPDATE Quotation
-        SET QuotationSubject = N'${QuotationSubject}',
-            QuotationDiscount = ${QuotationDiscount},
-            QuotationValidityDate = N'${ValidityDateFilter}', 
-            QuotationPayTerm = N'${PayTermFilter}',
-            QuotationDelivery = N'${DeliveryFilter}',
-            QuotationRemark = N'${RemarkFilter}',
-            EmployeeApproveId = ${EmployeeApproveId},
-            EndCustomer = N'${EndCustomerFilter}',
-            EmployeeEditId = ${UserId}
-        WHERE QuotationId = ${QuotationId}
-        
-        UPDATE QuotationNo
-        SET QuotationNo = N'${QuotationNo}'
-        WHERE QuotationNoId = @QuotationNoId`;
+            UPDATE Quotation
+            SET QuotationSubject = N'${QuotationSubject}',
+                QuotationDiscount = ${QuotationDiscount},
+                QuotationValidityDate = N'${ValidityDateFilter}', 
+                QuotationPayTerm = N'${PayTermFilter}',
+                QuotationDelivery = N'${DeliveryFilter}',
+                QuotationRemark = N'${RemarkFilter}',
+                EmployeeApproveId = ${EmployeeApproveId},
+                EndCustomer = N'${EndCustomerFilter}',
+                EmployeeEditId = ${UserId}
+            WHERE QuotationId = ${QuotationId};
+            UPDATE QuotationNo
+            SET QuotationNo = N'${QuotationNo}'
+            WHERE QuotationNoId = @QuotationNoId;`;
         await pool.request().query(UpdateQuotation);
         res.status(201).send({message: 'Successfully Edit Quotation'});
     } catch(err){
