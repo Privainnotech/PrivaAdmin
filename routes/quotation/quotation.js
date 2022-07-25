@@ -432,7 +432,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let UserId = req.session.UserId;
-        let QuotationId = req.params.QuotationId
+        let QuotationId = req.params.QuotationId;
         let {
             QuotationNo,
             QuotationSubject,
@@ -444,7 +444,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             EmployeeApproveId,
             EndCustomer
         } = req.body;
-        let PayTerm = JSON.stringify(QuotationPayTerm)
+        let PayTerm = JSON.stringify(QuotationPayTerm);
         let ValidityDateFilter = QuotationValidityDate.replace(/'/g,"''");
         let PayTermFilter = PayTerm.replace(/'/g,"''");
         let DeliveryFilter = QuotationDelivery.replace(/'/g,"''"); 

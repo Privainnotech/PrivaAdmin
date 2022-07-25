@@ -135,6 +135,7 @@ select:disabled{
 }
 
 
+
 hr{
 	margin: 8px 0px 13px 0px;
 }
@@ -176,10 +177,21 @@ hr{
 
 }
 
+.btn-group.ti button{
+	border: 1px solid #fff;
+}
+
+.btn-group.ti button:hover{
+	background-color: #1cbb8c;
+    border: #1cbb8c;
+}
+
 @media only screen and (min-width:960px) {
 	body{
 		font-size: 0.7rem;
 	}
+
+	
 	
 	.title.v-2{
 		display: block;
@@ -203,10 +215,17 @@ hr{
 		font-weight: 500;
 	}
 
-	
 	span.group-title.input-group-text.mg-0{
 		font-size: 1rem;
 		
+	}
+
+	.wid{
+		border: 0;
+		/* width: 90px; */
+		padding-right: 0;
+		font-size: 1rem;
+		font-weight: 800;
 	}
 
 	input.group-title{
@@ -272,6 +291,15 @@ hr{
 		padding-left: 0;
 	
 		color: #111;
+	}
+
+	.wid{
+		/* width: 100px; */
+		font-size: 1.3rem;
+		margin: 0;
+		padding-left: 0;
+		color: #111;
+		border: 0;
 	}
 
 	.input-group-text.mg-0{

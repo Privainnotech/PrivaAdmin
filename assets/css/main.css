@@ -87,7 +87,9 @@ a:hover{
 	text-decoration: none;
 }
 
-
+img#logo{
+	height: 50px;
+}
 
 
 main{
@@ -138,22 +140,20 @@ nav.navbar{
 	padding-right: 0;
 }
 
-@media only screen and (min-width:768px) {
+@media only screen and (max-width:768px) {
 	img#logo{
-		width: 150px;
-		height: 35px;
+		height: 20px;
 	}
 }
 
-@media only screen and (min-width:960px) {
+@media only screen and (max-width:960px) {
 	
 	body{
 		font-size: 0.7rem;
 	}
 
 	img#logo{
-		width: 150px;
-		height: 35px;
+		height: 45px;
 	}
 	nav a.sidebar-brand{
 		font-size: 25px;
@@ -164,14 +164,13 @@ nav.navbar{
 
 }
 
-@media only screen and (min-width:1320px) {
+@media only screen and (max-width:1320px) {
 	
 	body{
 		font-size: 0.9rem;
 	}
 
 	img#logo{
-		width: 170px;
 		height: 40px;
 	}
 	
