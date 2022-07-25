@@ -1,3 +1,6 @@
+$( "wid" ).change(function() {
+    this.style.width = ((this.value.length + 1) * 8) + "px";
+  });
 //Hide Edit Button
 function hideEdit() {
     $("#modalEditProject").removeClass('invisible');
@@ -67,7 +70,7 @@ function RePro() {
     $('#PJ_Delivery').val('');
     $('#PJ_Remark').val('');
     $('#PJ_End_Customer').val('');
-    $('#PJ_Approve').val('');
+    $('#PJ_Approve').val('-');
 
     $('#TotalPrice').val('');
     $('#PriceAfter').val('');
@@ -501,6 +504,7 @@ $(document).ready(function () {
                                         confirmButtonText: 'OK',
                                         confirmButtonColor: '#FF5733'
                                     });
+                                    ShowPro(QuotationId)
                                 }
                             });
                             $('#modalEditConfirm').modal('hide');

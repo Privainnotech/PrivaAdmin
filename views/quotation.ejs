@@ -426,16 +426,20 @@
               <div class="card flex-fill w-100">
                 <div class="card-header title v-2">
                   <div class="input-group">
-                    <input type="text" class="form-control group-title edit f-9" id="ProNo" value="Project No." disabled>
-                    <input type="text" class="form-control group-title edit f-9" id="Revised" value="" disabled>
+                    <input type="text" aria-label="First name" class="form-control wid" id="ProNo" value="pre_20220708" disabled>
+                    <input type="text" aria-label="Last name" class="form-control wid" id="Revised" value="_00" disabled>
                   </div>
+                  <!-- <div class="input-group ">
+                    <input type="text" class="input-group-text group-title mg-0 wid" id="ProNo" value="pre_20220708" disabled>
+                    <input type="text" class="input-group-text group-title mg-0" id="Revised" value="_00" disabled>
+                  </div> -->
                   <div class="btn-group right" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-dark invisible" id="modalEditProject">
-                      <h3 id="btn-text">Edit</h3>
-                    </button>
-                    <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Print</button>
-                    <button type="button" class="btn btn-dark btn-rad" id="btnRevised">Revised</button>
+                    <button type="button" class="btn btn-danger " id="btn-cancel" disabled>Cancel</button>
+                    <button type="button" class="btn btn-warning " id="btn-quotation" disabled>Quotation</button>
+                    <button type="button" class="btn btn-success " id="btn-book" disabled>Booking</button>
+                    <button type="button" class="btn btn-info " id="btn-loss" disabled>Loss</button>
                   </div>
+                  
                 </div>
                 <div class="card-body w-100">
                   <div class="align-self-center chart chart-lg">
@@ -537,16 +541,20 @@
                       <label class="input-group-text textbox mg-0 f-91" for="PJ_Approve">Approve
                         By:</label>
                       <select class="form-select edit f-91" id="PJ_Approve" disabled>
-                        <option value="null" selected="">-</option>
+                        <option value="null" selected>-</option>
+                        <option value="null" ></option>
                       </select>
                     </div>
 
                     <div class="footer v-2">
-                      <div class="btn-group right" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-danger " id="btn-cancel" disabled>Cancel</button>
-                        <button type="button" class="btn btn-warning " id="btn-quotation" disabled>Quotation</button>
-                        <button type="button" class="btn btn-success " id="btn-book" disabled>Booking</button>
-                        <button type="button" class="btn btn-info " id="btn-loss" disabled>Loss</button>
+                      
+                    
+                      <div class="btn-group right ti" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-dark invisible" id="modalEditProject">
+                          <h3 id="btn-text">Edit</h3>
+                        </button>
+                        <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Print</button>
+                        <button type="button" class="btn btn-dark btn-rad" id="btnRevised">Revised</button>
                       </div>
                     </div>
                   </div>

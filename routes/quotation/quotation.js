@@ -432,7 +432,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let UserId = req.session.UserId;
-        let QuotationId = req.params.QuotationId
+        let QuotationId = req.params.QuotationId;
         let {
             QuotationNo,
             QuotationSubject,
