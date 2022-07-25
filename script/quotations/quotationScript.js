@@ -17,7 +17,8 @@ function ShowPro(QuotationId) {
         cache: false,
         success: function (response) {
             var obj = JSON.parse(response);
-            $('#ProNo').val(obj.QuotationNo_Revised);
+            $('#ProNo').val(obj.QuotationNo);
+            $('#Revised').val("_"+obj.QuotationRevised);
             $('#CusName').val(obj.CustomerName);
             $('#QDate').val(obj.QuotationDate);
             $('#CusEmail').val(obj.CustomerEmail);
@@ -373,6 +374,7 @@ $(document).ready(function () {
 
         fill_resetSubTable()
         $("#btn-text").text("Edit");
+        $("#ProNo").attr("disabled", "disabled");
         $("#PJ_Name").attr("disabled", "disabled");
         $("#PJ_Discount").attr("disabled", "disabled");
         $("#PJ_End_Customer").attr("disabled", "disabled");
@@ -430,6 +432,7 @@ $(document).ready(function () {
                         $("#btnEditYes").unbind("click");
                         $(".btnYes").click(function () {
                             $("#btn-text").text("Edit");
+                            $("#ProNo").attr("disabled", "disabled");
                             $("#PJ_Name").attr("disabled", "disabled");
                             $("#PJ_Discount").attr("disabled", "disabled");
                             $("#PJ_End_Customer").attr("disabled", "disabled");
@@ -441,6 +444,7 @@ $(document).ready(function () {
                             $("#PJ_Remark").attr("disabled", "disabled");
                             $("#PJ_Approve").attr("disabled", "disabled");
 
+                            let QuotationNo = $.trim($('#ProNo').val());
                             let QuotationSubject = $.trim($('#PJ_Name').val());
                             let QuotationDiscount = $.trim($('#PJ_Discount').val());
                             let EndCustomer = $.trim($('#PJ_End_Customer').val());
@@ -461,6 +465,7 @@ $(document).ready(function () {
                                 method: 'put',
                                 contentType: 'application/json',
                                 data: JSON.stringify({
+                                    QuotationNo: QuotationNo,
                                     QuotationSubject: QuotationSubject,
                                     QuotationDiscount: QuotationDiscount,
                                     QuotationValidityDate: QuotationValidityDate,
@@ -508,6 +513,7 @@ $(document).ready(function () {
 
                         $("#btn-text").text("Save");
 
+                        $("#ProNo").removeAttr("disabled");
                         $("#PJ_Name").removeAttr("disabled");
                         $("#PJ_Discount").removeAttr("disabled");
                         $("#PJ_End_Customer").removeAttr("disabled");
