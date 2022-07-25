@@ -152,6 +152,7 @@ router.get('/:QuotationId', async (req, res) => {
         } else {
             quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
         }
+        quotations.recordset[0].QuotationRevised = Revised
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
     } catch(err){
         res.status(500).send({message: `${err}`});
