@@ -17,7 +17,7 @@ function ShowPro(QuotationId) {
         cache: false,
         success: function (response) {
             var obj = JSON.parse(response);
-            $('#ProNo').text(obj.QuotationNo_Revised);
+            $('#ProNo').val(obj.QuotationNo_Revised);
             $('#CusName').val(obj.CustomerName);
             $('#QDate').val(obj.QuotationDate);
             $('#CusEmail').val(obj.CustomerEmail);
@@ -48,7 +48,7 @@ function ShowPro(QuotationId) {
 //Reset Project
 function RePro() {
     // QuotationId = null
-    $('#ProNo').text('Project NO.');
+    $('#ProNo').val('Project NO.');
     $('#CusName').val('');
     $('#QDate').val('');
     $('#CusEmail').val('');
