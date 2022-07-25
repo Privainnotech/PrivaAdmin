@@ -115,30 +115,31 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             let {QuotationNoId, QuotationRevised, QuotationStatus, CustomerId} = getQuotation.recordset[0];
             if (QuotationStatus == 1 && QuotationRevised == 0) {
                 // GenQuotationNo
-                let genQuotationNo = '';
-                let CheckQuotationNo = await pool.request().query(`
-                    SELECT *
-                    FROM QuotationNo
-                    WHERE QuotationNo LIKE N'${checkMonth()}%'`)
-                if (CheckQuotationNo.recordset.length<10) {
-                    genQuotationNo = checkMonth()+'0'+CheckQuotationNo.recordset.length
-                } else {
-                    genQuotationNo = checkMonth()+CheckQuotationNo.recordset.length
-                }
-                console.log("Gen QuotationNo: " + genQuotationNo)
-                // Insert QuotationNo
-                let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
-                    SELECT SCOPE_IDENTITY() AS Id`;
-                let QuotationNo = await pool.request().query(InsertQuotationNo);
-                let newQuotationNoId = QuotationNo.recordset[0].Id
+                // let genQuotationNo = '';
+                // let CheckQuotationNo = await pool.request().query(`
+                //     SELECT *
+                //     FROM QuotationNo
+                //     WHERE QuotationNo LIKE N'${checkMonth()}%'`)
+                // if (CheckQuotationNo.recordset.length<10) {
+                //     genQuotationNo = checkMonth()+'0'+CheckQuotationNo.recordset.length
+                // } else {
+                //     genQuotationNo = checkMonth()+CheckQuotationNo.recordset.length
+                // }
+                // console.log("Gen QuotationNo: " + genQuotationNo)
+                // // Insert QuotationNo
+                // let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
+                //     SELECT SCOPE_IDENTITY() AS Id`;
+                // let QuotationNo = await pool.request().query(InsertQuotationNo);
+                // let newQuotationNoId = QuotationNo.recordset[0].Id
                 // Update Quotation NoId, Status & Delete pre-quotation no
+                // QuotationNoId = ${newQuotationNoId}, 
                 let UpdateQuotationStatus = `Update Quotation
-                    SET QuotationNoId = ${newQuotationNoId}, QuotationStatus = 2,
+                    SET QuotationStatus = 2,
                     QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkDate()}'
                     WHERE QuotationId = ${QuotationId}`;
-                let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId} AND QuotationNo LIKE N'pre_%'`
+                // let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId} AND QuotationNo LIKE N'pre_%'`
                 await pool.request().query(UpdateQuotationStatus);
-                await pool.request().query(DeletePreQuotationNo);
+                // await pool.request().query(DeletePreQuotationNo);
                 res.status(200).send({message: 'Successfully set quotation'});
             } else if (QuotationStatus == 1 && QuotationRevised > 0) {
                 let getRevise = await pool.request().query(`SELECT COUNT(a.QuotationId) as Revised FROM Quotation a

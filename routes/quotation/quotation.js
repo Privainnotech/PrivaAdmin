@@ -198,57 +198,45 @@ router.post('/add_pre_quotation', async (req, res) => {
             res.status(400).send({message: 'Please select Customer'});
             return;
         }
-        let CheckQuotation = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(
-             SELECT *
-             FROM Quotation
-             WHERE QuotationSubject = N'${QuotationSubject}'
-        )
-        THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`);
-        if(CheckQuotation.recordset[0].check){
-            res.status(400).send({message: 'Duplicate Quotation'});
-        } else{
-            // Generate QuotationNo
-            let genQuotationNo = '';
-            let SearchQuotationNo = await pool.request().query(`
-                SELECT *
-                FROM QuotationNo
-                WHERE QuotationNo LIKE N'pre_${checkMonth()}%'`)
-            // Check QuotationNo
-            let duplicateNo = true;
-            let Number = SearchQuotationNo.recordset.length
-            do {
-                if (Number<10) {
-                    genQuotationNo = 'pre_'+checkMonth()+'0'+Number
-                } else {
-                    genQuotationNo = 'pre_'+checkMonth()+Number
-                }
-                let CheckQuotationNo = await pool.request().query(`SELECT CASE
-                WHEN EXISTS(
-                     SELECT *
-                     FROM QuotationNo
-                     WHERE QuotationNo = N'${genQuotationNo}'
-                )
-                THEN CAST (1 AS BIT)
-                ELSE CAST (0 AS BIT) END AS 'check'`);
-                duplicateNo = CheckQuotationNo.recordset[0].check
-                if (duplicateNo) {
-                    Number++;
-                }
-            } while (duplicateNo);
-            // Insert QuotationNo
-            let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
-                SELECT SCOPE_IDENTITY() AS Id`;
-            let QuotationNo = await pool.request().query(InsertQuotationNo);
-            let QuotationNoId = QuotationNo.recordset[0].Id
-            // Insert Quotation with QuotationNoId
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject, QuotationUpdatedDate, EmployeeEditId) VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkDate()}', ${UserId})
+        // Generate QuotationNo
+        let genQuotationNo = '';
+        let SearchQuotationNo = await pool.request().query(`
+            SELECT *
+            FROM QuotationNo
+            WHERE QuotationNo LIKE N'pre_${checkMonth()}%'`)
+        // Check QuotationNo
+        let duplicateNo = true;
+        let Number = SearchQuotationNo.recordset.length
+        do {
+            if (Number<10) {
+                genQuotationNo = 'pre_'+checkMonth()+'0'+Number
+            } else {
+                genQuotationNo = 'pre_'+checkMonth()+Number
+            }
+            let CheckQuotationNo = await pool.request().query(`SELECT CASE
+            WHEN EXISTS(
+                    SELECT *
+                    FROM QuotationNo
+                    WHERE QuotationNo = N'${genQuotationNo}'
+            )
+            THEN CAST (1 AS BIT)
+            ELSE CAST (0 AS BIT) END AS 'check'`);
+            duplicateNo = CheckQuotationNo.recordset[0].check
+            if (duplicateNo) {
+                Number++;
+            }
+        } while (duplicateNo);
+        // Insert QuotationNo
+        let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
             SELECT SCOPE_IDENTITY() AS Id`;
-            let Quotation = await pool.request().query(InsertQuotation);
-            let QuotationId = Quotation.recordset[0].Id
-            res.status(201).send({message: 'Successfully add Quotation', QuotationId});
-        }
+        let QuotationNo = await pool.request().query(InsertQuotationNo);
+        let QuotationNoId = QuotationNo.recordset[0].Id
+        // Insert Quotation with QuotationNoId
+        let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject, QuotationUpdatedDate, EmployeeEditId) VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkDate()}', ${UserId})
+        SELECT SCOPE_IDENTITY() AS Id`;
+        let Quotation = await pool.request().query(InsertQuotation);
+        let QuotationId = Quotation.recordset[0].Id
+        res.status(201).send({message: 'Successfully add Quotation', QuotationId});
     } catch(err){
         res.status(500).send({message: `${err}`});
     }
@@ -445,6 +433,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         let UserId = req.session.UserId;
         let QuotationId = req.params.QuotationId
         let {
+            QuotationNo,
             QuotationSubject,
             QuotationDiscount,
             QuotationValidityDate,
@@ -465,7 +454,9 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             return;
         }
         // Insert Quotation with QuotationNoId
-        let UpdateQuotation = `UPDATE Quotation
+        let UpdateQuotation = `DECLARE @QuotationNoId bigint;
+        SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId = ${QuotationId});
+        UPDATE Quotation
         SET QuotationSubject = N'${QuotationSubject}',
             QuotationDiscount = ${QuotationDiscount},
             QuotationValidityDate = N'${ValidityDateFilter}', 
@@ -475,7 +466,11 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             EmployeeApproveId = ${EmployeeApproveId},
             EndCustomer = N'${EndCustomerFilter}',
             EmployeeEditId = ${UserId}
-        WHERE QuotationId = ${QuotationId}`;
+        WHERE QuotationId = ${QuotationId}
+        
+        UPDATE QuotationNo
+        SET QuotationNo = N'${QuotationNo}'
+        WHERE QuotationNoId = @QuotationNoId`;
         await pool.request().query(UpdateQuotation);
         res.status(201).send({message: 'Successfully Edit Quotation'});
     } catch(err){
