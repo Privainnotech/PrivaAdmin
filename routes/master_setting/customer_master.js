@@ -6,7 +6,6 @@ const { dbconfig } = require('../../config');
 router.get('/data/:CompanyId', async (req, res, next) => {
     try{
         let CompanyId = req.params.CompanyId;
-        console.log(CompanyId);
         let SelectCustomer = `SELECT row_number() over(order by CustomerFname) as 'index',
             a.CustomerId, a.CustomerTitle, a.CustomerFname, a.CustomerLname, a.CustomerTitle + a.CustomerFname + ' ' + a.CustomerLname CustomerName,
             a.CustomerEmail, a.CustomerTel, a.CompanyId, b.CompanyName
@@ -18,15 +17,22 @@ router.get('/data/:CompanyId', async (req, res, next) => {
         let Customer = await pool.request().query(SelectCustomer);
         res.status(200).send(JSON.stringify(Customer.recordset));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
 router.post('/add', async (req, res, next) => {
     try{
         let { CustomerTitle, CustomerFname, CustomerLname, CustomerTel, CustomerEmail, CompanyId } = req.body
+        if (CustomerFname == '') {
+            res.status(400).send({message: "Please enter Customer's firstname"});
+            return;
+        }
+        if(CompanyId == 'null'){
+            res.status(400).send({message: 'Please select Company'});
+            return;
+        }
         let pool = await sql.connect(dbconfig);
-        console.log('checked')
         let CheckCustomer = await pool.request().query(`SELECT *
             FROM MasterCustomer
             WHERE CustomerEmail = N'${CustomerEmail}'`);
@@ -54,7 +60,7 @@ router.post('/add', async (req, res, next) => {
             }
         }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -62,6 +68,10 @@ router.put('/edit/:CustomerId', async (req, res) => {
     try{
         let CustomerId = req.params.CustomerId;
         let { CustomerTitle, CustomerFname, CustomerLname, CustomerTel, CustomerEmail, CompanyId } = req.body
+        if (CustomerFname == '') {
+            res.status(400).send({message: "Please enter Customer's firstname"});
+            return;
+        }
         if(CompanyId == 'null'){
             res.status(400).send({message: 'Please select Company'});
             return;

@@ -115,7 +115,7 @@ router.get('/list', async (req, res, next) => {
         let quotations = await pool.request().query(getQuotationList);
         res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -154,7 +154,7 @@ router.get('/:QuotationId', async (req, res) => {
         }
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -169,7 +169,7 @@ router.get('/item/:QuotationId', async (req, res) => {
         let quotations = await pool.request().query(getQuotationItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -185,7 +185,7 @@ router.get('/subitem/:ItemId', async (req, res) => {
         let quotations = await pool.request().query(getQuotationSubItem);
         res.status(200).send(JSON.stringify(quotations.recordset));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -250,7 +250,7 @@ router.post('/add_pre_quotation', async (req, res) => {
             res.status(201).send({message: 'Successfully add Quotation', QuotationId});
         }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -280,7 +280,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
             res.status(201).send({message: 'Successfully add Item'});
         }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -350,7 +350,7 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
             }
         }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -479,7 +479,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         await pool.request().query(UpdateQuotation);
         res.status(201).send({message: 'Successfully Edit Quotation'});
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -513,7 +513,7 @@ router.put('/edit_item/:ItemId', async (req, res) => {
             res.status(200).send({message: 'Successfully Edit Item'});
         // }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -535,7 +535,7 @@ router.put('/edit_subitem/:SubItemId', async (req, res) => {
         updatePriceS(SubItemId);
         res.status(200).send({message: 'Successfully Edit Sub-Item'});
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 

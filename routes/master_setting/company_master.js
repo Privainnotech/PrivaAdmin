@@ -13,13 +13,17 @@ router.get('/data', async (req, res, next) => {
         let Company = await pool.request().query(SelectCompany);
         res.status(200).send(JSON.stringify(Company.recordset));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
 router.post('/add', async (req, res, next) => {
     try{
         let { CompanyName, CompanyAddress, CompanyTel, CompanyEmail } = req.body
+        if (CompanyName == '') {
+            res.status(400).send({message: "Please enter company's name"});
+            return;
+        }
         let pool = await sql.connect(dbconfig);
         let CheckCompany = await pool.request().query(`SELECT *
             FROM MasterCompany
@@ -42,7 +46,7 @@ router.post('/add', async (req, res, next) => {
             }
         }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -50,6 +54,10 @@ router.put('/edit/:CompanyId', async (req, res) => {
     try{
         let CompanyId = req.params.CompanyId;
         let { CompanyName, CompanyAddress, CompanyTel, CompanyEmail } = req.body
+        if (CompanyName = '') {
+            res.status(400).send({message: "Please enter company's name"});
+            return;
+        }
         let pool = await sql.connect(dbconfig);
         let CheckCompany = await pool.request().query(`SELECT CASE
             WHEN EXISTS(

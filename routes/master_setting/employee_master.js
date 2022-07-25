@@ -11,15 +11,15 @@ router.get('/data', async (req, res, next) => {
         let Employee = await pool.request().query(SelectEmployee);
         res.status(200).send(JSON.stringify(Employee.recordset));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
 router.post('/add', async (req, res, next) => {
     try{
         let { EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition, Password, Authority } = req.body
-        if (Password == '') {
-            res.status(400).send({message: 'Please enter Password'});
+        if (EmployeeFname == '' || EmployeeEmail == '' || Password == '') {
+            res.status(400).send({message: "Please enter Employee's firstname, email and password"});
             return;
         }
         let pool = await sql.connect(dbconfig);
@@ -52,7 +52,7 @@ router.post('/add', async (req, res, next) => {
             }
         }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -60,6 +60,10 @@ router.put('/edit/:EmployeeId', async (req, res) => {
     try{
         let EmployeeId = req.params.EmployeeId;
         let { EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel, EmployeeEmail, EmployeePosition } = req.body
+        if (EmployeeFname == '' || EmployeeEmail == '') {
+            res.status(400).send({message: "Please enter Employee's firstname and email"});
+            return;
+        }
         let pool = await sql.connect(dbconfig);
         let CheckEmployee = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
