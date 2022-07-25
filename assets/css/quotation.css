@@ -176,6 +176,11 @@ hr{
 
 }
 
+.btn-group.right button:hover{
+	background-color: #1cbb8c;
+    border: #1cbb8c;
+}
+
 @media only screen and (min-width:960px) {
 	body{
 		font-size: 0.7rem;

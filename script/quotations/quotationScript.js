@@ -50,6 +50,8 @@ function ShowPro(QuotationId) {
 function RePro() {
     // QuotationId = null
     $('#ProNo').val('Project NO.');
+    $('#Revised').val('');
+
     $('#CusName').val('');
     $('#QDate').val('');
     $('#CusEmail').val('');
