@@ -450,15 +450,16 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         let DeliveryFilter = QuotationDelivery.replace(/'/g,"''"); 
         let RemarkFilter = QuotationRemark.replace(/'/g,"''");
         let EndCustomerFilter = EndCustomer.replace(/'/g,"''"); 
-        if(EmployeeApproveId == 'null'){
+        if(EmployeeApproveId == ''){
             res.status(400).send({message: 'Please select Employee'});
             return;
         }
         let CheckQuotationNo = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
              SELECT *
-             FROM QuotationNo
-             WHERE QuotationNo = N'${QuotationNo} AND NOT QuotationId = ${QuotationId}'
+             FROM QuotationNo a
+             LEFT JOIN Quotation b ON a.QuotationNoId = b.QuotationNoId
+             WHERE a.QuotationNo = N'${QuotationNo}' AND NOT b.QuotationId = ${QuotationId}
         )
         THEN CAST (1 AS BIT)
         ELSE CAST (0 AS BIT) END AS 'check'`)
@@ -468,21 +469,21 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         }
         // Insert Quotation with QuotationNoId
         let UpdateQuotation = `DECLARE @QuotationNoId bigint;
-        SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId = ${QuotationId});
-            UPDATE Quotation
-            SET QuotationSubject = N'${QuotationSubject}',
-                QuotationDiscount = ${QuotationDiscount},
-                QuotationValidityDate = N'${ValidityDateFilter}', 
-                QuotationPayTerm = N'${PayTermFilter}',
-                QuotationDelivery = N'${DeliveryFilter}',
-                QuotationRemark = N'${RemarkFilter}',
-                EmployeeApproveId = ${EmployeeApproveId},
-                EndCustomer = N'${EndCustomerFilter}',
-                EmployeeEditId = ${UserId}
-            WHERE QuotationId = ${QuotationId};
-            UPDATE QuotationNo
-            SET QuotationNo = N'${QuotationNo}'
-            WHERE QuotationNoId = @QuotationNoId;`;
+            SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId = ${QuotationId});
+        UPDATE Quotation
+        SET QuotationSubject = N'${QuotationSubject}',
+            QuotationDiscount = ${QuotationDiscount},
+            QuotationValidityDate = N'${ValidityDateFilter}', 
+            QuotationPayTerm = N'${PayTermFilter}',
+            QuotationDelivery = N'${DeliveryFilter}',
+            QuotationRemark = N'${RemarkFilter}',
+            EmployeeApproveId = ${EmployeeApproveId},
+            EndCustomer = N'${EndCustomerFilter}',
+            EmployeeEditId = ${UserId}
+        WHERE QuotationId = ${QuotationId};
+        UPDATE QuotationNo
+        SET QuotationNo = N'${QuotationNo}'
+        WHERE QuotationNoId = @QuotationNoId;`;
         await pool.request().query(UpdateQuotation);
         res.status(201).send({message: 'Successfully Edit Quotation'});
     } catch(err){
