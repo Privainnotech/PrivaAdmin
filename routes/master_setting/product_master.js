@@ -10,7 +10,7 @@ router.get('/data', async (req, res, next) => {
         let Product = await pool.request().query(SelectProduct);
         res.status(200).send(JSON.stringify(Product.recordset));
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 
@@ -18,7 +18,6 @@ router.post('/add', async (req, res, next) => {
     try{
         let { ProductName, ProductPrice, ProductType } = req.body
         let pool = await sql.connect(dbconfig);
-        console.log('checked')
         let CheckProduct = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
                 SELECT *
@@ -49,7 +48,7 @@ router.post('/add', async (req, res, next) => {
             res.status(201).send({message: 'Successfully add Product'});
         }
     } catch(err){
-        res.status(500).send({message: err});
+        res.status(500).send({message: `${err}`});
     }
 })
 

@@ -4,8 +4,7 @@ const morgan = require('morgan');
 const path = require('path');
 const flash = require('express-flash');
 const session = require('express-session');
-const cors = require('cors')
-
+const cors = require('cors');
 
 app.use(cors());
 
