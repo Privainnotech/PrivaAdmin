@@ -93,6 +93,10 @@
 
 }
 
+.wid:disabled{
+	border: 0;
+}
+
 select:disabled{
 	background-color: #fff;
 	border: 0;
@@ -186,11 +190,23 @@ hr{
     border: #1cbb8c;
 }
 
-@media only screen and (min-width:960px) {
+.btn-group.right button{
+	margin-top: 5px;
+	font-size: 0.9rem;
+}
+
+.wid,.wid2{
+	font-weight: 900;
+}
+
+@media only screen and (max-width:1024px) {
 	body{
 		font-size: 0.7rem;
 	}
 
+	.btn-group.right button{
+		font-size: 0.7rem;
+	}
 	
 	
 	.title.v-2{
@@ -221,8 +237,16 @@ hr{
 	}
 
 	.wid{
+		width: 110px;
+		min-width: 90px;
+		max-width: 170px;
+		padding-right: 0;
+		font-size: 1rem;
+		font-weight: 800;
+	}
+	.wid2{
 		border: 0;
-		/* width: 90px; */
+		max-width: 70px;
 		padding-right: 0;
 		font-size: 1rem;
 		font-weight: 800;
@@ -294,7 +318,19 @@ hr{
 	}
 
 	.wid{
-		/* width: 100px; */
+		width: 140px;
+		min-width: 40px;
+		max-width: 180px;
+		font-size: 1.3rem;
+		margin: 0;
+		margin-bottom: 1px solid #ced4da;
+		/* padding-left: 0; */
+		color: #111;
+		border: 1px solid #ced4da;
+	}
+
+	.wid2{
+		max-width: 70px;
 		font-size: 1.3rem;
 		margin: 0;
 		padding-left: 0;

@@ -1,6 +1,6 @@
-$( "wid" ).change(function() {
-    this.style.width = ((this.value.length + 1) * 8) + "px";
-  });
+$( "#ProNo" ).change(function() {
+    this.style.width = ((this.value.length + 1) * 11) + "px";
+});
 //Hide Edit Button
 function hideEdit() {
     $("#modalEditProject").removeClass('invisible');
@@ -376,6 +376,8 @@ $(document).ready(function () {
     //clickTableQuotation
     $('#tableQuo tbody').on('click', 'tr', function () {
 
+        
+        $('#ProNo').change('input', () => $( "#ProNo" ).style.width = (($( "#ProNo" ).value.length + 1) * 11) + "px");
 
         fill_resetSubTable()
         $("#btn-text").text("Edit");
