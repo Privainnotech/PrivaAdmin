@@ -14,6 +14,9 @@
 
   <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
+	
+
+
   <title>Quotation</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -31,6 +34,7 @@
   <link rel="stylesheet" href="/css/app.css">
 
   <link rel="stylesheet" href="/css/quotation.css">
+  <link rel="stylesheet" href="/css/simple-image.css" />
 </head>
 
 <body>
@@ -627,15 +631,14 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-12 d-flex">
-                    <div class="card flex-fill h-20">
+                  <div class="col-12">
+                    <div class="card flex-fill">
                       <div class="card-header title v">
-                        <h1>Setting</h1>
+                        <h1>Detail</h1>
+                        <button id="save-button" class="visually-hidden" >Save</button>
                       </div>
                         <div class="card-body w-100">
-                          <h4>Quotation Table</h4>
-                          <h4>Quotation Details</h4>
-
+                          <div id="editorjs"></div>
                           
                         </div>
                     </div>
@@ -646,12 +649,6 @@
 
       </div>
   </div>
-
-
-
-
-
-
 
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="/js/jquery.min.js"></script>
@@ -664,6 +661,9 @@
   <script src="/js/app.js"></script>
   <script src="/quotations/quotationScript.js"></script>
   <script src="/quotations/quotationDropdown.js"></script>
+  <script src="/js/editor.js"></script>
+	<script src="/js/editorHeader.js"></script>
+	<script src="/js/editorInnerline.js"></script>
 </body>
 
 </html>
