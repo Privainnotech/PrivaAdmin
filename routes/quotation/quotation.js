@@ -138,6 +138,7 @@ router.get('/:QuotationId', async (req, res) => {
                 a.QuotationDiscount, a.QuotationNet, a.QuotationVat, a.QuotationNetVat,
                 CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate', CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
                 CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery', CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
+                CONVERT(nvarchar(max), a.QuotationDetail) AS 'QuotationDetail',
                 a.EmployeeApproveId, e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName, e.EmployeeEmail, e.EmployeePosition,
                 g.TableShow, g.TablePrice, g.TableQty, g.TableTotal, g.CustomDetail, g.DetailShow, g.DetailQty, g.DetailTotal
             FROM [Quotation] a
@@ -153,6 +154,13 @@ router.get('/:QuotationId', async (req, res) => {
             quotations.recordset[0].QuotationPayTerm = "";
         } else {
             quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
+        }
+        if (typeof quotations.recordset[0].QuotationDetail == 'object') {
+            quotations.recordset[0].QuotationDetail = { "time": 1550476186479,
+                "blocks": [{ "id": "cyZjplMOZ0", "type": "paragraph", "data": { "text": "" } }], "version": "2.8.1"
+            };
+        } else {
+            quotations.recordset[0].QuotationDetail = JSON.parse(quotations.recordset[0].QuotationDetail)
         }
         quotations.recordset[0].QuotationRevised = Revised
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
@@ -495,8 +503,9 @@ router.put('/edit_detail/:QuotationId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
         let { QuotationDetail } = req.body;
+        let Detail = JSON.stringify(QuotationDetail);
         let UpdateSetting = `UPDATE QuotationSetting
-        SET QuotationDetail = N'${QuotationDetail}'
+        SET QuotationDetail = N'${Detail}'
         WHERE QuotationId = ${QuotationId};`;
         await pool.request().query(UpdateSetting);
         res.status(201).send({message: 'Successfully Edit Quotation Detail'});
