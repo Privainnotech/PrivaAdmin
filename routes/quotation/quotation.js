@@ -434,7 +434,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         let UserId = req.session.UserId;
         let QuotationId = req.params.QuotationId;
         let {
-            QuotationNo,
             QuotationSubject,
             QuotationDiscount,
             QuotationValidityDate,
@@ -468,9 +467,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             return;
         }
         // Insert Quotation with QuotationNoId
-        let UpdateQuotation = `DECLARE @QuotationNoId bigint;
-            SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId = ${QuotationId});
-        UPDATE Quotation
+        let UpdateQuotation = `UPDATE Quotation
         SET QuotationSubject = N'${QuotationSubject}',
             QuotationDiscount = ${QuotationDiscount},
             QuotationValidityDate = N'${ValidityDateFilter}', 
@@ -480,10 +477,7 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             EmployeeApproveId = ${EmployeeApproveId},
             EndCustomer = N'${EndCustomerFilter}',
             EmployeeEditId = ${UserId}
-        WHERE QuotationId = ${QuotationId};
-        UPDATE QuotationNo
-        SET QuotationNo = N'${QuotationNo}'
-        WHERE QuotationNoId = @QuotationNoId;`;
+        WHERE QuotationId = ${QuotationId};`;
         await pool.request().query(UpdateQuotation);
         res.status(201).send({message: 'Successfully Edit Quotation'});
     } catch(err){
@@ -529,7 +523,6 @@ router.put('/edit_item/:ItemId', async (req, res) => {
 router.put('/edit_subitem/:SubItemId', async (req, res) => {
     try{
         let SubItemId = req.params.SubItemId;
-        console.log(req.body)
         let { ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit} = req.body
         let pool = await sql.connect(dbconfig);
         UpdateProduct = `UPDATE MasterProduct
