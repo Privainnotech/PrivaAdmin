@@ -247,12 +247,6 @@ hr{
 	.textbox{
 		width: 95px;
 	}
-
-	.h-20{
-		height: 77.3vh;
-	}
-	
-	
 }
 
 @media only screen and (min-width:1320px) {
@@ -262,9 +256,6 @@ hr{
 	main.content{
 		padding-top: 38px;
 		padding-bottom: 0;
-	}
-	.h-20{
-		height: 49vh;
 	}
 
 	.title.v{
