@@ -3,7 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const path = require('path');
 const flash = require('express-flash');
-const session = require('express-session');
+const cookieSession = require('cookie-session');
 const cors = require('cors');
 
 app.use(cors());
@@ -19,15 +19,11 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-app.use(session({
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24
-    },
-    store: new session.MemoryStore,
-    saveUninitialized: true,
-    resave: 'true',
-    secret: 'secret'
-}));
+app.use(cookieSession({
+    name: 'session',
+    keys: ['key1, key2'],
+    maxAge: 1000 * 60 * 60 * 24
+}))
 
 app.use(flash());
 

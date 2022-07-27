@@ -75,12 +75,27 @@ CREATE Table [Priva].[dbo].[Quotation](
 	QuotationPayTerm NVARCHAR(MAX) NULL DEFAULT N'-',
 	QuotationDelivery NVARCHAR(255) NULL DEFAULT N'-',
 	QuotationRemark NVARCHAR(MAX) NULL DEFAULT N'-',
+	QuotationDetail NVARCHAR(MAX) NULL,
 	EmployeeApproveId bigint NULL,
 	UserId bigint NULL
 	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
 	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
 	FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId),
 	FOREIGN KEY (UserId) REFERENCES Users(UserId)
+)
+
+CREATE Table [Priva].[dbo].[QuotationSetting](
+	QuotationSetId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	QuotationId bigint NOT NULL,
+	TableShow int NOT NULL DEFAULT 3,
+	TablePrice int NOT NULL DEFAULT 1,
+	TableQty int NOT NULL DEFAULT 1,
+	TableTotal int NOT NULL DEFAULT 1,
+	CustomDetail int NOT NULL DEFAULT 1,
+	DetailShow int NOT NULL DEFAULT 3,
+	DetailQty int NOT NULL DEFAULT 2,
+	DetailTotal int NOT NULL DEFAULT 0,
+	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
 CREATE Table [Priva].[dbo].[QuotationItem](
