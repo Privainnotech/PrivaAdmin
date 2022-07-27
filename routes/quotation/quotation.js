@@ -138,13 +138,15 @@ router.get('/:QuotationId', async (req, res) => {
                 a.QuotationDiscount, a.QuotationNet, a.QuotationVat, a.QuotationNetVat,
                 CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate', CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
                 CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery', CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
-                a.EmployeeApproveId, e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName, e.EmployeeEmail, e.EmployeePosition
+                a.EmployeeApproveId, e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName, e.EmployeeEmail, e.EmployeePosition,
+                g.TableShow, g.TablePrice, g.TableQty, g.TableTotal, g.CustomDetail, g.DetailShow, g.DetailQty, g.DetailTotal
             FROM [Quotation] a
             LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
             LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
             LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
             LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
             LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
+            LEFT JOIN [QuotationSetting] g ON a.QuotationId = g.QuotationId
             WHERE a.QuotationId = ${QuotationId}`;
         let quotations = await pool.request().query(getQuotation);
         if (typeof quotations.recordset[0].QuotationPayTerm == 'object' || !quotations.recordset[0].QuotationPayTerm.includes("QuotationPayTerm")) {
@@ -233,10 +235,14 @@ router.post('/add_pre_quotation', async (req, res) => {
         let QuotationNo = await pool.request().query(InsertQuotationNo);
         let QuotationNoId = QuotationNo.recordset[0].Id
         // Insert Quotation with QuotationNoId
-        let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject, QuotationUpdatedDate, EmployeeEditId) VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkDate()}', ${UserId})
-        SELECT SCOPE_IDENTITY() AS Id`;
+        let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationSubject, QuotationUpdatedDate, EmployeeEditId)
+            VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkDate()}', ${UserId})
+            SELECT SCOPE_IDENTITY() AS Id`;
         let Quotation = await pool.request().query(InsertQuotation);
         let QuotationId = Quotation.recordset[0].Id
+        let InsertSetting = `INSERT INTO QuotationSetting(QuotationId)
+            VALUES(${QuotationId})`
+        await pool.request().query(InsertSetting)
         res.status(201).send({message: 'Successfully add Quotation', QuotationId});
     } catch(err){
         res.status(500).send({message: `${err}`});
@@ -247,9 +253,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        let { ItemName, ItemPrice, ItemQty, ItemDescription } = req.body
-        if (!ItemDescription) ItemDescription="";
-        let DescriptionFilter = ItemDescription.replace(/'/g, "''")
+        let { ItemName, ItemPrice, ItemQty } = req.body
         //Unit = {Pc, Set, Lot} => Dropdown
         let CheckQuotationItem = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
@@ -262,7 +266,7 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         if(CheckQuotationItem.recordset[0].check){
             res.status(400).send({message: 'Duplicate item in quotation'});
         } else{
-            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty, ItemDescription)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}, N'${DescriptionFilter}')
+            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty})
             SELECT SCOPE_IDENTITY() AS Id`;
             let Item = await pool.request().query(InsertItem);
             updatePriceQ(Item.recordset[0].Id);
@@ -360,6 +364,7 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
             let DeleteQuotation = `DECLARE @QuotationNoId bigint;
                 SET @QuotationNoId = (SELECT QuotationNoId FROM Quotation WHERE QuotationId =  ${QuotationId});
                 DELETE FROM QuotationItem WHERE QuotationId=${QuotationId}
+                DELETE FROM QuotationSetting WHERE QuotationId=${QuotationId}
                 DELETE FROM Quotation WHERE QuotationId=${QuotationId}
                 IF (SELECT COUNT(QuotationNoId) FROM Quotation WHERE QuotationNoId=@QuotationNoId) = 0
                     BEGIN DELETE FROM QuotationNo WHERE QuotationNoId=@QuotationNoId END`;
@@ -485,11 +490,46 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
     }
 })
 
+router.put('/edit_detail/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId;
+        let { QuotationDetail } = req.body;
+        let UpdateSetting = `UPDATE QuotationSetting
+        SET QuotationDetail = N'${QuotationDetail}'
+        WHERE QuotationId = ${QuotationId};`;
+        await pool.request().query(UpdateSetting);
+        res.status(201).send({message: 'Successfully Edit Quotation Detail'});
+    } catch(err){
+        res.status(500).send({message: `${err}`});
+    }
+})
+
+router.put('/edit_setting/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId;
+        let { TableShow, TablePrice, TableQty, TableTotal,
+            CustomDetail, DetailShow, DetailQty, DetailTotal
+        } = req.body;
+        let UpdateSetting = `UPDATE QuotationSetting
+        SET TableShow = ${TableShow}, TablePrice = ${TablePrice},
+            TableQty = ${TableQty},  TableTotal = ${TableTotal},
+            CustomDetail = ${CustomDetail}, DetailShow = ${DetailShow},
+            DetailQty = ${DetailQty}, DetailTotal = ${DetailTotal}
+        WHERE QuotationId = ${QuotationId};`;
+        await pool.request().query(UpdateSetting);
+        res.status(201).send({message: 'Quotation Setting Updated'});
+    } catch(err){
+        res.status(500).send({message: `${err}`});
+    }
+})
+
 // FIX check duplicate item
 router.put('/edit_item/:ItemId', async (req, res) => {
     try{
         let ItemId = req.params.ItemId;
-        let { ItemName, ItemPrice, ItemQty, ItemDescription} = req.body
+        let { ItemName, ItemPrice, ItemQty } = req.body
         let pool = await sql.connect(dbconfig);
         // let CheckSubItem = await pool.request().query(`SELECT CASE
         // WHEN EXISTS(
@@ -508,7 +548,7 @@ router.put('/edit_item/:ItemId', async (req, res) => {
         //     res.status(200).send({message: 'Successfully Edit Item'});
         // } else {
             UpdateQuotationItem = `UPDATE QuotationItem
-            SET ItemName = N'${ItemName}', ItemPrice = ${ItemPrice}, ItemQty = ${ItemQty}, ItemDescription =N'${ItemDescription}'
+            SET ItemName = N'${ItemName}', ItemPrice = ${ItemPrice}, ItemQty = ${ItemQty}
             WHERE ItemId = ${ItemId}`;
             await pool.request().query(UpdateQuotationItem);
             updatePriceQ(ItemId);
