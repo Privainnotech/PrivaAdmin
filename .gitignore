@@ -1,4 +1,4 @@
 /node_modules
+/sql
 *.env
 *.pdf
-*.sql
