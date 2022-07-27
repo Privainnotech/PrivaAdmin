@@ -489,9 +489,11 @@ router.get('/:QuotationId', async (req, res) => {
         let pdfDoc = pdfCreator.createPdfKitDocument(quotationPdf, {tableLayouts: customLayouts});
         console.log('Quotation created')
         let quotationPath = path.join(process.cwd(), `/public/report/quotation/${quotationNo}.pdf`)
+        console.log('file creating')
         let creating = pdfDoc.pipe(fs.createWriteStream(quotationPath));
         pdfDoc.end();
         creating.on('finish', () => {
+            console.log('create file success')
             const fileOption = {
                 headers: {
                     'x-timestamp': Date.now(),

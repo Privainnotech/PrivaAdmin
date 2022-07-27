@@ -38,6 +38,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             QuotationPayTerm,
             QuotationDelivery,
             QuotationRemark,
+            QuotationDetail,
             EmployeeApproveId,
             EndCustomer
         } = req.body
@@ -46,12 +47,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         if (!QuotationPayTerm) QuotationPayTerm="-";
         if (!QuotationDelivery) QuotationDelivery="-";
         if (!QuotationRemark) QuotationRemark="-";
-        let PayTerm = JSON.stringify(QuotationPayTerm)
-        let ValidityDateFilter = QuotationValidityDate.replace(/'/g, "''");
-        let PayTermFilter = PayTerm.replace(/'/g, "''");
-        let DeliveryFilter = QuotationDelivery.replace(/'/g, "''");
-        let RemarkFilter = QuotationRemark.replace(/'/g, "''");
-        let EndCustomerFilter = EndCustomer.replace(/'/g, "''");
+        if (!QuotationDetail) QuotationDetail="-";
         console.log(QuotationStatus)
         if (QuotationStatus == 1) { // not pre&cancel status
             res.status(400).send({message: "Cannot revise pre-quotation"});
@@ -65,11 +61,21 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             let newRevise = getRevise.recordset[0].Revised;
             // let newRevise = QuotationRevised+1;
             console.log(newRevise)
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationUpdatedDate, EmployeeApproveId, EndCustomer)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${ValidityDateFilter}', N'${PayTermFilter}', N'${DeliveryFilter}', N'${RemarkFilter}', N'${checkDate()}', ${EmployeeApproveId}, N'${EndCustomerFilter}')
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EndCustomer)
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${QuotationDetail}', N'${checkDate()}', ${EmployeeApproveId}, N'${QuotationEndCustomer}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let NewQuotationId = Quotation.recordset[0].Id
+            // Copy Setting
+            let getSetting = await pool.request().query(`SELECT * FROM QuotationSetting
+            WHERE QuotationId = ${OldQuotationId}`);
+            let {
+                TableShow, TablePrice, TableQty, TableTotal,
+                CustomDetail, DetailShow, DetailQty, DetailTotal
+            } = getSetting.recordset[0]
+            await pool.request().query(`INSERT INTO QuotationSetting(QuotationId, TableShow, TablePrice, TableQty, TableTotal, CustomDetail, DetailShow, DetailQty, DetailTotal)
+            VALUES(${NewQuotationId}, ${TableShow}, ${TablePrice}, ${TableQty}, ${TableTotal}, ${CustomDetail}, ${DetailShow}, ${DetailQty}, ${DetailTotal})
+            SELECT SCOPE_IDENTITY() AS Id`);
             // Copy Item
             let selectOldItem = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${OldQuotationId}`)
             for(const item of selectOldItem.recordset){
