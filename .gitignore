@@ -1,4 +1,4 @@
 /node_modules
+/sql
 *.env
-/public/report
-.sql
+*.pdf
