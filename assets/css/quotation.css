@@ -2,6 +2,10 @@
 	min-height: 250px;
 }
 
+table.dataTable tbody td{
+	padding: 2px 8px;	
+}
+
 .textbox{
 	width: 125px;
 	font-weight: 500;
@@ -93,10 +97,6 @@
 
 }
 
-.wid:disabled{
-	border: 0;
-}
-
 select:disabled{
 	background-color: #fff;
 	border: 0;
@@ -146,6 +146,7 @@ hr{
 
 #ProNo{
 	padding-left: 0;
+	margin: 0;
 }
 
 .card-header{
@@ -191,13 +192,10 @@ hr{
 }
 
 .btn-group.right button{
-	margin-top: 5px;
-	font-size: 0.9rem;
+	margin-bottom: 5px;
+	font-size: 0.8rem;
 }
 
-.wid,.wid2{
-	font-weight: 900;
-}
 
 @media only screen and (max-width:1024px) {
 	body{
@@ -211,7 +209,6 @@ hr{
 	
 	.title.v-2{
 		display: block;
-		margin-bottom: 5px;
 	}
 
 	.title.v{
@@ -234,22 +231,6 @@ hr{
 	span.group-title.input-group-text.mg-0{
 		font-size: 1rem;
 		
-	}
-
-	.wid{
-		width: 110px;
-		min-width: 90px;
-		max-width: 170px;
-		padding-right: 0;
-		font-size: 1rem;
-		font-weight: 800;
-	}
-	.wid2{
-		border: 0;
-		max-width: 70px;
-		padding-right: 0;
-		font-size: 1rem;
-		font-weight: 800;
 	}
 
 	input.group-title{
@@ -315,27 +296,6 @@ hr{
 		padding-left: 0;
 	
 		color: #111;
-	}
-
-	.wid{
-		width: 140px;
-		min-width: 40px;
-		max-width: 180px;
-		font-size: 1.3rem;
-		margin: 0;
-		margin-bottom: 1px solid #ced4da;
-		/* padding-left: 0; */
-		color: #111;
-		border: 1px solid #ced4da;
-	}
-
-	.wid2{
-		max-width: 70px;
-		font-size: 1.3rem;
-		margin: 0;
-		padding-left: 0;
-		color: #111;
-		border: 0;
 	}
 
 	.input-group-text.mg-0{
