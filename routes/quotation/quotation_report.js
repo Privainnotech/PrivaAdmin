@@ -323,7 +323,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
     } else {
         detail = {
             headerRows: 0,
-            widths: ['*'],
+            widths: ['*', '10%', '10%'],
             style: 'text',
             // alignment: 'left',
             body: []
@@ -332,8 +332,14 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
         Details.forEach(Detail => {
             let isBold, text = Detail.data.text;
             text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
-            text = text.replace(/<b>|<\/b>/g,"");
-            detail['body'].push([{ text: text, style: isBold}])
+            text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
+            text = text.split(", ");
+            console.log(text)
+            detail['body'].push([
+                { text: text[0], style: isBold},
+                { text: text[1] ? text[1] : "", style: isBold},
+                { text: text[2] ? text[2] : "", style: isBold}
+            ])
         })
         // console.log(JSON.parse(QuotationDetail))
     }

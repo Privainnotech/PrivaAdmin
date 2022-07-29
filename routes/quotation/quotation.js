@@ -163,14 +163,14 @@ router.get('/:QuotationId', async (req, res) => {
                         "id": "cyZjplMOZ0",
                         "type": "paragraph",
                         "data": {
-                            "text": "<b>Item</b>"
+                            "text": "<b>ตัวอย่างการพิมพ์ Detail </b>"
                         }
                     },
                     {
                         "id": "Mj_9XdxLe0",
                         "type": "paragraph",
                         "data": {
-                            "text": "1.Description"
+                            "text": "1 รายละเอียด, จำนวน, ราคา"
                         }
                     }
                 ],
