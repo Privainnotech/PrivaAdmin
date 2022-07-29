@@ -504,7 +504,7 @@ router.put('/edit_detail/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId;
         let { QuotationDetail } = req.body;
         let Detail = JSON.stringify(QuotationDetail);
-        let UpdateSetting = `UPDATE QuotationSetting
+        let UpdateSetting = `UPDATE Quotation
         SET QuotationDetail = N'${Detail}'
         WHERE QuotationId = ${QuotationId};`;
         await pool.request().query(UpdateSetting);
