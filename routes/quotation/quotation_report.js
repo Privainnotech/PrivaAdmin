@@ -319,7 +319,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
         body: []
     }
     if (CustomDetail) {
-        if (typeof QuotationDetail == 'object') {
+        if (QuotationDetail == null) {
             detail['body'].push(
                 [{ text: ``, style: 'blacktext'},"",""]
             )
@@ -330,7 +330,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
                 text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
                 text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
                 text = text.split(", ");
-                console.log(text)
                 detail['body'].push([
                     { text: text[0], style: isBold},
                     { text: text[1] ? text[1] : "", style: isBold},
