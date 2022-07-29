@@ -200,8 +200,25 @@ hr{
 	margin-bottom: 5px;
 }
 
+@media only screen and (max-width:768px) {
+	.title h2{
+		font-size: 20px;
+	}
+	span.group-title.input-group-text.mg-0 {
+		font-size: 0.8rem;
+	}
+	.input-group-text.mg-0{
+		font-size: 0.5rem;
+	}
+	.no-bor {
+		font-size: 0.5rem;
+	}
+	.btn-group.right button{
+		font-size: 0.5rem;
+	}
+}
 
-@media only screen and (max-width:1024px) {
+@media only screen and (min-width:1024px) {
 	body{
 		font-size: 0.7rem;
 	}
@@ -253,7 +270,7 @@ hr{
 	}
 }
 
-@media only screen and (max-width:1320px) {
+@media only screen and (min-width:1320px) {
 	body{
 		font-size: 0.9rem;
 	}

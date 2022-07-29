@@ -1,8 +1,25 @@
 .codex-editor__redactor{
-    border: 1px solid #111;
+    border: 1px solid rgba(0, 0, 0, 0.5);
     width: 210mm;
     max-height: 297mm;
     margin: 0 auto;
 }
 
 
+@media only screen and (max-width:768px) {
+    .codex-editor__redactor{
+        width: 170mm;
+        border: 0;
+
+    }
+
+   
+    
+}
+
+@media only screen and (max-width:425px) {
+    .codex-editor__redactor{
+        width: 70mm;
+        border: 0;
+    }  
+}

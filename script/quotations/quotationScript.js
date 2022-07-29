@@ -120,7 +120,6 @@ function getDetail(QuotationId) {
                 $(".btnYes").click(function () {
                     editor.save().then(savedData => {
                         load = JSON.stringify(savedData, null, 4)
-                        // console.log(savedData)
                         $.ajax({
                             url: "/quotation/edit_detail/" + QuotationId,
                             method: 'put',
@@ -153,12 +152,11 @@ function getDetail(QuotationId) {
                         });
                         $('#modalEditConfirm').modal('hide');
                     })
-                    $(".close,.no").click(function () {
-                        $('#modalEditConfirm').modal('hide');
-                    })
+                    
                 })
-                
-
+            })
+            $(".close,.no").click(function () {
+                $('#modalEditConfirm').modal('hide');
             })
         }
 
@@ -500,7 +498,6 @@ $(document).ready(function () {
         $("#modalEditProject").removeClass('save');
 
         rows = $(this).closest("tr");
-        console.log(rows)
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
 
