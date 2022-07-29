@@ -7,7 +7,6 @@ const { bahttext } = require('bahttext')
 const path = require('path');
 const fs = require('fs');
 const pdfMake = require('pdfmake');
-const { text } = require('express');
 
 const fonts = {
     Roboto: {
@@ -65,7 +64,7 @@ const moneyFormat = (x) => {
 
 const applySpacing = (name) => {
     let spacebar = ""
-    for(let i=0;i<name.length/2;i++){
+    for(let i=0;i<name.length+name.length/2;i++){
         spacebar = spacebar + " "
     }
     return spacebar;
@@ -278,9 +277,9 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
     let signature = [
         { 
             width: 'auto',
-            margin: [15,0,0,0],
+            margin: [10,0,0,0],
             stack: [{
-                text: `${space}${EmployeeFname}.${space}`,
+                text: `${space}`,
                 style: 'sign'
             }, {
                 text: `${EmployeeName}`,
@@ -319,7 +318,8 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
         body: []
     }
     if (CustomDetail) {
-        if (typeof QuotationDetail == 'object') {
+        // console.log(JSON.parse(QuotationDetail))
+        if (JSON.parse(QuotationDetail) == null) {
             detail['body'].push(
                 [{ text: ``, style: 'blacktext'},"",""]
             )
@@ -330,7 +330,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
                 text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
                 text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
                 text = text.split(", ");
-                console.log(text)
                 detail['body'].push([
                     { text: text[0], style: isBold},
                     { text: text[1] ? text[1] : "", style: isBold},

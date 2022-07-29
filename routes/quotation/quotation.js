@@ -155,6 +155,9 @@ router.get('/:QuotationId', async (req, res) => {
         } else {
             quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
         }
+        if (typeof quotations.recordset[0].EmployeeApproveId == 'object') {
+            quotations.recordset[0].EmployeeApproveId = 'null'
+        }
         if (typeof quotations.recordset[0].QuotationDetail == 'object') {
             quotations.recordset[0].QuotationDetail = {
                 "time": 1659069460288,
@@ -391,8 +394,7 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
                 DELETE FROM QuotationItem WHERE QuotationId=${QuotationId}
                 DELETE FROM QuotationSetting WHERE QuotationId=${QuotationId}
                 DELETE FROM Quotation WHERE QuotationId=${QuotationId}
-                IF (SELECT COUNT(QuotationNoId) FROM Quotation WHERE QuotationNoId=@QuotationNoId) = 0
-                    BEGIN DELETE FROM QuotationNo WHERE QuotationNoId=@QuotationNoId END`;
+                DELETE FROM QuotationNo WHERE QuotationNoId = @QuotationNoId AND QuotationNo LIKE N'pre_%'`;
             await pool.request().query(DeleteQuotation);
             res.status(200).send({ message: 'Successfully delete pre-quotation' });
         } else {
@@ -481,19 +483,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
         let EndCustomerFilter = EndCustomer.replace(/'/g, "''");
         if (EmployeeApproveId == '') {
             res.status(400).send({ message: 'Please select Employee' });
-            return;
-        }
-        let CheckQuotationNo = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(
-             SELECT *
-             FROM QuotationNo a
-             LEFT JOIN Quotation b ON a.QuotationNoId = b.QuotationNoId
-             WHERE a.QuotationNo = N'${QuotationNo}' AND NOT b.QuotationId = ${QuotationId}
-        )
-        THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`)
-        if (CheckQuotationNo.recordset[0].check) {
-            res.status(400).send({ message: 'Duplicate Quotation No.' });
             return;
         }
         // Insert Quotation with QuotationNoId
