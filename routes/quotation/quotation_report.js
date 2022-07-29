@@ -300,10 +300,31 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
     }
     let detail = {
         headerRows: 0,
-        widths: ['*', '5%','5%'],
+        widths: ['*', '10%', '10%'],
         style: 'text',
         // alignment: 'left',
         body: []
+    }
+    if (CustomDetail) {
+        if (typeof QuotationDetail == 'object') {
+            detail['body'].push(
+                [{ text: ``, style: 'blacktext'},"",""]
+            )
+        } else {
+            let Details = JSON.parse(QuotationDetail).blocks
+            Details.forEach(Detail => {
+                let isBold, text = Detail.data.text;
+                text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
+                text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
+                text = text.split(", ");
+                console.log(text)
+                detail['body'].push([
+                    { text: text[0], style: isBold},
+                    { text: text[1] ? text[1] : "", style: isBold},
+                    { text: text[2] ? text[2] : "", style: isBold}
+                ])
+            })
+        }
     }
 
     // get item
