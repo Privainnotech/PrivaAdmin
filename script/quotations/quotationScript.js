@@ -1,6 +1,6 @@
-$( "wid" ).change(function() {
-    this.style.width = ((this.value.length + 1) * 8) + "px";
-  });
+
+// let loadDetail = null;
+
 //Hide Edit Button
 function hideEdit() {
     $("#modalEditProject").removeClass('invisible');
@@ -20,8 +20,8 @@ function ShowPro(QuotationId) {
         cache: false,
         success: function (response) {
             var obj = JSON.parse(response);
-            $('#ProNo').val(obj.QuotationNo);
-            $('#Revised').val("_"+obj.QuotationRevised);
+            $('#ProNo').text(obj.QuotationNo_Revised);
+            // $('#Revised').val("_"+obj.QuotationRevised);
             $('#CusName').val(obj.CustomerName);
             $('#QDate').val(obj.QuotationDate);
             $('#CusEmail').val(obj.CustomerEmail);
@@ -52,9 +52,7 @@ function ShowPro(QuotationId) {
 //Reset Project
 function RePro() {
     // QuotationId = null
-    $('#ProNo').val('Project NO.');
-    $('#Revised').val('');
-
+    $('#ProNo').text('Project NO.');
     $('#CusName').val('');
     $('#QDate').val('');
     $('#CusEmail').val('');
@@ -77,6 +75,107 @@ function RePro() {
     $('#Vat').val('');
     $('#NetTotal').val('');
 }
+
+
+
+// get Custom Detail
+function getDetail(QuotationId) {
+    $.ajax({
+        url: "/quotation/" + QuotationId,
+        method: 'get',
+        cache: false,
+        success: function (response) {
+            var obj = JSON.parse(response);
+            const loadDetail = JSON.stringify(obj.QuotationDetail);
+            const editor = new EditorJS(
+                {
+                    tools: {
+                        text: {
+                            class: SimpleText,
+                            inlineToolbar: ['link']
+                        },
+                        header: {
+                            class: Header,
+                            shortcut: 'CMD+SHIFT+H',
+                            config: {
+                                placeholder: 'Enter a header',
+                                levels: [2, 3, 4],
+                                defaultLevel: 3
+                            }
+                        }
+                    }
+                }
+            );
+
+            editor.isReady.then(() => {
+                editor.render(JSON.parse(loadDetail));
+            })
+
+            //  Edit Detail
+            const saveButton = document.getElementById('save-button');
+
+            saveButton.addEventListener('click', () => {
+                $('#modalEditConfirm').modal('show');
+                $("#btnEditYes").unbind("click");
+                $(".btnYes").click(function () {
+                    editor.save().then(savedData => {
+                        load = JSON.stringify(savedData, null, 4)
+                        $.ajax({
+                            url: "/quotation/edit_detail/" + QuotationId,
+                            method: 'put',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                QuotationDetail: savedData
+                            }),
+                            success: function () {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Edit',
+                                    text: 'Successfully Edit Detail',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                            },
+                            error: function (err) {
+                                errorText = err.responseJSON.message;
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'warning',
+                                    title: 'Warning',
+                                    text: errorText,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#FF5733'
+                                });
+                            }
+                        });
+                        $('#modalEditConfirm').modal('hide');
+                    })
+                    
+                })
+            })
+            $(".close,.no").click(function () {
+                $('#modalEditConfirm').modal('hide');
+            })
+        }
+
+
+    })
+
+}
+
+//Remove Detail Paper
+function removeDetailPaper() {
+    const detailPaper = document.querySelectorAll('.codex-editor');
+    if ($('div').hasClass('codex-editor')) {
+        detailPaper.forEach(paper => {
+            paper.remove();
+        });
+    }
+}
+
+
 
 $(document).ready(function () {
     //Reset Item Table
@@ -102,7 +201,7 @@ $(document).ready(function () {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
             "scrollY": "40vh",
-            // "scrollX": true,
+            "scrollX": true,
             "bPaginate": false,
             // "bInfo": false,
             "bLengthChange": false,
@@ -375,11 +474,8 @@ $(document).ready(function () {
 
     //clickTableQuotation
     $('#tableQuo tbody').on('click', 'tr', function () {
-
-
         fill_resetSubTable()
         $("#btn-text").text("Edit");
-        $("#ProNo").attr("disabled", "disabled");
         $("#PJ_Name").attr("disabled", "disabled");
         $("#PJ_Discount").attr("disabled", "disabled");
         $("#PJ_End_Customer").attr("disabled", "disabled");
@@ -401,8 +497,13 @@ $(document).ready(function () {
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
 
+
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
+            $('#save-button').removeClass('visually-hidden');
+            $('#save-button').toggleClass('visually-hidden');
+
+            removeDetailPaper()
 
             hideAdd()
 
@@ -410,11 +511,14 @@ $(document).ready(function () {
 
             fill_resetTable()
             RePro()
+
+
         }
         else {
             $('#tableQuo tr').removeClass('selected');
             $(this).toggleClass('selected');
 
+            removeDetailPaper()
 
             ShowPro(QuotationId)
             fill_item(QuotationId, QuotationStatus)
@@ -426,7 +530,9 @@ $(document).ready(function () {
                 $("#addItem").removeClass('visually-hidden');
                 //Show Quotation Button
                 $("#btn-quotation").removeAttr("disabled");
-
+                //Show Detail Custom Button
+                $('#save-button').removeClass('visually-hidden');
+                getDetail(QuotationId)
 
                 $(document).on("click", "#modalEditProject", function () {
                     if ($("#modalEditProject").hasClass('save')) {
@@ -437,7 +543,6 @@ $(document).ready(function () {
                         $("#btnEditYes").unbind("click");
                         $(".btnYes").click(function () {
                             $("#btn-text").text("Edit");
-                            $("#ProNo").attr("disabled", "disabled");
                             $("#PJ_Name").attr("disabled", "disabled");
                             $("#PJ_Discount").attr("disabled", "disabled");
                             $("#PJ_End_Customer").attr("disabled", "disabled");
@@ -449,7 +554,6 @@ $(document).ready(function () {
                             $("#PJ_Remark").attr("disabled", "disabled");
                             $("#PJ_Approve").attr("disabled", "disabled");
 
-                            let QuotationNo = $.trim($('#ProNo').val());
                             let QuotationSubject = $.trim($('#PJ_Name').val());
                             let QuotationDiscount = $.trim($('#PJ_Discount').val());
                             let EndCustomer = $.trim($('#PJ_End_Customer').val());
@@ -470,7 +574,6 @@ $(document).ready(function () {
                                 method: 'put',
                                 contentType: 'application/json',
                                 data: JSON.stringify({
-                                    QuotationNo: QuotationNo,
                                     QuotationSubject: QuotationSubject,
                                     QuotationDiscount: QuotationDiscount,
                                     QuotationValidityDate: QuotationValidityDate,
@@ -519,7 +622,6 @@ $(document).ready(function () {
 
                         $("#btn-text").text("Save");
 
-                        $("#ProNo").removeAttr("disabled");
                         $("#PJ_Name").removeAttr("disabled");
                         $("#PJ_Discount").removeAttr("disabled");
                         $("#PJ_End_Customer").removeAttr("disabled");
@@ -588,7 +690,7 @@ $(document).ready(function () {
                 $("#btn-quotation").removeAttr("disabled");
                 $("#btn-loss").removeAttr("disabled");
             }
-            
+
             // Revised
             $(document).on("click", "#btnRevised", function () {
                 $('#modalRevisedConfirm').modal('show');
@@ -924,6 +1026,8 @@ $(document).ready(function () {
                 });
             })
         }
+
+
     });
 
 
@@ -1243,9 +1347,8 @@ $(document).ready(function () {
         });
     });
 
-
-
-
-
 });
+
+
+
 

@@ -96,6 +96,8 @@ main{
 	background: #ededed;
 }
 
+
+
 .title{
 	display: flex;
 	justify-content: space-between;
@@ -141,6 +143,18 @@ nav.navbar{
 }
 
 @media only screen and (max-width:768px) {
+	*{
+		font-size: 0.5rem;
+	}
+	.title h1{
+		font-size: 20px;
+	}
+	.title button{
+		font-size: 0.5rem;
+	}
+	
+
+	
 	img#logo{
 		height: 20px;
 	}

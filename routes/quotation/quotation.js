@@ -156,8 +156,25 @@ router.get('/:QuotationId', async (req, res) => {
             quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
         }
         if (typeof quotations.recordset[0].QuotationDetail == 'object') {
-            quotations.recordset[0].QuotationDetail = { "time": 1550476186479,
-                "blocks": [{ "id": "cyZjplMOZ0", "type": "paragraph", "data": { "text": "" } }], "version": "2.8.1"
+            quotations.recordset[0].QuotationDetail = {
+                "time": 1659069460288,
+                "blocks": [
+                    {
+                        "id": "cyZjplMOZ0",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "<b>Item</b>"
+                        }
+                    },
+                    {
+                        "id": "Mj_9XdxLe0",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "1.Description"
+                        }
+                    }
+                ],
+                "version": "2.25.0"
             };
         } else {
             quotations.recordset[0].QuotationDetail = JSON.parse(quotations.recordset[0].QuotationDetail)
