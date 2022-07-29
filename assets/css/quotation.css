@@ -278,7 +278,9 @@ hr{
 		padding-top: 38px;
 		padding-bottom: 0;
 	}
-
+	.dataTables_scrollHeadInner{
+		margin: 0 auto;
+	}
 	.title.v{
 		margin-top: 0;
 	}

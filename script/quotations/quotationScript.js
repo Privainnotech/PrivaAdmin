@@ -52,7 +52,7 @@ function ShowPro(QuotationId) {
 //Reset Project
 function RePro() {
     // QuotationId = null
-    $('#ProNo').val('Project NO.');
+    $('#ProNo').text('Project NO.');
     $('#CusName').val('');
     $('#QDate').val('');
     $('#CusEmail').val('');
@@ -201,7 +201,7 @@ $(document).ready(function () {
         tableQuo = $('#tableQuo').DataTable({
             "bDestroy": true,
             "scrollY": "40vh",
-            // "scrollX": true,
+            "scrollX": true,
             "bPaginate": false,
             // "bInfo": false,
             "bLengthChange": false,
@@ -474,10 +474,6 @@ $(document).ready(function () {
 
     //clickTableQuotation
     $('#tableQuo tbody').on('click', 'tr', function () {
-
-
-        $('#ProNo').change('input', () => $("#ProNo").style.width = (($("#ProNo").value.length + 1) * 11) + "px");
-
         fill_resetSubTable()
         $("#btn-text").text("Edit");
         $("#PJ_Name").attr("disabled", "disabled");
