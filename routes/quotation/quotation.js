@@ -171,11 +171,6 @@ router.get('/:QuotationId', async (req, res) => {
                         "type": "list",
                         "data": {
                             "text": "1 รายละเอียด, จำนวน, ราคา"
-                            "style": "ordered",
-                            "items": [
-                                "Description",
-                                
-                            ]
                         }
                     }
                 ],

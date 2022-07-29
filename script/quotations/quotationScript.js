@@ -94,22 +94,6 @@ function getDetail(QuotationId) {
                             class: SimpleText,
                             inlineToolbar: ['link']
                         },
-                        header: {
-                            class: Header,
-                            shortcut: 'CMD+SHIFT+H',
-                            config: {
-                                placeholder: 'Enter a header',
-                                levels: [2, 3, 4],
-                                defaultLevel: 3
-                            }
-                        },
-                        list: {
-                            class: List,
-                            inlineToolbar: true,
-                            config: {
-                                defaultStyle: 'unordered'
-                            }
-                        },
                     }
                 }
             );
