@@ -311,37 +311,33 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
             ],
         ]
     }
-    let detail;
-    if (!CustomDetail) {
-        detail = {
-            headerRows: 0,
-            widths: ['*', '10%', '5%'],
-            style: 'text',
-            // alignment: 'left',
-            body: []
+    let detail = {
+        headerRows: 0,
+        widths: ['*', '10%', '10%'],
+        style: 'text',
+        // alignment: 'left',
+        body: []
+    }
+    if (CustomDetail) {
+        if (typeof QuotationDetail == 'object') {
+            detail['body'].push(
+                [{ text: ``, style: 'blacktext'},"",""]
+            )
+        } else {
+            let Details = JSON.parse(QuotationDetail).blocks
+            Details.forEach(Detail => {
+                let isBold, text = Detail.data.text;
+                text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
+                text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
+                text = text.split(", ");
+                console.log(text)
+                detail['body'].push([
+                    { text: text[0], style: isBold},
+                    { text: text[1] ? text[1] : "", style: isBold},
+                    { text: text[2] ? text[2] : "", style: isBold}
+                ])
+            })
         }
-    } else {
-        detail = {
-            headerRows: 0,
-            widths: ['*', '10%', '10%'],
-            style: 'text',
-            // alignment: 'left',
-            body: []
-        }
-        let Details = JSON.parse(QuotationDetail).blocks
-        Details.forEach(Detail => {
-            let isBold, text = Detail.data.text;
-            text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
-            text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
-            text = text.split(", ");
-            console.log(text)
-            detail['body'].push([
-                { text: text[0], style: isBold},
-                { text: text[1] ? text[1] : "", style: isBold},
-                { text: text[2] ? text[2] : "", style: isBold}
-            ])
-        })
-        // console.log(JSON.parse(QuotationDetail))
     }
 
     // get item
