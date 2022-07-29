@@ -102,7 +102,14 @@ function getDetail(QuotationId) {
                                 levels: [2, 3, 4],
                                 defaultLevel: 3
                             }
-                        }
+                        },
+                        list: {
+                            class: List,
+                            inlineToolbar: true,
+                            config: {
+                                defaultStyle: 'unordered'
+                            }
+                        },
                     }
                 }
             );
@@ -152,7 +159,7 @@ function getDetail(QuotationId) {
                         });
                         $('#modalEditConfirm').modal('hide');
                     })
-                    
+
                 })
             })
             $(".close,.no").click(function () {
@@ -518,7 +525,11 @@ $(document).ready(function () {
             $('#tableQuo tr').removeClass('selected');
             $(this).toggleClass('selected');
 
+            $('#save-button').removeClass('visually-hidden');
+            $('#save-button').toggleClass('visually-hidden');
+
             removeDetailPaper()
+            getDetail(QuotationId)
 
             ShowPro(QuotationId)
             fill_item(QuotationId, QuotationStatus)
@@ -532,7 +543,6 @@ $(document).ready(function () {
                 $("#btn-quotation").removeAttr("disabled");
                 //Show Detail Custom Button
                 $('#save-button').removeClass('visually-hidden');
-                getDetail(QuotationId)
 
                 $(document).on("click", "#modalEditProject", function () {
                     if ($("#modalEditProject").hasClass('save')) {
