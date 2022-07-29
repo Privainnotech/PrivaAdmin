@@ -102,14 +102,7 @@ function getDetail(QuotationId) {
                                 levels: [2, 3, 4],
                                 defaultLevel: 3
                             }
-                        },
-                        list: {
-                            class: List,
-                            inlineToolbar: true,
-                            config: {
-                                defaultStyle: 'unordered'
-                            }
-                        },
+                        }
                     }
                 }
             );
