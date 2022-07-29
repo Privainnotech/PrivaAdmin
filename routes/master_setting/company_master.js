@@ -90,7 +90,10 @@ router.delete('/delete/:CompanyId', async (req, res) => {
         let CompanyId = req.params.CompanyId;
         let DeleteCompany = `UPDATE MasterCompany
         SET CompanyActive = 0
-        WHERE CompanyId = ${CompanyId}`;
+        WHERE CompanyId = ${CompanyId};
+        UPDATE MasterCustomer
+        SET CustomerActive = 0
+        WHERE CompanyId = ${CompanyId};`;
         let pool = await sql.connect(dbconfig);
         await pool.request().query(DeleteCompany);
         res.status(200).send({message: `Successfully delete company`});

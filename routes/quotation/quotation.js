@@ -394,8 +394,7 @@ router.delete('/delete_quotation/:QuotationId', async (req, res) => {
                 DELETE FROM QuotationItem WHERE QuotationId=${QuotationId}
                 DELETE FROM QuotationSetting WHERE QuotationId=${QuotationId}
                 DELETE FROM Quotation WHERE QuotationId=${QuotationId}
-                IF (SELECT COUNT(QuotationNoId) FROM Quotation WHERE QuotationNoId=@QuotationNoId) = 0
-                    BEGIN DELETE FROM QuotationNo WHERE QuotationNoId=@QuotationNoId END`;
+                DELETE FROM QuotationNo WHERE QuotationNoId = @QuotationNoId AND QuotationNo LIKE N'pre_%'`;
             await pool.request().query(DeleteQuotation);
             res.status(200).send({ message: 'Successfully delete pre-quotation' });
         } else {

@@ -120,7 +120,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
         } else {
             let {QuotationNoId, QuotationRevised, QuotationStatus, CustomerId} = getQuotation.recordset[0];
             if (QuotationStatus == 1 && QuotationRevised == 0) {
-                GenQuotationNo
+                // GenQuotationNo
                 let genQuotationNo = '';
                 let CheckQuotationNo = await pool.request().query(`
                     SELECT *
