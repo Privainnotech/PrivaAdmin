@@ -168,7 +168,7 @@ router.get('/:QuotationId', async (req, res) => {
                     },
                     {
                         "id": "Mj_9XdxLe0",
-                        "type": "list",
+                        "type": "paragraph",
                         "data": {
                             "text": "1 รายละเอียด, จำนวน, ราคา"
                         }
