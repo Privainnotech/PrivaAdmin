@@ -155,6 +155,9 @@ router.get('/:QuotationId', async (req, res) => {
         } else {
             quotations.recordset[0].QuotationPayTerm = JSON.parse(quotations.recordset[0].QuotationPayTerm)
         }
+        if (typeof quotations.recordset[0].EmployeeApproveId == 'object') {
+            quotations.recordset[0].EmployeeApproveId = 'null'
+        }
         if (typeof quotations.recordset[0].QuotationDetail == 'object') {
             quotations.recordset[0].QuotationDetail = {
                 "time": 1659069460288,
