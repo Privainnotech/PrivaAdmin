@@ -143,6 +143,16 @@ nav.navbar{
 }
 
 @media only screen and (max-width:768px) {
+	*{
+		font-size: 0.5rem;
+	}
+	.title h1{
+		font-size: 20px;
+	}
+
+	.btn {
+		font-size: 0.5rem;
+	}
 	img#logo{
 		height: 20px;
 	}

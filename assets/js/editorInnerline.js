@@ -25,12 +25,3 @@ class SimpleText {
 
 
 
-const saveButton = document.getElementById('save-button');
-
-saveButton.addEventListener('click', () => {
-    editor.save().then(savedData => {
-        load = JSON.stringify(savedData, null, 4)
-        console.log(savedData)
-
-    })
-})

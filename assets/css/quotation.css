@@ -191,9 +191,13 @@ hr{
     border: #1cbb8c;
 }
 
+#btn-text{
+	margin: 0;
+}
+
 .btn-group.right button{
-	margin-bottom: 5px;
 	font-size: 0.8rem;
+	margin-bottom: 5px;
 }
 
 
@@ -249,7 +253,7 @@ hr{
 	}
 }
 
-@media only screen and (min-width:1320px) {
+@media only screen and (max-width:1320px) {
 	body{
 		font-size: 0.9rem;
 	}

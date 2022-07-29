@@ -1,4 +1,5 @@
-let loadDetail = null;
+
+// let loadDetail = null;
 
 //Hide Edit Button
 function hideEdit() {
@@ -76,6 +77,7 @@ function RePro() {
 }
 
 
+
 // get Custom Detail
 function getDetail(QuotationId) {
     $.ajax({
@@ -84,13 +86,98 @@ function getDetail(QuotationId) {
         cache: false,
         success: function (response) {
             var obj = JSON.parse(response);
-            loadDetail = obj.QuotationNo_Revised;
+            const loadDetail = JSON.stringify(obj.QuotationDetail);
+            const editor = new EditorJS(
+                {
+                    tools: {
+                        text: {
+                            class: SimpleText,
+                            inlineToolbar: ['link']
+                        },
+                        header: {
+                            class: Header,
+                            shortcut: 'CMD+SHIFT+H',
+                            config: {
+                                placeholder: 'Enter a header',
+                                levels: [2, 3, 4],
+                                defaultLevel: 3
+                            }
+                        }
+                    }
+                }
+            );
+
+            editor.isReady.then(() => {
+                editor.render(JSON.parse(loadDetail));
+            })
+
+            //  Edit Detail
+            const saveButton = document.getElementById('save-button');
+
+            saveButton.addEventListener('click', () => {
+                $('#modalEditConfirm').modal('show');
+                $("#btnEditYes").unbind("click");
+                $(".btnYes").click(function () {
+                    editor.save().then(savedData => {
+                        load = JSON.stringify(savedData, null, 4)
+                        // console.log(savedData)
+                        $.ajax({
+                            url: "/quotation/edit_detail/" + QuotationId,
+                            method: 'put',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                QuotationDetail: savedData
+                            }),
+                            success: function () {
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Edit',
+                                    text: 'Successfully Edit Detail',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                            },
+                            error: function (err) {
+                                errorText = err.responseJSON.message;
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'warning',
+                                    title: 'Warning',
+                                    text: errorText,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#FF5733'
+                                });
+                            }
+                        });
+                        $('#modalEditConfirm').modal('hide');
+                    })
+                    $(".close,.no").click(function () {
+                        $('#modalEditConfirm').modal('hide');
+                    })
+                })
+                
+
+            })
         }
+
+
     })
+
+}
+
+//Remove Detail Paper
+function removeDetailPaper() {
+    const detailPaper = document.querySelectorAll('.codex-editor');
+    if ($('div').hasClass('codex-editor')) {
+        detailPaper.forEach(paper => {
+            paper.remove();
+        });
+    }
 }
 
 
- 
 
 $(document).ready(function () {
     //Reset Item Table
@@ -390,8 +477,8 @@ $(document).ready(function () {
     //clickTableQuotation
     $('#tableQuo tbody').on('click', 'tr', function () {
 
-        
-        $('#ProNo').change('input', () => $( "#ProNo" ).style.width = (($( "#ProNo" ).value.length + 1) * 11) + "px");
+
+        $('#ProNo').change('input', () => $("#ProNo").style.width = (($("#ProNo").value.length + 1) * 11) + "px");
 
         fill_resetSubTable()
         $("#btn-text").text("Edit");
@@ -413,11 +500,17 @@ $(document).ready(function () {
         $("#modalEditProject").removeClass('save');
 
         rows = $(this).closest("tr");
+        console.log(rows)
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
 
+
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
+            $('#save-button').removeClass('visually-hidden');
+            $('#save-button').toggleClass('visually-hidden');
+
+            removeDetailPaper()
 
             hideAdd()
 
@@ -425,11 +518,14 @@ $(document).ready(function () {
 
             fill_resetTable()
             RePro()
+
+
         }
         else {
             $('#tableQuo tr').removeClass('selected');
             $(this).toggleClass('selected');
 
+            removeDetailPaper()
 
             ShowPro(QuotationId)
             fill_item(QuotationId, QuotationStatus)
@@ -441,7 +537,9 @@ $(document).ready(function () {
                 $("#addItem").removeClass('visually-hidden');
                 //Show Quotation Button
                 $("#btn-quotation").removeAttr("disabled");
-
+                //Show Detail Custom Button
+                $('#save-button').removeClass('visually-hidden');
+                getDetail(QuotationId)
 
                 $(document).on("click", "#modalEditProject", function () {
                     if ($("#modalEditProject").hasClass('save')) {
@@ -599,7 +697,7 @@ $(document).ready(function () {
                 $("#btn-quotation").removeAttr("disabled");
                 $("#btn-loss").removeAttr("disabled");
             }
-            
+
             // Revised
             $(document).on("click", "#btnRevised", function () {
                 $('#modalRevisedConfirm').modal('show');
@@ -935,6 +1033,8 @@ $(document).ready(function () {
                 });
             })
         }
+
+
     });
 
 
@@ -1256,22 +1356,6 @@ $(document).ready(function () {
 
 });
 
-const editor = new EditorJS({
-    autofocus: true,
-    tools: {
-        text: {
-            class: SimpleText,
-            inlineToolbar: ['link']
-        },
-        header: {
-            class: Header,
-            shortcut: 'CMD+SHIFT+H',
-            config: {
-                placeholder: 'Enter a header',
-                levels: [2, 3, 4],
-                defaultLevel: 3
-            }
-        }
-    },
-    data: loadDetail
-});
+
+
+
