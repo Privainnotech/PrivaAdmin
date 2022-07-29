@@ -319,7 +319,8 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
         body: []
     }
     if (CustomDetail) {
-        if (QuotationDetail == null) {
+        console.log(JSON.parse(QuotationDetail))
+        if (JSON.parse(QuotationDetail) == null) {
             detail['body'].push(
                 [{ text: ``, style: 'blacktext'},"",""]
             )
