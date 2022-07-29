@@ -512,6 +512,8 @@ $(document).ready(function () {
             $('#save-button').removeClass('visually-hidden');
             $('#save-button').toggleClass('visually-hidden');
 
+            $("#modalEditProject").removeClass('save');
+
             removeDetailPaper()
             getDetail(QuotationId)
 

@@ -7,6 +7,7 @@ const { bahttext } = require('bahttext')
 const path = require('path');
 const fs = require('fs');
 const pdfMake = require('pdfmake');
+const { text } = require('express');
 
 const fonts = {
     Roboto: {
@@ -70,7 +71,19 @@ const applySpacing = (name) => {
     return spacebar;
 }
 
-const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
+const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) => {
+
+    let {
+        CustomerName, CustomerEmail, CompanyName, CompanyAddress, EndCustomer,
+        QuotationSubject, QuotationDate,
+        QuotationTotalPrice, QuotationDiscount, QuotationNet, QuotationVat, QuotationNetVat,
+        QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail,
+        EmployeeName, EmployeeFname, EmployeeLname, EmployeePosition
+    } = quotation
+    let {
+        TableShow, TablePrice, TableQty, TableTotal,
+        CustomDetail, DetailShow, DetailQty, DetailTotal
+    } = setting
     // head
     let head = [
         {
@@ -107,10 +120,10 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
             },{
                 margin: [3,0,50,0],
                 width: '*',
-                stack: [{ text: `${quotation.CustomerName}` },
-                    { text: `${quotation.CustomerEmail}` },
-                    { text: `${quotation.CompanyName}` },
-                    { text: `${quotation.CompanyAddress}` }
+                stack: [{ text: `${CustomerName}` },
+                    { text: `${CustomerEmail}` },
+                    { text: `${CompanyName}` },
+                    { text: `${CompanyAddress}` }
                 ], style: 'blacktext',
             }]
         },
@@ -123,7 +136,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
                 ]
             }, {
                 width: '*',
-                stack: [{ text: `${quotation.QuotationDate}` },
+                stack: [{ text: `${QuotationDate}` },
                     { text: `${quotationNo}` }
                 ],
                 alignment: 'right'
@@ -146,8 +159,8 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
             },{
                 margin: [3,0,0,0],
                 width: '*',
-                stack: [{ text: `${quotation.QuotationSubject}`, },
-                    { text: `${quotation.EndCustomer}`, }
+                stack: [{ text: `${QuotationSubject}`, },
+                    { text: `${EndCustomer}`, }
                 ],
                 style: 'blacktext',
                 // color: "#808080"
@@ -159,16 +172,16 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
             text: ""
         }]
 
-    // console.log(bahttext(quotation.QuotationNetVat.toFixed(2)))
+    // console.log(bahttext(QuotationNetVat.toFixed(2)))
     // price
     let discount = ""
-    if (quotation.QuotationDiscount == 0) discount = "-"
-    else discount = moneyFormat(quotation.QuotationDiscount.toFixed(2))
+    if (QuotationDiscount == 0) discount = "-"
+    else discount = moneyFormat(QuotationDiscount.toFixed(2))
     let price = [
         {
             width: '*',
             margin: [5,5,0,0],
-            text: `[THAI BAHT] :  ${bahttext(quotation.QuotationNetVat.toFixed(2))}`,
+            text: `[THAI BAHT] :  ${bahttext(QuotationNetVat.toFixed(2))}`,
             style: 'bahttext'
         },
         {
@@ -181,7 +194,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
                 body: [
                     [
                         { text: "Sub Total for the above:", style: 'pricetext',color: "#808080" },
-                        { text: `${moneyFormat(quotation.QuotationTotalPrice.toFixed(2))}`, style: 'price'}
+                        { text: `${moneyFormat(QuotationTotalPrice.toFixed(2))}`, style: 'price'}
                     ],
                     [
                         { text: "Discount:", style: 'pricetext',color: "#808080" },
@@ -189,15 +202,15 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
                     ],
                     [
                         { text: "Price after discount:", style: 'pricetext',color: "#808080", border: [false, false, false, false] },
-                        { text: `${moneyFormat(quotation.QuotationNet.toFixed(2))}`, style: 'price'}
+                        { text: `${moneyFormat(QuotationNet.toFixed(2))}`, style: 'price'}
                     ],
                     [
                         { text: "VAT Including 7%:", style: 'pricetext',color: "#808080", border: [false, false, false, false] },
-                        { text: `${moneyFormat(quotation.QuotationVat.toFixed(2))}`, style: 'price'}
+                        { text: `${moneyFormat(QuotationVat.toFixed(2))}`, style: 'price'}
                     ],
                     [
                         { text: "Net Total:", style: 'pricetext',color: "#808080", border: [false, false, false, false] },
-                        { text: `${moneyFormat(quotation.QuotationNetVat.toFixed(2))}`, style: 'price'}
+                        { text: `${moneyFormat(QuotationNetVat.toFixed(2))}`, style: 'price'}
                     ]
                 ]
             },
@@ -223,10 +236,10 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
             return payTerm
         }
     }
-    let payTerm = getPayTerm(quotation.QuotationPayTerm);
-    let validityDate = quotation.QuotationValidityDate ? quotation.QuotationValidityDate : '-';
-    let delivery = quotation.QuotationDelivery ? quotation.QuotationDelivery : '-';
-    let remark = quotation.QuotationRemark ? quotation.QuotationRemark : '-'
+    let payTerm = getPayTerm(QuotationPayTerm);
+    let validityDate = QuotationValidityDate ? QuotationValidityDate : '-';
+    let delivery = QuotationDelivery ? QuotationDelivery : '-';
+    let remark = QuotationRemark ? QuotationRemark : '-'
     let condition = [
         {
             margin: [25,0,0,0],
@@ -261,19 +274,19 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
     ]
 
     // sign
-    let space = applySpacing(quotation.EmployeeFname+quotation.EmployeeLname)
+    let space = applySpacing(EmployeeFname+EmployeeLname)
     let signature = [
         { 
             width: 'auto',
             margin: [15,0,0,0],
             stack: [{
-                text: `${space}${quotation.EmployeeFname}.${space}`,
+                text: `${space}${EmployeeFname}.${space}`,
                 style: 'sign'
             }, {
-                text: `${quotation.EmployeeName}`,
+                text: `${EmployeeName}`,
                 style: 'text'
             }, {
-                text: `${quotation.EmployeePosition}`,
+                text: `${EmployeePosition}`,
                 style: 'text'
             }] 
         }, {
@@ -334,46 +347,93 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
     const Items = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`)
     if (Items.recordset.length){
         for(let Item of Items.recordset) {
-            let { ItemName, ItemPrice, ItemQty, ItemDescription } = Item
+            let { ItemName, ItemPrice, ItemQty } = Item
             if (ItemPrice == 'undefined' || typeof ItemPrice == 'object') ItemPrice = 0;
             if (ItemQty == 'undefined' || typeof ItemQty == 'object') ItemQty = 0
-            if (ItemDescription == 'undefined' || typeof ItemDescription == 'object') ItemDescription = ""
             let LineTotal = ItemPrice * ItemQty
-            itemtable['body'].push([
-                {text: `${i}`, style: 'btext', alignment: 'center'},
-                {text: `${ItemName}`, style: 'btext'},
-                {text: `${moneyFormat(ItemPrice.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
-                {text: `${moneyFormat(ItemQty.toFixed(2))}`, style: 'blacktext', alignment: 'right'},
-                {text: `${moneyFormat(LineTotal.toFixed(2))}`, style: 'blacktext', alignment: 'right'}
-            ])
-            detail['body'].push(
-                [{ text: `${i} ${ItemName}`, style: 'btext'},"",""],
-                [{ margin: [7,0,0,0], text: `${ItemDescription}`, style: 'blacktext'},"",""]
-            )
+
+            let IPrice, IQty, ITotal;
+            if (TableShow === 1 || TableShow === 3) {
+                TablePrice === 1 || TablePrice === 3 ? IPrice = moneyFormat(ItemPrice.toFixed(2)) : IPrice = "";
+                TableQty === 1 || TableQty === 3 ? IQty = ItemQty : IQty = "";
+                TableTotal === 1 || TableTotal === 3 ? ITotal = moneyFormat(LineTotal.toFixed(2)) : ITotal = "";
+
+                itemtable['body'].push([
+                    {text: `${i}`, style: 'btext', alignment: 'center'},
+                    {text: `${ItemName}`, style: 'btext'},
+                    {text: `${IPrice}`, style: 'blacktext', alignment: 'right'},
+                    {text: `${IQty}`, style: 'blacktext', alignment: 'center'},
+                    {text: `${ITotal}`, style: 'blacktext', alignment: 'right'}
+                ])
+                line++;
+            }
+            if(!CustomDetail) {
+                if (DetailShow === 1 || DetailShow === 3) {
+                    DetailQty === 1 || DetailQty === 3 ? IQty = ItemQty : IQty = "";
+                    DetailTotal === 1 || DetailTotal === 3 ? ITotal = moneyFormat(LineTotal.toFixed(2)) : ITotal = "";
+    
+                    detail['body'].push([
+                        { text: `${i} ${ItemName}`, style: 'btext'},
+                        { text: `${IQty}`, style: 'blacktext'},
+                        { text: `${ITotal}`, style: 'blacktext'},
+                    ])
+                }
+            }
             let j = 1;
             const SubItems = await pool.request().query(`SELECT * FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
             WHERE ItemId = ${Item.ItemId}`)
             if (SubItems.recordset.length){
                 for(let SubItem of SubItems.recordset) {
-                    let {SubItemQty, SubItemUnit, ProductName} = SubItem
+                    let {SubItemQty, SubItemUnit, ProductName, ProductPrice} = SubItem
                     if (SubItemQty == 'null' || SubItemUnit == "undefined"){
                         SubItemQty = "";
                         SubItemUnit = "";
                     } 
-                    itemtable['body'].push(["", {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext'},"","",""])
+                    let SubTotal = ProductPrice * SubItemQty
+                    let SPrice, SQty, STotal;
+                    if (TableShow === 2 || TableShow === 3) {
+                        TablePrice === 2 || TablePrice === 3 ? SPrice = moneyFormat(ProductPrice.toFixed(2)) : SPrice = ""
+                        TableQty === 2 || TableQty === 3 ? SQty = `${SubItemQty} ${SubItemUnit}` : SQty = ""
+                        TableTotal === 2 || TableTotal === 3 ? STotal = moneyFormat(SubTotal.toFixed(2)) : STotal = ""
+                        
+                        if (SPrice === "" || SQty === "") {
+                            itemtable['body'].push(["", {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext'},"","",""])
+                        } else {
+                            itemtable['body'].push([
+                                {text: "", style: 'btext', alignment: 'center'},
+                                {text: `${j}) ${ProductName}`, style: 'btext'},
+                                {text: `${SPrice}`, style: 'blacktext', alignment: 'right'},
+                                {text: `${SQty}`, style: 'blacktext', alignment: 'center'},
+                                {text: `${STotal}`, style: 'blacktext', alignment: 'right'}
+                            ])
+                        }
+                        line++;
+                    }
+                    if(!CustomDetail) {
+                        if (DetailShow === 2 || DetailShow === 3) {
+                            DetailQty === 2 || DetailQty === 3 ? SQty = `${SubItemQty} ${SubItemUnit}` : SQty = "";
+                            DetailTotal === 2 || DetailTotal === 3 ? STotal = moneyFormat(SubTotal.toFixed(2)) : STotal = "";
+            
+                            detail['body'].push([
+                                { margin: [7,0,0,0], text: `${j}) ${ProductName}`, style: 'btext'},
+                                { text: `${SQty}`, style: 'blacktext'},
+                                { text: `${STotal}`, style: 'blacktext'},
+                            ])
+                        }
+                    }
                     j++;
-                    line++;
                 }
             }
             i++;
-            line++;
         }
     } else {
-        detail['body'].push(
-            [{ text: ``, style: 'btext'},"",""],
-            [{ margin: [7,0,0,0], text: ``, style: 'blacktext'},"",""]
-        )
+        if (!CustomDetail) {
+            detail['body'].push(
+                [{ text: ``, style: 'btext'},"",""],
+                [{ margin: [7,0,0,0], text: ``, style: 'blacktext'},"",""]
+            )
+        }
     }
     let maxline = 25
     if (line<maxline) for (;line<maxline;line++) itemtable['body'].push([""," ","","",""])
@@ -449,7 +509,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, Author) => {
                 margin: [15,0,50,0],
                 // alignment: 'left',
                 layout: 'noBorders',
-                fontSize: 7,
+                // fontSize: 7,
                 table: detail
             }],
         styles: {
@@ -486,6 +546,7 @@ router.get('/:QuotationId', async (req, res) => {
             CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
             CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
             CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
+            CONVERT(nvarchar(max), a.QuotationDetail) AS 'QuotationDetail',
             e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
             e.EmployeeFname, e.EmployeeLname, e.EmployeeEmail, e.EmployeePosition
             FROM [Quotation] a
@@ -495,15 +556,20 @@ router.get('/:QuotationId', async (req, res) => {
             LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
             LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
             WHERE a.QuotationId = ${QuotationId}`;
+        let getSetting = `SELECT TableShow, TablePrice, TableQty, TableTotal, CustomDetail, DetailShow, DetailQty, DetailTotal
+            FROM QuotationSetting
+            WHERE QuotationId = ${QuotationId}`;
         let getUser = `SELECT EmployeeFname+' '+EmployeeLname as name FROM MasterEmployee WHERE EmployeeId = ${UserId}`
         let quotations = await pool.request().query(getQuotation);
-        let user = await pool.request().query(getUser)
+        let settings = await pool.request().query(getSetting);
+        let user = await pool.request().query(getUser);
         let quotation = quotations.recordset[0];
+        let setting = settings.recordset[0];
         // console.log(quotation)
         let quotationNo = ""
         if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
         else  quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
-        let quotationPdf = await createPdf(QuotationId, quotationNo, quotation, user.recordset[0].name);
+        let quotationPdf = await createPdf(QuotationId, quotationNo, quotation, setting, user.recordset[0].name);
         
         let pdfCreator = new pdfMake(fonts);
         console.log('Creating quotation....')
