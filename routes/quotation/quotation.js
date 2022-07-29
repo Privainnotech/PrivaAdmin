@@ -483,19 +483,6 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
             res.status(400).send({ message: 'Please select Employee' });
             return;
         }
-        let CheckQuotationNo = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(
-             SELECT *
-             FROM QuotationNo a
-             LEFT JOIN Quotation b ON a.QuotationNoId = b.QuotationNoId
-             WHERE a.QuotationNo = N'${QuotationNo}' AND NOT b.QuotationId = ${QuotationId}
-        )
-        THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`)
-        if (CheckQuotationNo.recordset[0].check) {
-            res.status(400).send({ message: 'Duplicate Quotation No.' });
-            return;
-        }
         // Insert Quotation with QuotationNoId
         let UpdateQuotation = `UPDATE Quotation
         SET QuotationSubject = N'${QuotationSubject}',
