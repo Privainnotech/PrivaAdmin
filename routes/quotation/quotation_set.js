@@ -26,6 +26,7 @@ const checkDate = () => {
 router.post('/revise/:OldQuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
+        let UserId = req.session.UserId;
         let OldQuotationId = req.params.OldQuotationId;
         let {
             QuotationNoId,
@@ -61,8 +62,8 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             let newRevise = getRevise.recordset[0].Revised;
             // let newRevise = QuotationRevised+1;
             console.log(newRevise)
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EndCustomer)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${QuotationDetail}', N'${checkDate()}', ${EmployeeApproveId}, N'${EndCustomer}')
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EmployeeEditId, EndCustomer)
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${QuotationDetail}', N'${checkDate()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let NewQuotationId = Quotation.recordset[0].Id
