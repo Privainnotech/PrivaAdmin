@@ -709,6 +709,7 @@ $(document).ready(function () {
                         let QuotationDelivery = obj.QuotationDelivery;
                         let QuotationRemark = obj.QuotationRemark;
                         let EmployeeApproveId = obj.EmployeeApproveId;
+                        let QuotationDetail = obj.QuotationDetail;
 
                         $("#btnREYes").unbind("click");
                         $(".btnYes").click(function () {
@@ -727,6 +728,7 @@ $(document).ready(function () {
                                     QuotationPayTerm: QuotationPayTerm,
                                     QuotationDelivery: QuotationDelivery,
                                     QuotationRemark: QuotationRemark,
+                                    QuotationDetail: QuotationDetail,
                                     EmployeeApproveId: EmployeeApproveId
                                 }),
                                 success: function () {
