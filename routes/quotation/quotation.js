@@ -166,7 +166,7 @@ router.get('/:QuotationId', async (req, res) => {
                         "id": "cyZjplMOZ0",
                         "type": "paragraph",
                         "data": {
-                            "text": "<b>ตัวอย่างการพิมพ์ Detail </b>"
+                            "text": "<b>Item</b>"
                         }
                     },
                     {

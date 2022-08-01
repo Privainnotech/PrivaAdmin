@@ -512,6 +512,8 @@ $(document).ready(function () {
             $('#save-button').removeClass('visually-hidden');
             $('#save-button').toggleClass('visually-hidden');
 
+            $("#modalEditProject").removeClass('save');
+
             removeDetailPaper()
             getDetail(QuotationId)
 
@@ -707,6 +709,7 @@ $(document).ready(function () {
                         let QuotationDelivery = obj.QuotationDelivery;
                         let QuotationRemark = obj.QuotationRemark;
                         let EmployeeApproveId = obj.EmployeeApproveId;
+                        let QuotationDetail = obj.QuotationDetail;
 
                         $("#btnREYes").unbind("click");
                         $(".btnYes").click(function () {
@@ -725,6 +728,7 @@ $(document).ready(function () {
                                     QuotationPayTerm: QuotationPayTerm,
                                     QuotationDelivery: QuotationDelivery,
                                     QuotationRemark: QuotationRemark,
+                                    QuotationDetail: QuotationDetail,
                                     EmployeeApproveId: EmployeeApproveId
                                 }),
                                 success: function () {
