@@ -49,6 +49,8 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         if (!QuotationDelivery) QuotationDelivery="-";
         if (!QuotationRemark) QuotationRemark="-";
         if (!QuotationDetail) QuotationDetail="-";
+        let Detail = JSON.stringify(QuotationDetail);
+        let PayTerm = JSON.stringify(QuotationPayTerm);
         console.log(QuotationStatus)
         if (QuotationStatus == 1) { // not pre&cancel status
             res.status(400).send({message: "Cannot revise pre-quotation"});
@@ -63,7 +65,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             // let newRevise = QuotationRevised+1;
             console.log(newRevise)
             let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EmployeeEditId, EndCustomer)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${QuotationDetail}', N'${checkDate()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${PayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkDate()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let NewQuotationId = Quotation.recordset[0].Id
