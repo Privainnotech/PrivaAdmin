@@ -329,7 +329,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
                 let isBold, text = Detail.data.text;
                 text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
                 text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
-                text = text.split(", ");
+                text = text.split("; ");
                 detail['body'].push([
                     { text: text[0], style: isBold},
                     { text: text[1] ? text[1] : "", style: isBold},
@@ -580,17 +580,11 @@ router.get('/:QuotationId', async (req, res) => {
         pdfDoc.end();
         creating.on('finish', () => {
             console.log('create file success')
-            const fileOption = {
-                headers: {
-                    'x-timestamp': Date.now(),
-                    'x-sent': true
-                }
-            }
-            res.status(200).sendFile(quotationPath, fileOption)
+            res.status(200).sendFile(quotationPath)
+            // res.download(quotationPath)
             // res.status(200).send({message: 'Successfully create quotation report'});
         })
     } catch(err){
-        console.log(err)
         res.status(500).send({message: `${err}`});
     }
 })
