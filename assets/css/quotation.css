@@ -6,6 +6,10 @@ table.dataTable tbody td{
 	padding: 2px 8px;	
 }
 
+.modal-80{
+	max-width: 80vw;
+}
+
 .textbox{
 	width: 125px;
 	font-weight: 500;
@@ -230,13 +234,12 @@ hr{
 	
 	.title.v-2{
 		display: block;
+		margin-top: 0;
 	}
 
-	.title.v{
-		margin-top: 40px;
-	}
 	
-	#btnPrint,#btnRevised,#modalEditProject{
+	
+	#btnPrint,#btnRevised,#modalEditProject,#btnExample{
 		min-width: 82px;
 		font-size: 0.7rem;
 		margin: 0;
@@ -285,7 +288,7 @@ hr{
 		margin-top: 0;
 	}
 
-	#btnPrint,#btnRevised,#modalEditProject{
+	#btnPrint,#btnRevised,#modalEditProject,#btnExample{
 		width: 82px;
 		font-size: 0.8rem;
 		margin: 0;

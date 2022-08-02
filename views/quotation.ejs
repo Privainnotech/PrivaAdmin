@@ -289,6 +289,23 @@
         </div>
       </div>
 
+      <!-- form Preview -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalPreview">
+        <div class="modal-dialog modal-dialog-centered modal-80" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Preview</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <iframe id="PreviewPDF" src="/report/quotation/20220701_00.pdf#toolbar=0" width="100%" height="500px">
+              </iframe>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
       <!-- Delete From -->
       <!-- form Confirm delete -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
@@ -355,6 +372,24 @@
             </div>
             <div class="modal-body text-center">
               <p>Are you sure to Edit?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnSettingYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- form confirm Edit -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalSettingConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Setting</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to save setting?</p>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary no" type="button"
                 data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnEditYes"
@@ -541,7 +576,8 @@
                               <button type="button" class="btn btn-dark invisible" id="modalEditProject">
                                 <p id="btn-text">Edit</p>
                               </button>
-                              <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Print</button>
+                              <button type="button" class="btn btn-dark btn-rad" id="btnExample" >Preview</button>
+                              <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Download</button>
                               <button type="button" class="btn btn-dark btn-rad" id="btnRevised">Revised</button>
                             </div>
                           </div>
@@ -606,13 +642,25 @@
                         <div class="card flex-fill">
                           <div class="card-header title v">
                             <h1>Setting</h1>
+                            <button type="button" class="btn btn-success visually-hidden"
+                            id="modalSaveSetting">Save Setting</button>
                           </div>
                           <div class="card-body w-100">
                             <div class="form-check form-switch">
                               <div class="input-group mb-3">
-                                <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                <select class="form-select" id="inputGroupSelect01">
-                                  <option selected>Choose...</option>
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableShow">Teble:</label>
+                                <select class="form-select" id="IP-Set-TableShow" disabled>
+                                  <option selected value= '' >Choose...</option>
+                                  <option value="0">none</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
+                              <div class="input-group mb-3">
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TablePrice">Table Unit Price:</label>
+                                <select class="form-select" id="IP-Set-TablePrice" disabled>
+                                  <option selected value= ''>Choose...</option>
                                   <option value="0">none</option>
                                   <option value="1">Item only</option>
                                   <option value="2">Description only</option>
@@ -620,9 +668,26 @@
                                 </select>
                               </div>
 
-                              <!-- checked box-->
-                              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" >
-                              <label class="form-check-label" for="flexSwitchCheckDefault">Switch to Custom Detial</label>
+                              <div class="input-group mb-3">
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableQty">Table Quantity:</label>
+                                <select class="form-select" id="IP-Set-TableQty" disabled>
+                                  <option selected value= ''>Choose...</option>
+                                  <option value="0">none</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
+                              <div class="input-group mb-3">
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableTotal">Table Total Price:</label>
+                                <select class="form-select" id="IP-Set-TableTotal" disabled>
+                                  <option selected value= ''>Choose...</option>
+                                  <option value="0">none</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
                             </div>
                           </div>
                         </div>
