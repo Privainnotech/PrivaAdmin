@@ -289,6 +289,23 @@
         </div>
       </div>
 
+      <!-- form Preview -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalPreview">
+        <div class="modal-dialog modal-dialog-centered modal-80" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Preview</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <iframe id="PreviewPDF" src="/report/quotation/20220701_00.pdf#toolbar=0" width="100%" height="500px">
+              </iframe>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
       <!-- Delete From -->
       <!-- form Confirm delete -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
@@ -559,8 +576,8 @@
                               <button type="button" class="btn btn-dark invisible" id="modalEditProject">
                                 <p id="btn-text">Edit</p>
                               </button>
-                              <button type="button" class="btn btn-dark btn-rad" id="btnExample" >Example</button>
-                              <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Print</button>
+                              <button type="button" class="btn btn-dark btn-rad" id="btnExample" >Preview</button>
+                              <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Download</button>
                               <button type="button" class="btn btn-dark btn-rad" id="btnRevised">Revised</button>
                             </div>
                           </div>

@@ -6,6 +6,10 @@ table.dataTable tbody td{
 	padding: 2px 8px;	
 }
 
+.modal-80{
+	max-width: 80vw;
+}
+
 .textbox{
 	width: 125px;
 	font-weight: 500;

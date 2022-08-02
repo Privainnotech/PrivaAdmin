@@ -21,7 +21,7 @@ function hideSetting() {
     $("#IP-Set-TablePrice").attr("disabled", "disabled");
     $("#IP-Set-TableQty").attr("disabled", "disabled");
     $("#IP-Set-TableTotal").attr("disabled", "disabled");
-    
+
 }
 
 //Show Setting
@@ -32,7 +32,7 @@ function ShowSetting() {
     $("#IP-Set-TablePrice").removeAttr("disabled");
     $("#IP-Set-TableQty").removeAttr("disabled");
     $("#IP-Set-TableTotal").removeAttr("disabled");
-    
+
 }
 
 //Show Project
@@ -562,7 +562,7 @@ $(document).ready(function () {
 
             $("#modalEditProject").removeClass('save');
 
-            
+
 
             removeDetailPaper()
             getDetail(QuotationId)
@@ -703,7 +703,7 @@ $(document).ready(function () {
                         let TablePrice = $.trim($('#IP-Set-TablePrice').val());
                         let TableQty = $.trim($('#IP-Set-TableQty').val());
                         let TableTotal = $.trim($('#IP-Set-TableTotal').val());
-                        
+
                         $.ajax({
                             url: "/quotation/edit_setting/" + QuotationId,
                             method: 'put',
@@ -890,7 +890,41 @@ $(document).ready(function () {
                 })
             });
 
-            // Print
+            // Preview PDF
+            $(document).on("click", "#btnExample", function () {
+                $('#modalPreview').modal('show');
+
+                $.ajax({
+                    url: "/quotation_report/" + QuotationId,
+                    method: 'get',
+                    contentType: 'application/json',
+                    success: function (success) {
+                        fileName = success.message;
+                        console.log(fileName)
+                        document.getElementById('PreviewPDF').src = fileName+"#toolbar=0";
+
+
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
+                    }
+                });
+                $('#modalPreview').modal('hide');
+                $(".close,.no").click(function () {
+                    $('#modalPreview').modal('hide');
+                });
+            });
+
+            // Print PDF
             $(document).on("click", "#btnPrint", function () {
                 $('#modalPrintConfirm').modal('show');
 
