@@ -29,9 +29,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         let UserId = req.session.UserId;
         let OldQuotationId = req.params.OldQuotationId;
         let {
-            QuotationNoId,
-            QuotationRevised,
-            QuotationSubject,
+            QuotationNoId, QuotationSubject,
             QuotationStatus,
             QuotationTotalPrice,
             QuotationDiscount,
@@ -48,14 +46,16 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         if (!QuotationPayTerm) QuotationPayTerm="-";
         if (!QuotationDelivery) QuotationDelivery="-";
         if (!QuotationRemark) QuotationRemark="-";
-        if (!QuotationDetail) QuotationDetail="-";
-        let Detail = JSON.stringify(QuotationDetail);
+        let Detail;
+        if (!QuotationDetail) {
+            Detail = null;
+        } else {
+            Detail = JSON.stringify(QuotationDetail);
+        }
         let PayTerm = JSON.stringify(QuotationPayTerm);
         console.log(QuotationStatus)
-        if (QuotationStatus == 1) { // not pre&cancel status
+        if (QuotationStatus == 1) { // not pre status
             res.status(400).send({message: "Cannot revise pre-quotation"});
-        // } else if(QuotationStatus == 5) {
-        //     res.status(400).send({message: "Cannot revise cancel quotation"});
         } else {
             // InsertQuotationRevised
             let getRevise = await pool.request().query(`SELECT COUNT(a.QuotationId) as Revised FROM Quotation a
@@ -73,11 +73,10 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             let getSetting = await pool.request().query(`SELECT * FROM QuotationSetting
             WHERE QuotationId = ${OldQuotationId}`);
             let {
-                TableShow, TablePrice, TableQty, TableTotal,
-                CustomDetail, DetailShow, DetailQty, DetailTotal
+                TableShow, TablePrice, TableQty, TableTotal
             } = getSetting.recordset[0]
-            await pool.request().query(`INSERT INTO QuotationSetting(QuotationId, TableShow, TablePrice, TableQty, TableTotal, CustomDetail, DetailShow, DetailQty, DetailTotal)
-            VALUES(${NewQuotationId}, ${TableShow}, ${TablePrice}, ${TableQty}, ${TableTotal}, ${CustomDetail}, ${DetailShow}, ${DetailQty}, ${DetailTotal})
+            await pool.request().query(`INSERT INTO QuotationSetting(QuotationId, TableShow, TablePrice, TableQty, TableTotal)
+            VALUES(${NewQuotationId}, ${TableShow}, ${TablePrice}, ${TableQty}, ${TableTotal})
             SELECT SCOPE_IDENTITY() AS Id`);
             // Copy Item
             let selectOldItem = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${OldQuotationId}`)

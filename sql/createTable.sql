@@ -76,6 +76,8 @@ CREATE Table [Priva].[dbo].[Quotation](
 	QuotationDelivery NVARCHAR(255) NULL DEFAULT N'-',
 	QuotationRemark NVARCHAR(MAX) NULL DEFAULT N'-',
 	QuotationDetail NVARCHAR(MAX) NULL,
+	QuotationDetail1 NVARCHAR(MAX) NULL,
+	QuotationDetail2 NVARCHAR(MAX) NULL,
 	EmployeeApproveId bigint NULL,
 	UserId bigint NULL
 	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
