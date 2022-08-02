@@ -140,7 +140,7 @@ router.get('/:QuotationId', async (req, res) => {
                 CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery', CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
                 CONVERT(nvarchar(max), a.QuotationDetail) AS 'QuotationDetail',
                 a.EmployeeApproveId, e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName, e.EmployeeEmail, e.EmployeePosition,
-                g.TableShow, g.TablePrice, g.TableQty, g.TableTotal, g.CustomDetail, g.DetailShow, g.DetailQty, g.DetailTotal
+                g.TableShow, g.TablePrice, g.TableQty, g.TableTotal
             FROM [Quotation] a
             LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
             LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
@@ -524,14 +524,13 @@ router.put('/edit_setting/:QuotationId', async (req, res) => {
     try {
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
-        let { TableShow, TablePrice, TableQty, TableTotal,
-            CustomDetail, DetailShow, DetailQty, DetailTotal
+        let { TableShow, TablePrice, TableQty, TableTotal
+            
         } = req.body;
         let UpdateSetting = `UPDATE QuotationSetting
         SET TableShow = ${TableShow}, TablePrice = ${TablePrice},
-            TableQty = ${TableQty},  TableTotal = ${TableTotal},
-            CustomDetail = ${CustomDetail}, DetailShow = ${DetailShow},
-            DetailQty = ${DetailQty}, DetailTotal = ${DetailTotal}
+            TableQty = ${TableQty},  TableTotal = ${TableTotal}
+            
         WHERE QuotationId = ${QuotationId};`;
         await pool.request().query(UpdateSetting);
         res.status(201).send({ message: 'Quotation Setting Updated' });
