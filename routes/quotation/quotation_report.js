@@ -318,12 +318,20 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             if (ItemPrice == 'undefined' || typeof ItemPrice == 'object') ItemPrice = 0;
             if (ItemQty == 'undefined' || typeof ItemQty == 'object') ItemQty = 0
             let LineTotal = ItemPrice * ItemQty
+            if (LineTotal === 0) {
+                ItemPrice = "";
+                ItemQty = "";
+                LineTotal = "";
+            } else {
+                ItemPrice = moneyFormat(ItemPrice.toFixed(2));
+                LineTotal = moneyFormat(LineTotal.toFixed(2));
+            }
 
             let IPrice, IQty, ITotal;
             if (TableShow === 1 || TableShow === 3) {
-                TablePrice === 1 || TablePrice === 3 ? IPrice = moneyFormat(ItemPrice.toFixed(2)) : IPrice = "";
+                TablePrice === 1 || TablePrice === 3 ? IPrice = ItemPrice : IPrice = "";
                 TableQty === 1 || TableQty === 3 ? IQty = ItemQty : IQty = "";
-                TableTotal === 1 || TableTotal === 3 ? ITotal = moneyFormat(LineTotal.toFixed(2)) : ITotal = "";
+                TableTotal === 1 || TableTotal === 3 ? ITotal = LineTotal : ITotal = "";
 
                 itemtable['body'].push([
                     {text: `${i}`, style: 'btext', alignment: 'center'},
@@ -341,16 +349,28 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             if (SubItems.recordset.length){
                 for(let SubItem of SubItems.recordset) {
                     let {SubItemQty, SubItemUnit, ProductName, ProductPrice} = SubItem
-                    if (SubItemQty == 'null' || SubItemUnit == "undefined"){
+                    if (ProductPrice == 'undefined' || typeof ProductPrice == 'object') ProductPrice = 0;
+                    if (SubItemQty == 'undefined' || typeof SubItemQty == 'object') SubItemQty = 0
+                    let SubTotal = ProductPrice * SubItemQty
+                    if (SubTotal === 0) {
+                        ProductPrice = ""
                         SubItemQty = "";
                         SubItemUnit = "";
-                    } 
-                    let SubTotal = ProductPrice * SubItemQty
+                        SubTotal = "";
+                    } else {
+                        ProductPrice = moneyFormat(ProductPrice.toFixed(2))
+                        SubTotal = moneyFormat(SubTotal.toFixed(2));
+                    }
+                    if (SubItemQty == 0 || SubItemUnit == "" || SubItemUnit == "null"){
+                        SubItemQty = "";
+                        SubItemUnit = "";
+                    }
+                    
                     let SPrice, SQty, STotal;
                     if (TableShow === 2 || TableShow === 3) {
-                        TablePrice === 2 || TablePrice === 3 ? SPrice = moneyFormat(ProductPrice.toFixed(2)) : SPrice = ""
+                        TablePrice === 2 || TablePrice === 3 ? SPrice = ProductPrice : SPrice = ""
                         TableQty === 2 || TableQty === 3 ? SQty = `${SubItemQty} ${SubItemUnit}` : SQty = ""
-                        TableTotal === 2 || TableTotal === 3 ? STotal = moneyFormat(SubTotal.toFixed(2)) : STotal = ""
+                        TableTotal === 2 || TableTotal === 3 ? STotal = SubTotal : STotal = ""
                         
                         if (SPrice === "" || SQty === "") {
                             itemtable['body'].push(["", {text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`, style: 'blacktext'},"","",""])
