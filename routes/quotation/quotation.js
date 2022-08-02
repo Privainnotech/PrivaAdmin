@@ -30,9 +30,8 @@ const updatePriceS = async (SubItemId) => {
             SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = @ItemId)
 
             UPDATE QuotationItem
-            SET ItemPrice = (SELECT SUM(a.SubItemQty * b.ProductPrice) 
-                FROM QuotationSubItem a
-                LEFT JOIN MasterProduct b on a.ProductId = b.ProductId
+            SET ItemPrice = (SELECT SUM(SubItemQty * SubItemPrice) 
+                FROM QuotationSubItem
                 WHERE ItemId = @ItemId)
             WHERE ItemId = @ItemId
 
@@ -55,9 +54,8 @@ const updatePriceI = async (ItemId) => {
             SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = ${ItemId})
             
             UPDATE QuotationItem
-            SET ItemPrice = (SELECT SUM(a.SubItemQty * b.ProductPrice) 
-                FROM QuotationSubItem a
-                LEFT JOIN MasterProduct b on a.ProductId = b.ProductId
+            SET ItemPrice = (SELECT SUM(SubItemQty * SubItemPrice) 
+                FROM QuotationSubItem
                 WHERE ItemId = ${ItemId})
             WHERE ItemId = ${ItemId}
 
@@ -208,7 +206,7 @@ router.get('/subitem/:ItemId', async (req, res) => {
     try {
         let pool = await sql.connect(dbconfig);
         let ItemId = req.params.ItemId
-        getQuotationSubItem = `SELECT c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode , b.ProductName SubItemName, b.ProductPrice SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
+        getQuotationSubItem = `SELECT c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode , b.ProductName SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
             FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
             LEFT JOIN [QuotationItem] c ON a.ItemId = c.ItemId
@@ -343,11 +341,11 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
                     ProductCode = ProductType[0] + "_" + checkMonth() + CheckProductCode.recordset.length
                 }
                 console.log("Gen ProductCode: " + ProductCode)
-                let InsertProduct = `INSERT INTO MasterProduct(ProductCode, ProductName, ProductPrice, ProductType) VALUES(N'${ProductCode}', N'${SubItemName}', ${SubItemPrice}, N'${ProductType}')
+                let InsertProduct = `INSERT INTO MasterProduct(ProductCode, ProductName, ProductType) VALUES(N'${ProductCode}', N'${SubItemName}', N'${ProductType}')
                     SELECT SCOPE_IDENTITY() AS Id`;
                 let newProduct = await pool.request().query(InsertProduct);
                 console.log("ProductId: " + newProduct.recordset[0].Id)
-                let InsertSubItem = `INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemQty, SubItemUnit) VALUES(${ItemId}, ${newProduct.recordset[0].Id}, N'${SubItemQty}', N'${SubItemUnit}')`
+                let InsertSubItem = `INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemPrice, SubItemQty, SubItemUnit) VALUES(${ItemId}, ${newProduct.recordset[0].Id}, ${SubItemPrice}, ${SubItemQty}, N'${SubItemUnit}')`
                 await pool.request().query(InsertSubItem);
                 updatePriceI(ItemId);
                 res.status(201).send({ message: 'Successfully add Sub-item' });
@@ -437,22 +435,17 @@ router.delete('/delete_subitem/:SubItemId', async (req, res) => {
         let DeleteSubItem = `DECLARE @QuotationId bigint, @ItemId bigint;
             SET @ItemId = (SELECT ItemId FROM QuotationSubItem WHERE SubItemId = ${SubItemId});
             SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = @ItemId);
-            UPDATE QuotationSubItem
-            SET SubItemQty = 0
-            WHERE SubItemId = ${SubItemId};
+            DELETE FROM QuotationSubItem WHERE SubItemId = ${SubItemId};
             UPDATE QuotationItem
-            SET ItemPrice = (SELECT SUM(a.SubItemQty * b.ProductPrice) 
-                FROM QuotationSubItem a
-                LEFT JOIN MasterProduct b on a.ProductId = b.ProductId
+            SET ItemPrice = (SELECT SUM(SubItemQty * SubItemPrice) 
+                FROM QuotationSubItem 
                 WHERE ItemId = @ItemId)
             WHERE ItemId = @ItemId;
             UPDATE Quotation
             SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
                 FROM QuotationItem 
                 WHERE QuotationId = @QuotationId)
-            WHERE QuotationId = @QuotationId;
-
-            DELETE FROM QuotationSubItem WHERE SubItemId = ${SubItemId};`;
+            WHERE QuotationId = @QuotationId;`;
         await pool.request().query(DeleteSubItem);
         res.status(200).send({ message: 'Successfully delete Sub-item' });
     } catch (err) {
@@ -541,30 +534,15 @@ router.put('/edit_item/:ItemId', async (req, res) => {
     try {
         let ItemId = req.params.ItemId;
         let { ItemName, ItemPrice, ItemQty } = req.body
+        if (ItemPrice === "") ItemPrice = 0;
+        if (ItemQty === "") ItemQty = 0;
         let pool = await sql.connect(dbconfig);
-        // let CheckSubItem = await pool.request().query(`SELECT CASE
-        // WHEN EXISTS(
-        //      SELECT *
-        //      FROM QuotationSubItem
-        //      WHERE ItemId = ${ItemId}
-        // )
-        // THEN CAST (1 AS BIT)
-        // ELSE CAST (0 AS BIT) END AS 'check'`);
-        // if(CheckSubItem.recordset[0].check){
-        //     // if item have subitem get price from subitem
-        //     UpdateQuotationItem = `UPDATE QuotationItem
-        //     SET ItemName = N'${ItemName}', ItemPrice = ${ItemPrice}, ItemQty = ${ItemQty}, ItemDescription =N'${ItemDescription}'
-        //     WHERE ItemId = ${ItemId}`;
-        //     await pool.request().query(UpdateQuotationItem);
-        //     res.status(200).send({message: 'Successfully Edit Item'});
-        // } else {
         UpdateQuotationItem = `UPDATE QuotationItem
             SET ItemName = N'${ItemName}', ItemPrice = ${ItemPrice}, ItemQty = ${ItemQty}
             WHERE ItemId = ${ItemId}`;
         await pool.request().query(UpdateQuotationItem);
         updatePriceQ(ItemId);
         res.status(200).send({ message: 'Successfully Edit Item' });
-        // }
     } catch (err) {
         res.status(500).send({ message: `${err}` });
     }
@@ -575,12 +553,14 @@ router.put('/edit_subitem/:SubItemId', async (req, res) => {
     try {
         let SubItemId = req.params.SubItemId;
         let { ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit } = req.body
+        if (SubItemPrice === "") SubItemPrice = 0;
+        if (SubItemQty === "") SubItemQty = 0;
         let pool = await sql.connect(dbconfig);
         UpdateProduct = `UPDATE MasterProduct
-        SET ProductName =N'${SubItemName}', ProductPrice = ${SubItemPrice}
+        SET ProductName =N'${SubItemName}'
         WHERE ProductId = ${ProductId}`;
         UpdateQuotationSubItem = `UPDATE QuotationSubItem
-        SET SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
+        SET SubItemPrice = ${SubItemPrice}, SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
         WHERE SubItemId = ${SubItemId}`;
         await pool.request().query(UpdateProduct);
         await pool.request().query(UpdateQuotationSubItem);

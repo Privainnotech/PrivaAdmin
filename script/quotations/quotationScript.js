@@ -883,9 +883,9 @@ $(document).ready(function () {
                 $('#modalPrintConfirm').modal('show');
 
                 $("#modalPrintConfirm .modal-title").text("Confirm Preview PDF");
-
                 $("#btnPrintYes").unbind();
                 $("#btnPrintYes").click(function () {
+                    document.getElementById('PreviewPDF').src = "";
                     $('#modalPreview').modal('show');
                     $("#modalPreview .modal-title").text("Preview PDF");
                     $.ajax({

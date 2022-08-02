@@ -88,8 +88,8 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
                 let selectOldSubItem = await pool.request().query(`SELECT * FROM QuotationSubItem WHERE ItemId = ${item.ItemId}`)
                 for(const subitem of selectOldSubItem.recordset){
                     
-                    await pool.request().query(`INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemQty, SubItemUnit)
-                    VALUES(${NewItemId}, ${subitem.ProductId}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`)
+                    await pool.request().query(`INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemPrice, SubItemQty, SubItemUnit)
+                    VALUES(${NewItemId}, ${subitem.ProductId}, ${subitem.SubItemPrice}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`)
                 }
             }
             console.log('copy success')

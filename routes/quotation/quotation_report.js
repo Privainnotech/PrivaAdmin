@@ -348,17 +348,17 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             WHERE ItemId = ${Item.ItemId}`)
             if (SubItems.recordset.length){
                 for(let SubItem of SubItems.recordset) {
-                    let {SubItemQty, SubItemUnit, ProductName, ProductPrice} = SubItem
-                    if (ProductPrice == 'undefined' || typeof ProductPrice == 'object') ProductPrice = 0;
+                    let {SubItemQty, SubItemUnit, ProductName, SubItemPrice} = SubItem
+                    if (SubItemPrice == 'undefined' || typeof SubItemPrice == 'object') SubItemPrice = 0;
                     if (SubItemQty == 'undefined' || typeof SubItemQty == 'object') SubItemQty = 0
-                    let SubTotal = ProductPrice * SubItemQty
+                    let SubTotal = SubItemPrice * SubItemQty
                     if (SubTotal === 0) {
-                        ProductPrice = ""
+                        SubItemPrice = ""
                         SubItemQty = "";
                         SubItemUnit = "";
                         SubTotal = "";
                     } else {
-                        ProductPrice = moneyFormat(ProductPrice.toFixed(2))
+                        SubItemPrice = moneyFormat(SubItemPrice.toFixed(2))
                         SubTotal = moneyFormat(SubTotal.toFixed(2));
                     }
                     if (SubItemQty == 0 || SubItemUnit == "" || SubItemUnit == "null"){
@@ -368,7 +368,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
                     
                     let SPrice, SQty, STotal;
                     if (TableShow === 2 || TableShow === 3) {
-                        TablePrice === 2 || TablePrice === 3 ? SPrice = ProductPrice : SPrice = ""
+                        TablePrice === 2 || TablePrice === 3 ? SPrice = SubItemPrice : SPrice = ""
                         TableQty === 2 || TableQty === 3 ? SQty = `${SubItemQty} ${SubItemUnit}` : SQty = ""
                         TableTotal === 2 || TableTotal === 3 ? STotal = SubTotal : STotal = ""
                         
@@ -574,7 +574,7 @@ router.get('/:QuotationId', async (req, res) => {
         let settings = await pool.request().query(getSetting);
         let quotation = quotations.recordset[0];
         let setting = settings.recordset[0];
-        // console.log(quotation)
+        console.log(setting)
         let quotationNo = ""
         if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
         else  quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
