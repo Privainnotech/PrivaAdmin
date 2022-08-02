@@ -900,10 +900,7 @@ $(document).ready(function () {
                     contentType: 'application/json',
                     success: function (success) {
                         fileName = success.message;
-                        console.log(fileName)
                         document.getElementById('PreviewPDF').src = fileName+"#toolbar=0";
-
-
                     },
                     error: function (err) {
                         errorText = err.responseJSON.message;
@@ -931,11 +928,11 @@ $(document).ready(function () {
                 $("#btnPrintYes").unbind("click");
                 $(".btnYes").click(function () {
                     $.ajax({
-                        url: "/quotation_report/" + QuotationId,
+                        url: "/quotation_report/download/" + QuotationId,
                         method: 'get',
                         contentType: 'application/json',
                         success: function () {
-                            window.open("/quotation_report/" + QuotationId)
+                            window.open("/quotation_report/download/" + QuotationId)
                         },
                         error: function (err) {
                             errorText = err.responseJSON.message;
