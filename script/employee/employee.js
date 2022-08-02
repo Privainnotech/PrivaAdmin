@@ -268,8 +268,8 @@ $(document).ready(function () {
         let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
         $(".modal-title").text("Confirm Delete");
 
-        $("#btnYes").unbind("click");
-        $(".btnYes").click(function () {
+        $("#btnYes").unbind();
+        $("#btnYes").click(function () {
             $.ajax({
                 url: "/employee_master/delete/" + EmployeeId,
                 method: 'delete',

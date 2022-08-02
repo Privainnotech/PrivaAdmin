@@ -376,13 +376,13 @@
               <p>Are you sure to Edit?</p>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary no" type="button"
-                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnSettingYes"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnEditYes"
                 type="button">Yes</button></div>
           </div>
         </div>
       </div>
 
-      <!-- form confirm Edit -->
+      <!-- form confirm Setting -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalSettingConfirm">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -394,7 +394,7 @@
               <p>Are you sure to save setting?</p>
             </div>
             <div class="modal-footer"><button class="btn btn-secondary no" type="button"
-                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnEditYes"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnSettingYes"
                 type="button">Yes</button></div>
           </div>
         </div>
@@ -643,27 +643,25 @@
                       <div class="col-12">
                         <div class="card flex-fill">
                           <div class="card-header title v">
-                            <h1>Setting</h1>
+                            <h1>Table Setting</h1>
                             <button type="button" class="btn btn-success visually-hidden"
                             id="modalSaveSetting">Save Setting</button>
                           </div>
                           <div class="card-body w-100">
                             <div class="form-check form-switch">
                               <div class="input-group mb-3">
-                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableShow">Table:</label>
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableShow">Show:</label>
                                 <select class="form-select" id="IP-Set-TableShow" disabled>
-                                  <option selected value= '' >Choose...</option>
-                                  <option value="0">None</option>
+                                  <option value="0" selected>None</option>
                                   <option value="1">Item only</option>
                                   <option value="2">Description only</option>
                                   <option value="3">Both</option>
                                 </select>
                               </div>
                               <div class="input-group mb-3">
-                                <label class="input-group-text mg-0 f-9" for="IP-Set-TablePrice">Table Unit Price:</label>
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TablePrice">Show Unit Price:</label>
                                 <select class="form-select" id="IP-Set-TablePrice" disabled>
-                                  <option selected value= ''>Choose...</option>
-                                  <option value="0">None</option>
+                                  <option value="0" selected>None</option>
                                   <option value="1">Item only</option>
                                   <option value="2">Description only</option>
                                   <option value="3">Both</option>
@@ -671,20 +669,18 @@
                               </div>
 
                               <div class="input-group mb-3">
-                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableQty">Table Quantity:</label>
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableQty">Show Quantity:</label>
                                 <select class="form-select" id="IP-Set-TableQty" disabled>
-                                  <option selected value= ''>Choose...</option>
-                                  <option value="0">None</option>
+                                  <option value="0" selected>None</option>
                                   <option value="1">Item only</option>
                                   <option value="2">Description only</option>
                                   <option value="3">Both</option>
                                 </select>
                               </div>
                               <div class="input-group mb-3">
-                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableTotal">Table Total Price:</label>
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableTotal">Show Total Price:</label>
                                 <select class="form-select" id="IP-Set-TableTotal" disabled>
-                                  <option selected value= ''>Choose...</option>
-                                  <option value="0">None</option>
+                                  <option value="0" selected>None</option>
                                   <option value="1">Item only</option>
                                   <option value="2">Description only</option>
                                   <option value="3">Both</option>
