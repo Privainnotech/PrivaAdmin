@@ -26,11 +26,10 @@ const checkDate = () => {
 router.post('/revise/:OldQuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
+        let UserId = req.session.UserId;
         let OldQuotationId = req.params.OldQuotationId;
         let {
-            QuotationNoId,
-            QuotationRevised,
-            QuotationSubject,
+            QuotationNoId, QuotationSubject,
             QuotationStatus,
             QuotationTotalPrice,
             QuotationDiscount,
@@ -47,12 +46,16 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         if (!QuotationPayTerm) QuotationPayTerm="-";
         if (!QuotationDelivery) QuotationDelivery="-";
         if (!QuotationRemark) QuotationRemark="-";
-        if (!QuotationDetail) QuotationDetail="-";
+        let Detail;
+        if (!QuotationDetail) {
+            Detail = null;
+        } else {
+            Detail = JSON.stringify(QuotationDetail);
+        }
+        let PayTerm = JSON.stringify(QuotationPayTerm);
         console.log(QuotationStatus)
-        if (QuotationStatus == 1) { // not pre&cancel status
+        if (QuotationStatus == 1) { // not pre status
             res.status(400).send({message: "Cannot revise pre-quotation"});
-        // } else if(QuotationStatus == 5) {
-        //     res.status(400).send({message: "Cannot revise cancel quotation"});
         } else {
             // InsertQuotationRevised
             let getRevise = await pool.request().query(`SELECT COUNT(a.QuotationId) as Revised FROM Quotation a
@@ -61,8 +64,8 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             let newRevise = getRevise.recordset[0].Revised;
             // let newRevise = QuotationRevised+1;
             console.log(newRevise)
-            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EndCustomer)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${QuotationDetail}', N'${checkDate()}', ${EmployeeApproveId}, N'${EndCustomer}')
+            let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EmployeeEditId, EndCustomer)
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${PayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkDate()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let NewQuotationId = Quotation.recordset[0].Id
@@ -70,11 +73,10 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             let getSetting = await pool.request().query(`SELECT * FROM QuotationSetting
             WHERE QuotationId = ${OldQuotationId}`);
             let {
-                TableShow, TablePrice, TableQty, TableTotal,
-                CustomDetail, DetailShow, DetailQty, DetailTotal
+                TableShow, TablePrice, TableQty, TableTotal
             } = getSetting.recordset[0]
-            await pool.request().query(`INSERT INTO QuotationSetting(QuotationId, TableShow, TablePrice, TableQty, TableTotal, CustomDetail, DetailShow, DetailQty, DetailTotal)
-            VALUES(${NewQuotationId}, ${TableShow}, ${TablePrice}, ${TableQty}, ${TableTotal}, ${CustomDetail}, ${DetailShow}, ${DetailQty}, ${DetailTotal})
+            await pool.request().query(`INSERT INTO QuotationSetting(QuotationId, TableShow, TablePrice, TableQty, TableTotal)
+            VALUES(${NewQuotationId}, ${TableShow}, ${TablePrice}, ${TableQty}, ${TableTotal})
             SELECT SCOPE_IDENTITY() AS Id`);
             // Copy Item
             let selectOldItem = await pool.request().query(`SELECT * FROM QuotationItem WHERE QuotationId = ${OldQuotationId}`)

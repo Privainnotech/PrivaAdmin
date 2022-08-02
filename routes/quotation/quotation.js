@@ -166,14 +166,14 @@ router.get('/:QuotationId', async (req, res) => {
                         "id": "cyZjplMOZ0",
                         "type": "paragraph",
                         "data": {
-                            "text": "<b>Item</b>"
+                            "text": "<b>ตัวอย่างการพิมพ์(อย่าลืมลบออก)</b>"
                         }
                     },
                     {
                         "id": "Mj_9XdxLe0",
                         "type": "paragraph",
                         "data": {
-                            "text": "1 รายละเอียด, จำนวน, ราคา"
+                            "text": "1 รายละเอียด; จำนวน หน่วย; ราคา"
                         }
                     }
                 ],
@@ -524,16 +524,13 @@ router.put('/edit_setting/:QuotationId', async (req, res) => {
     try {
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
-        let { TableShow, TablePrice, TableQty, TableTotal
-            
-        } = req.body;
+        let { TableShow, TablePrice, TableQty, TableTotal } = req.body;
         let UpdateSetting = `UPDATE QuotationSetting
         SET TableShow = ${TableShow}, TablePrice = ${TablePrice},
             TableQty = ${TableQty},  TableTotal = ${TableTotal}
-            
         WHERE QuotationId = ${QuotationId};`;
         await pool.request().query(UpdateSetting);
-        res.status(201).send({ message: 'Quotation Setting Updated' });
+        res.status(201).send({ message: 'Quotation Setting Updated'});
     } catch (err) {
         res.status(500).send({ message: `${err}` });
     }

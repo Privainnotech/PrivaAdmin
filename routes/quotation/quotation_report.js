@@ -71,18 +71,14 @@ const applySpacing = (name) => {
 }
 
 const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) => {
-
     let {
         CustomerName, CustomerEmail, CompanyName, CompanyAddress, EndCustomer,
-        QuotationSubject, QuotationDate,
-        QuotationTotalPrice, QuotationDiscount, QuotationNet, QuotationVat, QuotationNetVat,
-        QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail,
+        QuotationSubject, QuotationDate, QuotationTotalPrice, QuotationDiscount,
+        QuotationNet, QuotationVat, QuotationNetVat, QuotationValidityDate,
+        QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail,
         EmployeeName, EmployeeFname, EmployeeLname, EmployeePosition
     } = quotation
-    let {
-        TableShow, TablePrice, TableQty, TableTotal,
-        CustomDetail, DetailShow, DetailQty, DetailTotal
-    } = setting
+    let { TableShow, TablePrice, TableQty, TableTotal } = setting
     // head
     let head = [
         {
@@ -242,9 +238,9 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
     let condition = [
         {
             margin: [25,0,0,0],
-            width: '50%',
+            width: '90%',
             columns: [{
-                width: '40%',
+                width: '20%',
                 stack: [
                     { text: "CONDITION:", style: 'condition', margin: [-22,0,0,0]},
                     { text: "Validity:", style: 'conditiontext'},
@@ -269,7 +265,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
             width: '*',
             text: ""
         }
-
     ]
 
     // sign
@@ -310,35 +305,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
             ],
         ]
     }
-    let detail = {
-        headerRows: 0,
-        widths: ['*', '10%', '10%'],
-        style: 'text',
-        // alignment: 'left',
-        body: []
-    }
-    if (CustomDetail) {
-        // console.log(JSON.parse(QuotationDetail))
-        if (JSON.parse(QuotationDetail) == null) {
-            detail['body'].push(
-                [{ text: ``, style: 'blacktext'},"",""]
-            )
-        } else {
-            let Details = JSON.parse(QuotationDetail).blocks
-            Details.forEach(Detail => {
-                let isBold, text = Detail.data.text;
-                text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
-                text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
-                text = text.split(", ");
-                detail['body'].push([
-                    { text: text[0], style: isBold},
-                    { text: text[1] ? text[1] : "", style: isBold},
-                    { text: text[2] ? text[2] : "", style: isBold}
-                ])
-            })
-        }
-    }
-
+    
     // get item
     let i = 1;
     let line = 0;
@@ -365,18 +332,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
                     {text: `${ITotal}`, style: 'blacktext', alignment: 'right'}
                 ])
                 line++;
-            }
-            if(!CustomDetail) {
-                if (DetailShow === 1 || DetailShow === 3) {
-                    DetailQty === 1 || DetailQty === 3 ? IQty = ItemQty : IQty = "";
-                    DetailTotal === 1 || DetailTotal === 3 ? ITotal = moneyFormat(LineTotal.toFixed(2)) : ITotal = "";
-    
-                    detail['body'].push([
-                        { text: `${i} ${ItemName}`, style: 'btext'},
-                        { text: `${IQty}`, style: 'blacktext'},
-                        { text: `${ITotal}`, style: 'blacktext'},
-                    ])
-                }
             }
             let j = 1;
             const SubItems = await pool.request().query(`SELECT * FROM [QuotationSubItem] a
@@ -409,33 +364,15 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
                         }
                         line++;
                     }
-                    if(!CustomDetail) {
-                        if (DetailShow === 2 || DetailShow === 3) {
-                            DetailQty === 2 || DetailQty === 3 ? SQty = `${SubItemQty} ${SubItemUnit}` : SQty = "";
-                            DetailTotal === 2 || DetailTotal === 3 ? STotal = moneyFormat(SubTotal.toFixed(2)) : STotal = "";
-            
-                            detail['body'].push([
-                                { margin: [7,0,0,0], text: `${j}) ${ProductName}`, style: 'btext'},
-                                { text: `${SQty}`, style: 'blacktext'},
-                                { text: `${STotal}`, style: 'blacktext'},
-                            ])
-                        }
-                    }
                     j++;
                 }
             }
             i++;
         }
-    } else {
-        if (!CustomDetail) {
-            detail['body'].push(
-                [{ text: ``, style: 'btext'},"",""],
-                [{ margin: [7,0,0,0], text: ``, style: 'blacktext'},"",""]
-            )
-        }
     }
     let maxline = 25
     if (line<maxline) for (;line<maxline;line++) itemtable['body'].push([""," ","","",""])
+
     let doc = {
         info: {
             title: `No. ${quotationNo}`,
@@ -491,26 +428,8 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
             { columns: price },
             { columns: condition },
             { text: "\n\n"},
-            { columns: signature },
-            // new page
-            {
-                margin: [0,-15,0,0],
-                text: `Quotation No. : ${quotationNo}`,
-                alignment: 'right',
-                fontSize: 8
-            },
-            {
-                text: `\n\nQuotation Detail :\n\n`,
-                style: 'btext',
-                fontSize: 8
-            },
-            {
-                margin: [15,0,50,0],
-                // alignment: 'left',
-                layout: 'noBorders',
-                // fontSize: 7,
-                table: detail
-            }],
+            { columns: signature }
+        ],
         styles: {
             text: { color: '#808080'},
             price: { color: '#000000', alignment: 'right', lineHeight: 1.2},
@@ -530,6 +449,78 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
             lineHeight: 1.1
         }
     }
+
+    // Detail    
+    let detailHeader = () =>{
+        return { columns: [
+            {
+                width: '*',
+                text: `\n\nQuotation Detail :\n\n`,
+                style: 'btext',
+                fontSize: 8,
+            },
+            {
+                width: '50%',
+                margin: [0,-15,0,0],
+                text: `Quotation No. : ${quotationNo}`,
+                alignment: 'right',
+                fontSize: 8
+            }
+        ]}
+    }
+    let detailTable = () => {
+        return {
+            headerRows: 0,
+            widths: ['*', '10%', '10%'],
+            style: 'text',
+            body: []
+        }
+    }
+    if (JSON.parse(QuotationDetail) !== null) {
+        let detailTable1 = detailTable();
+        let detailTable2 = detailTable();
+        let detailTable3 = detailTable();
+        let detail1 = { margin: [15,0,50,0], layout: 'noBorders', table: detailTable1};
+        let detail2 = { margin: [15,0,50,0], layout: 'noBorders', table: detailTable2};
+        let detail3 = { margin: [15,0,50,0], layout: 'noBorders', table: detailTable3};
+        let Details = JSON.parse(QuotationDetail).blocks;
+        let i=0;
+        Details.forEach(Detail => {
+            let isBold, text = Detail.data.text;
+            text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
+            text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
+            text = text.split("; ");
+            if (i<40) {
+                if (i===0) { doc['content'].push(detailHeader(), detail1) }
+                detailTable1['body'].push([
+                    { text: text[0], style: isBold},
+                    { text: text[1] ? text[1] : "", style: isBold},
+                    { text: text[2] ? text[2] : "", style: isBold}
+                ])
+            } else if (i<80) {
+                if (i===40) {
+                    detail1.pageBreak = 'after'
+                    doc['content'].push(detailHeader(), detail2)
+                }
+                detailTable2['body'].push([
+                    { text: text[0], style: isBold},
+                    { text: text[1] ? text[1] : "", style: isBold},
+                    { text: text[2] ? text[2] : "", style: isBold}
+                ])
+            } else {
+                if (i===80) {
+                    detail2.pageBreak = 'after'
+                    doc['content'].push(detailHeader(), detail3)
+                }
+                detailTable3['body'].push([
+                    { text: text[0], style: isBold},
+                    { text: text[1] ? text[1] : "", style: isBold},
+                    { text: text[2] ? text[2] : "", style: isBold}
+                ])
+            }
+            i++;
+        })
+    }
     return doc;
 }
 
@@ -538,9 +529,11 @@ router.get('/:QuotationId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let UserId = req.session.UserId;
         let QuotationId = req.params.QuotationId
-        let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised, c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
-            c.CustomerEmail, f.CompanyName, f.CompanyAddress, a.EndCustomer, a.QuotationSubject, a.QuotationDate,
-            a.QuotationTotalPrice, a.QuotationDiscount, a.QuotationNet, a.QuotationVat, a.QuotationNetVat,
+        let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised,
+            c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
+            c.CustomerEmail, f.CompanyName, f.CompanyAddress, a.EndCustomer,
+            a.QuotationSubject, a.QuotationDate, a.QuotationTotalPrice, a.QuotationDiscount,
+            a.QuotationNet, a.QuotationVat, a.QuotationNetVat,
             CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate',
             CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
             CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
@@ -555,7 +548,7 @@ router.get('/:QuotationId', async (req, res) => {
             LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
             LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
             WHERE a.QuotationId = ${QuotationId}`;
-        let getSetting = `SELECT TableShow, TablePrice, TableQty, TableTotal, CustomDetail, DetailShow, DetailQty, DetailTotal
+        let getSetting = `SELECT TableShow, TablePrice, TableQty, TableTotal
             FROM QuotationSetting
             WHERE QuotationId = ${QuotationId}`;
         let getUser = `SELECT EmployeeFname+' '+EmployeeLname as name FROM MasterEmployee WHERE EmployeeId = ${UserId}`
@@ -580,17 +573,12 @@ router.get('/:QuotationId', async (req, res) => {
         pdfDoc.end();
         creating.on('finish', () => {
             console.log('create file success')
-            const fileOption = {
-                headers: {
-                    'x-timestamp': Date.now(),
-                    'x-sent': true
-                }
-            }
-            res.status(200).sendFile(quotationPath, fileOption)
+            res.send({ message: `/report/quotation/${quotationNo}.pdf` })
+            // res.status(200).sendFile(quotationPath)
+            // res.download(quotationPath)
             // res.status(200).send({message: 'Successfully create quotation report'});
         })
     } catch(err){
-        console.log(err)
         res.status(500).send({message: `${err}`});
     }
 })
