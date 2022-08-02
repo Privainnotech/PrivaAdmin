@@ -146,8 +146,9 @@ function getDetail(QuotationId) {
 
             saveButton.addEventListener('click', () => {
                 $('#modalEditConfirm').modal('show');
-                $("#btnEditYes").unbind("click");
-                $(".btnYes").click(function () {
+                $(".modal-title").text("Confirm Edit Detail");
+                $("#btnEditYes").unbind();
+                $("#btnEditYes").click(function () {
                     editor.save().then(savedData => {
                         load = JSON.stringify(savedData, null, 4)
                         $.ajax({
@@ -583,6 +584,7 @@ $(document).ready(function () {
                 $(document).on("click", "#modalEditProject", function () {
                     if ($("#modalEditProject").hasClass('save')) {
                         $('#modalEditConfirm').modal('show');
+                        $(".modal-title").text("Confirm Edit Project");
 
                         $(".save#modalEditProject").removeClass('save');
 
@@ -686,6 +688,8 @@ $(document).ready(function () {
                 // Save Setting
                 $(document).on("click", "#modalSaveSetting", function () {
                     $('#modalSettingConfirm').modal('show');
+
+                    $(".modal-title").text("Confirm Setting");
 
 
                     $("#btnSettingYes").unbind();
@@ -882,12 +886,12 @@ $(document).ready(function () {
             $(document).on("click", "#btnExample", function () {
                 $('#modalPrintConfirm').modal('show');
 
-                $("#modalPrintConfirm .modal-title").text("Confirm Preview PDF");
+                $(".modal-title").text("Confirm Preview PDF");
 
                 $("#btnPrintYes").unbind();
                 $("#btnPrintYes").click(function () {
                     $('#modalPreview').modal('show');
-                    $("#modalPreview .modal-title").text("Preview PDF");
+                    $(".modal-title").text("Preview PDF");
                     $.ajax({
                         url: "/quotation_report/" + QuotationId,
                         method: 'get',
@@ -962,7 +966,7 @@ $(document).ready(function () {
             $(document).on('click', '#btn-quotation', function () {
                 $('#modalStatusConfirm').modal('show');
 
-                $(".modal-title").text("Confirm Quotation");
+                $(".modal-title").text("Confirm Set Status Quotation");
 
                 $("#btnSetYes").unbind();
                 $("#btnSetYes").click(function () {
@@ -1005,7 +1009,7 @@ $(document).ready(function () {
             $(document).on('click', '#btn-cancel', function () {
                 $('#modalStatusConfirm').modal('show');
 
-                $(".modal-title").text("Confirm Cancel");
+                $(".modal-title").text("Confirm Set Status Cancel");
                 $("#btnSetYes").unbind();
                 $("#btnSetYes").click(function () {
                     $.ajax({
@@ -1047,7 +1051,7 @@ $(document).ready(function () {
             $(document).on('click', '#btn-book', function () {
                 $('#modalStatusConfirm').modal('show');
 
-                $(".modal-title").text("Confirm Book");
+                $(".modal-title").text("Confirm Set Status Book");
                 $("#btnSetYes").unbind();
                 $("#btnSetYes").click(function () {
                     $.ajax({
@@ -1089,7 +1093,7 @@ $(document).ready(function () {
             $(document).on('click', '#btn-loss', function () {
                 $('#modalStatusConfirm').modal('show');
 
-                $(".modal-title").text("Confirm loss");
+                $(".modal-title").text("Confirm Set Status Loss");
                 $("#btnSetYes").unbind();
                 $("#btnSetYes").click(function () {
                     $.ajax({
@@ -1335,7 +1339,7 @@ $(document).ready(function () {
             $('#modalAddSubMaster').modal('show');
 
             $("#formSub").trigger("reset");
-            $(".modal-title").text("Add SubItem in " + ItemName);
+            $(".modal-title").text("Add Description in " + ItemName);
 
             $("#modalSaveSub").unbind();
             $("#modalSaveSub").click(function () {
