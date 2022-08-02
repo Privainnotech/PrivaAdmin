@@ -573,8 +573,8 @@ router.get('/:QuotationId', async (req, res) => {
         pdfDoc.end();
         creating.on('finish', () => {
             console.log('create file success')
-            res.send({ message: `/report/quotation/${quotationNo}.pdf` })
-            // res.status(200).sendFile(quotationPath)
+            // res.send({ message: `/report/quotation/${quotationNo}.pdf` })
+            res.status(200).sendFile(quotationPath)
             // res.download(quotationPath)
             // res.status(200).send({message: 'Successfully create quotation report'});
         })
