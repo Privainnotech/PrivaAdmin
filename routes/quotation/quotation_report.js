@@ -341,7 +341,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             if (SubItems.recordset.length){
                 for(let SubItem of SubItems.recordset) {
                     let {SubItemQty, SubItemUnit, ProductName, ProductPrice} = SubItem
-                    if (SubItemQty == 'null' || SubItemUnit == "undefined"){
+                    if (SubItemQty == 'null' || SubItemQty == 0 || SubItemUnit == "null"){
                         SubItemQty = "";
                         SubItemUnit = "";
                     } 
