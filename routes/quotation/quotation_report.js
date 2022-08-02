@@ -7,6 +7,7 @@ const { bahttext } = require('bahttext')
 const path = require('path');
 const fs = require('fs');
 const pdfMake = require('pdfmake');
+const { stringify } = require('querystring');
 
 const fonts = {
     Roboto: {
@@ -70,7 +71,7 @@ const applySpacing = (name) => {
     return spacebar;
 }
 
-const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) => {
+const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
     let {
         CustomerName, CustomerEmail, CompanyName, CompanyAddress, EndCustomer,
         QuotationSubject, QuotationDate, QuotationTotalPrice, QuotationDiscount,
@@ -376,7 +377,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
     let doc = {
         info: {
             title: `No. ${quotationNo}`,
-            author: `${Author}`,
             subject: `${quotationNo}`,
             creator: 'PRIVA INNOTECH CO., LTD'
         },
@@ -527,7 +527,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, Author) =
 router.get('/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
-        let UserId = req.session.UserId;
         let QuotationId = req.params.QuotationId
         let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised,
             c.CustomerTitle + c.CustomerFname + ' ' + c.CustomerLname CustomerName,
@@ -551,17 +550,15 @@ router.get('/:QuotationId', async (req, res) => {
         let getSetting = `SELECT TableShow, TablePrice, TableQty, TableTotal
             FROM QuotationSetting
             WHERE QuotationId = ${QuotationId}`;
-        let getUser = `SELECT EmployeeFname+' '+EmployeeLname as name FROM MasterEmployee WHERE EmployeeId = ${UserId}`
         let quotations = await pool.request().query(getQuotation);
         let settings = await pool.request().query(getSetting);
-        let user = await pool.request().query(getUser);
         let quotation = quotations.recordset[0];
         let setting = settings.recordset[0];
         // console.log(quotation)
         let quotationNo = ""
         if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
         else  quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
-        let quotationPdf = await createPdf(QuotationId, quotationNo, quotation, setting, user.recordset[0].name);
+        let quotationPdf = await createPdf(QuotationId, quotationNo, quotation, setting);
         
         let pdfCreator = new pdfMake(fonts);
         console.log('Creating quotation....')
@@ -579,6 +576,32 @@ router.get('/:QuotationId', async (req, res) => {
             // res.status(200).send({message: 'Successfully create quotation report'});
         })
     } catch(err){
+        res.status(500).send({message: `${err}`});
+    }
+})
+
+router.get('/download/:QuotationId', async (req, res) => {
+    try{
+        let pool = await sql.connect(dbconfig);
+        let QuotationId = req.params.QuotationId
+        let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised
+            FROM [Quotation] a
+            LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+            WHERE a.QuotationId = ${QuotationId}`;
+        let quotations = await pool.request().query(getQuotation);
+        let quotation = quotations.recordset[0];
+        let quotationNo = ""
+        if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
+        else quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
+        let quotationPath = path.join(process.cwd(), `/public/report/quotation/${quotationNo}.pdf`)
+        fs.readFileSync(quotationPath);
+        res.status(200).download(quotationPath)
+    } catch(err){
+        if (err.code.includes('ENOENT')) {
+            res.status(500).send({message: 'Please preview quotation before download'});
+            return;
+        }
+        
         res.status(500).send({message: `${err}`});
     }
 })
