@@ -16,7 +16,7 @@ router.get('/data', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
     try{
-        let { ProductName, ProductPrice, ProductType } = req.body
+        let { ProductName, ProductType } = req.body
         let pool = await sql.connect(dbconfig);
         let CheckProduct = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
@@ -42,8 +42,8 @@ router.post('/add', async (req, res, next) => {
                 ProductCode = ProductType[0]+"_"+checkMonth()+CheckProductCode.recordset.length
             }
             console.log("Gen ProductCode: " + ProductCode)
-            let InsertProduct = `INSERT INTO MasterProduct(ProductCode, ProductName, ProductPrice, ProductType)
-                VALUES  (N'${ProductCode}', N'${ProductName}', N'${ProductPrice}', N'${ProductType}'`;
+            let InsertProduct = `INSERT INTO MasterProduct(ProductCode, ProductName, ProductType)
+                VALUES  (N'${ProductCode}', N'${ProductName}', N'${ProductType}'`;
             await pool.request().query(InsertProduct);
             res.status(201).send({message: 'Successfully add Product'});
         }
@@ -55,7 +55,7 @@ router.post('/add', async (req, res, next) => {
 router.put('/edit/:ProductId', async (req, res) => {
     try{
         let ProductId = req.params.ProductId;
-        let { ProductName, ProductPrice, ProductType } = req.body
+        let { ProductName, ProductType } = req.body
         let pool = await sql.connect(dbconfig);
         let CheckProduct = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
@@ -69,11 +69,7 @@ router.put('/edit/:ProductId', async (req, res) => {
             res.status(400).send({message: 'Duplicate Product'});
         } else{
             let UpdateProduct = `UPDATE MasterProduct
-                SET
-                ProductCode = N'${ProductCode}',
-                ProductName = N'${ProductName}',
-                ProductPrice = N'${ProductPrice}',
-                ProductType = N'${ProductType}'
+                SET ProductName = N'${ProductName}', ProductType = N'${ProductType}'
                 WHERE ProductId = ${ProductId}`;
             await pool.request().query(UpdateProduct);
             res.status(200).send({message: `Successfully edit Product`});

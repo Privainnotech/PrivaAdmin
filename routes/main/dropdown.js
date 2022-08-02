@@ -81,7 +81,7 @@ router.get('/product/:ProductId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let ProductId = req.params.ProductId;
-        let SelectProduct = `Select ProductId, ProductCode, ProductName, ProductPrice, ProductType FROM MasterProduct WHERE ProductId = ${ProductId}`;
+        let SelectProduct = `Select ProductId, ProductCode, ProductName, ProductType FROM MasterProduct WHERE ProductId = ${ProductId}`;
         let Product = await pool.request().query(SelectProduct);
         res.status(200).send(JSON.stringify(Product.recordset[0]));
     } catch(err){
