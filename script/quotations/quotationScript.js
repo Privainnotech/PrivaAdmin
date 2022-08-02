@@ -892,38 +892,54 @@ $(document).ready(function () {
 
             // Preview PDF
             $(document).on("click", "#btnExample", function () {
-                $('#modalPreview').modal('show');
+                $('#modalPrintConfirm').modal('show');
 
-                $.ajax({
-                    url: "/quotation_report/" + QuotationId,
-                    method: 'get',
-                    contentType: 'application/json',
-                    success: function (success) {
-                        fileName = success.message;
-                        document.getElementById('PreviewPDF').src = fileName+"#toolbar=0";
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
-                    }
-                });
-                $('#modalPreview').modal('hide');
+                $("#modalPrintConfirm .modal-title").text("Confirm Preview PDF");
+
+                $("#btnPrintYes").unbind("click");
+                $(".btnYes").click(function () {
+                    $('#modalPreview').modal('show');
+                    $("#modalPreview .modal-title").text("Preview PDF");
+                    $.ajax({
+                        url: "/quotation_report/" + QuotationId,
+                        method: 'get',
+                        contentType: 'application/json',
+                        success: function (success) {
+                            fileName = success.message;
+                            document.getElementById('PreviewPDF').src = fileName + "#toolbar=0";
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
+                            });
+                            $('#modalPreview').modal('hide');
+                        }
+                    });
+
+                    $(".close,.no").click(function () {
+                        $('#modalPreview').modal('hide');
+                    });
+                    $('#modalPrintConfirm').modal('hide');
+                })
                 $(".close,.no").click(function () {
-                    $('#modalPreview').modal('hide');
+                    $('#modalPrintConfirm').modal('hide');
                 });
+
+
             });
 
             // Print PDF
             $(document).on("click", "#btnPrint", function () {
                 $('#modalPrintConfirm').modal('show');
+
+                $("#modalPrintConfirm .modal-title").text("Confirm Download PDF");
 
                 $("#btnPrintYes").unbind("click");
                 $(".btnYes").click(function () {
