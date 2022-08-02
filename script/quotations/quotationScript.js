@@ -108,13 +108,11 @@ function RePro() {
     $('#Vat').val('');
     $('#NetTotal').val('');
 
-    $('#IP-Set-TableShow').val('');
-    $('#IP-Set-TablePrice').val('');
-    $('#IP-Set-TableQty').val('');
-    $('#IP-Set-TableTotal').val('');
-    $('#IP-Set-DetailShow').val('');
-    $('#IP-Set-DetailQty').val('');
-    $('#IP-Set-DetailTotal').val('');
+    $('#IP-Set-TableShow').val('0');
+    $('#IP-Set-TablePrice').val('0');
+    $('#IP-Set-TableQty').val('0');
+    $('#IP-Set-TableTotal').val('0');
+    
 }
 
 
@@ -478,8 +476,8 @@ $(document).ready(function () {
         rows = $(this).closest('tr');
         let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
         $(".modal-title").text("Confirm Delete");
-        $("#btnYes").unbind("click");
-        $(".btnYes").click(function () {
+        $("#btnYes").unbind();
+        $("#btnYes").click(function () {
             $.ajax({
                 url: "/quotation/delete_quotation/" + QuotationId,
                 method: 'delete',
@@ -588,8 +586,8 @@ $(document).ready(function () {
 
                         $(".save#modalEditProject").removeClass('save');
 
-                        $("#btnEditYes").unbind("click");
-                        $(".btnYes").click(function () {
+                        $("#btnEditYes").unbind();
+                        $("#btnEditYes").click(function () {
                             $("#btn-text").text("Edit");
                             $("#PJ_Name").attr("disabled", "disabled");
                             $("#PJ_Discount").attr("disabled", "disabled");
@@ -690,15 +688,8 @@ $(document).ready(function () {
                     $('#modalSettingConfirm').modal('show');
 
 
-                    $("#btnSettingYes").unbind("click");
-                    $(".btnYes").click(function () {
-                        $("#btn-text").text("Setting");
-
-                        $("#IP-Set-TableShow").attr("disabled", "disabled");
-                        $("#IP-Set-TablePrice").attr("disabled", "disabled");
-                        $("#IP-Set-TableQty").attr("disabled", "disabled");
-                        $("#IP-Set-TableTotal").attr("disabled", "disabled");
-
+                    $("#btnSettingYes").unbind();
+                    $("#btnSettingYes").click(function () {
                         let TableShow = $.trim($('#IP-Set-TableShow').val());
                         let TablePrice = $.trim($('#IP-Set-TablePrice').val());
                         let TableQty = $.trim($('#IP-Set-TableQty').val());
@@ -725,8 +716,6 @@ $(document).ready(function () {
                                     showConfirmButton: false,
                                     timer: 1500
                                 })
-                                tableQuo.ajax.reload(null, false);
-                                ShowPro(QuotationId)
                             },
                             error: function (err) {
                                 errorText = err.responseJSON.message;
@@ -739,7 +728,6 @@ $(document).ready(function () {
                                     confirmButtonText: 'OK',
                                     confirmButtonColor: '#FF5733'
                                 });
-                                ShowPro(QuotationId)
                             }
                         });
                         $('#modalSettingConfirm').modal('hide');
@@ -837,8 +825,8 @@ $(document).ready(function () {
                         let EmployeeApproveId = obj.EmployeeApproveId;
                         let QuotationDetail = obj.QuotationDetail;
 
-                        $("#btnREYes").unbind("click");
-                        $(".btnYes").click(function () {
+                        $("#btnREYes").unbind();
+                        $("#btnREYes").click(function () {
                             $.ajax({
                                 url: "/quotation_set/revise/" + QuotationId,
                                 method: 'post',
@@ -896,8 +884,8 @@ $(document).ready(function () {
 
                 $("#modalPrintConfirm .modal-title").text("Confirm Preview PDF");
 
-                $("#btnPrintYes").unbind("click");
-                $(".btnYes").click(function () {
+                $("#btnPrintYes").unbind();
+                $("#btnPrintYes").click(function () {
                     $('#modalPreview').modal('show');
                     $("#modalPreview .modal-title").text("Preview PDF");
                     $.ajax({
@@ -941,8 +929,8 @@ $(document).ready(function () {
 
                 $("#modalPrintConfirm .modal-title").text("Confirm Download PDF");
 
-                $("#btnPrintYes").unbind("click");
-                $(".btnYes").click(function () {
+                $("#btnPrintYes").unbind();
+                $("#btnPrintYes").click(function () {
                     $.ajax({
                         url: "/quotation_report/download/" + QuotationId,
                         method: 'get',
@@ -976,8 +964,8 @@ $(document).ready(function () {
 
                 $(".modal-title").text("Confirm Quotation");
 
-                $("#btnSetYes").unbind("click");
-                $(".btnYes").click(function () {
+                $("#btnSetYes").unbind();
+                $("#btnSetYes").click(function () {
                     $.ajax({
                         url: "/quotation_set/quotation/" + QuotationId,
                         method: 'get',
@@ -1018,8 +1006,8 @@ $(document).ready(function () {
                 $('#modalStatusConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Cancel");
-                $("#btnSetYes").unbind("click");
-                $(".btnYes").click(function () {
+                $("#btnSetYes").unbind();
+                $("#btnSetYes").click(function () {
                     $.ajax({
                         url: "/quotation_set/cancel/" + QuotationId,
                         method: 'get',
@@ -1060,8 +1048,8 @@ $(document).ready(function () {
                 $('#modalStatusConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Book");
-                $("#btnSetYes").unbind("click");
-                $(".btnYes").click(function () {
+                $("#btnSetYes").unbind();
+                $("#btnSetYes").click(function () {
                     $.ajax({
                         url: "/quotation_set/booking/" + QuotationId,
                         method: 'get',
@@ -1102,8 +1090,8 @@ $(document).ready(function () {
                 $('#modalStatusConfirm').modal('show');
 
                 $(".modal-title").text("Confirm loss");
-                $("#btnSetYes").unbind("click");
-                $(".btnYes").click(function () {
+                $("#btnSetYes").unbind();
+                $("#btnSetYes").click(function () {
                     $.ajax({
                         url: "/quotation_set/loss/" + QuotationId,
                         method: 'get',
@@ -1279,8 +1267,8 @@ $(document).ready(function () {
         let ItemId = tableItem.rows(rows).data()[0].ItemId;
         let QuotationId = tableItem.rows(rows).data()[0].QuotationId;
         $(".modal-title").text("Confirm Delete");
-        $("#btnYes").unbind("click");
-        $(".btnYes").click(function () {
+        $("#btnYes").unbind();
+        $("#btnYes").click(function () {
             $.ajax({
                 url: "/quotation/delete_item/" + ItemId,
                 method: 'delete',
@@ -1490,8 +1478,8 @@ $(document).ready(function () {
         let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
         let QuotationId = tableSubItem.rows(rows).data()[0].QuotationId;
         $(".modal-title").text("Confirm Delete");
-        $("#btnYes").unbind("click");
-        $(".btnYes").click(function () {
+        $("#btnYes").unbind();
+        $("#btnYes").click(function () {
             $.ajax({
                 url: "/quotation/delete_subitem/" + SubItemId,
                 method: 'delete',

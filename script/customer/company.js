@@ -174,8 +174,8 @@ $(document).ready(function () {
         rows = $(this).closest('tr');
         let CompanyId = tableCompany.rows(rows).data()[0].CompanyId;
         $(".modal-title").text("Confirm Delete");
-        $("#btnYes").unbind("click");
-        $(".btnYes").click(function () {
+        $("#btnYes").unbind();
+        $("#btnYes").click(function () {
             $.ajax({
                 url: "/company_master/delete/" + CompanyId,
                 method: 'delete',

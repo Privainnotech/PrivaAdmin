@@ -138,7 +138,7 @@ $(document).ready(function () {
         let CustomerId = tableCustomer.rows(rows).data()[0].CustomerId;
         $(".modal-title").text("Confirm Delete");
         $("#btnYes").unbind("click");
-        $(".btnYes").click(function () {
+        $("#btnYes").click(function () {
             $.ajax({
                 url: "/customer_master/delete/" + CustomerId,
                 method: 'delete',
