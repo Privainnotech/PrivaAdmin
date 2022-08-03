@@ -191,7 +191,8 @@ router.get('/item/:QuotationId', async (req, res) => {
     try {
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId
-        getQuotationItem = `SELECT a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription, b.QuotationStatus
+        getQuotationItem = `SELECT row_number() over(order by a.ItemId) as 'Item',
+            a.QuotationId, a.ItemId, a.ItemName, a.ItemPrice, a.ItemQty, a.ItemDescription, b.QuotationStatus
             FROM [QuotationItem] a
             LEFT JOIN [Quotation] b on a.QuotationId = b.QuotationId
             WHERE a.QuotationId = ${QuotationId}`;
@@ -206,7 +207,7 @@ router.get('/subitem/:ItemId', async (req, res) => {
     try {
         let pool = await sql.connect(dbconfig);
         let ItemId = req.params.ItemId
-        getQuotationSubItem = `SELECT c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode , b.ProductName SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
+        getQuotationSubItem = `SELECT row_number() over(order by a.SubItemId) as 'Index', c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode , b.ProductName SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit, CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
             FROM [QuotationSubItem] a
             LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
             LEFT JOIN [QuotationItem] c ON a.ItemId = c.ItemId
@@ -281,6 +282,12 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         let QuotationId = req.params.QuotationId
         let { ItemName, ItemPrice, ItemQty } = req.body
         //Unit = {Pc, Set, Lot} => Dropdown
+        if (ItemName == '') {
+            res.status(400).send({ message: 'Please enter Item name' });
+            return;
+        }
+        if (ItemPrice == '') ItemPrice = 0;
+        if (ItemQty == '') ItemQty = 0;
         let CheckQuotationItem = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
              SELECT *
@@ -292,7 +299,10 @@ router.post('/add_item/:QuotationId', async (req, res) => {
         if (CheckQuotationItem.recordset[0].check) {
             res.status(400).send({ message: 'Duplicate item in quotation' });
         } else {
-            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty)VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty})
+            console.log('insert')
+            console.log(QuotationId+ItemName+ItemPrice+ItemQty)
+            let InsertItem = `INSERT INTO QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty)
+            VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty})
             SELECT SCOPE_IDENTITY() AS Id`;
             let Item = await pool.request().query(InsertItem);
             updatePriceQ(Item.recordset[0].Id);
@@ -311,11 +321,11 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
         // ProductType = {Labor, Material, Internal, Unknown} => Dropdown
         // Unit = {Pc, Set, Lot} => Dropdown
         if (SubItemName == '') {
-            res.status(400).send({ message: 'Please enter product name' });
+            res.status(400).send({ message: 'Please enter description' });
             return;
         }
         if (SubItemPrice == '') SubItemPrice = 0;
-        if (SubItemQty == '') SubItemPrice = 0;
+        if (SubItemQty == '') SubItemQty = 0;
         if (ProductId == 'null') { // Add new product
             let CheckProduct = await pool.request().query(`SELECT CASE
             WHEN EXISTS(
@@ -326,7 +336,22 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
             THEN CAST (1 AS BIT)
             ELSE CAST (0 AS BIT) END AS 'check'`);
             if (CheckProduct.recordset[0].check) {
-                res.status(400).send({ message: 'Duplicate Product' });
+                let CheckSubItem = await pool.request().query(`SELECT CASE
+                WHEN EXISTS(
+                    SELECT *
+                    FROM QuotationSubItem
+                    WHERE ProductName = N'${SubItemName}' and ItemId = ${ItemId}
+                )
+                THEN CAST (1 AS BIT)
+                ELSE CAST (0 AS BIT) END AS 'check'`);
+                if (CheckSubItem.recordset[0].check) {
+                    res.status(400).send({ message: 'Duplicate Sub-item' });
+                } else {
+                    let InsertSubItem = `INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemQty, SubItemUnit) VALUES(${ItemId}, ${ProductId}, N'${SubItemQty}', N'${SubItemUnit}')`
+                    await pool.request().query(InsertSubItem);
+                    updatePriceI(ItemId);
+                    res.status(201).send({ message: 'Sub-item has been added' });
+                }
             } else {
                 let ProductCode = '';
                 let CheckProductCode = await pool.request().query(`
@@ -347,6 +372,11 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
                 console.log("ProductId: " + newProduct.recordset[0].Id)
                 let InsertSubItem = `INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemPrice, SubItemQty, SubItemUnit) VALUES(${ItemId}, ${newProduct.recordset[0].Id}, ${SubItemPrice}, ${SubItemQty}, N'${SubItemUnit}')`
                 await pool.request().query(InsertSubItem);
+                if (SubItemPrice === 0 || SubItemQty === 0 || SubItemUnit === '' ) {
+
+                } else{
+
+                }
                 updatePriceI(ItemId);
                 res.status(201).send({ message: 'Successfully add Sub-item' });
             }

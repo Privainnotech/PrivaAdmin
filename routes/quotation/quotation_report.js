@@ -7,7 +7,6 @@ const { bahttext } = require('bahttext')
 const path = require('path');
 const fs = require('fs');
 const pdfMake = require('pdfmake');
-const { stringify } = require('querystring');
 
 const fonts = {
     Roboto: {
@@ -574,7 +573,7 @@ router.get('/:QuotationId', async (req, res) => {
         let settings = await pool.request().query(getSetting);
         let quotation = quotations.recordset[0];
         let setting = settings.recordset[0];
-        console.log(setting)
+        // console.log(setting)
         let quotationNo = ""
         if (quotation.QuotationRevised < 10) quotationNo = quotation.QuotationNo+"_0"+quotation.QuotationRevised
         else  quotationNo = quotation.QuotationNo+"_"+quotation.QuotationRevised
@@ -621,7 +620,6 @@ router.get('/download/:QuotationId', async (req, res) => {
             res.status(500).send({message: 'Please preview quotation before download'});
             return;
         }
-        
         res.status(500).send({message: `${err}`});
     }
 })
