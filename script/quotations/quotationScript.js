@@ -991,6 +991,7 @@ $(document).ready(function () {
                                 timer: 1500
                             })
                             tableQuo.ajax.reload(null, false);
+                            ShowPro(QuotationId);
                         },
                         error: function (err) {
                             errorText = err.responseJSON.message;
