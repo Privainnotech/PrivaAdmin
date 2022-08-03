@@ -285,8 +285,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             }] 
         }, {
             width: '*',
-            text: "",
-            pageBreak: 'after'
+            text: ""
         }
     ]
 
@@ -469,7 +468,13 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
         }
     }
 
-    // Detail    
+    // Detail
+    let pageBreak = () => {
+        return {
+            text: "",
+            pageBreak: "before"
+        }
+    }
     let detailHeader = () =>{
         return { columns: [
             {
@@ -496,6 +501,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
         }
     }
     if (JSON.parse(QuotationDetail) !== null) {
+        doc['content'].push()
         let detailTable1 = detailTable();
         let detailTable2 = detailTable();
         let detailTable3 = detailTable();
@@ -510,27 +516,21 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
             text = text.split("; ");
             if (i<40) {
-                if (i===0) { doc['content'].push(detailHeader(), detail1) }
+                if (i===0) { doc['content'].push(pageBreak(), detailHeader(), detail1) }
                 detailTable1['body'].push([
                     { text: text[0], style: isBold},
                     { text: text[1] ? text[1] : "", style: isBold},
                     { text: text[2] ? text[2] : "", style: isBold}
                 ])
             } else if (i<80) {
-                if (i===40) {
-                    detail1.pageBreak = 'after'
-                    doc['content'].push(detailHeader(), detail2)
-                }
+                if (i===40) { doc['content'].push(pageBreak(), detailHeader(), detail2) }
                 detailTable2['body'].push([
                     { text: text[0], style: isBold},
                     { text: text[1] ? text[1] : "", style: isBold},
                     { text: text[2] ? text[2] : "", style: isBold}
                 ])
             } else {
-                if (i===80) {
-                    detail2.pageBreak = 'after'
-                    doc['content'].push(detailHeader(), detail3)
-                }
+                if (i===80) { doc['content'].push(pageBreak(), detailHeader(), detail3) }
                 detailTable3['body'].push([
                     { text: text[0], style: isBold},
                     { text: text[1] ? text[1] : "", style: isBold},
