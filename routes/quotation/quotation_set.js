@@ -124,15 +124,32 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             if (QuotationStatus == 1 && QuotationRevised == 0) {
                 // GenQuotationNo
                 let genQuotationNo = '';
-                let CheckQuotationNo = await pool.request().query(`
+                let SearchQuotationNo = await pool.request().query(`
                     SELECT *
                     FROM QuotationNo
                     WHERE QuotationNo LIKE N'${checkMonth()}%'`)
-                if (CheckQuotationNo.recordset.length<10) {
-                    genQuotationNo = checkMonth()+'0'+CheckQuotationNo.recordset.length
-                } else {
-                    genQuotationNo = checkMonth()+CheckQuotationNo.recordset.length
-                }
+                // Check QuotationNo
+                let duplicateNo = true;
+                let Number = SearchQuotationNo.recordset.length
+                do {
+                    if (Number < 10) {
+                        genQuotationNo = checkMonth() + '0' + Number
+                    } else {
+                        genQuotationNo = checkMonth() + Number
+                    }
+                    let CheckQuotationNo = await pool.request().query(`SELECT CASE
+                    WHEN EXISTS(
+                            SELECT *
+                            FROM QuotationNo
+                            WHERE QuotationNo = N'${genQuotationNo}'
+                    )
+                    THEN CAST (1 AS BIT)
+                    ELSE CAST (0 AS BIT) END AS 'check'`);
+                    duplicateNo = CheckQuotationNo.recordset[0].check
+                    if (duplicateNo) {
+                        Number++;
+                    }
+                } while (duplicateNo);
                 console.log("Gen QuotationNo: " + genQuotationNo)
                 // Insert QuotationNo
                 let InsertQuotationNo = `INSERT INTO QuotationNo(QuotationNo,CustomerId) VALUES(N'${genQuotationNo}',${CustomerId})
