@@ -1,0 +1,17 @@
+.box-item{
+    margin-bottom: 10px;
+}
+
+.box-item button.btn{
+    padding: 2px 7px;
+}
+
+input {
+    margin-bottom: 10px;
+}
+
+.box-description{
+    margin: 10px;
+    margin-left: 20px;
+}
+
