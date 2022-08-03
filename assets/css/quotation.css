@@ -6,6 +6,10 @@ table.dataTable tbody td{
 	padding: 2px 8px;	
 }
 
+.mymb {
+	margin-bottom: 30px;
+}
+
 .modal-80{
 	max-width: 80vw;
 }

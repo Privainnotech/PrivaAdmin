@@ -317,6 +317,9 @@ $(document).ready(function () {
             },
             "columns": [
                 {
+                    "data": "Item"
+                },
+                {
                     "data": "ItemName"
                 },
                 {
@@ -352,7 +355,7 @@ $(document).ready(function () {
 
             ], "columnDefs": [
                 {
-                    "targets": [4],
+                    "targets": [5],
                     "visible": false
                 },
             ],
@@ -375,6 +378,9 @@ $(document).ready(function () {
                 "dataSrc": ""
             },
             "columns": [
+                {
+                    "data": "Index"
+                },
                 {
                     "data": "SubItemName"
                 },
@@ -410,7 +416,7 @@ $(document).ready(function () {
 
             ], "columnDefs": [
                 {
-                    "targets": [4],
+                    "targets": [5],
                     "visible": false
                 },
             ],

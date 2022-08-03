@@ -135,6 +135,10 @@ table.dataTable tbody tr.selected>* {
     color: white;
 }
 
+.red{
+	color: red;
+	display: inline;
+}
 
 nav.navbar{
 	padding-top: 10px;
