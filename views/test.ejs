@@ -2,740 +2,733 @@
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords"
-		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+  <meta name="author" content="AdminKit">
+  <meta name="keywords"
+    content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
 
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+  <link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-	<title>Quotation</title>
+	
 
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+  <title>Quotation</title>
 
-	<link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
-	<link rel="stylesheet" href="/fonts/font-awesome.min.css">
-	<link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-	<link rel="stylesheet" href="/css/main.css">
-	<link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
 
-	<link rel="stylesheet" href="/css/quotation.css">
+  <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
+  <link rel="stylesheet" href="/fonts/font-awesome.min.css">
+  <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
 
-	<link rel="stylesheet" href="/css/simple-image.css" />
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/item-table.css">
+
+  <link rel="stylesheet" href="/css/quotation.css">
+  <link rel="stylesheet" href="/css/simple-image.css" />
 </head>
 
 <body>
-	<div class="wrapper">
-		<%- include('./partials/sidebar'); %>
+  <div class="wrapper">
+    <%- include('./partials/sidebar'); %>
 
-			<!-- Add From -->
-			<!-- form Add Quatation -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalQuotationMaster">
-				<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<form id="formQuotation" action="/Setting/AddEditRecpName">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modalHeaderAddPart">Add Project:</h4><button type="button"
-									class="close" data-dismiss="modal" aria-label="Close"><span
-										aria-hidden="true">×</span></button>
-							</div>
-							<div class="modal-body">
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Project
-											Name:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpProjectName"
-											style="width: 100%;" required=""></div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Customer
-											Name:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-										<select class="form-select" id="modalInpCustomerId">
-											<option value="null" selected="">-</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer"><button class="btn btn-primary" id="modalSaveProject"
-									type="button">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-
-			<!-- form Add item -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalAddItemMaster">
-				<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<form id="formAddItem" action="/Setting/AddEditRecpName">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button"
-									class="close" data-dismiss="modal" aria-label="Close"><span
-										aria-hidden="true">×</span></button>
-							</div>
-							<div class="modal-body">
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Item
-											Name:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpAddItemName"
-											style="width: 100%;" required=""></div>
-								</div>
-
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Price:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpAddItemPrice"
-											style="width: 100%;" required=""></div>
-								</div>
-
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Qty:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpAddQty" style="width: 100%;"
-											required=""></div>
-								</div>
-
-								<!-- <div class="form-row my-2">
-                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Details:&nbsp;</span>
+      <!-- Add From -->
+      <!-- form Add Quatation -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalQuotationMaster">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <form id="formQuotation" action="/Setting/AddEditRecpName">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalHeaderAddPart">Add Project:</h4><button type="button" class="close"
+                  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span><p class="red">*</p> Project
+                      Name:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpProjectName" style="width: 100%;" required=""></div>
                 </div>
-                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><textarea
-                    class="form-control" type="text" id="modalInpAddDetails" style="width: 100%;"
-                    required=""></textarea></div>
-              </div> -->
-							</div>
-							<div class="modal-footer"><button class="btn btn-primary" id="modalAddItem"
-									type="button">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-
-			<!-- form Add Sub -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalAddSubMaster">
-				<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<form id="formSub" action="/Setting/AddEditRecpName">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modalHeaderAddPart">Add Description:</h4><button
-									type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-										aria-hidden="true">×</span></button>
-							</div>
-							<div class="modal-body">
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Description
-											List:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-										<select class="form-select" id="modalInpProduct">
-											<option value="null" selected="">New Description</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Type:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-										<select class="form-select" id="modalInpSubType">
-											<option value="Labor" selected="">Labor</option>
-											<option value="Material" selected="">Material</option>
-											<option value="Intenal" selected="">Intenal</option>
-											<option value="Unknown" selected="">Unknown</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Description:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpSubName" style="width: 100%;"
-											required=""></div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Price:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpSubPrice" style="width: 100%;"
-											required=""></div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Qty:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpSubQty" style="width: 100%;"
-											required=""></div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Unit:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-										<select class="form-select" id="modalInpSubUnit">
-											<option value="Pc" selected="">Pc</option>
-											<option value="Lot" selected="">Lot</option>
-											<option value="Set" selected="">Set</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer"><button class="btn btn-primary" id="modalSaveSub"
-									type="button">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-
-			<!-- Edit From -->
-			<!-- form Edit item -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalItemMaster">
-				<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<form id="formEditItem" action="/Setting/AddEditRecpName">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button"
-									class="close" data-dismiss="modal" aria-label="Close"><span
-										aria-hidden="true">×</span></button>
-							</div>
-							<div class="modal-body">
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Item
-											Name:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpItemName" style="width: 100%;"
-											required=""></div>
-								</div>
-
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Price:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpItemPrice" style="width: 100%;"
-											required=""></div>
-								</div>
-
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Qty:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpQty" style="width: 100%;"
-											required=""></div>
-								</div>
-
-								<!-- <div class="form-row my-2">
-                <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Details:&nbsp;</span>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span><p class="red">*</p> Customer
+                      Name:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpCustomerId">
+                      <option value="null" selected="">-</option>
+                    </select>
+                  </div>
                 </div>
-                <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><textarea
-                    class="form-control" type="text" id="modalInpEditDetails" style="width: 100%;"
-                    required=""></textarea></div>
-              </div> -->
-							</div>
-							<div class="modal-footer"><button class="btn btn-primary" id="modalEditItem"
-									type="button">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
+              </div>
+              <div class="modal-footer"><button class="btn btn-primary" id="modalSaveProject"
+                  type="button">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-			<!-- form Edit Sub -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalSubMaster">
-				<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<form id="formSub" action="/Setting/AddEditRecpName">
-							<div class="modal-header">
-								<h4 class="modal-title" id="modalHeaderAddPart">Add Description:</h4><button
-									type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-										aria-hidden="true">×</span></button>
-							</div>
-							<div class="modal-body">
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Description
-											List:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-										<select class="form-select" id="modalInpEdProduct" disabled>
-											<option value="null" selected="">New Description</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Type:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-										<select class="form-select" id="modalInpEdSubType" disabled>
-											<option value="Labor" selected="">Labor</option>
-											<option value="Material" selected="">Material</option>
-											<option value="Intenal" selected="">Intenal</option>
-											<option value="Unknown" selected="">Unknown</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Description:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpEdSubName" style="width: 100%;"
-											required=""></div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Price:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpEdSubPrice"
-											style="width: 100%;" required=""></div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Qty:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input
-											class="form-control" type="text" id="modalInpEdSubQty" style="width: 100%;"
-											required=""></div>
-								</div>
-								<div class="form-row my-2">
-									<div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center">
-										<span>Unit:&nbsp;</span>
-									</div>
-									<div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
-										<select class="form-select" id="modalInpEdSubUnit">
-											<option value="Pc" selected="">Pc</option>
-											<option value="Lot" selected="">Lot</option>
-											<option value="Set" selected="">Set</option>
-										</select>
-									</div>
-								</div>
-							</div>
-							<div class="modal-footer"><button class="btn btn-primary" id="modalEdSaveSub"
-									type="button">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
+      <!-- form Add item -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalAddItemMaster">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <form id="formAddItem" action="/Setting/AddEditRecpName">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button" class="close"
+                  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span><p class="red">*</p> Item
+                      Name:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpAddItemName" style="width: 100%;" required=""></div>
+                </div>
 
-			<!-- Delete From -->
-			<!-- form Confirm delete -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
-				<div class="modal-dialog modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title">Confirm Delete</h4><button type="button" class="close"
-								data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-						<div class="modal-body text-center">
-							<p>Are you sure to delete?</p>
-						</div>
-						<div class="modal-footer"><button class="btn btn-secondary no" type="button"
-								data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes"
-								type="button">Yes</button></div>
-					</div>
-				</div>
-			</div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpAddItemPrice" style="width: 100%;" required=""></div>
+                </div>
 
-			<!-- Confirm From -->
-			<!-- form Confirm revised -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalRevisedConfirm">
-				<div class="modal-dialog modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title">Confirm Revised</h4><button type="button" class="close"
-								data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-						<div class="modal-body text-center">
-							<p>Are you sure to Revised?</p>
-						</div>
-						<div class="modal-footer"><button class="btn btn-secondary no" type="button"
-								data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnREYes"
-								type="button">Yes</button></div>
-					</div>
-				</div>
-			</div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpAddQty" style="width: 100%;" required=""></div>
+                </div>
+              </div>
+              <div class="modal-footer"><button class="btn btn-primary" id="modalAddItem" type="button">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-			<!-- form Confirm Print -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalPrintConfirm">
-				<div class="modal-dialog modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title">Confirm Print</h4><button type="button" class="close"
-								data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-						<div class="modal-body text-center">
-							<p>Are you sure to go to Print page?</p>
-						</div>
-						<div class="modal-footer"><button class="btn btn-secondary no" type="button"
-								data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnPrintYes"
-								type="button">Yes</button></div>
-					</div>
-				</div>
-			</div>
+      <!-- form Add Sub -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalAddSubMaster">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <form id="formSub" action="/Setting/AddEditRecpName">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalHeaderAddPart">Add Description:</h4><button type="button" class="close"
+                  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Description
+                      List:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpProduct">
+                      <option value="null" selected="">New Description</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row my-2 mb-4">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Type:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpSubType">
+                      <option value="Labor">Labor</option>
+                      <option value="Material">Material</option>
+                      <option value="Intenal">Intenal</option>
+                      <option value="Unknown" selected>Unknown</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span><p class="red">*</p> Description:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpSubName" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpSubPrice" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpSubQty" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Unit:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpSubUnit">
+                      <option value="">None</option>
+                      <option value="Pc">Pc</option>
+                      <option value="Lot">Lot</option>
+                      <option value="Set">Set</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer"><button class="btn btn-primary" id="modalSaveSub" type="button">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-			<!-- form confirm Edit -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalEditConfirm">
-				<div class="modal-dialog modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title">Confirm Edit</h4><button type="button" class="close"
-								data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-						<div class="modal-body text-center">
-							<p>Are you sure to Edit?</p>
-						</div>
-						<div class="modal-footer"><button class="btn btn-secondary no" type="button"
-								data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnEditYes"
-								type="button">Yes</button></div>
-					</div>
-				</div>
-			</div>
+      <!-- Edit From -->
+      <!-- form Edit item -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalItemMaster">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <form id="formEditItem" action="/Setting/AddEditRecpName">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalHeaderAddPart">Add Item:</h4><button type="button" class="close"
+                  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span><p class="red">*</p> Item
+                      Name:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpItemName" style="width: 100%;" required=""></div>
+                </div>
 
-			<!-- form Confirm Set Status -->
-			<div class="modal fade" role="dialog" tabindex="-1" id="modalStatusConfirm">
-				<div class="modal-dialog modal-dialog-centered" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title">Confirm Cancel</h4><button type="button" class="close"
-								data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-						</div>
-						<div class="modal-body text-center">
-							<p>Are you sure set Status?</p>
-						</div>
-						<div class="modal-footer"><button class="btn btn-secondary no" type="button"
-								data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnSetYes"
-								type="button">Yes</button></div>
-					</div>
-				</div>
-			</div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpItemPrice" style="width: 100%;" required=""></div>
+                </div>
 
-			<div class="main">
-				<%- include('./partials/navbar'); %>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpQty" style="width: 100%;" required=""></div>
+                </div>
 
-					<main class="content">
-						<div class="container-fluid p-0">
-							<div class="row">
-								<!-- <div class="col-12">
-									<div class="card flex-fill">
-										<div class="card-header title">
-											<h1>Quotation List</h1>
-											<button type="button" class="btn btn-success" id="addProject">New
-												Project</button>
-										</div>
-										<table id="tableQuo" class="table table-hover my-0 ">
-											<thead>
-												<tr>
-													<th>Index</th>
-													<th>Quotation NO.</th>
-													<th>Revised</th>
-													<th>Project</th>
-													<th>Customer</th>
-													<th>Quotation Date</th>
-													<th>Update Date</th>
-													<th>Status</th>
-													<th>Editor</th>
-													<th>Action</th>
-													<th style="display: none;"></th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td colspan="9">Loading...</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xxl-5">
-									<div class="card flex-fill w-100">
-										<div class="card-header title v-2">
-											<h2 id="ProNo">Project No.</h2>
-										</div>
+                
+              </div>
+              <div class="modal-footer"><button class="btn btn-primary" id="modalEditItem" type="button">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-										<div class="card-body w-100">
-											<div class="btn-group right" role="group">
-												<button type="button" class="btn btn-danger " id="btn-cancel"
-													disabled>Cancel</button>
-												<button type="button" class="btn btn-warning " id="btn-quotation"
-													disabled>Quotation</button>
-												<button type="button" class="btn btn-success " id="btn-book"
-													disabled>Booking</button>
-												<button type="button" class="btn btn-info " id="btn-loss"
-													disabled>Loss</button>
-											</div>
-											<div class="align-self-center chart chart-lg">
+      <!-- form Edit Sub -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalSubMaster">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <form id="formSub" action="/Setting/AddEditRecpName">
+              <div class="modal-header">
+                <h4 class="modal-title" id="modalHeaderAddPart">Add Description:</h4><button type="button" class="close"
+                  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span><span>Description
+                      List:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpEdProduct" disabled>
+                      <option value="null">New Description</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row my-2 mb-4">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Type:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpEdSubType" disabled>
+                      <option value="Labor">Labor</option>
+                      <option value="Material">Material</option>
+                      <option value="Intenal">Intenal</option>
+                      <option value="Unknown" selected>Unknown</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span><p class="red">*</p> Description:&nbsp;</span></div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpEdSubName" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Price:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpEdSubPrice" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Qty:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
+                      type="text" id="modalInpEdSubQty" style="width: 100%;" required=""></div>
+                </div>
+                <div class="form-row my-2">
+                  <div class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"><span>Unit:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
+                    <select class="form-select" id="modalInpEdSubUnit">
+                      <option value="">None</option>
+                      <option value="Pc">Pc</option>
+                      <option value="Lot">Lot</option>
+                      <option value="Set">Set</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer"><button class="btn btn-primary" id="modalEdSaveSub" type="button">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group">
-													<span class="input-group-text group-title mg-0 f-9">Project
-														Name:</span>
-													<input type="text" class="form-control group-title edit f-9"
-														id="PJ_Name" disabled>
-												</div>
+      <!-- form Preview -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalPreview">
+        <div class="modal-dialog modal-dialog-centered modal-80" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Preview PDF</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <iframe id="PreviewPDF" src="/report/quotation/20220701_00.pdf#toolbar=0" width="100%" height="500px">
+              </iframe>
+            </div>
+            
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group">
-													<span class="input-group-text mg-0">Customer:</span>
-													<input id="CusName" class="no-bor form-control" disabled>
-												</div>
+      <!-- Delete From -->
+      <!-- form Confirm delete -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Delete</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to delete?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group">
-													<span class="input-group-text mg-0">Date:</span>
-													<input id="QDate" class="no-bor form-control disabled" disabled>
-												</div>
+      <!-- Confirm From -->
+      <!-- form Confirm revised -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalRevisedConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Revised</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to Revised?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnREYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group ">
-													<span class="input-group-text mg-0">Email: </span>
-													<input id="CusEmail" class="no-bor form-control " disabled>
-												</div>
+      <!-- form Confirm Print -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalPrintConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Download PDF</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to go to Download PDF?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnPrintYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group ">
-													<span class="input-group-text mg-0">Company:</span>
-													<input id="ComName" class="no-bor form-control " disabled>
-												</div>
+      <!-- form confirm Edit -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalEditConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Edit</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to Edit?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnEditYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group ">
-													<textarea style="width: 94px;" class="input-group-text mg-0"
-														rows="1" cols="1" disabled>Address:</textarea>
-													<textarea id="Adress" class="no-bor form-control"
-														disabled></textarea>
-												</div>
-												<br>
-												<div class="input-group">
-													<span class="input-group-text textbox4 mg-0 f-9">End
-														Customer:</span>
-													<input type="text" class="form-control edit f-9"
-														id="PJ_End_Customer" disabled>
-												</div>
-												<hr>
-												<span class="input-group-text group-title mg-0 f-9">Condition</span>
+      <!-- form confirm Setting -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalSettingConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Setting</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to save setting?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnSettingYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group">
-													<span class="input-group-text textbox4 mg-0 f-9">Validity:</span>
-													<input type="text" class="form-control edit  f-9" id="PJ_Validity"
-														disabled>
-													<span class="input-group-text textbox2 mg-0 f-9">Delivery:</span>
-													<input type="text" class="form-control edit f-9" id="PJ_Delivery"
-														disabled>
-												</div>
+      <!-- form Confirm Set Status -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalStatusConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Cancel</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure set Status?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-danger btnYes" id="btnSetYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
 
-												<div class="input-group">
-													<span class="input-group-text textbox4 mg-0 f-9">Term of
-														Payment:</span>
-													<input type="text" class="form-control edit f-9" id="PJ_Payment1"
-														disabled>
-												</div>
+      <div class="main">
+        <%- include('./partials/navbar'); %>
 
-												<div class="input-group">
-													<span class="input-group-text textbox4 mg-0 f-9"></span>
-													<input type="text" class="form-control edit f-9" id="PJ_Payment2"
-														disabled>
-												</div>
+          <main class="content">
+            <div class="container-fluid p-0">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card flex-fill">
+                    <div class="card-header title">
+                      <h1>Quotation List</h1>
+                      <button type="button" class="btn btn-success" id="addProject">New Project</button>
+                    </div>
+                    <table id="tableQuo" class="table table-hover my-0 ">
+                      <thead>
+                        <tr>
+                          <th>Index</th>
+                          <th>Quotation NO.</th>
+                          <th>Revised</th>
+                          <th>Project</th>
+                          <th>Customer</th>
+                          <th>Quotation Date</th>
+                          <th>Update Date</th>
+                          <th>Status</th>
+                          <th>Editor</th>
+                          <th>Action</th>
+                          <th style="display: none;"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td colspan="10">Loading...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xxl-5">
+                  <div class="card flex-fill w-100">
+                    <div class="card-header title v-2">
+                      <h2 id="ProNo">Project No.</h2>
+                    </div>
 
-												<div class="input-group">
-													<span class="input-group-text textbox4 mg-0 f-9"></span>
-													<input type="text" class="form-control edit f-9" id="PJ_Payment3"
-														disabled>
-												</div>
+                      <div class="card-body w-100">
+                        <div class="btn-group right" role="group">
+                          <button type="button" class="btn btn-danger " id="btn-cancel" disabled>Cancel</button>
+                          <button type="button" class="btn btn-warning " id="btn-quotation" disabled>Quotation</button>
+                          <button type="button" class="btn btn-success " id="btn-book" disabled>Booking</button>
+                          <button type="button" class="btn btn-info " id="btn-loss" disabled>Loss</button>
+                        </div>
+                        <div class="align-self-center chart chart-lg">
+                          <!-- set -->
+                          <div class="input-group">
+                            <span class="input-group-text group-title mg-0 f-9">Project Name:</span>
+                            <input type="text" class="form-control group-title edit f-9" id="PJ_Name" disabled>
+                          </div>
 
-												<div class="input-group">
-													<span class="input-group-text textbox4 mg-0 f-9">Remark:</span>
-													<input type="text" class="form-control edit f-9" id="PJ_Remark"
-														disabled>
-												</div>
+                          <div class="input-group">
+                            <span class="input-group-text mg-0">Customer:</span>
+                            <input id="CusName" class="no-bor form-control" disabled>
+                          </div>
 
-												<hr>
-												<span class="input-group-text group-title mg-0 f-9">Price</span>
+                          <div class="input-group">
+                            <span class="input-group-text mg-0">Date:</span>
+                            <input id="QDate" class="no-bor form-control disabled" disabled>
+                          </div>
 
-												<div class="input-group ">
-													<span class="input-group-text mg-0">Sub Total:</span>
-													<input id="TotalPrice" class="no-bor form-control" disabled>
-												</div>
+                          <div class="input-group ">
+                            <span class="input-group-text mg-0">Email: </span>
+                            <input id="CusEmail" class="no-bor form-control " disabled>
+                          </div>
 
-												<div class="input-group ">
-													<span class="input-group-text textbox2 mg-0 f-9">Discount: </span>
-													<input type="text" class="form-control edit f-9" id="PJ_Discount"
-														disabled>
-												</div>
+                          <div class="input-group ">
+                            <span class="input-group-text mg-0">Company:</span>
+                            <input id="ComName" class="no-bor form-control " disabled>
+                          </div>
 
-												<div class="input-group ">
-													<span class="input-group-text mg-0">Price after discount:</span>
-													<input id="PriceAfter" class="no-bor form-control" disabled>
-												</div>
+                          <div class="input-group ">
+                            <textarea style="width: 94px;" class="input-group-text mg-0" rows="1" cols="1"
+                              disabled>Address:</textarea>
+                            <textarea id="Adress" class="no-bor form-control" disabled></textarea>
+                          </div>
+                          <br>
+                          <div class="input-group">
+                            <span class="input-group-text textbox4 mg-0 f-9">End Customer:</span>
+                            <input type="text" class="form-control edit f-9" id="PJ_End_Customer" disabled>
+                          </div>
+                          <hr>
+                          <span class="input-group-text group-title mg-0 f-9">Condition</span>
 
-												<div class="input-group ">
-													<span class="input-group-text mg-0">VAT Including 7%:</span>
-													<input id="Vat" class="no-bor form-control" disabled>
-												</div>
+                          <div class="input-group">
+                            <span class="input-group-text textbox4 mg-0 f-9">Validity:</span>
+                            <input type="text" class="form-control edit  f-9" id="PJ_Validity" disabled>
+                            <span class="input-group-text textbox2 mg-0 f-9">Delivery:</span>
+                            <input type="text" class="form-control edit f-9" id="PJ_Delivery" disabled>
+                          </div>
 
-												<div class="input-group ">
-													<span class="input-group-text mg-0">Net Total:</span>
-													<input id="NetTotal" class="no-bor form-control" disabled>
-												</div>
+                          <div class="input-group">
+                            <span class="input-group-text textbox4 mg-0 f-9">Term of Payment:</span>
+                            <input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled>
+                          </div>
 
-												<div class="input-group ">
-													<label class="input-group-text textbox mg-0 f-91"
-														for="PJ_Approve">Approve
-														By:</label>
-													<select class="form-select edit f-91" id="PJ_Approve" disabled>
-														<option value="null" selected>-</option>
-														<option value="null"></option>
-													</select>
-												</div>
+                          <div class="input-group">
+                            <span class="input-group-text textbox4 mg-0 f-9"></span>
+                            <input type="text" class="form-control edit f-9" id="PJ_Payment2" disabled>
+                          </div>
 
-												<div class="footer v-2">
-													<div class="btn-group right ti" role="group"
-														aria-label="Basic example">
-														<button type="button" class="btn btn-dark invisible"
-															id="modalEditProject">
-															<h3 id="btn-text">Edit</h3>
-														</button>
-														<button type="button" class="btn btn-dark btn-rad"
-															id="btnPrint">Print</button>
-														<button type="button" class="btn btn-dark btn-rad"
-															id="btnRevised">Revised</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xxl-7 ">
-									<div class="row">
-										<div class="col-12 d-flex">
-											<div class="card flex-fill h-20">
-												<div class="card-header title v">
-													<h1>Item</h1><button type="button"
-														class="btn btn-success visually-hidden"
-														id="addItem">AddItem</button>
-												</div>
-												<table id="tableItem" class="table table-hover my-0" style="width:100%">
-													<thead>
-														<tr>
-															<th style="width: 50%;">Item Name</th>
-															<th>Unit Price</th>
-															<th>Qty</th>
-															<th style="width: 10%;">Action</th>
-															<th style="display: none;"></th>
-														</tr>
-													</thead>
-													<tbody id="showTable">
-														<tr>
-															<td colspan="4">Loading...</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
+                          <div class="input-group">
+                            <span class="input-group-text textbox4 mg-0 f-9"></span>
+                            <input type="text" class="form-control edit f-9" id="PJ_Payment3" disabled>
+                          </div>
 
-									</div>
-									<div class="row">
-										<div class="col-12 d-flex">
-											<div class="card flex-fill h-20">
-												<div class="card-header title v">
-													<h1>Description</h1>
-												</div>
-												<table id="tableSubItem" class="table table-hover my-0"
-													style="width:100%">
-													<thead>
-														<tr>
-															<th style="width: 50%;">Description</th>
-															<th>Unit Price</th>
-															<th>Qty</th>
-															<th style="width: 15%;">Action</th>
-															<th style="display: none;"></th>
-														</tr>
-													</thead>
-													<tbody id="showSubTable">
-														<tr>
-															<td colspan="4">Loading...</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-									</div>
-								</div> -->
-								<div class="col-12 d-flex">
-									<div class="card flex-fill h-20">
-										<div class="card-header title v">
-											<h1>Setting</h1>
-										</div>
-										<div class="card-body w-100">
-											<!-- <h4>Quotation Table</h4>
-											<h4>Quotation Details</h4> -->
+                          <div class="input-group">
+                            <span class="input-group-text textbox4 mg-0 f-9">Remark:</span>
+                            <input type="text" class="form-control edit f-9" id="PJ_Remark" disabled>
+                          </div>
 
-											<div id="editorjs"></div>
+                          <hr>
+                          <span class="input-group-text group-title mg-0 f-9">Price</span>
 
-											<button id="save-button">Save</button>
-											<pre id="output"></pre>
+                          <div class="input-group ">
+                            <span class="input-group-text mg-0">Sub Total:</span>
+                            <input id="TotalPrice" class="no-bor form-control" disabled>
+                          </div>
 
-										</div>
+                          <div class="input-group ">
+                            <span class="input-group-text textbox2 mg-0 f-9">Discount: </span>
+                            <input type="text" class="form-control edit f-9" id="PJ_Discount" disabled>
+                          </div>
 
-									</div>
-								</div>
-							</div>
-						</div>
-					</main>
+                          <div class="input-group ">
+                            <span class="input-group-text mg-0">Price after discount:</span>
+                            <input id="PriceAfter" class="no-bor form-control" disabled>
+                          </div>
 
-			</div>
-	</div>
+                          <div class="input-group ">
+                            <span class="input-group-text mg-0">VAT Including 7%:</span>
+                            <input id="Vat" class="no-bor form-control" disabled>
+                          </div>
 
+                          <div class="input-group ">
+                            <span class="input-group-text mg-0">Net Total:</span>
+                            <input id="NetTotal" class="no-bor form-control" disabled>
+                          </div>
 
+                          <div class="input-group ">
+                            <label class="input-group-text textbox mg-0 f-91" for="PJ_Approve">Approve
+                              By:</label>
+                            <select class="form-select edit f-91" id="PJ_Approve" disabled>
+                              <option value="null" selected>-</option>
+                              <option value="null"></option>
+                            </select>
+                          </div>
 
+                          <div class="footer v-2">
+                            <div class="btn-group right ti" role="group" aria-label="Basic example">
+                              <button type="button" class="btn btn-dark invisible" id="modalEditProject">
+                                <p id="btn-text">Edit</p>
+                              </button>
+                              <button type="button" class="btn btn-dark btn-rad" id="btnExample" >Preview</button>
+                              <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Download</button>
+                              <button type="button" class="btn btn-dark btn-rad" id="btnRevised">Revised</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xxl-7 ">
+                    <div class="row">
+                      <div class="col-12 d-flex">
+                        <div class="card flex-fill">
+                          <div class="card-header title v">
+                            <h1>Table</h1><button type="button" class="btn btn-success visually-hidden"
+                              id="addItem">AddItem</button>
+                          </div>
+                          <table id="tableItem" class="table table-hover my-0" style="width:100%">
+                            <thead>
+                              <tr>
+                                <th style="width: 5%;">Item</th>
+                                <th style="width: 50%;">Description</th>
+                                <th style="width: 15%;">Unit Price</th>
+                                <th style="width: 10%;">Qty</th>
+                                <th style="width: 15%;">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody id="showTable">
+                              <tr>
+                                <td colspan="5">Loading...</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <div class="row">
+                      <div class="col-12">
+                        <div class="card flex-fill">
+                          <div class="card-header title v">
+                            <h1>Description</h1>
+                          </div>
+                          <table id="tableSubItem" class="table table-hover my-0" style="width:100%">
+                            <thead>
+                              <tr>
+                                <th>Index</th>
+                                <th style="width: 50%;">Description</th>
+                                <th>Unit Price</th>
+                                <th>Qty</th>
+                                <th style="width: 15%;">Action</th>
+                                <th style="display: none;"></th>
+                              </tr>
+                            </thead>
+                            <tbody id="showSubTable">
+                              <tr>
+                                <td colspan="5">Loading...</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="card flex-fill">
+                          <div class="card-header title v">
+                            <h1>Table Setting</h1>
+                            <button type="button" class="btn btn-success visually-hidden"
+                            id="modalSaveSetting">Save Setting</button>
+                          </div>
+                          <div class="card-body w-100">
+                            <div class="form-check form-switch">
+                              <div class="input-group mb-3">
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableShow">Show:</label>
+                                <select class="form-select" id="IP-Set-TableShow" disabled>
+                                  <option value="0" selected>None</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
+                              <div class="input-group mb-3">
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TablePrice">Show Unit Price:</label>
+                                <select class="form-select" id="IP-Set-TablePrice" disabled>
+                                  <option value="0" selected>None</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
 
+                              <div class="input-group mb-3">
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableQty">Show Quantity:</label>
+                                <select class="form-select" id="IP-Set-TableQty" disabled>
+                                  <option value="0" selected>None</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
+                              <div class="input-group mb-3">
+                                <label class="input-group-text mg-0 f-9" for="IP-Set-TableTotal">Show Total Price:</label>
+                                <select class="form-select" id="IP-Set-TableTotal" disabled>
+                                  <option value="0" selected>None</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="card flex-fill">
+                      <div class="card-header title v">
+                        <h1>Detail</h1>
+                        <button id="save-button" class="btn btn-success visually-hidden" >Save</button>
+                      </div>
+                        <div class="card-body w-100">
+                          <div id="editorjs" class="center"></div>
+                          
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </main>
 
+      </div>
+  </div>
 
-
-	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-	<script src="/js/jquery.min.js"></script>
-	<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-	<script src="/bootstrap/js/bootstrap.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-		crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
-	<script src="/js/app.js"></script>
-	<script src="/quotations/quotationScript.js"></script>
-	<script src="/quotations/quotationDropdown.js"></script>
-	<script src="/js/editor.js"></script>
-	<script src="/js/editorHeader.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="/bootstrap/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/editor.js"></script>
 	<script src="/js/editorInnerline.js"></script>
-	
+  <script src="/test.js"></script>
+  <script src="/quotations/quotationDropdown.js"></script>
+  <script src="/quotations/quotationSetting.js"></script>
+  
 </body>
 
 </html>
