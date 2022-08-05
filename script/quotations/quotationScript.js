@@ -816,76 +816,41 @@ $(document).ready(function () {
                 $('#modalRevisedConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Revised");
-                $.ajax({
-                    url: "/quotation/" + QuotationId,
-                    method: 'get',
-                    cache: false,
-                    success: function (response) {
-                        var obj = JSON.parse(response);
-                        let QuotationNoId = obj.QuotationNoId;
-                        let QuotationRevised = obj.QuotationRevised;
-                        let QuotationStatus = obj.QuotationStatus;
-                        let QuotationSubject = obj.QuotationSubject;
-                        let QuotationTotalPrice = obj.QuotationTotalPrice;
-                        let QuotationDiscount = obj.QuotationDiscount;
-                        let QuotationValidityDate = obj.QuotationValidityDate;
-                        let QuotationPayTerm = obj.QuotationPayTerm;
-                        let QuotationDelivery = obj.QuotationDelivery;
-                        let QuotationRemark = obj.QuotationRemark;
-                        let EmployeeApproveId = obj.EmployeeApproveId;
-                        let QuotationDetail = obj.QuotationDetail;
-
-                        $("#btnREYes").unbind();
-                        $("#btnREYes").click(function () {
-                            $.ajax({
-                                url: "/quotation_set/revise/" + QuotationId,
-                                method: 'post',
-                                contentType: 'application/json',
-                                data: JSON.stringify({
-                                    QuotationNoId: QuotationNoId,
-                                    QuotationRevised: QuotationRevised,
-                                    QuotationStatus: QuotationStatus,
-                                    QuotationSubject: QuotationSubject,
-                                    QuotationTotalPrice: QuotationTotalPrice,
-                                    QuotationDiscount: QuotationDiscount,
-                                    QuotationValidityDate: QuotationValidityDate,
-                                    QuotationPayTerm: QuotationPayTerm,
-                                    QuotationDelivery: QuotationDelivery,
-                                    QuotationRemark: QuotationRemark,
-                                    QuotationDetail: QuotationDetail,
-                                    EmployeeApproveId: EmployeeApproveId
-                                }),
-                                success: function () {
-                                    Swal.fire({
-                                        position: 'center',
-                                        icon: 'success',
-                                        title: 'Created',
-                                        text: 'Successfully revise quotation',
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    })
-                                    tableQuo.ajax.reload(null, false);
-                                },
-                                error: function (err) {
-                                    errorText = err.responseJSON.message;
-                                    Swal.fire({
-                                        position: 'center',
-                                        icon: 'warning',
-                                        title: 'Warning',
-                                        text: errorText,
-                                        showConfirmButton: true,
-                                        confirmButtonText: 'OK',
-                                        confirmButtonColor: '#FF5733'
-                                    });
-                                }
+                $("#btnREYes").unbind();
+                $("#btnREYes").click(function () {
+                    $.ajax({
+                        url: "/quotation_set/revise/" + QuotationId,
+                        method: 'get',
+                        cache: false,
+                        success: function () {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Created',
+                                text: 'Successfully revise quotation',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            tableQuo.ajax.reload(null, false);
+                        },
+                        error: function (err) {
+                            errorText = err.responseJSON.message;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: errorText,
+                                showConfirmButton: true,
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#FF5733'
                             });
-                            $('#modalRevisedConfirm').modal('hide');
-                        })
-                        $(".close,.no").click(function () {
-                            $('#modalRevisedConfirm').modal('hide');
-                        });
-                    }
+                        }
+                    });
+                    $('#modalRevisedConfirm').modal('hide');
                 })
+                $(".close,.no").click(function () {
+                    $('#modalRevisedConfirm').modal('hide');
+                });
             });
 
             // Preview PDF

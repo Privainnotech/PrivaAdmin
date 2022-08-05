@@ -39,24 +39,36 @@ const checkTime = () => {
 }
 
 //revised quotation
-router.post('/revise/:OldQuotationId', async (req, res) => {
+router.get('/revise/:OldQuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let UserId = req.session.UserId;
+        if (UserId == '') {
+            res.status(400).send({ message: 'Please login' });
+            return;
+        }
         let OldQuotationId = req.params.OldQuotationId;
+        let getOldQuotation = `SELECT
+                b.QuotationNoId, a.QuotationStatus, a.QuotationSubject, a.EndCustomer,
+                a.QuotationTotalPrice, a.QuotationDiscount,
+                CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate',
+                CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
+                CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
+                CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
+                CONVERT(nvarchar(max), a.QuotationDetail) AS 'QuotationDetail',
+                a.EmployeeApproveId
+            FROM [Quotation] a
+            LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+            WHERE a.QuotationId = ${OldQuotationId}`;
+        let Oldquotation = await pool.request().query(getOldQuotation);
         let {
             QuotationNoId, QuotationSubject,
-            QuotationStatus,
-            QuotationTotalPrice,
-            QuotationDiscount,
-            QuotationValidityDate,
-            QuotationPayTerm,
-            QuotationDelivery,
-            QuotationRemark,
-            QuotationDetail,
-            EmployeeApproveId,
-            EndCustomer
-        } = req.body
+            QuotationStatus, EndCustomer,
+            QuotationTotalPrice, QuotationDiscount,
+            QuotationValidityDate, QuotationPayTerm,
+            QuotationDelivery, QuotationRemark,
+            QuotationDetail, EmployeeApproveId
+        } = Oldquotation.recordset[0]
         if (!EndCustomer) EndCustomer="-";
         if (!QuotationValidityDate) QuotationValidityDate="-";
         if (!QuotationPayTerm) QuotationPayTerm="-";
@@ -66,10 +78,8 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         if (!QuotationDetail) {
             Detail = null;
         } else {
-            Detail = JSON.stringify(QuotationDetail);
+            Detail = QuotationDetail;
         }
-        let PayTerm = JSON.stringify(QuotationPayTerm);
-        console.log(QuotationStatus)
         if (QuotationStatus == 1) { // not pre status
             res.status(400).send({message: "Cannot revise pre-quotation"});
         } else {
@@ -79,9 +89,9 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             WHERE a.QuotationNoId = ${QuotationNoId} AND NOT a.QuotationStatus = 1`);
             let newRevise = getRevise.recordset[0].Revised;
             // let newRevise = QuotationRevised+1;
-            console.log(newRevise)
+            console.log('Revised: '+newRevise)
             let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EmployeeEditId, EndCustomer)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${PayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkTime()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkTime()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let NewQuotationId = Quotation.recordset[0].Id
@@ -108,7 +118,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
                     VALUES(${NewItemId}, ${subitem.ProductId}, ${subitem.SubItemPrice}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`)
                 }
             }
-            console.log('copy success')
+            console.log('revise success')
             res.status(200).send({message: 'Successfully revise quotation'});
         }
     } catch(err){
@@ -187,7 +197,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
                 WHERE a.QuotationNoId = ${QuotationNoId} AND NOT a.QuotationStatus = 1`);
                 let newRevise = getRevise.recordset[0].Revised;
                 // let newRevise = QuotationRevised+1;
-                console.log(newRevise)
+                console.log('Revised: '+newRevise)
                 // Update Quotation NoId, Status & cancel other quotation
                 let UpdateQuotationStatus = `Update Quotation
                 SET QuotationRevised = ${newRevise}, QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkTime()}' WHERE QuotationId = ${QuotationId}`;

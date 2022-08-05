@@ -178,7 +178,7 @@ router.get('/:QuotationId', async (req, res) => {
         if (typeof quotations.recordset[0].EmployeeApproveId == 'object') {
             quotations.recordset[0].EmployeeApproveId = 'null'
         }
-        if (typeof quotations.recordset[0].QuotationDetail == 'object') {
+        if (typeof quotations.recordset[0].QuotationDetail === 'object' || quotations.recordset[0].QuotationDetail === 'null') {
             quotations.recordset[0].QuotationDetail = {
                 "time": 1659069460288,
                 "blocks": [
@@ -245,6 +245,10 @@ router.post('/add_pre_quotation', async (req, res) => {
     try {
         let pool = await sql.connect(dbconfig);
         let UserId = req.session.UserId;
+        if (UserId == '') {
+            res.status(400).send({ message: 'Please login' });
+            return;
+        }
         let { QuotationSubject, CustomerId } = req.body
         if (QuotationSubject == '') {
             res.status(400).send({ message: 'Please enter Project name' });
@@ -519,6 +523,10 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
     try {
         let pool = await sql.connect(dbconfig);
         let UserId = req.session.UserId;
+        if (UserId == '') {
+            res.status(400).send({ message: 'Please login' });
+            return;
+        }
         let QuotationId = req.params.QuotationId;
         let {
             QuotationSubject,
