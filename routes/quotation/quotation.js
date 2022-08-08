@@ -489,7 +489,6 @@ router.delete('/delete_item/:ItemId', async (req, res) => {
         let DeleteSubItem = `DELETE FROM QuotationSubItem WHERE ItemId = ${ItemId}`;
         await pool.request().query(DeleteSubItem);
         await pool.request().query(DeleteItem);
-        updatePriceI(ItemId);
         res.status(200).send({ message: 'Successfully delete Item' });
     } catch (err) {
         res.status(500).send({ message: `${err}` });
@@ -644,11 +643,11 @@ router.put('/edit_subitem/:SubItemId', async (req, res) => {
             return;
         }
         UpdateProduct = `UPDATE MasterProduct
-        SET ProductName =N'${SubItemName}'
-        WHERE ProductId = ${ProductId}`;
+            SET ProductName =N'${SubItemName}'
+            WHERE ProductId = ${ProductId}`;
         UpdateQuotationSubItem = `UPDATE QuotationSubItem
-        SET SubItemPrice = ${SubItemPrice}, SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
-        WHERE SubItemId = ${SubItemId}`;
+            SET SubItemPrice = ${SubItemPrice}, SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
+            WHERE SubItemId = ${SubItemId}`;
         await pool.request().query(UpdateProduct);
         await pool.request().query(UpdateQuotationSubItem);
         if (!(SubItemPrice === 0 || SubItemQty === 0 || SubItemUnit === '')) {

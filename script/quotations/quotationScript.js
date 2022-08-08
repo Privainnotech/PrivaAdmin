@@ -112,7 +112,7 @@ function RePro() {
     $('#IP-Set-TablePrice').val('0');
     $('#IP-Set-TableQty').val('0');
     $('#IP-Set-TableTotal').val('0');
-    
+
 }
 
 
@@ -426,7 +426,8 @@ $(document).ready(function () {
 
     //======================== Quotation =============================//
     //Create Project
-    $(document).on("click", "#addProject", function () {
+    $("#addProject").unbind();
+    $("#addProject").on("click", function () {
         $('#modalQuotationMaster').modal('show');
 
         $("#formQuotation").trigger("reset");
@@ -511,6 +512,7 @@ $(document).ready(function () {
 
     //clickTableQuotation
     $('#tableQuo tbody').on('click', 'tr', function () {
+
         fill_resetSubTable()
         $("#btn-text").text("Edit");
         $("#PJ_Name").attr("disabled", "disabled");
@@ -533,7 +535,6 @@ $(document).ready(function () {
         $("#IP-Set-TableQty").attr("disabled", "disabled");
         $("#IP-Set-TableTotal").attr("disabled", "disabled");
 
-        $("#modalEditProject").removeClass('save');
 
         rows = $(this).closest("tr");
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
@@ -587,12 +588,15 @@ $(document).ready(function () {
                 //Show Setting
                 ShowSetting()
 
-                $(document).on("click", "#modalEditProject", function () {
+                $("#modalEditProject").unbind();
+                $("#modalEditProject").click(function () {
+
                     if ($("#modalEditProject").hasClass('save')) {
+                        console.log(1)
+                        $("#modalEditProject").removeClass('save');
+
                         $('#modalEditConfirm').modal('show');
                         $(".modal-title").text("Confirm Save Edit Project");
-
-                        $(".save#modalEditProject").removeClass('save');
 
                         $("#btnEditYes").unbind();
                         $("#btnEditYes").click(function () {
@@ -674,9 +678,9 @@ $(document).ready(function () {
                         })
                     }
                     else {
+                        console.log(0)
                         $("#modalEditProject").removeClass('save');
                         $("#modalEditProject").toggleClass('save');
-
                         $("#btn-text").text("Save");
 
                         $("#PJ_Name").removeAttr("disabled");
@@ -692,7 +696,8 @@ $(document).ready(function () {
                     }
                 })
                 // Save Setting
-                $(document).on("click", "#modalSaveSetting", function () {
+                $("#modalSaveSetting").unbind();
+                $("#modalSaveSetting").on("click", function () {
                     $('#modalSettingConfirm').modal('show');
 
                     $(".modal-title").text("Confirm Setting");
@@ -812,7 +817,8 @@ $(document).ready(function () {
             }
 
             // Revised
-            $(document).on("click", "#btnRevised", function () {
+            $("#btnRevised").unbind();
+            $("#btnRevised").on("click", function () {
                 $('#modalRevisedConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Revised");
@@ -854,59 +860,49 @@ $(document).ready(function () {
             });
 
             // Preview PDF
-            $(document).on("click", "#btnExample", function () {
-                $('#modalPrintConfirm').modal('show');
+            $("#btnExample").unbind();
+            $("#btnExample").on("click", function () {
 
-                $(".modal-title").text("Confirm Preview PDF");
 
-                $("#btnPrintYes").unbind();
-                $("#btnPrintYes").click(function () {
-                    document.getElementById('PreviewPDF').src = "";
-                    $('#modalPreview').modal('show');
-                    $(".modal-title").text("Preview PDF");
-                    $.ajax({
-                        url: "/quotation_report/" + QuotationId,
-                        method: 'get',
-                        contentType: 'application/json',
-                        success: function (success) {
-                            fileName = success.message;
-                            document.getElementById('PreviewPDF').src = fileName + "#toolbar=0";
-                        },
-                        error: function (err) {
-                            errorText = err.responseJSON.message;
-                            Swal.fire({
-                                position: 'center',
-                                icon: 'warning',
-                                title: 'Warning',
-                                text: errorText,
-                                showConfirmButton: true,
-                                confirmButtonText: 'OK',
-                                confirmButtonColor: '#FF5733'
-                            });
-                            $('#modalPreview').modal('hide');
-                        }
-                    });
-
-                    $(".close,.no").click(function () {
+                document.getElementById('PreviewPDF').src = "";
+                $('#modalPreview').modal('show');
+                $(".modal-title").text("Preview PDF");
+                $.ajax({
+                    url: "/quotation_report/" + QuotationId,
+                    method: 'get',
+                    contentType: 'application/json',
+                    success: function (success) {
+                        fileName = success.message;
+                        document.getElementById('PreviewPDF').src = fileName + "#toolbar=0";
+                    },
+                    error: function (err) {
+                        errorText = err.responseJSON.message;
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: errorText,
+                            showConfirmButton: true,
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#FF5733'
+                        });
                         $('#modalPreview').modal('hide');
-                    });
-                    $('#modalPrintConfirm').modal('hide');
-                })
-                $(".close,.no").click(function () {
-                    $('#modalPrintConfirm').modal('hide');
+                    }
                 });
+
+                $(".close,.no").click(function () {
+                    $('#modalPreview').modal('hide');
+                });
+
 
 
             });
 
             // Print PDF
-            $(document).on("click", "#btnPrint", function () {
-                $('#modalPrintConfirm').modal('show');
+            $("#btnPrint").unbind();
+            $("#btnPrint").on("click", function () {
 
-                $("#modalPrintConfirm .modal-title").text("Confirm Download PDF");
 
-                $("#btnPrintYes").unbind();
-                $("#btnPrintYes").click(function () {
                     $.ajax({
                         url: "/quotation_report/download/" + QuotationId,
                         method: 'get',
@@ -927,15 +923,11 @@ $(document).ready(function () {
                             });
                         }
                     });
-                    $('#modalPrintConfirm').modal('hide');
-                })
-                $(".close,.no").click(function () {
-                    $('#modalPrintConfirm').modal('hide');
-                });
             });
 
             //btn-quotation
-            $(document).on('click', '#btn-quotation', function () {
+            $("#btn-quotation").unbind();
+            $('#btn-quotation').on('click', function () {
                 $('#modalStatusConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Set Status Quotation");
@@ -979,7 +971,8 @@ $(document).ready(function () {
             })
 
             //btn-cancel
-            $(document).on('click', '#btn-cancel', function () {
+            $("#btn-cancel").unbind();
+            $("#btn-cancel").on('click', function () {
                 $('#modalStatusConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Set Status Cancel");
@@ -1021,7 +1014,8 @@ $(document).ready(function () {
             })
 
             //btn-book
-            $(document).on('click', '#btn-book', function () {
+            $("#btn-book").unbind();
+            $('#btn-book').on('click', function () {
                 $('#modalStatusConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Set Status Book");
@@ -1063,7 +1057,8 @@ $(document).ready(function () {
             })
 
             //btn-loss
-            $(document).on('click', '#btn-loss', function () {
+            $("#btn-loss").unbind();
+            $("#btn-loss").on('click', function () {
                 $('#modalStatusConfirm').modal('show');
 
                 $(".modal-title").text("Confirm Set Status Loss");
@@ -1106,7 +1101,8 @@ $(document).ready(function () {
 
             //======================== Item =============================//
             // Create Item
-            $(document).on("click", "#addItem", function () {
+            $("#addItem").unbind();
+            $("#addItem").on("click", function () {
                 $('#modalAddItemMaster').modal('show');
 
                 $("#formAddItem").trigger("reset");
@@ -1375,7 +1371,7 @@ $(document).ready(function () {
         $('#modalSubMaster').modal('show');
 
         $("#formSub").trigger("reset");
-        $(".modal-title").text("Edit SubItem");
+        $(".modal-title").text("Edit Description");
         rows = $(this).closest('tr');
         let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
         let ProductId = tableSubItem.rows(rows).data()[0].ProductId;
