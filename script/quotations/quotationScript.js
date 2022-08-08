@@ -1379,7 +1379,7 @@ $(document).ready(function () {
         $('#modalSubMaster').modal('show');
 
         $("#formSub").trigger("reset");
-        $(".modal-title").text("Edit SubItem");
+        $(".modal-title").text("Edit Description");
         rows = $(this).closest('tr');
         let SubItemId = tableSubItem.rows(rows).data()[0].SubItemId;
         let ProductId = tableSubItem.rows(rows).data()[0].ProductId;
