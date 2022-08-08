@@ -590,7 +590,7 @@ $(document).ready(function () {
                 $(document).on("click", "#modalEditProject", function () {
                     if ($("#modalEditProject").hasClass('save')) {
                         $('#modalEditConfirm').modal('show');
-                        $(".modal-title").text("Confirm Edit Project");
+                        $(".modal-title").text("Confirm Save Edit Project");
 
                         $(".save#modalEditProject").removeClass('save');
 
