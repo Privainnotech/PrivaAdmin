@@ -1,0 +1,12 @@
+#quotationTable {
+    display: grid;
+    grid-template-columns: 10% 50% 15% 10% 15%;
+    justify-items: center;
+}
+
+.table-row{
+    display: grid;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: 10px;
+}

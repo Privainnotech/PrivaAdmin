@@ -501,7 +501,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
         }
     }
     if (JSON.parse(QuotationDetail) !== null) {
-        doc['content'].push()
         let detailTable1 = detailTable();
         let detailTable2 = detailTable();
         let detailTable3 = detailTable();
@@ -512,6 +511,9 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
         let i=0;
         Details.forEach(Detail => {
             let isBold, text = Detail.data.text;
+            if (text.includes('ตัวอย่างการพิมพ์')) {
+                throw new Error('Please delete detail example');
+            }
             text.includes('<b>') ? isBold = 'btext' : isBold = 'blacktext'
             text = text.replace(/<b>|<\/b>|&nbsp;/g," ");
             text = text.split("; ");

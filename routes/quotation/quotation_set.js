@@ -22,25 +22,53 @@ const checkDate = () => {
     return dd+'-'+mm+'-'+yyyy;
 }
 
+const checkTime = () => {
+    let today = new Date();
+    let SS = today.getSeconds();
+    let MM = today.getMinutes();
+    let HH = today.getHours();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1;
+    let yyyy = today.getFullYear();
+    if (SS < 10) { SS = '0' + SS; }
+    if (MM < 10) { MM = '0' + MM; }
+    if (HH < 10) { HH = '0' + HH; }
+    if (dd < 10) { dd = '0' + dd; }
+    if (mm < 10) { mm = '0' + mm; }
+    return dd + '-' + mm + '-' + yyyy + ',' + HH + ':' + MM + ':' + SS;
+}
+
 //revised quotation
-router.post('/revise/:OldQuotationId', async (req, res) => {
+router.get('/revise/:OldQuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let UserId = req.session.UserId;
+        if (UserId == '') {
+            res.status(400).send({ message: 'Please login' });
+            return;
+        }
         let OldQuotationId = req.params.OldQuotationId;
+        let getOldQuotation = `SELECT
+                b.QuotationNoId, a.QuotationStatus, a.QuotationSubject, a.EndCustomer,
+                a.QuotationTotalPrice, a.QuotationDiscount,
+                CONVERT(nvarchar(max), a.QuotationValidityDate) AS 'QuotationValidityDate',
+                CONVERT(nvarchar(max), a.QuotationPayTerm) AS 'QuotationPayTerm',
+                CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
+                CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
+                CONVERT(nvarchar(max), a.QuotationDetail) AS 'QuotationDetail',
+                a.EmployeeApproveId
+            FROM [Quotation] a
+            LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+            WHERE a.QuotationId = ${OldQuotationId}`;
+        let Oldquotation = await pool.request().query(getOldQuotation);
         let {
             QuotationNoId, QuotationSubject,
-            QuotationStatus,
-            QuotationTotalPrice,
-            QuotationDiscount,
-            QuotationValidityDate,
-            QuotationPayTerm,
-            QuotationDelivery,
-            QuotationRemark,
-            QuotationDetail,
-            EmployeeApproveId,
-            EndCustomer
-        } = req.body
+            QuotationStatus, EndCustomer,
+            QuotationTotalPrice, QuotationDiscount,
+            QuotationValidityDate, QuotationPayTerm,
+            QuotationDelivery, QuotationRemark,
+            QuotationDetail, EmployeeApproveId
+        } = Oldquotation.recordset[0]
         if (!EndCustomer) EndCustomer="-";
         if (!QuotationValidityDate) QuotationValidityDate="-";
         if (!QuotationPayTerm) QuotationPayTerm="-";
@@ -50,10 +78,8 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
         if (!QuotationDetail) {
             Detail = null;
         } else {
-            Detail = JSON.stringify(QuotationDetail);
+            Detail = QuotationDetail;
         }
-        let PayTerm = JSON.stringify(QuotationPayTerm);
-        console.log(QuotationStatus)
         if (QuotationStatus == 1) { // not pre status
             res.status(400).send({message: "Cannot revise pre-quotation"});
         } else {
@@ -63,9 +89,9 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
             WHERE a.QuotationNoId = ${QuotationNoId} AND NOT a.QuotationStatus = 1`);
             let newRevise = getRevise.recordset[0].Revised;
             // let newRevise = QuotationRevised+1;
-            console.log(newRevise)
+            console.log('Revised: '+newRevise)
             let InsertQuotation = `INSERT INTO Quotation(QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice, QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate, EmployeeApproveId, EmployeeEditId, EndCustomer)
-            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${PayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkDate()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
+            VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkTime()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
             SELECT SCOPE_IDENTITY() AS Id`;
             let Quotation = await pool.request().query(InsertQuotation);
             let NewQuotationId = Quotation.recordset[0].Id
@@ -92,7 +118,7 @@ router.post('/revise/:OldQuotationId', async (req, res) => {
                     VALUES(${NewItemId}, ${subitem.ProductId}, ${subitem.SubItemPrice}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`)
                 }
             }
-            console.log('copy success')
+            console.log('revise success')
             res.status(200).send({message: 'Successfully revise quotation'});
         }
     } catch(err){
@@ -159,7 +185,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
                 // Update Quotation NoId, Status & Delete pre-quotation no
                 let UpdateQuotationStatus = `Update Quotation
                     SET QuotationStatus = 2, QuotationNoId = ${newQuotationNoId},
-                    QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkDate()}'
+                    QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkTime()}'
                     WHERE QuotationId = ${QuotationId}`;
                 let DeletePreQuotationNo = `DELETE QuotationNo WHERE QuotationNoId = ${QuotationNoId} AND QuotationNo LIKE N'pre_%'`
                 await pool.request().query(UpdateQuotationStatus);
@@ -171,11 +197,11 @@ router.get('/quotation/:QuotationId', async (req, res) => {
                 WHERE a.QuotationNoId = ${QuotationNoId} AND NOT a.QuotationStatus = 1`);
                 let newRevise = getRevise.recordset[0].Revised;
                 // let newRevise = QuotationRevised+1;
-                console.log(newRevise)
+                console.log('Revised: '+newRevise)
                 // Update Quotation NoId, Status & cancel other quotation
                 let UpdateQuotationStatus = `Update Quotation
-                SET QuotationRevised = ${newRevise}, QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
-                let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
+                SET QuotationRevised = ${newRevise}, QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkTime()}' WHERE QuotationId = ${QuotationId}`;
+                let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkTime()}'
                     WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`
                 await pool.request().query(UpdateQuotationStatus);
                 await pool.request().query(CancelQuotation);
@@ -185,8 +211,8 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             } else {
                 // Update Quotation NoId, Status & cancel other quotation
                 let UpdateQuotationStatus = `Update Quotation
-                SET QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
-                let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
+                SET QuotationStatus = 2, QuotationDate = N'${checkDate()}', QuotationUpdatedDate = N'${checkTime()}' WHERE QuotationId = ${QuotationId}`;
+                let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkTime()}'
                     WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`
                 await pool.request().query(UpdateQuotationStatus);
                 await pool.request().query(CancelQuotation);
@@ -207,8 +233,8 @@ router.get('/booking/:QuotationId', async (req, res) => {
         let {QuotationNoId, QuotationStatus} = getQuotation.recordset[0];
         if (QuotationStatus != 3 && QuotationStatus != 1) {
             // Update Quotation NoId, Status & Delete pre-quotation no
-            let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
-            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
+            let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkTime()}' WHERE QuotationId = ${QuotationId}`;
+            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkTime()}'
                 WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(CancelQuotation);
@@ -230,8 +256,8 @@ router.get('/loss/:QuotationId', async (req, res) => {
         let {QuotationNoId, QuotationStatus} = getQuotation.recordset[0];
         if (QuotationStatus != 4 && QuotationStatus != 1) {
             // Update Quotation NoId, Status & Delete pre-quotation no
-            let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 4, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
-            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}'
+            let UpdateQuotationStatus = `Update Quotation SET QuotationStatus = 4, QuotationUpdatedDate = N'${checkTime()}' WHERE QuotationId = ${QuotationId}`;
+            let CancelQuotation = `Update Quotation SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkTime()}'
                 WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId} AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`
             await pool.request().query(UpdateQuotationStatus);
             await pool.request().query(CancelQuotation);
@@ -254,7 +280,7 @@ router.get('/cancel/:QuotationId', async (req, res) => {
         if (QuotationStatus != 5 && QuotationStatus != 1) {
             // Update Quotation NoId, Status & Delete pre-quotation no
             let UpdateQuotationStatus = `Update Quotation
-            SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkDate()}' WHERE QuotationId = ${QuotationId}`;
+            SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkTime()}' WHERE QuotationId = ${QuotationId}`;
             await pool.request().query(UpdateQuotationStatus);
             res.status(200).send({message: 'Successfully set quotation'});
         } else {
