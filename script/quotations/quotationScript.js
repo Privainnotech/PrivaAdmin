@@ -510,7 +510,9 @@ $(document).ready(function () {
     });
 
     //clickTableQuotation
+    $(document).unbind();
     $('#tableQuo tbody').on('click', 'tr', function () {
+
         fill_resetSubTable()
         $("#btn-text").text("Edit");
         $("#PJ_Name").attr("disabled", "disabled");
@@ -533,7 +535,6 @@ $(document).ready(function () {
         $("#IP-Set-TableQty").attr("disabled", "disabled");
         $("#IP-Set-TableTotal").attr("disabled", "disabled");
 
-        $("#modalEditProject").removeClass('save');
 
         rows = $(this).closest("tr");
         var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
@@ -587,12 +588,15 @@ $(document).ready(function () {
                 //Show Setting
                 ShowSetting()
 
-                $(document).on("click", "#modalEditProject", function () {
+                $("#modalEditProject").unbind();
+                $("#modalEditProject").click( function () {
+
                     if ($("#modalEditProject").hasClass('save')) {
+                        console.log(1)
+                        $("#modalEditProject").removeClass('save');
+
                         $('#modalEditConfirm').modal('show');
                         $(".modal-title").text("Confirm Save Edit Project");
-
-                        $(".save#modalEditProject").removeClass('save');
 
                         $("#btnEditYes").unbind();
                         $("#btnEditYes").click(function () {
@@ -674,9 +678,9 @@ $(document).ready(function () {
                         })
                     }
                     else {
+                        console.log(0)
                         $("#modalEditProject").removeClass('save');
                         $("#modalEditProject").toggleClass('save');
-
                         $("#btn-text").text("Save");
 
                         $("#PJ_Name").removeAttr("disabled");
