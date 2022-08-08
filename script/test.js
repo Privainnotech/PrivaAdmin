@@ -217,6 +217,10 @@ $(document).ready(function () {
         trHTML += '</tr>'
         document.getElementById("tableItem").innerHTML = trHTML;
     }
+    //Reset Subitem Table
+    function fill_resetSubTable(ItemId) {
+        $(`#Subitem${ItemId}`).remove();
+    }
 
     //Quotation Table
     function fill_quotation() {
@@ -303,7 +307,7 @@ $(document).ready(function () {
                 table.html('')
                 if(items.length) for (let item of items) {
                     let { Item, ItemName, ItemPrice, ItemQty, ItemId, QuotationId, QuotationStatus} = item
-                    let itemRow = $('<tr>').appendTo(table)
+                    let itemRow = $('<tr>').addClass('itemTr selected').attr('id',`Item${ItemId}`).appendTo(table)
                         $('<td>').addClass('Id').text(ItemId).hide().appendTo(itemRow)
                         $('<td>').addClass('QId').text(QuotationId).hide().appendTo(itemRow)
                         $('<td>').addClass('QStatus').text(QuotationStatus).hide().appendTo(itemRow)
@@ -321,46 +325,58 @@ $(document).ready(function () {
                         itemAct = "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>";
                     }
                     itemAction.html(itemAct);
+                    fill_subitem(ItemId, QuotationStatus)
+                }
+            }
+        })
+    }
 
-                    await $.ajax({
-                        url: "/quotation/subitem/" + ItemId,
-                        method: 'get',
-                        cache: false,
-                        success: function (subitemData) {
-                            var subitems = JSON.parse(subitemData);
-                            if(subitems.length) for (let subitem of subitems) {
-                                let { Index, SubItemId, ProductId, ProductType, ProductCode, SubItemName, SubItemPrice, SubItemQty, SubItemUnit, SubItemQtyUnit, QuotationId } = subitem
-                                let Description = `${Index}) ${SubItemName}`
-                                let subitemRow = $('<tr>').appendTo(table)
-                                    $('<td>').addClass('QId').text(QuotationId).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('PId').text(ProductId).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('PType').text(ProductType).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('PCode').text(ProductCode).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('Id').text(SubItemId).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('Name').text(SubItemName).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('Price').text(SubItemPrice).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('Qty').text(SubItemQty).hide().appendTo(subitemRow)
-                                    $('<td>').addClass('Unit').text(SubItemUnit).hide().appendTo(subitemRow)
-                                    $('<td>').text('').appendTo(subitemRow)
-                                    $('<td>').text(Description).appendTo(subitemRow)
-                                    $('<td>').text(SubItemPrice).appendTo(subitemRow)
-                                    $('<td>').text(SubItemQtyUnit).appendTo(subitemRow)
-                                let subitemAction = $('<td>').text('action').appendTo(subitemRow)
-                                let subitemAct;
-                                if (QuotationStatus === '1') {
-                                    subitemAct = "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem'><i class='fa fa-remove'></i></button></div></div>"
-                                        ;
-                                }
-                                // disabled
-                                else {
-                                    subitemAct = "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' disabled><i class='fa fa-remove'></i></button></div></div>"
-                                        ;
-                                }
-                                subitemAction.html(subitemAct);
-                            }
-                            
+    function fill_subitem(ItemId, QuotationStatus) {
+        let id = $(`#Item${ItemId}`);
+        $.ajax({
+            url: "/quotation/subitem/" + ItemId,
+            method: 'get',
+            cache: false,
+            success: function (subitemData) {
+                var subitems = JSON.parse(subitemData);
+                if(subitems.length) {
+                    const subitemTr = $('<tr>').addClass('subitemTr').insertAfter($(`#Item${ItemId}`))
+                    const subitemTd = $('<td>').attr('colspan','5').appendTo(subitemTr)
+                    const subitemTable = $('<table>').addClass('subitemTable').appendTo(subitemTd)
+                    for (let subitem of subitems) {
+                        let { Index, SubItemId, ProductId, ProductType, ProductCode, SubItemName, SubItemPrice, SubItemQty, SubItemUnit, SubItemQtyUnit, QuotationId } = subitem
+                        subitemTr.attr('id',`Subitem${ItemId}`)
+                        let Description = `${Index}) ${SubItemName}`
+                        let subitemRow = $('<tr>').appendTo(subitemTable)
+                            $('<td>').addClass('QId').text(QuotationId).hide().appendTo(subitemRow)
+                            $('<td>').addClass('IId').text(ItemId).hide().appendTo(subitemRow)
+                            $('<td>').addClass('PId').text(ProductId).hide().appendTo(subitemRow)
+                            $('<td>').addClass('PType').text(ProductType).hide().appendTo(subitemRow)
+                            $('<td>').addClass('PCode').text(ProductCode).hide().appendTo(subitemRow)
+                            $('<td>').addClass('Id').text(SubItemId).hide().appendTo(subitemRow)
+                            $('<td>').addClass('Name').text(SubItemName).hide().appendTo(subitemRow)
+                            $('<td>').addClass('Price').text(SubItemPrice).hide().appendTo(subitemRow)
+                            $('<td>').addClass('Qty').text(SubItemQty).hide().appendTo(subitemRow)
+                            $('<td>').addClass('Unit').text(SubItemUnit).hide().appendTo(subitemRow)
+                            $('<td>').text('').css('width', '8%').appendTo(subitemRow)
+                            $('<td>').text(Description).css('width', '50%').appendTo(subitemRow)
+                            $('<td>').text(SubItemPrice).css('width', '15%').appendTo(subitemRow)
+                            $('<td>').text(SubItemQtyUnit).css('width', '10%').appendTo(subitemRow)
+                        let subitemAction = $('<td>').text('action').css('width', '15%').appendTo(subitemRow)
+                        let subitemAct;
+                        if (QuotationStatus === '1') {
+                            subitemAct = "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem'><i class='fa fa-remove'></i></button></div></div>"
+                                ;
                         }
-                    })
+                        // disabled
+                        else {
+                            subitemAct = "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' disabled><i class='fa fa-remove'></i></button></div></div>"
+                                ;
+                        }
+                        subitemAction.html(subitemAct);
+                    }
+                } else {
+                    id.removeClass('selected')
                 }
             }
         })
@@ -1265,83 +1281,91 @@ $(document).ready(function () {
         }
     });
 
-
     //clickTableItem
     $('#tableItem tbody').on('click', 'tr', function () {
+        let rows = $(this).closest('tr');
+        let ItemId = rows.find(".Id").text();
+        let QuotationStatus  = rows.find(".QStatus").text();
+
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            $(`#Subitem${ItemId}`).remove();
+        }
+        else {
+            if ($(this).hasClass('itemTr')) {
+                $(this).addClass('selected');
+                fill_subitem(ItemId, QuotationStatus)
+            }
+        }
+    });
+
+    //Add Sub-Item
+    $(document).on("click", "#btnSubItem", function () {
         let rows = $(this).closest('tr');
         let ItemId = rows.find(".Id").text()
         let ItemName = rows.find(".Name").text()
         let QuotationId = rows.find(".QId").text()
+        let QuotationStatus = rows.find(".QStatus").text()
 
-        if ($(this).hasClass('selected')) {
-            $(this).removeClass('selected');
-        }
-        else {
-            $('#tableItem tr').removeClass('selected');
-            $(this).toggleClass('selected');
-        }
+        $('#modalAddSubMaster').modal('show');
 
-        //Add Sub-Item
-        $(document).on("click", "#btnSubItem", function () {
-            $('#modalAddSubMaster').modal('show');
+        $("#formSub").trigger("reset");
+        $(".modal-title").text("Add Description in " + ItemName);
 
-            $("#formSub").trigger("reset");
-            $(".modal-title").text("Add Description in " + ItemName);
+        $("#modalSaveSub").unbind();
+        $("#modalSaveSub").click(function () {
+            let ProductId = $.trim($('#modalInpProduct').val());
+            let SubItemName = $.trim($('#modalInpSubName').val());
+            let SubItemPrice = $.trim($('#modalInpSubPrice').val());
+            let ProductType = $.trim($('#modalInpSubType').val());
+            let SubItemQty = $.trim($('#modalInpSubQty').val());
+            let SubItemUnit = $.trim($('#modalInpSubUnit').val());
 
-            $("#modalSaveSub").unbind();
-            $("#modalSaveSub").click(function () {
-                let ProductId = $.trim($('#modalInpProduct').val());
-                let SubItemName = $.trim($('#modalInpSubName').val());
-                let SubItemPrice = $.trim($('#modalInpSubPrice').val());
-                let ProductType = $.trim($('#modalInpSubType').val());
-                let SubItemQty = $.trim($('#modalInpSubQty').val());
-                let SubItemUnit = $.trim($('#modalInpSubUnit').val());
+            $.ajax({
+                url: "/quotation/add_subitem/" + ItemId,
+                method: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    ProductId: ProductId,
+                    SubItemName: SubItemName,
+                    SubItemPrice: SubItemPrice,
+                    ProductType: ProductType,
+                    SubItemQty: SubItemQty,
+                    SubItemUnit: SubItemUnit
+                }),
+                success: function () {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Created',
+                        text: 'Successfully add Sub-item',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    fill_resetSubTable(ItemId)
+                    fill_item(QuotationId);
+                    ShowPro(QuotationId)
+                    $('#modalAddSubMaster').modal('hide');
 
-                $.ajax({
-                    url: "/quotation/add_subitem/" + ItemId,
-                    method: 'post',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        ProductId: ProductId,
-                        SubItemName: SubItemName,
-                        SubItemPrice: SubItemPrice,
-                        ProductType: ProductType,
-                        SubItemQty: SubItemQty,
-                        SubItemUnit: SubItemUnit
-                    }),
-                    success: function () {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Created',
-                            text: 'Successfully add Sub-item',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        fill_item(QuotationId);
-                        ShowPro(QuotationId)
-                        $('#modalAddSubMaster').modal('hide');
-
-                    },
-                    error: function (err) {
-                        errorText = err.responseJSON.message;
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'warning',
-                            title: 'Warning',
-                            text: errorText,
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#FF5733'
-                        });
-                    }
-                });
-            })
-            $(".close").click(function () {
-                $('#modalAddSubMaster').modal('hide');
+                },
+                error: function (err) {
+                    errorText = err.responseJSON.message;
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: errorText,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#FF5733'
+                    });
+                }
             });
         })
-    });
+        $(".close").click(function () {
+            $('#modalAddSubMaster').modal('hide');
+        });
+    })
 
     //Edit Sub-Item
     $(document).on("click", "#btnEditSubItem", function () {
@@ -1350,12 +1374,15 @@ $(document).ready(function () {
         $("#formSub").trigger("reset");
         $(".modal-title").text("Edit SubItem");
         let rows = $(this).closest('tr');
+        $(this).addClass('selected');
+        let ItemId = rows.find(".IId").text();
         let SubItemId = rows.find(".Id").text();
         let SubItemName = rows.find(".Name").text();
         let SubItemPrice = rows.find(".Price").text();
         let SubItemQty = rows.find(".Qty").text();
         let SubItemUnit = rows.find(".Unit").text();
         let QuotationId = rows.find(".QId").text();
+        let QuotationStatus = rows.find(".QStatus").text()
         let ProductId = rows.find(".PId").text();
         let ProductType = rows.find(".PType").text();
 
@@ -1396,6 +1423,7 @@ $(document).ready(function () {
                         showConfirmButton: false,
                         timer: 1500
                     })
+                    fill_resetSubTable(ItemId)
                     fill_item(QuotationId);
                     ShowPro(QuotationId);
                     $('#modalSubMaster').modal('hide');
@@ -1424,8 +1452,10 @@ $(document).ready(function () {
         $('#modalDeleteConfirm').modal('show');
 
         let rows = $(this).closest('tr');
+        let ItemId = rows.find(".IId").text();
         let SubItemId = rows.find(".Id").text();
         let QuotationId = rows.find(".QId").text();
+        let QuotationStatus = rows.find(".QStatus").text()
         $(".modal-title").text("Confirm Delete");
         $("#btnYes").unbind();
         $("#btnYes").click(function () {
@@ -1442,9 +1472,9 @@ $(document).ready(function () {
                         showConfirmButton: false,
                         timer: 1500
                     })
+                    fill_resetSubTable(ItemId)
                     fill_item(QuotationId);
                     ShowPro(QuotationId)
-
                 }
             })
             $('#modalDeleteConfirm').modal('hide');
