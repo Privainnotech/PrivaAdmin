@@ -131,10 +131,15 @@ router.get('/quotation/:QuotationId', async (req, res) => {
     try{
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
-        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId, a.QuotationRevised, a.QuotationStatus, b.CustomerId
+        let getQuotation = await pool.request().query(`SELECT a.QuotationNoId, a.QuotationRevised, a.QuotationStatus, b.CustomerId, a.EmployeeApproveId
         FROM [Quotation] a
         LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
-        WHERE QuotationId = ${QuotationId}`)
+        WHERE QuotationId = ${QuotationId}`);
+        console.log(getQuotation.recordset[0].EmployeeApproveId === null)
+        if (getQuotation.recordset[0].EmployeeApproveId === null) {
+            res.status(400).send({message: 'Cannot quotation without approve employee'});
+            return;
+        }
         let checkItem = await pool.request().query(`SELECT CASE
         WHEN EXISTS(
             SELECT *
@@ -142,9 +147,9 @@ router.get('/quotation/:QuotationId', async (req, res) => {
             WHERE QuotationId = ${QuotationId}
         )
         THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`)
+        ELSE CAST (0 AS BIT) END AS 'check'`);
         if(!checkItem.recordset[0].check){
-            res.status(400).send({message: 'Cannot quotation with 0 item'});
+            res.status(400).send({message: 'Cannot quotation without item'});
         } else {
             let {QuotationNoId, QuotationRevised, QuotationStatus, CustomerId} = getQuotation.recordset[0];
             if (QuotationStatus == 1 && QuotationRevised == 0) {

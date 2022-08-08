@@ -370,11 +370,12 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
             if (CheckProduct.recordset[0].check) {
                 let getProductId = await pool.request().query(`SELECT ProductId FROM MasterProduct WHERE ProductName = N'${SubItemName}'`)
                 let ProductId = getProductId.recordset[0].ProductId
+                console.log(ProductId)
+                console.log(ItemId)
                 let CheckSubItem = await pool.request().query(`SELECT CASE
                     WHEN EXISTS(
                         SELECT *
-                        FROM QuotationSubItem a
-                        LEFT JOIN MasterProduct b on a.
+                        FROM QuotationSubItem 
                         WHERE ProductId = ${ProductId} and ItemId = ${ItemId}
                     )
                     THEN CAST (1 AS BIT)
@@ -382,7 +383,8 @@ router.post('/add_subitem/:ItemId', async (req, res) => {
                 if (CheckSubItem.recordset[0].check) {
                     res.status(400).send({ message: 'Duplicate Sub-item' });
                 } else {
-                    let InsertSubItem = `INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemPrice, SubItemQty, SubItemUnit) VALUES(${ItemId}, ${ProductId}, ${SubItemPrice}, N'${SubItemQty}', N'${SubItemUnit}')`
+                    console.log('check')
+                    let InsertSubItem = `INSERT INTO QuotationSubItem(ItemId, ProductId, SubItemPrice, SubItemQty, SubItemUnit) VALUES(${ItemId}, ${ProductId}, ${SubItemPrice}, ${SubItemQty}, N'${SubItemUnit}')`
                     await pool.request().query(InsertSubItem);
                     if (!(SubItemPrice === 0 || SubItemQty === 0 || SubItemUnit === '' )) {
                         updatePriceI(ItemId);
@@ -625,9 +627,22 @@ router.put('/edit_subitem/:SubItemId', async (req, res) => {
     try {
         let SubItemId = req.params.SubItemId;
         let { ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit } = req.body
+        console.log(req.body)
         if (SubItemPrice === "") SubItemPrice = 0;
         if (SubItemQty === "") SubItemQty = 0;
         let pool = await sql.connect(dbconfig);
+        let checkProduct = await pool.request().query(`SELECT CASE
+            WHEN EXISTS(
+                SELECT *
+                FROM MasterProduct 
+                WHERE ProductName = N'${SubItemName}' AND NOT ProductId = ${ProductId}
+            )
+            THEN CAST (1 AS BIT)
+            ELSE CAST (0 AS BIT) END AS 'check'`)
+        if (checkProduct.recordset[0].check) {
+            res.status(400).send({ message: 'Duplicate description with another product' });
+            return;
+        }
         UpdateProduct = `UPDATE MasterProduct
         SET ProductName =N'${SubItemName}'
         WHERE ProductId = ${ProductId}`;
