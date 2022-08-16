@@ -201,10 +201,33 @@ router.get('/:QuotationId', async (req, res) => {
             };
         } else {
             quotations.recordset[0].QuotationDetail = JSON.parse(quotations.recordset[0].QuotationDetail)
+            if (quotations.recordset[0].QuotationDetail.blocks.length === 0){
+                quotations.recordset[0].QuotationDetail = {
+                    "time": 1659069460288,
+                    "blocks": [
+                        {
+                            "id": "cyZjplMOZ0",
+                            "type": "paragraph",
+                            "data": {
+                                "text": "<b>ตัวอย่างการพิมพ์(อย่าลืมลบออก)</b>"
+                            }
+                        },
+                        {
+                            "id": "Mj_9XdxLe0",
+                            "type": "paragraph",
+                            "data": {
+                                "text": "1 รายละเอียด; จำนวน หน่วย; ราคา"
+                            }
+                        }
+                    ],
+                    "version": "2.25.0"
+                };
+            }
         }
         quotations.recordset[0].QuotationRevised = Revised
         res.status(200).send(JSON.stringify(quotations.recordset[0]));
     } catch (err) {
+        console.log(`${err}`)
         res.status(500).send({ message: `${err}` });
     }
 })
