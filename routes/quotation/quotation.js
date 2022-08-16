@@ -186,7 +186,7 @@ router.get('/:QuotationId', async (req, res) => {
                         "id": "cyZjplMOZ0",
                         "type": "paragraph",
                         "data": {
-                            "text": "<b>ตัวอย่างการพิมพ์(อย่าลืมลบออก)</b>"
+                            "text": "<b>ตัวอย่างการพิมพ์(อย่าลืมลบออกถ้ามีการแก้ไข)</b>"
                         }
                     },
                     {
@@ -209,7 +209,7 @@ router.get('/:QuotationId', async (req, res) => {
                             "id": "cyZjplMOZ0",
                             "type": "paragraph",
                             "data": {
-                                "text": "<b>ตัวอย่างการพิมพ์(อย่าลืมลบออก)</b>"
+                                "text": "<b>ตัวอย่างการพิมพ์(อย่าลืมลบออกถ้ามีการแก้ไข)</b>"
                             }
                         },
                         {
@@ -596,7 +596,12 @@ router.put('/edit_detail/:QuotationId', async (req, res) => {
         let pool = await sql.connect(dbconfig);
         let QuotationId = req.params.QuotationId;
         let { QuotationDetail } = req.body;
-        let Detail = JSON.stringify(QuotationDetail);
+        console.log(QuotationDetail)
+        let Detail = null;
+        if (QuotationDetail.blocks.length !== 0) {
+            Detail = JSON.stringify(QuotationDetail);
+        }
+        console.log(Detail)
         let UpdateSetting = `UPDATE Quotation
         SET QuotationDetail = N'${Detail}'
         WHERE QuotationId = ${QuotationId};`;
