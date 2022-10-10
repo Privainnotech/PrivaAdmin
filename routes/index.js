@@ -1,73 +1,73 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 // MIDDLEWARE
 const ifNotLoggedIn = (req, res, next) => {
-    if (!req.session.isLoggedIn) {
-        return res.redirect('/login');
-    }
-    next();
-}
+  if (!req.session.isLoggedIn) {
+    return res.redirect("/login");
+  }
+  next();
+};
 
 const ifLoggedIn = (req, res, next) => {
-    if (req.session.isLoggedIn) {
-        return res.redirect('/');
-    }
-    next();
-}
+  if (req.session.isLoggedIn) {
+    return res.redirect("/");
+  }
+  next();
+};
 
 const isAuth = (req, res, next) => {
-    if(!req.session.isAuth) {
-        req.flash('page', 'employee')
-        req.flash('status', 'Unauthorized')
-        req.flash('error', 'You are not allowed to access this page')
-        return res.status(401).render('error')
-        // return res.status(401).send({message: 'Not allow'})
-    }
-    next()
-}
+  if (!req.session.isAuth) {
+    req.flash("page", "employee");
+    req.flash("status", "Unauthorized");
+    req.flash("error", "You are not allowed to access this page");
+    return res.status(401).render("error");
+    // return res.status(401).send({message: 'Not allow'})
+  }
+  next();
+};
 
 // PAGE
 
-router.get('/', ifNotLoggedIn, (req , res, next) => {
-    req.flash('page', 'home')
-    res.render('index')
-})
+router.get("/", ifNotLoggedIn, (req, res, next) => {
+  req.flash("page", "home");
+  res.render("index");
+});
 
-router.get('/login', ifLoggedIn, (req, res, next) => {
-    res.render('login', {message: ''});
+router.get("/login", ifLoggedIn, (req, res, next) => {
+  res.render("login");
 });
 
 // customer page
-router.get('/customer', ifNotLoggedIn, (req, res, next) => {
-    req.flash('page', 'customer')
-    res.render('customer')
+router.get("/customer", ifNotLoggedIn, (req, res, next) => {
+  req.flash("page", "customer");
+  res.render("customer");
 });
 
 // quotation page
-router.get('/quotation', ifNotLoggedIn, (req, res, next) => {
-    req.flash('page', 'quotation')
-    res.render('quotation')
+router.get("/quotation", ifNotLoggedIn, (req, res, next) => {
+  req.flash("page", "quotation");
+  res.render("quotation");
 });
 
 // Employee page
-router.get('/employee', ifNotLoggedIn, isAuth, (req, res, next) => {
-    req.flash('page', 'employee')
-    res.render('employee')
+router.get("/employee", ifNotLoggedIn, isAuth, (req, res, next) => {
+  req.flash("page", "employee");
+  res.render("employee");
 });
 
 // User page
-router.get('/users', ifNotLoggedIn, isAuth, (req, res, next) => {
-    res.render('users')
-})
+router.get("/users", ifNotLoggedIn, isAuth, (req, res, next) => {
+  res.render("users");
+});
 
 // Test page
-router.get('/test', (req, res, next) => {
-    res.render('test')
+router.get("/test", (req, res, next) => {
+  res.render("test");
 });
 
 // router.get('/error', (req, res, next) => {
 //     res.render('error')
 // });
 
-module.exports = router
+module.exports = router;

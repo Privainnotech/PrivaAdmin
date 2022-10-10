@@ -1,12 +1,4 @@
-CREATE Table [Priva].[dbo].[Users](
-	UserId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-	AvatarPath NVARCHAR(255) NOT NULL DEFAULT N'./images/avatar/0.png',
-	Username NVARCHAR(50) NOT NULL,
-	Password NVARCHAR(255) NOT NULL,
-	Role NVARCHAR(255) NULL
-)
-
-CREATE Table [Priva].[dbo].[MasterCompany](
+CREATE Table [MasterCompany](
     CompanyId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     CompanyName NVARCHAR(50) NOT NULL UNIQUE,
     CompanyAddress NVARCHAR(255) NOT NULL,
@@ -15,7 +7,7 @@ CREATE Table [Priva].[dbo].[MasterCompany](
 	CompanyActive int NOT NULL DEFAULT 1
 )
 
-CREATE Table [Priva].[dbo].[MasterCustomer](
+CREATE Table [MasterCustomer](
     CustomerId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	CompanyId bigint NOT NULL,
     CustomerTitle NVARCHAR(10) NULL,
@@ -27,22 +19,28 @@ CREATE Table [Priva].[dbo].[MasterCustomer](
 	CONSTRAINT FK_customer_company FOREIGN KEY (CompanyId) REFERENCES MasterCompany(CompanyId)
 )
 
-CREATE Table [Priva].[dbo].[MasterStatus](
-    StatusId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+CREATE Table [MasterStatus](
+    StatusId int PRIMARY KEY CLUSTERED NOT NULL,
 	StatusName NVARCHAR(20) NOT NULL UNIQUE
 )
 
-CREATE Table [Priva].[dbo].[MasterEmployee](
+INSERT INTO MasterStatus(StatusId, StatusName)
+VALUES(1, N'Pre-Quotation'),(2, N'Quotation'),(2, N'Quotation'),(2, N'Quotation'),(2, N'Quotation')
+
+CREATE Table [MasterEmployee](
 	EmployeeId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	EmployeeTitle NVARCHAR(10) NULL,
 	EmployeeFname NVARCHAR(50) NOT NULL,
 	EmployeeLname NVARCHAR(50) NULL,
-	EmployeeEmail NVARCHAR(50) NULL,
+	EmployeeEmail NVARCHAR(50) NOT NULL,
 	EmployeeTel NVARCHAR(20) NULL,
-	EmployeePosition NVARCHAR(50) NULL
+	EmployeePosition NVARCHAR(50) NULL,
+	Password NVARCHAR(max) NOT NULL,
+	Authority int NOT NULL DEFAULT 0
+
 )
 
-CREATE Table [Priva].[dbo].[MasterProduct](
+CREATE Table [MasterProduct](
 	ProductId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	ProductCode NVARCHAR(20) NOT NULL UNIQUE,
 	ProductName NVARCHAR(255) NOT NULL UNIQUE,
@@ -50,14 +48,14 @@ CREATE Table [Priva].[dbo].[MasterProduct](
 	ProductType NVARCHAR(10) NULL,
 )
 
-CREATE Table [Priva].[dbo].[QuotationNo](
+CREATE Table [QuotationNo](
     QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
 	CustomerId bigint NOT NULL
 	FOREIGN KEY (CustomerId) REFERENCES MasterCustomer(CustomerId)
 )
 
-CREATE Table [Priva].[dbo].[Quotation](
+CREATE Table [Quotation](
     QuotationId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     QuotationNoId bigint NOT NULL,
 	QuotationRevised int NOT NULL DEFAULT 0,
@@ -86,7 +84,7 @@ CREATE Table [Priva].[dbo].[Quotation](
 	FOREIGN KEY (UserId) REFERENCES Users(UserId)
 )
 
-CREATE Table [Priva].[dbo].[QuotationSetting](
+CREATE Table [QuotationSetting](
 	QuotationSetId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	QuotationId bigint NOT NULL,
 	TableShow int NOT NULL DEFAULT 3,
@@ -100,7 +98,7 @@ CREATE Table [Priva].[dbo].[QuotationSetting](
 	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
-CREATE Table [Priva].[dbo].[QuotationItem](
+CREATE Table [QuotationItem](
 	ItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     QuotationId bigint NOT NULL,
 	ItemName NVARCHAR(255) NOT NULL,
@@ -110,7 +108,7 @@ CREATE Table [Priva].[dbo].[QuotationItem](
 	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
-CREATE Table [Priva].[dbo].[QuotationSubItem](
+CREATE Table [QuotationSubItem](
 	SubItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     ItemId bigint NOT NULL,
 	ProductId bigint NULL,
