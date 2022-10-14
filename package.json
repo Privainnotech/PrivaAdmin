@@ -18,7 +18,9 @@
     "morgan": "^1.10.0",
     "mssql": "^8.1.2",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.8.0",
     "nodemon": "^2.0.18",
-    "pdfmake": "^0.2.5"
+    "pdfmake": "^0.2.5",
+    "sendmail": "^1.6.1"
   }
 }

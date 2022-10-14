@@ -1,3 +1,14 @@
+DROP TABLE QuotationSubItem
+DROP TABLE QuotationItem
+DROP TABLE QuotationSetting
+DROP TABLE Quotation
+DROP TABLE QuotationNo
+DROP TABLE MasterProduct
+DROP TABLE MasterEmployee
+DROP TABLE MasterStatus
+DROP TABLE MasterCustomer
+DROP TABLE MasterCompany
+
 CREATE Table [MasterCompany](
     CompanyId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     CompanyName NVARCHAR(50) NOT NULL UNIQUE,
@@ -10,9 +21,7 @@ CREATE Table [MasterCompany](
 CREATE Table [MasterCustomer](
     CustomerId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	CompanyId bigint NOT NULL,
-    CustomerTitle NVARCHAR(10) NULL,
-	CustomerFname NVARCHAR(50) NOT NULL,
-	CustomerLname NVARCHAR(50) NULL,
+	CustomerName NVARCHAR(50) NOT NULL,
     CustomerEmail NVARCHAR(50) NOT NULL,
 	CustomerTel NVARCHAR(20) NULL,
 	CustomerActive int NOT NULL DEFAULT 1
@@ -25,7 +34,7 @@ CREATE Table [MasterStatus](
 )
 
 INSERT INTO MasterStatus(StatusId, StatusName)
-VALUES(1, N'Pre-Quotation'),(2, N'Quotation'),(2, N'Quotation'),(2, N'Quotation'),(2, N'Quotation')
+VALUES(1, N'Pre-Quotation'),(2, N'Quotation'),(3, N'Booking'),(4, N'Loss'),(5, N'Cancel')
 
 CREATE Table [MasterEmployee](
 	EmployeeId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
@@ -36,8 +45,9 @@ CREATE Table [MasterEmployee](
 	EmployeeTel NVARCHAR(20) NULL,
 	EmployeePosition NVARCHAR(50) NULL,
 	Password NVARCHAR(max) NOT NULL,
-	Authority int NOT NULL DEFAULT 0
-
+	Authority int NOT NULL DEFAULT 0,
+	EmployeeActive int NOT NULL DEFAULT 1,
+	Approver int NOT NULL DEFAULT 0
 )
 
 CREATE Table [MasterProduct](
@@ -61,27 +71,27 @@ CREATE Table [Quotation](
 	QuotationRevised int NOT NULL DEFAULT 0,
 	QuotationSubject NVARCHAR(255) NOT NULL,
 	EndCustomer NVARCHAR(255) NOT NULL DEFAULT N'-',
-	QuotationDate NVARCHAR(10) NULL DEFAULT N'-',
-	QuotationUpdatedDate NVARCHAR(10) NULL DEFAULT N'-',
-	QuotationStatus bigint NOT NULL DEFAULT 1,
+	QuotationDate date NULL,
+	QuotationUpdatedDate datetime NULL,
+	QuotationStatus int NOT NULL DEFAULT 1,
 	QuotationTotalPrice money NULL DEFAULT 0,
 	QuotationDiscount money NULL DEFAULT 0,
 	QuotationNet AS QuotationTotalPrice - QuotationDiscount,
 	QuotationVat AS (QuotationTotalPrice - QuotationDiscount) * 0.07 ,
 	QuotationNetVat AS (QuotationTotalPrice - QuotationDiscount) * 1.07,
-	QuotationValidityDate int NULL DEFAULT N'-',
+	QuotationValidityDate NVARCHAR(255) NULL DEFAULT N'-',
 	QuotationPayTerm NVARCHAR(MAX) NULL DEFAULT N'-',
 	QuotationDelivery NVARCHAR(255) NULL DEFAULT N'-',
 	QuotationRemark NVARCHAR(MAX) NULL DEFAULT N'-',
 	QuotationDetail NVARCHAR(MAX) NULL,
 	QuotationDetail1 NVARCHAR(MAX) NULL,
 	QuotationDetail2 NVARCHAR(MAX) NULL,
+	QuotationApproval int NOT NULL DEFAULT 0,
 	EmployeeApproveId bigint NULL,
-	UserId bigint NULL
+	EmployeeEditId bigint NULL
 	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
 	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
 	FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId),
-	FOREIGN KEY (UserId) REFERENCES Users(UserId)
 )
 
 CREATE Table [QuotationSetting](
@@ -91,10 +101,6 @@ CREATE Table [QuotationSetting](
 	TablePrice int NOT NULL DEFAULT 1,
 	TableQty int NOT NULL DEFAULT 1,
 	TableTotal int NOT NULL DEFAULT 1,
-	CustomDetail int NOT NULL DEFAULT 1,
-	DetailShow int NOT NULL DEFAULT 3,
-	DetailQty int NOT NULL DEFAULT 2,
-	DetailTotal int NOT NULL DEFAULT 0,
 	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
@@ -103,8 +109,7 @@ CREATE Table [QuotationItem](
     QuotationId bigint NOT NULL,
 	ItemName NVARCHAR(255) NOT NULL,
     ItemPrice money NULL,
-	ItemQty int NULL,
-	ItemDescription NVARCHAR(MAX) NULL
+	ItemQty int NULL
 	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
@@ -112,9 +117,12 @@ CREATE Table [QuotationSubItem](
 	SubItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
     ItemId bigint NOT NULL,
 	ProductId bigint NULL,
+	SubItemName NVARCHAR(255) NOT NULL,
+	SubItemPrice money NULL,
 	SubItemQty int NULL,
 	SubItemUnit NVARCHAR(10) NULL
 	FOREIGN KEY (ItemId) REFERENCES QuotationItem(ItemId),
 	FOREIGN KEY (ProductId) REFERENCES MasterProduct(ProductId)
 )
+
 

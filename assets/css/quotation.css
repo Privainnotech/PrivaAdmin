@@ -1,362 +1,378 @@
 .min-h {
-	min-height: 250px;
+  min-height: 250px;
 }
 
-table.dataTable tbody td{
-	padding: 2px 8px;	
+table {
+  /* margin: 0 auto; */
+  /* width: 100%; */
+  /* clear: both; */
+  /* border-collapse: collapse; */
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+table.dataTable tbody td {
+  padding: 2px 8px;
 }
 
 .mymb {
-	margin-bottom: 30px;
+  margin-bottom: 30px;
 }
 
-.modal-80{
-	max-width: 80vw;
+.modal-80 {
+  max-width: 80vw;
 }
 
-.textbox{
-	width: 125px;
-	font-weight: 500;
-	margin-bottom: 10px;
+.textbox {
+  width: 125px;
+  font-weight: 500;
+  margin-bottom: 10px;
 }
 
-.textbox2{
-	font-weight: 500;
-	width: 90px;
-	margin-bottom: 10px;
+.textbox2 {
+  font-weight: 500;
+  width: 90px;
+  margin-bottom: 10px;
 }
 
-.textbox3{
-	font-weight: 500;
-	width: 100px;
-	margin-bottom: 10px;
+.textbox3 {
+  font-weight: 500;
+  width: 100px;
+  margin-bottom: 10px;
 }
 
-.textbox4{
-	font-weight: 500;
-	width: 150px;
-	margin-bottom: 10px;
+.textbox4 {
+  font-weight: 500;
+  width: 150px;
+  margin-bottom: 10px;
 }
-.no-bor{
-	border: none;
-	background: white;
-	font-size: 0.9rem;
-	
-}
-
-.btn-rad{
-	border-radius: 3px;
+.no-bor {
+  border: none;
+  background: white;
+  font-size: 0.9rem;
 }
 
-.input-group-text.mg-0{
-	background-color: #fff;
-	border: 0;
-	text-align: left;
-	font-size: 0.9rem;
-	font-weight: 700;
-	margin: 0;
+.btn-rad {
+  border-radius: 3px;
 }
 
-.no-bor-title{
-	background: white;
-	font-size: 35px;
-	color: black;
-	font-weight: 700;
-	border: none;
+.input-group-text.mg-0 {
+  background-color: #fff;
+  border: 0;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
 }
 
-#tableItem_wrapper{
-	padding-bottom: 10px;
-	padding-bottom: 20px;
+.no-bor-title {
+  background: white;
+  font-size: 35px;
+  color: black;
+  font-weight: 700;
+  border: none;
 }
 
-#tableSubItem_wrapper{
-	padding-bottom: 10px;
-	padding-bottom: 20px;
+#tableItem_wrapper {
+  padding-bottom: 10px;
+  padding-bottom: 20px;
 }
 
-#showTable tr:not(.subitemTr):hover>* {
-    box-shadow: inset 0 0 0 9999px #1cbb8bb3;
-    color: white;
+#tableSubItem_wrapper {
+  padding-bottom: 10px;
+  padding-bottom: 20px;
 }
-#showTable tr:not(.subitemTr).selected>* {
-    box-shadow: inset 0 0 0 9999px #1cbb8c;
-    color: white;
+
+#showTable tr:not(.subitemTr):hover > * {
+  box-shadow: inset 0 0 0 9999px #1cbb8bb3;
+  color: white;
 }
-#showTable tr.subitemTr>* {
-    box-shadow: none;
-    color: #495057;
+#showTable tr:not(.subitemTr).selected > * {
+  box-shadow: inset 0 0 0 9999px #1cbb8c;
+  color: white;
 }
-#showTable tr.subitemTr:hover>* {
-    box-shadow: inset 0 0 0 9999px #ffffff;
-    color: #495057;
+#showTable tr.subitemTr > * {
+  box-shadow: none;
+  color: #495057;
 }
-#showTable tr.subitemTr.selected>* {
-    box-shadow: inset 0 0 0 9999px #ffffff;
-    color: #495057;
+#showTable tr.subitemTr:hover > * {
+  box-shadow: inset 0 0 0 9999px #ffffff;
+  color: #495057;
+}
+#showTable tr.subitemTr.selected > * {
+  box-shadow: inset 0 0 0 9999px #ffffff;
+  color: #495057;
 }
 .subitemTable {
-	width: 100%;
+  width: 100%;
 }
-.subitemTr>td {
-	padding: 0;
-}
-
-
-
-.title h2{
-	font-size: 25px;
-	padding: 9px;
-	border-radius: 7px;
-	font-weight: 700;
+.subitemTr > td {
+  padding: 0;
 }
 
-
-.footer{
-	padding-top: 30px;
-	font-size: 1rem;
+.title h2 {
+  font-size: 25px;
+  padding: 9px;
+  border-radius: 7px;
+  font-weight: 700;
 }
 
-.footer .btn-group button{
-	font-size: 0.7rem;
-	font-weight: 500;
+.footer {
+  padding-top: 30px;
+  font-size: 1rem;
 }
 
-.form-control:disabled{
-	background-color: #fff;
-	border: 0;
-
-}
-.form-select:disabled{
-	background-color: #fff;
-	border: 0;
-
+.footer .btn-group button {
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 
-select:disabled{
-	background-color: #fff;
-	border: 0;
+.form-control:disabled {
+  background-color: #fff;
+  border: 0;
+}
+.form-select:disabled {
+  background-color: #fff;
+  border: 0;
 }
 
-.form-control.f-9{
-	margin-bottom: 4px;
+select:disabled {
+  background-color: #fff;
+  border: 0;
 }
 
-.form-select.f-91{
-	margin-bottom: 4px;
+.form-control.f-9 {
+  margin-bottom: 4px;
 }
 
-.form-control:disabled.f-9{
-	background-color: #fff;
-	margin-bottom: 4px;
-	border: 0;
-}
-.form-select:disabled.f-91{
-	background-color: #fff;
-	margin-bottom: 4px;
-	border: 0;
+.form-select.f-91 {
+  margin-bottom: 4px;
 }
 
-.bg-w{
-    background: white;
-	height: 90vh;
-    padding: 20px;
-    border-radius: 8px;
+.form-control:disabled.f-9 {
+  background-color: #fff;
+  margin-bottom: 4px;
+  border: 0;
+}
+.form-select:disabled.f-91 {
+  background-color: #fff;
+  margin-bottom: 4px;
+  border: 0;
 }
 
-.f-9{
-	font-size: 0.8rem;
-	height: 30.99px;
+.bg-w {
+  background: white;
+  height: 90vh;
+  padding: 20px;
+  border-radius: 8px;
 }
 
-.f-91{
-	font-size: 0.8rem;
-	height: 33.39px;
+.f-9 {
+  font-size: 0.8rem;
+  height: 30.99px;
 }
 
-
-
-hr{
-	margin: 8px 0px 13px 0px;
+.f-91 {
+  font-size: 0.8rem;
+  height: 33.39px;
 }
 
-#ProNo{
-	padding-left: 0;
-	margin: 0;
+hr {
+  margin: 8px 0px 13px 0px;
 }
 
-.card-header{
-	
-	padding-bottom: 0px;
+#ProNo {
+  padding-left: 0;
+  margin: 0;
 }
 
-.card-body{
-	padding-top: 0px;
+.card-header {
+  padding-bottom: 0px;
 }
 
-.cardbody.w-100{
-	padding-top: 0;
+.card-body {
+  padding-top: 0px;
 }
 
-.btn-group{
-	text-align:right
+.cardbody.w-100 {
+  padding-top: 0;
 }
 
+.btn-group {
+  text-align: right;
+}
 
-#CusName{
-	margin: 0;
+#CusName {
+  margin: 0;
 }
 
 .right {
-	display: flex;
- 	justify-content: center;
+  display: flex;
+  justify-content: center;
+}
+#ProNo {
+  display: inline-block;
+  margin: 0;
+}
+.approve-float {
+  display: inline-block;
+  margin-left: auto;
+}
+#previewbtn {
+  margin-left: 1.5em;
 }
 
-.btn:disabled{
-	background-color: rgba(0, 0, 0, 0.7);
-	border: red;
-
+.btn:disabled {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: red;
 }
 
-.btn-group.ti button{
-	border: 1px solid #fff;
+.btn-group.ti button {
+  border: 1px solid #fff;
 }
 
-.btn-group.ti button:hover{
-	background-color: #1cbb8c;
-    border: #1cbb8c;
+.btn-group.ti button:hover {
+  background-color: #1cbb8c;
+  border: 1px solid #1cbb8c;
 }
 
-#btn-text{
-	margin: 0;
+#btn-text {
+  margin: 0;
 }
 
-.btn-group.right button{
-	font-size: 0.8rem;
-	margin-bottom: 5px;
+.btn-group.right button {
+  font-size: 0.8rem;
+  margin-bottom: 5px;
 }
 
-@media only screen and (max-width:768px) {
-	.title h2{
-		font-size: 20px;
-	}
-	span.group-title.input-group-text.mg-0 {
-		font-size: 0.8rem;
-	}
-	.input-group-text.mg-0{
-		font-size: 0.5rem;
-	}
-	.no-bor {
-		font-size: 0.5rem;
-	}
-	.btn-group.right button{
-		font-size: 0.5rem;
-	}
+.fa-check-circle {
+  color: #1cbb8c;
+}
+.fa-hourglass {
+  color: #fcb92c;
 }
 
-@media only screen and (min-width:1024px) {
-	body{
-		font-size: 0.7rem;
-	}
-
-	.btn-group.right button{
-		font-size: 0.7rem;
-	}
-	
-	
-	.title.v-2{
-		display: block;
-		margin-top: 0;
-	}
-
-	
-	
-	#btnPrint,#btnRevised,#modalEditProject,#btnExample{
-		min-width: 82px;
-		font-size: 0.7rem;
-		margin: 0;
-		font-weight: 500;
-	}
-	#modalEditProject h3{
-		font-size: 0.7rem;
-		margin: 0;
-		color: #fff;
-		font-weight: 500;
-	}
-
-	span.group-title.input-group-text.mg-0{
-		font-size: 1rem;
-		
-	}
-
-	input.group-title{
-		font-size: 1rem;
-	}
-
-	.input-group-text.mg-0{
-		font-size: 0.8rem;
-	}
-	.no-bor{
-		font-size: 0.8rem;
-	}
-
-	.textbox{
-		width: 95px;
-	}
+@media only screen and (max-width: 768px) {
+  .title h2 {
+    font-size: 20px;
+  }
+  span.group-title.input-group-text.mg-0 {
+    font-size: 0.8rem;
+  }
+  .input-group-text.mg-0 {
+    font-size: 0.5rem;
+  }
+  .no-bor {
+    font-size: 0.5rem;
+  }
+  .btn-group.right button {
+    font-size: 0.5rem;
+  }
 }
 
-@media only screen and (min-width:1320px) {
-	body{
-		font-size: 0.9rem;
-	}
-	main.content{
-		padding-top: 38px;
-		padding-bottom: 0;
-	}
-	.dataTables_scrollHeadInner{
-		margin: 0 auto;
-	}
-	.title.v{
-		margin-top: 0;
-	}
+@media only screen and (min-width: 1024px) {
+  body {
+    font-size: 0.7rem;
+  }
 
-	#btnPrint,#btnRevised,#modalEditProject,#btnExample{
-		width: 82px;
-		font-size: 0.8rem;
-		margin: 0;
-		font-weight: 400;
-	}
+  .btn-group.right button {
+    font-size: 0.7rem;
+  }
 
-	.footer .btn-group button {
-		font-size: 0.8rem;
-		font-weight: 500;
-	}
+  .title.v-2 {
+    display: block;
+    margin-top: 0;
+  }
 
-	#modalEditProject h3{
-		color: #fff;
-		font-weight: 400;
-		font-size: 0.9rem;
-		margin: 0;
-	}
-	
-	span.group-title.input-group-text.mg-0{
-		font-size: 1.3rem;
-		margin: 0;
-		padding-left: 0;
-	
-		color: #111;
-	}
+  #btnPrint,
+  #btnRevised,
+  #modalEditProject,
+  #btnExample {
+    min-width: 82px;
+    font-size: 0.7rem;
+    margin: 0;
+    font-weight: 500;
+  }
+  #modalEditProject h3 {
+    font-size: 0.7rem;
+    margin: 0;
+    color: #fff;
+    font-weight: 500;
+  }
 
-	.input-group-text.mg-0{
-		font-size: 0.9rem;
-	}
-	.no-bor{
-		font-size: 0.9rem;
-	}
-	
-	input.group-title{
-		font-size: 1.2rem;
-	}
+  span.group-title.input-group-text.mg-0 {
+    font-size: 1rem;
+  }
 
-	
+  input.group-title {
+    font-size: 1rem;
+  }
+
+  .input-group-text.mg-0 {
+    font-size: 0.8rem;
+  }
+  .no-bor {
+    font-size: 0.8rem;
+  }
+
+  .textbox {
+    width: 95px;
+  }
+}
+
+@media only screen and (min-width: 1320px) {
+  body {
+    font-size: 0.9rem;
+  }
+  main.content {
+    padding-top: 38px;
+    padding-bottom: 0;
+  }
+  .dataTables_scrollHeadInner {
+    margin: 0 auto;
+  }
+  .title.v {
+    margin-top: 0;
+  }
+
+  #btnPrint,
+  #btnRevised,
+  #modalEditProject,
+  #btnExample {
+    width: 82px;
+    font-size: 0.8rem;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .footer .btn-group button {
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  #modalEditProject h3 {
+    color: #fff;
+    font-weight: 400;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  span.group-title.input-group-text.mg-0 {
+    font-size: 1.3rem;
+    margin: 0;
+    padding-left: 0;
+
+    color: #111;
+  }
+
+  .input-group-text.mg-0 {
+    font-size: 0.9rem;
+  }
+  .no-bor {
+    font-size: 0.9rem;
+  }
+
+  input.group-title {
+    font-size: 1.2rem;
+  }
 }

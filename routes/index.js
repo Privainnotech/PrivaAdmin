@@ -56,11 +56,6 @@ router.get("/employee", ifNotLoggedIn, isAuth, (req, res, next) => {
   res.render("employee");
 });
 
-// User page
-router.get("/users", ifNotLoggedIn, isAuth, (req, res, next) => {
-  res.render("users");
-});
-
 // Test page
 router.get("/test", (req, res, next) => {
   res.render("test");

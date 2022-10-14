@@ -63,7 +63,7 @@
                       Name:&nbsp;</span></div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
                     <select class="form-select" id="modalInpCustomerId">
-                      <option value="null" selected="">-</option>
+                      <option value="" selected>-</option>
                     </select>
                   </div>
                 </div>
@@ -129,7 +129,7 @@
                       List:&nbsp;</span></div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
                     <select class="form-select" id="modalInpProduct">
-                      <option value="null" selected="">New Description</option>
+                      <option value="" selected="">New Description</option>
                     </select>
                   </div>
                 </div>
@@ -167,7 +167,7 @@
                   </div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
                     <select class="form-select" id="modalInpSubUnit">
-                      <option value="">None</option>
+                      <option value="" selected>None</option>
                       <option value="Pc">Pc</option>
                       <option value="Lot">Lot</option>
                       <option value="Set">Set</option>
@@ -238,7 +238,7 @@
                       List:&nbsp;</span></div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
                     <select class="form-select" id="modalInpEdProduct" disabled>
-                      <option value="null">New Description</option>
+                      <option value="" selected>New Description</option>
                     </select>
                   </div>
                 </div>
@@ -277,7 +277,7 @@
                   </div>
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-5">
                     <select class="form-select" id="modalInpEdSubUnit">
-                      <option value="">None</option>
+                      <option value="" selected>None</option>
                       <option value="Pc">Pc</option>
                       <option value="Lot">Lot</option>
                       <option value="Set">Set</option>
@@ -297,11 +297,17 @@
         <div class="modal-dialog modal-dialog-centered modal-80" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Preview PDF</h4><button type="button" class="close" data-dismiss="modal"
+              <h4 class="modal-title">Preview PDF</h4>
+              <div class="btn-group" id="previewbtn">
+                <button type="button" id="btnDownload" class="btn btn-dark" >Download</button>
+                <button type="button" id="btnReqApprove" class="btn btn-warning" >Request Approval</button>
+              </div>
+              
+              <button type="button" class="close" data-dismiss="modal"
                 aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body text-center">
-              <iframe id="PreviewPDF" src="/report/quotation/20220701_00.pdf#toolbar=0" width="100%" height="500px">
+              <iframe id="PreviewPDF" src="" width="100%" height="500px">
               </iframe>
             </div>
             
@@ -459,8 +465,9 @@
               <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xxl-5">
                   <div class="card flex-fill w-100">
-                    <div class="card-header title v-2">
+                    <div class="card-header title v-2 project-header">
                       <h2 id="ProNo">Project No.</h2>
+                      <button type="button" class="btn btn-success approve-float" id="btn-approve" style="display: none;">Approve</button>
                     </div>
 
                       <div class="card-body w-100">
@@ -569,7 +576,7 @@
                             <label class="input-group-text textbox mg-0 f-91" for="PJ_Approve">Approve
                               By:</label>
                             <select class="form-select edit f-91" id="PJ_Approve" disabled>
-                              <option value="null" selected>-</option>
+                              <option value="" selected>-</option>
                             </select>
                           </div>
 
@@ -578,9 +585,8 @@
                               <button type="button" class="btn btn-dark invisible" id="modalEditProject">
                                 <p id="btn-text">Edit</p>
                               </button>
-                              <button type="button" class="btn btn-dark btn-rad" id="btnExample" >Preview</button>
-                              <button type="button" class="btn btn-dark btn-rad" id="btnPrint">Download</button>
-                              <button type="button" class="btn btn-dark btn-rad" id="btnRevised">Revised</button>
+                              <button type="button" class="btn btn-dark btn-rad invisible" id="btnExample" >Preview</button>
+                              <button type="button" class="btn btn-dark btn-rad invisible" id="btnRevised">Revised</button>
                             </div>
                           </div>
                         </div>
@@ -598,11 +604,11 @@
                           <table id="tableItem" class="table table-hover my-0" style="width:100%">
                             <thead>
                               <tr>
-                                <th>Item</th>
-                                <th style="width: 50%;">Item Name</th>
-                                <th>Unit Price</th>
-                                <th>Qty</th>
-                                <th style="width: 10%;">Action</th>
+                                <th style="width: 10%;">Item</th>
+                                <th style="width: 40%;">Item Name</th>
+                                <th style="width: 15%;">Unit Price</th>
+                                <th style="width: 15%;">Qty</th>
+                                <th style="width: 20%;">Action</th>
                                 <th style="display: none;"></th>
                               </tr>
                             </thead>
@@ -624,11 +630,11 @@
                           <table id="tableSubItem" class="table table-hover my-0" style="width:100%">
                             <thead>
                               <tr>
-                                <th>Index</th>
-                                <th style="width: 50%;">Description</th>
-                                <th>Unit Price</th>
-                                <th>Qty</th>
-                                <th style="width: 15%;">Action</th>
+                                <th style="width: 10%;">Index</th>
+                                <th style="width: 40%;">Description</th>
+                                <th style="width: 15%;">Unit Price</th>
+                                <th style="width: 15%;">Qty</th>
+                                <th style="width: 20%;">Action</th>
                                 <th style="display: none;"></th>
                               </tr>
                             </thead>
@@ -654,17 +660,17 @@
                               <div class="input-group mb-3">
                                 <label class="input-group-text mg-0 f-9" for="IP-Set-TableShow">Show:</label>
                                 <select class="form-select" id="IP-Set-TableShow" disabled>
-                                  <option value="0" selected>None</option>
+                                  <option value="0">None</option>
                                   <option value="1">Item only</option>
                                   <option value="2">Description only</option>
-                                  <option value="3">Both</option>
+                                  <option value="3" selected>Both</option>
                                 </select>
                               </div>
                               <div class="input-group mb-3">
                                 <label class="input-group-text mg-0 f-9" for="IP-Set-TablePrice">Show Unit Price:</label>
                                 <select class="form-select" id="IP-Set-TablePrice" disabled>
-                                  <option value="0" selected>None</option>
-                                  <option value="1">Item only</option>
+                                  <option value="0">None</option>
+                                  <option value="1" selected>Item only</option>
                                   <option value="2">Description only</option>
                                   <option value="3">Both</option>
                                 </select>
@@ -673,8 +679,8 @@
                               <div class="input-group mb-3">
                                 <label class="input-group-text mg-0 f-9" for="IP-Set-TableQty">Show Quantity:</label>
                                 <select class="form-select" id="IP-Set-TableQty" disabled>
-                                  <option value="0" selected>None</option>
-                                  <option value="1">Item only</option>
+                                  <option value="0">None</option>
+                                  <option value="1" selected>Item only</option>
                                   <option value="2">Description only</option>
                                   <option value="3">Both</option>
                                 </select>
@@ -682,8 +688,8 @@
                               <div class="input-group mb-3">
                                 <label class="input-group-text mg-0 f-9" for="IP-Set-TableTotal">Show Total Price:</label>
                                 <select class="form-select" id="IP-Set-TableTotal" disabled>
-                                  <option value="0" selected>None</option>
-                                  <option value="1">Item only</option>
+                                  <option value="0">None</option>
+                                  <option value="1" selected>Item only</option>
                                   <option value="2">Description only</option>
                                   <option value="3">Both</option>
                                 </select>

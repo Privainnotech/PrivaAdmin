@@ -2,206 +2,312 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap");
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-	font-family: 'Ubuntu', sans-serif;
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 0.8rem;
+  font: inherit;
+  vertical-align: baseline;
+  font-family: "Ubuntu", sans-serif;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-	display: block;
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
 body {
-	line-height: 1;
-	background-repeat: no-repeat;
-	background: #44A08D;  /* fallback for old browsers */
-	background: -webkit-linear-gradient(to right, #093637, #44A08D);  /* Chrome 10-25, Safari 5.1-6 */
-	background: linear-gradient(to right, #093637, #44A08D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-	height: 100vh;
+  line-height: 1;
+  background-repeat: no-repeat;
+  background: #44a08d; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #093637,
+    #44a08d
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #093637,
+    #44a08d
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  height: 100vh;
 }
-ol, ul {
-	list-style: none;
+ol,
+ul {
+  list-style: none;
 }
-blockquote, q {
-	quotes: none;
+blockquote,
+q {
+  quotes: none;
 }
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-nav.navbar{
-	margin-bottom: 0;
+nav.navbar {
+  margin-bottom: 0;
 }
 
 .dataTables_wrapper {
-	padding: 10px;
-	padding-right: 15px;
+  padding: 10px;
+  padding-right: 15px;
 }
 
-nav h1{
-	font-size: 40px;
-	font-weight: 700;
+nav h1 {
+  font-size: 40px;
+  font-weight: 700;
 }
-nav{
-	margin-bottom: 15px;
+nav {
+  margin-bottom: 15px;
 }
 
 .container1 {
-	display: flexbox;
-	padding: 10px;
-	justify-content: center;
-	align-items: center;
-	margin-bottom: 50px;
-	margin-left: 50px;
-	margin-right: 50px;
-	background: #fff;
-	border-radius: 8px;
+  display: flexbox;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
+  background: #fff;
+  border-radius: 8px;
 }
 
-a:hover{
-	text-decoration: none;
+a:hover {
+  text-decoration: none;
 }
 
-img#logo{
-	height: 50px;
+img#logo {
+  height: 50px;
 }
 
-
-main{
-	background: #ededed;
+main {
+  background: #ededed;
 }
 
-
-
-.title{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 5px;
-	padding-right: 10px;
-	
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  padding-right: 10px;
 }
 
-
-.title h1{
-	font-size: 35px;
-	padding: 9px;
-	border-radius: 7px;
-	font-weight: 700;
+.title h1 {
+  font-size: 35px;
+  padding: 9px;
+  border-radius: 7px;
+  font-weight: 700;
 }
 
-label input,label select{
-	margin-bottom: 5px;
+label input,
+label select {
+  margin-bottom: 5px;
 }
 
-
-i{
-	width: 20px;
-	height: 20px;
+i {
+  width: 20px;
+  height: 20px;
 }
 
-table.dataTable tbody tr:hover>* {
-    box-shadow: inset 0 0 0 9999px rgba(28, 187, 140, 0.7);
-    color: white;
+table.dataTable tbody tr:hover > * {
+  box-shadow: inset 0 0 0 9999px rgba(28, 187, 140, 0.7);
+  color: white;
 }
 
-table.dataTable tbody tr.selected>* {
-    box-shadow: inset 0 0 0 9999px #1cbb8c;
-    color: white;
+table.dataTable tbody tr.selected > * {
+  box-shadow: inset 0 0 0 9999px #1cbb8c;
+  color: white;
 }
 
-.red{
-	color: red;
-	display: inline;
+.red {
+  color: red;
+  display: inline;
 }
 
-nav.navbar{
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-right: 0;
+nav.navbar {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 0;
+}
+.sidebar-link.sub i {
+  margin-left: 1em;
+}
+.sidebar-link.sub.active {
+  color: #e9ecef;
+  border-left-color: #568bda;
+  background: linear-gradient(
+    90deg,
+    rgba(59, 125, 221, 0.088),
+    rgba(59, 125, 221, 0.05) 50%,
+    transparent
+  );
+}
+.sidebar-link.sub.active i {
+  color: #e9ecef;
+}
+.sidebar-item.active a.sidebar-link.sub:hover {
+  color: rgba(233, 236, 239, 0.75);
+  border-left-color: transparent;
+  background: none;
+}
+.sidebar-item.active .sidebar-link.sub.active:hover {
+  color: #e9ecef;
+  border-left-color: #568bda;
+  background: linear-gradient(
+    90deg,
+    rgba(59, 125, 221, 0.088),
+    rgba(59, 125, 221, 0.05) 50%,
+    transparent
+  );
+}
+@media only screen and (max-width: 768px) {
+  * {
+    font-size: 0.5rem;
+  }
+  .title h1 {
+    font-size: 20px;
+  }
+  .title button {
+    font-size: 0.5rem;
+  }
+
+  img#logo {
+    height: 20px;
+  }
 }
 
-@media only screen and (max-width:768px) {
-	*{
-		font-size: 0.5rem;
-	}
-	.title h1{
-		font-size: 20px;
-	}
-	.title button{
-		font-size: 0.5rem;
-	}
-	
+@media only screen and (max-width: 960px) {
+  body {
+    font-size: 0.7rem;
+  }
 
-	
-	img#logo{
-		height: 20px;
-	}
+  img#logo {
+    height: 45px;
+  }
+  nav a.sidebar-brand {
+    font-size: 25px;
+  }
+  nav a.sidebar-link {
+    font-size: 15px;
+  }
 }
 
-@media only screen and (max-width:960px) {
-	
-	body{
-		font-size: 0.7rem;
-	}
+@media only screen and (max-width: 1320px) {
+  body {
+    font-size: 0.9rem;
+  }
 
-	img#logo{
-		height: 45px;
-	}
-	nav a.sidebar-brand{
-		font-size: 25px;
-	}
-	nav a.sidebar-link{
-		font-size: 15px;
-	}
+  img#logo {
+    height: 40px;
+  }
 
+  nav a.sidebar-brand {
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  nav a.sidebar-link {
+    font-size: 18px;
+    font-weight: 500;
+  }
 }
-
-@media only screen and (max-width:1320px) {
-	
-	body{
-		font-size: 0.9rem;
-	}
-
-	img#logo{
-		height: 40px;
-	}
-	
-	nav a.sidebar-brand {
-		font-size: 30px;
-		font-weight: 700;
-	}
-	
-	nav a.sidebar-link {
-		font-size: 18px;
-		font-weight: 500;
-	}
-
-}
-
-	
