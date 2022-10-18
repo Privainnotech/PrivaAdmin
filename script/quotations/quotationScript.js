@@ -1,5 +1,8 @@
 // let loadDetail = null;
-
+let $LoadingPreview = $("#loading-preview").hide();
+$("#loading-close").on("click", function () {
+  $LoadingPreview.hide();
+});
 //Hide Edit Button
 function hideEdit() {
   $("#modalEditProject").addClass("invisible");
@@ -33,16 +36,6 @@ function ShowSetting() {
   $("#IP-Set-TableQty").removeAttr("disabled");
   $("#IP-Set-TableTotal").removeAttr("disabled");
 }
-
-let $loading = $("#loadingDiv").hide();
-
-$(document)
-  .ajaxStart(() => {
-    $loading.show();
-  })
-  .ajaxStop(() => {
-    $loading.hide();
-  });
 
 //Show Project
 function ShowPro(QuotationId) {
@@ -862,15 +855,26 @@ $(document).ready(function () {
           url: "/quotation_report/" + QuotationId,
           method: "get",
           contentType: "application/json",
+          beforeSend: function () {
+            $("#loading-preview i").addClass("fa-hourglass");
+            $(".loading-title").text("Loading Quotation PDF");
+            $LoadingPreview.show();
+          },
+          complete: function () {
+            $("#loading-preview i").removeClass("fa-hourglass");
+            $("#loading-preview i").addClass("fa-check-circle");
+            $(".loading-title").text("Loading Complete!!");
+          },
           success: function (success) {
             document.getElementById("PreviewPDF").src = "";
-            !QuotationApproval
-              ? $("#btnReqApprove").show()
-              : $("#btnReqApprove").hide();
+            QuotationApproval == 2
+              ? $("#btnReqApprove").hide()
+              : $("#btnReqApprove").show();
             $("#modalPreview").modal("show");
             $(".modal-title").text("Preview PDF");
             fileName = success.message;
             document.getElementById("PreviewPDF").src = fileName + "#toolbar=0";
+            $("#loading-preview i").removeClass("fa-check-circle");
             //
           },
           error: function (err) {
@@ -884,11 +888,13 @@ $(document).ready(function () {
               confirmButtonText: "OK",
               confirmButtonColor: "#FF5733",
             });
-            $("#modalPreview").modal("hide");
           },
         });
 
         $(".close,.no").click(function () {
+          $(".modal-loading-title").text("");
+          $(".modal-loading-icon").removeClass("fa-check-circle");
+          $(".modal-loading-icon").removeClass("fa-times-circle");
           $("#modalPreview").modal("hide");
         });
       });
@@ -930,6 +936,14 @@ $(document).ready(function () {
             QuotationId: QuotationId,
             EmployeeApproveId: EmployeeApproveId,
           }),
+          beforeSend: function () {
+            $(".modal-loading-title").text("Sending Request...");
+            $(".modal-loading-icon").addClass("fa-hourglass");
+            $LoadingPreview.show();
+          },
+          complete: function () {
+            $(".modal-loading-icon").removeClass("fa-hourglass");
+          },
           success: function (msg) {
             Swal.fire({
               position: "center",
@@ -939,6 +953,8 @@ $(document).ready(function () {
               showConfirmButton: false,
               timer: 1500,
             });
+            $(".modal-loading-icon").addClass("fa-check-circle");
+            $(".modal-loading-title").text("Request Sented");
             ShowPro(QuotationId);
           },
           error: function (err) {
@@ -952,6 +968,8 @@ $(document).ready(function () {
               confirmButtonText: "OK",
               confirmButtonColor: "#FF5733",
             });
+            $(".modal-loading-icon").addClass("fa-times-circle");
+            $(".modal-loading-title").text("Send Request Failed");
           },
         });
       });

@@ -3,12 +3,14 @@ const path = require("path");
 const fs = require("fs");
 
 const mailInfo = require("../../libs/mailInfo");
+const QuotationLink = "https://dashboard.privainnotech.net/quotation";
 
 const sendQuotationMail = async (Sender, Receiver, Quotation) => {
   try {
     let { EmployeeFname, EmployeeLname } = Sender;
     let SenderName = `${EmployeeFname} ${EmployeeLname}`;
     let ApproverEmail = Receiver.EmployeeEmail;
+    console.log(ApproverEmail);
 
     let { QuotationNo, QuotationRevised } = Quotation;
     let quotationNo = "";
@@ -75,7 +77,7 @@ const mailHtml = async (QuotationNo, Quotation) => {
       <h5>Net Total: ${QuotationNetVat}</h5>
     </div>
     
-    <a href="" style="color: #fff;text-decoration:none;">
+    <a href="${QuotationLink}" style="color: #fff;text-decoration:none;">
       <div style="background-color: #1cbb8c;padding:10px;border: 3px solid #000;text-align: center;">
         <h2>Go to Quotation</h2>
       </div>
