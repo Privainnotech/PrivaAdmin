@@ -137,17 +137,20 @@ router.get("/quotation/:QuotationId", async (req, res) => {
         getQuotation.recordset[0];
       if (QuotationStatus == 1 && QuotationRevised == 0) {
         // GenQuotationNo
+        let month = checkMonth();
         let genQuotationNo = "";
         let SearchQuotationNo = await pool.request().query(`SELECT *
-          FROM QuotationNo WHERE QuotationNo LIKE N'${checkMonth()}%'`);
+          FROM QuotationNo WHERE QuotationNo LIKE N'${month}%'`);
         // Check QuotationNo
         let duplicateNo = true;
         let Number = SearchQuotationNo.recordset.length;
         do {
           if (Number < 10) {
-            genQuotationNo = checkMonth() + "0" + Number;
+            genQuotationNo = month + "00" + Number;
+          } else if (Number < 100) {
+            genQuotationNo = month + "0" + Number;
           } else {
-            genQuotationNo = checkMonth() + Number;
+            genQuotationNo = month + Number;
           }
           let CheckQuotationNo = await pool.request().query(`SELECT CASE
             WHEN EXISTS(

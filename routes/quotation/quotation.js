@@ -19,7 +19,8 @@ router.get("/list", async (req, res, next) => {
       LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
       LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
       LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
-      LEFT JOIN [MasterEmployee] e ON a.EmployeeEditId = e.EmployeeId`;
+      LEFT JOIN [MasterEmployee] e ON a.EmployeeEditId = e.EmployeeId
+      WHERE NOT c.CustomerName = N'Fake'`;
     let pool = await sql.connect(dbconfig);
     let quotations = await pool.request().query(getQuotationList);
     res.status(200).send(JSON.stringify(quotations.recordset));
@@ -152,6 +153,8 @@ router.post("/add_pre_quotation", async (req, res) => {
     let Number = SearchQuotationNo.recordset.length;
     do {
       if (Number < 10) {
+        genQuotationNo = "pre_" + month + "00" + Number;
+      } else if (Number < 100) {
         genQuotationNo = "pre_" + month + "0" + Number;
       } else {
         genQuotationNo = "pre_" + month + Number;
