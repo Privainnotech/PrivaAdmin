@@ -435,10 +435,11 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             SubItemPrice = moneyFormat(SubItemPrice.toFixed(2));
             SubTotal = moneyFormat(SubTotal.toFixed(2));
           }
-          if (SubItemQty == 0 || SubItemUnit == "" || SubItemUnit == "null") {
+          if (SubItemQty == 0) {
             SubItemQty = "";
             SubItemUnit = "";
           }
+          if (SubItemUnit == "null") SubItemUnit = "";
 
           let SPrice, SQty, STotal;
           if (TableShow === 2 || TableShow === 3) {

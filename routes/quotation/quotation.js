@@ -289,7 +289,7 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
             VALUES(${ItemId}, ${ProductId}, N'${SubItemName}', ${SubItemPrice},
               ${SubItemQty}, N'${SubItemUnit}')`;
           await pool.request().query(InsertSubItem);
-          if (!(SubItemPrice === 0 || SubItemQty === 0 || SubItemUnit === "")) {
+          if (!(SubItemPrice === 0 || SubItemQty === 0)) {
             PriceI(ItemId);
           }
           res.status(201).send({ message: "Sub-item has been added" });
@@ -320,7 +320,7 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
           VALUES(${ItemId}, ${newProduct.recordset[0].Id}, N'${SubItemName}', ${SubItemPrice},
             ${SubItemQty}, N'${SubItemUnit}')`;
         await pool.request().query(InsertSubItem);
-        if (!(SubItemPrice === 0 || SubItemQty === 0 || SubItemUnit === "")) {
+        if (!(SubItemPrice === 0 || SubItemQty === 0)) {
           PriceI(ItemId);
         }
         res.status(201).send({ message: "Successfully add Sub-item" });
@@ -343,7 +343,7 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
           VALUES(${ItemId}, ${ProductId}, N'${SubItemName}', ${SubItemPrice},
             N'${SubItemQty}', N'${SubItemUnit}')`;
         await pool.request().query(InsertSubItem);
-        if (!(SubItemPrice === 0 || SubItemQty === 0 || SubItemUnit === "")) {
+        if (!(SubItemPrice === 0 || SubItemQty === 0)) {
           PriceI(ItemId);
         }
         res.status(201).send({ message: "Sub-item has been added" });
@@ -549,8 +549,7 @@ router.put("/edit_subitem/:SubItemId", async (req, res) => {
       SubItemQty = ${SubItemQty}, SubItemUnit =N'${SubItemUnit}'
       WHERE SubItemId = ${SubItemId}`;
     await pool.request().query(UpdateQuotationSubItem);
-    if (!(SubItemPrice === 0 || SubItemQty === 0 || SubItemUnit === ""))
-      PriceS(SubItemId);
+    if (!(SubItemPrice === 0 || SubItemQty === 0)) PriceS(SubItemId);
     res.status(200).send({ message: "Successfully Edit Sub-Item" });
   } catch (err) {
     res.status(500).send({ message: `${err}` });
