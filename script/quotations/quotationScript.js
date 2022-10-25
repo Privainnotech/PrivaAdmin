@@ -88,6 +88,8 @@ function ShowPro(QuotationId) {
       $("#IP-Set-DetailShow").val(obj.DetailShow);
       $("#IP-Set-DetailQty").val(obj.DetailQty);
       $("#IP-Set-DetailTotal").val(obj.DetailTotal);
+
+      // getDetail
     },
   });
 }

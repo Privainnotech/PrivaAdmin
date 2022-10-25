@@ -81,7 +81,7 @@ router.get("/:QuotationId", async (req, res) => {
       quotations.recordset[0].QuotationDetail = detailDefault;
     } else {
       quotations.recordset[0].QuotationDetail = JSON.parse(QuotationDetail);
-      if (QuotationDetail.blocks.length === 0) {
+      if (quotations.recordset[0].QuotationDetail.blocks.length === 0) {
         quotations.recordset[0].QuotationDetail = detailDefault;
       }
     }
