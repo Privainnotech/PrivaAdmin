@@ -90,51 +90,6 @@ function ShowPro(QuotationId) {
       $("#IP-Set-DetailTotal").val(obj.DetailTotal);
 
       // getDetail
-    },
-  });
-}
-
-//Reset Project
-function RePro() {
-  // QuotationId = null
-  $("#btn-approve").hide();
-  $("#ProNo").html("Project NO.");
-  $("#CusName").val("");
-  $("#QDate").val("");
-  $("#CusEmail").val("");
-  $("#ComName").val("");
-  $("#Adress").val("");
-
-  $("#PJ_Name").val("");
-  $("#PJ_Discount").val("");
-  $("#PJ_Validity").val("");
-  $("#PJ_Payment1").val("");
-  $("#PJ_Payment2").val("");
-  $("#PJ_Payment3").val("");
-  $("#PJ_Delivery").val("");
-  $("#PJ_Remark").val("");
-  $("#PJ_End_Customer").val("");
-  $("#PJ_Approve").val("-");
-
-  $("#TotalPrice").val("");
-  $("#PriceAfter").val("");
-  $("#Vat").val("");
-  $("#NetTotal").val("");
-
-  $("#IP-Set-TableShow").val("0");
-  $("#IP-Set-TablePrice").val("0");
-  $("#IP-Set-TableQty").val("0");
-  $("#IP-Set-TableTotal").val("0");
-}
-
-// get Custom Detail
-function getDetail(QuotationId) {
-  $.ajax({
-    url: "/quotation/" + QuotationId,
-    method: "get",
-    cache: false,
-    success: function (response) {
-      var obj = JSON.parse(response);
       const loadDetail = JSON.stringify(obj.QuotationDetail);
       const editor = new EditorJS({
         tools: {
@@ -198,6 +153,39 @@ function getDetail(QuotationId) {
       });
     },
   });
+}
+
+//Reset Project
+function RePro() {
+  // QuotationId = null
+  $("#btn-approve").hide();
+  $("#ProNo").html("Project NO.");
+  $("#CusName").val("");
+  $("#QDate").val("");
+  $("#CusEmail").val("");
+  $("#ComName").val("");
+  $("#Adress").val("");
+
+  $("#PJ_Name").val("");
+  $("#PJ_Discount").val("");
+  $("#PJ_Validity").val("");
+  $("#PJ_Payment1").val("");
+  $("#PJ_Payment2").val("");
+  $("#PJ_Payment3").val("");
+  $("#PJ_Delivery").val("");
+  $("#PJ_Remark").val("");
+  $("#PJ_End_Customer").val("");
+  $("#PJ_Approve").val("-");
+
+  $("#TotalPrice").val("");
+  $("#PriceAfter").val("");
+  $("#Vat").val("");
+  $("#NetTotal").val("");
+
+  $("#IP-Set-TableShow").val("0");
+  $("#IP-Set-TablePrice").val("0");
+  $("#IP-Set-TableQty").val("0");
+  $("#IP-Set-TableTotal").val("0");
 }
 
 //Remove Detail Paper
@@ -564,7 +552,6 @@ $(document).ready(function () {
       $("#btnExample").removeClass("invisible");
 
       removeDetailPaper();
-      getDetail(QuotationId);
 
       ShowPro(QuotationId);
       fill_item(QuotationId, QuotationStatus);
