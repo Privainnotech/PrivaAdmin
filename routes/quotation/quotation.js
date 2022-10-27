@@ -13,7 +13,7 @@ router.get("/list", async (req, res, next) => {
       b.QuotationNoId, a.QuotationId, a.QuotationStatus, b.QuotationNo,
       a.QuotationRevised, a.QuotationSubject, c.CustomerName,
       FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
-      FORMAT(a.QuotationUpdatedDate, 'dd-MM-yyyy hh:mm') QuotationUpdatedDate,
+      FORMAT(a.QuotationUpdatedDate, 'dd-MM-yyyy HH:mm') QuotationUpdatedDate,
       d.StatusName, a.EmployeeApproveId, e.EmployeeFname, a.QuotationApproval
       FROM [Quotation] a
       LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
@@ -486,13 +486,17 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     if (QuotationDetail.blocks.length !== 0) {
       Detail = JSON.stringify(QuotationDetail);
     }
-    console.log(Detail);
+    Detail = Detail.replaceAll("&nbsp;", " ")
+      .replaceAll("'", "")
+      .replaceAll("amp;", "");
+    console.log(Detail.length);
     let UpdateDetail = `UPDATE Quotation
       SET QuotationDetail = N'${Detail}'
       WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(UpdateDetail);
     res.status(201).send({ message: "Successfully Edit Quotation Detail" });
   } catch (err) {
+    console.log(err);
     res.status(500).send({ message: `${err}` });
   }
 });
