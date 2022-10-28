@@ -375,9 +375,9 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
   let i = 1;
   let line = 0;
   let pool = await sql.connect(dbconfig);
-  const Items = await pool
-    .request()
-    .query(`SELECT * FROM QuotationItem WHERE QuotationId = ${QuotationId}`);
+  const Items = await pool.request().query(`SELECT *
+    FROM privanet.QuotationItem
+    WHERE QuotationId = ${QuotationId}`);
   if (Items.recordset.length) {
     for (let Item of Items.recordset) {
       let { ItemName, ItemPrice, ItemQty } = Item;
@@ -415,9 +415,9 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
       }
       let j = 1;
       const SubItems = await pool.request()
-        .query(`SELECT * FROM [QuotationSubItem] a
-              LEFT JOIN [MasterProduct] b ON a.ProductId = b.ProductId
-              WHERE ItemId = ${Item.ItemId}`);
+        .query(`SELECT * FROM privanet.[QuotationSubItem] a
+          LEFT JOIN privanet.[MasterProduct] b ON a.ProductId = b.ProductId
+          WHERE ItemId = ${Item.ItemId}`);
       if (SubItems.recordset.length) {
         for (let SubItem of SubItems.recordset) {
           let { SubItemQty, SubItemUnit, ProductName, SubItemPrice } = SubItem;

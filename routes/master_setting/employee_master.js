@@ -8,7 +8,7 @@ router.get("/data", async (req, res, next) => {
   try {
     let SelectEmployee = `SELECT row_number() over(order by EmployeeFname) as 'index', *,
         EmployeeTitle+EmployeeFname+' '+EmployeeLname EmployeeName
-      FROM MasterEmployee
+      FROM privanet.MasterEmployee
       WHERE EmployeeActive = 1 ORDER BY EmployeeFname`;
     let pool = await sql.connect(dbconfig);
     let Employee = await pool.request().query(SelectEmployee);
@@ -31,11 +31,11 @@ router.post("/add", async (req, res, next) => {
     }
     let pool = await sql.connect(dbconfig);
     let CheckEmployee = await pool.request().query(`SELECT *
-        FROM MasterEmployee
+        FROM privanet.MasterEmployee
         WHERE EmployeeEmail = N'${EmployeeEmail}'`);
     let Hashpass = await bcrypt.hash(Password, 12);
     if (!CheckEmployee.recordset.length) {
-      let InsertEmployee = `INSERT INTO MasterEmployee
+      let InsertEmployee = `INSERT INTO privanet.MasterEmployee
           (EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeTel,
           EmployeeEmail, EmployeePosition, Password, Authority, Approver)
         VALUES (N'${EmployeeTitle}', N'${EmployeeFname}', N'${EmployeeLname}',
@@ -47,7 +47,7 @@ router.post("/add", async (req, res, next) => {
       if (CheckEmployee.recordset[0].EmployeeActive) {
         res.status(400).send({ message: "Duplicate Employee" });
       } else {
-        let ActivateEmployee = `UPDATE MasterEmployee
+        let ActivateEmployee = `UPDATE privanet.MasterEmployee
           SET
           EmployeeTitle = N'${EmployeeTitle}', EmployeeFname = N'${EmployeeFname}',
           EmployeeLname = N'${EmployeeLname}', EmployeeTel = N'${EmployeeTel}',
@@ -79,7 +79,7 @@ router.put("/edit/:EmployeeId", async (req, res) => {
     let CheckEmployee = await pool.request().query(`SELECT CASE
       WHEN EXISTS(
         SELECT *
-        FROM MasterEmployee
+        FROM privanet.MasterEmployee
         WHERE EmployeeEmail = N'${EmployeeEmail}' AND NOT EmployeeId = ${EmployeeId}
       )
       THEN CAST (1 AS BIT)
@@ -87,7 +87,7 @@ router.put("/edit/:EmployeeId", async (req, res) => {
     if (CheckEmployee.recordset[0].check) {
       res.status(400).send({ message: "Duplicate Employee Email" });
     } else {
-      let UpdateEmployee = `UPDATE MasterEmployee
+      let UpdateEmployee = `UPDATE privanet.MasterEmployee
         SET
         EmployeeTitle = N'${EmployeeTitle}', EmployeeFname = N'${EmployeeFname}',
         EmployeeLname = N'${EmployeeLname}', EmployeeTel = N'${EmployeeTel}',
@@ -111,7 +111,7 @@ router.put("/change_password/:EmployeeId", async (req, res) => {
     }
     let pool = await sql.connect(dbconfig);
     let Hashpass = await bcrypt.hash(Password, 12);
-    let UpdateEmployee = `UPDATE MasterEmployee
+    let UpdateEmployee = `UPDATE privanet.MasterEmployee
       SET Password = N'${Hashpass}'
       WHERE EmployeeId = ${EmployeeId}`;
     await pool.request().query(UpdateEmployee);
@@ -130,7 +130,7 @@ router.put("/change_authority/:EmployeeId", async (req, res) => {
     if (UserId == EmployeeId && Authority == 0)
       return res.status(400).send({ message: "Cannot de-authority yourself" });
     let pool = await sql.connect(dbconfig);
-    let UpdateEmployee = `UPDATE MasterEmployee
+    let UpdateEmployee = `UPDATE privanet.MasterEmployee
       SET Authority = ${Authority}
       WHERE EmployeeId = ${EmployeeId}`;
     await pool.request().query(UpdateEmployee);
@@ -144,7 +144,7 @@ router.put("/change_approval/:EmployeeId", async (req, res) => {
     let EmployeeId = req.params.EmployeeId;
     let { Approver } = req.body;
     let pool = await sql.connect(dbconfig);
-    let UpdateEmployee = `UPDATE MasterEmployee
+    let UpdateEmployee = `UPDATE privanet.MasterEmployee
       SET Approver = ${Approver}
       WHERE EmployeeId = ${EmployeeId}`;
     await pool.request().query(UpdateEmployee);
@@ -157,7 +157,7 @@ router.put("/change_approval/:EmployeeId", async (req, res) => {
 router.delete("/delete/:EmployeeId", async (req, res) => {
   try {
     let EmployeeId = req.params.EmployeeId;
-    let DeleteEmployee = `UPDATE MasterEmployee
+    let DeleteEmployee = `UPDATE privanet.MasterEmployee
       SET EmployeeActive = 0
       WHERE EmployeeId = ${EmployeeId}`;
     let pool = await sql.connect(dbconfig);

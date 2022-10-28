@@ -26,15 +26,15 @@ router.get("/:QuotationId", async (req, res) => {
       a.QuotationApproval, a.EmployeeApproveId,
       e.EmployeeFname + ' ' + e.EmployeeLname EmployeeName,
       e.EmployeeFname, e.EmployeeLname, e.EmployeeEmail, e.EmployeePosition
-      FROM [Quotation] a
-      LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
-      LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
-      LEFT JOIN [MasterStatus] d ON a.QuotationStatus = d.StatusId
-      LEFT JOIN [MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
-      LEFT JOIN [MasterCompany] f ON c.CompanyId = f.CompanyId
+      FROM privanet.[Quotation] a
+      LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+      LEFT JOIN privanet.[MasterCustomer] c ON b.CustomerId = c.CustomerId
+      LEFT JOIN privanet.[MasterStatus] d ON a.QuotationStatus = d.StatusId
+      LEFT JOIN privanet.[MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
+      LEFT JOIN privanet.[MasterCompany] f ON c.CompanyId = f.CompanyId
       WHERE a.QuotationId = ${QuotationId}`;
     let getSetting = `SELECT TableShow, TablePrice, TableQty, TableTotal
-      FROM QuotationSetting
+      FROM privanet.QuotationSetting
       WHERE QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
     let settings = await pool.request().query(getSetting);
@@ -83,8 +83,8 @@ router.get("/download/:QuotationId", async (req, res) => {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
     let getQuotation = `SELECT b.QuotationNo, a.QuotationRevised
-        FROM [Quotation] a
-        LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+        FROM privanet.[Quotation] a
+        LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
         WHERE a.QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
     let quotation = quotations.recordset[0];

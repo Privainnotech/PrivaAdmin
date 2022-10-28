@@ -7,7 +7,7 @@ const sendQuotationMail = require("../modules/mail");
 
 const SelectEmp = (EmployeeId) => {
   return `SELECT EmployeeTitle, EmployeeFname, EmployeeLname, EmployeeEmail
-    FROM MasterEmployee
+    FROM privanet.MasterEmployee
     WHERE EmployeeId = ${EmployeeId}`;
 };
 
@@ -30,10 +30,10 @@ router.post("/request", async (req, res) => {
       a.QuotationSubject, FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
       a.QuotationTotalPrice, a.QuotationDiscount,
       a.QuotationNet, a.QuotationVat, a.QuotationNetVat
-      FROM [Quotation] a
-      LEFT JOIN [QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
-      LEFT JOIN [MasterCustomer] c ON b.CustomerId = c.CustomerId
-      LEFT JOIN [MasterCompany] d ON c.CompanyId = d.CompanyId
+      FROM privanet.[Quotation] a
+      LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+      LEFT JOIN privanet.[MasterCustomer] c ON b.CustomerId = c.CustomerId
+      LEFT JOIN privanet.[MasterCompany] d ON c.CompanyId = d.CompanyId
       WHERE a.QuotationId = ${QuotationId}`);
     console.log(getQuotation.recordset[0]);
     let Sender = getSender.recordset[0];
@@ -43,13 +43,13 @@ router.post("/request", async (req, res) => {
       return res.status(400).send({ message: "Quotation already approved" });
     }
     let checkItem = await pool.request().query(`SELECT ItemId
-        FROM QuotationItem
+        FROM privanet.QuotationItem
         WHERE QuotationId = ${QuotationId}`);
     if (!checkItem.recordset.length) {
       return res.status(400).send({ message: "Please check quotation item" });
     }
     await sendQuotationMail(Sender, Receiver, Quotation);
-    let WaitApproveQuotation = `UPDATE Quotation
+    let WaitApproveQuotation = `UPDATE privanet.Quotation
         SET QuotationApproval = 1
         WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(WaitApproveQuotation);
@@ -69,7 +69,7 @@ router.put("/approve", async (req, res) => {
       return;
     }
     let pool = await sql.connect(dbconfig);
-    let ApproveQuotation = `UPDATE Quotation
+    let ApproveQuotation = `UPDATE privanet.Quotation
         SET QuotationApproval = 2
         WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(ApproveQuotation);

@@ -6,18 +6,18 @@ const PriceS = async (SubItemId) => {
     let pool = await sql.connect(dbconfig);
     let UpdatePrice = `
         DECLARE @QuotationId bigint, @ItemId bigint
-        SET @ItemId = (SELECT ItemId FROM QuotationSubItem WHERE SubItemId = ${SubItemId})
-        SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = @ItemId)
+        SET @ItemId = (SELECT ItemId FROM privanet.QuotationSubItem WHERE SubItemId = ${SubItemId})
+        SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId = @ItemId)
   
-        UPDATE QuotationItem
+        UPDATE privanet.QuotationItem
         SET ItemPrice = (SELECT SUM(SubItemQty * SubItemPrice) 
-          FROM QuotationSubItem
+          FROM privanet.QuotationSubItem
           WHERE ItemId = @ItemId)
         WHERE ItemId = @ItemId
   
-        UPDATE Quotation
+        UPDATE privanet.Quotation
         SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
-          FROM QuotationItem 
+          FROM privanet.QuotationItem 
           WHERE QuotationId = @QuotationId)
         WHERE QuotationId = @QuotationId`;
     await pool.request().query(UpdatePrice);
@@ -31,17 +31,17 @@ const PriceI = async (ItemId) => {
     let pool = await sql.connect(dbconfig);
     let UpdatePrice = `
         DECLARE @QuotationId bigint
-        SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = ${ItemId})
+        SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId = ${ItemId})
         
-        UPDATE QuotationItem
+        UPDATE privanet.QuotationItem
         SET ItemPrice = (SELECT SUM(SubItemQty * SubItemPrice) 
-          FROM QuotationSubItem
+          FROM privanet.QuotationSubItem
           WHERE ItemId = ${ItemId})
         WHERE ItemId = ${ItemId}
   
-        UPDATE Quotation
+        UPDATE privanet.Quotation
         SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
-          FROM QuotationItem 
+          FROM privanet.QuotationItem 
           WHERE QuotationId = @QuotationId)
         WHERE QuotationId = @QuotationId`;
     await pool.request().query(UpdatePrice);
@@ -55,11 +55,11 @@ const PriceQ = async (ItemId) => {
     let pool = await sql.connect(dbconfig);
     let UpdatePrice = `
         DECLARE @QuotationId bigint
-        SET @QuotationId = (SELECT QuotationId FROM QuotationItem WHERE ItemId = ${ItemId})
+        SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId = ${ItemId})
   
-        UPDATE Quotation
+        UPDATE privanet.Quotation
         SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
-          FROM QuotationItem 
+          FROM privanet.QuotationItem 
           WHERE QuotationId = @QuotationId)
         WHERE QuotationId = @QuotationId`;
     await pool.request().query(UpdatePrice);

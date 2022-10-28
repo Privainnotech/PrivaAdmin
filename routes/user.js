@@ -15,7 +15,7 @@ router.post("/login", async (req, res) => {
     } else {
       let pool = await sql.connect(dbconfig);
       let user = await pool.request().query(
-        `SELECT * FROM MasterEmployee
+        `SELECT * FROM privanet.MasterEmployee
           WHERE EmployeeEmail = N'${Email}'`
       );
       if (user.recordset.length) {
@@ -82,7 +82,7 @@ router.get("/logout", (req, res, next) => {
 // router.delete('/delete/:UserId', async (req, res) => {
 //     try{
 //         let UserId = req.params.UserId;
-//         let DeleteUser = `DELETE FROM Users WHERE UserId = ${UserId}`;
+//         let DeleteUser = `DELETE FROM privanet.Users WHERE UserId = ${UserId}`;
 //         let pool = await sql.connect(dbconfig);
 //         await pool.request().query(DeleteUser);
 //         res.status(200).send({message: `Successfully delete company`});
