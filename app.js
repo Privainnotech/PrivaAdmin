@@ -59,4 +59,16 @@ app.use("/quotation_report", quotationReportRoute);
 app.use("/quotation_approval", quotationApproveRoute);
 app.use("/dropdown", dropdownRoute);
 
+const sql = require("mssql");
+const { dbconfig } = require("./config");
+app.use("/testconnect", async (req, res, next) => {
+  try {
+    let pool = await sql.connect(dbconfig);
+    res.status(200).send({ message: "Connect SQL Server Success" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ message: err });
+  }
+});
+
 module.exports = app;
