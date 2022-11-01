@@ -1,8 +1,4 @@
-require("dotenv").config();
-
-const { SQL_USER, SQL_PASSWORD, SQL_DATABASE, SQL_SERVER, SQL_PORT } =
-  process.env;
-
+const PORT = 3000;
 const dbconfig = {
   user: "privaadmin",
   password: "Bvc7f&07",
@@ -18,5 +14,6 @@ const dbconfig = {
 };
 
 module.exports = {
+  PORT,
   dbconfig,
 };
