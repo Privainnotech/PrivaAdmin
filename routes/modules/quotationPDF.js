@@ -420,7 +420,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
           WHERE ItemId = ${Item.ItemId}`);
       if (SubItems.recordset.length) {
         for (let SubItem of SubItems.recordset) {
-          let { SubItemQty, SubItemUnit, ProductName, SubItemPrice } = SubItem;
+          let { SubItemQty, SubItemUnit, SubItemName, SubItemPrice } = SubItem;
           if (SubItemPrice == "undefined" || typeof SubItemPrice == "object")
             SubItemPrice = 0;
           if (SubItemQty == "undefined" || typeof SubItemQty == "object")
@@ -457,7 +457,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
               itemtable["body"].push([
                 "",
                 {
-                  text: `${j}) ${ProductName}  ${SubItemQty} ${SubItemUnit}`,
+                  text: `${j}) ${SubItemName}  ${SubItemQty} ${SubItemUnit}`,
                   style: "blacktext",
                 },
                 "",
@@ -467,7 +467,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
             } else {
               itemtable["body"].push([
                 { text: "", style: "btext", alignment: "center" },
-                { text: `${j}) ${ProductName}`, style: "btext" },
+                { text: `${j}) ${SubItemName}`, style: "btext" },
                 { text: `${SPrice}`, style: "blacktext", alignment: "right" },
                 { text: `${SQty}`, style: "blacktext", alignment: "center" },
                 { text: `${STotal}`, style: "blacktext", alignment: "right" },

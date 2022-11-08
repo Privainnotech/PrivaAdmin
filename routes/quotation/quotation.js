@@ -116,7 +116,7 @@ router.get("/subitem/:ItemId", async (req, res) => {
     let ItemId = req.params.ItemId;
     let getQuotationSubItem = `SELECT row_number() over(order by a.SubItemId) as 'Index',
       c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode,
-      b.ProductName SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit,
+      a.SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit,
       CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
       FROM privanet.[QuotationSubItem] a
       LEFT JOIN privanet.[MasterProduct] b ON a.ProductId = b.ProductId
@@ -544,6 +544,7 @@ router.put("/edit_item/:ItemId", async (req, res) => {
 router.put("/edit_subitem/:SubItemId", async (req, res) => {
   try {
     let SubItemId = req.params.SubItemId;
+    console.log(SubItemId)
     let { SubItemName, SubItemPrice, SubItemQty, SubItemUnit } = req.body;
     console.log(req.body);
     if (SubItemName == "")

@@ -1485,22 +1485,20 @@ $(document).ready(function () {
 
     $("#modalEdSaveSub").unbind();
     $("#modalEdSaveSub").click(function () {
-      let ProductId = $.trim($("#modalInpEdProduct").val());
       let SubItemName = $.trim($("#modalInpEdSubName").val());
       let SubItemPrice = $.trim($("#modalInpEdSubPrice").val());
-      let ProductType = $.trim($("#modalInpEdSubType").val());
       let SubItemQty = $.trim($("#modalInpEdSubQty").val());
       let SubItemUnit = $.trim($("#modalInpEdSubUnit").val());
+      console.log(SubItemName)
+
 
       $.ajax({
         url: "/quotation/edit_subitem/" + SubItemId,
         method: "put",
         contentType: "application/json",
         data: JSON.stringify({
-          ProductId: ProductId,
           SubItemName: SubItemName,
           SubItemPrice: SubItemPrice,
-          ProductType: ProductType,
           SubItemQty: SubItemQty,
           SubItemUnit: SubItemUnit,
         }),
