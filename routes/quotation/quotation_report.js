@@ -74,6 +74,7 @@ router.get("/:QuotationId", async (req, res) => {
       // res.status(200).send({message: 'Successfully create quotation report'});
     });
   } catch (err) {
+    console.log(err)
     res.status(500).send({ message: `${err}` });
   }
 });

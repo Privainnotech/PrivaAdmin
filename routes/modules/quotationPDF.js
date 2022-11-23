@@ -629,7 +629,8 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
       body: [],
     };
   };
-  if (JSON.parse(QuotationDetail) !== null) {
+
+  if (QuotationDetail !== '' && JSON.parse(QuotationDetail) != null) {
     let detailTable1 = detailTable();
     let detailTable2 = detailTable();
     let detailTable3 = detailTable();
