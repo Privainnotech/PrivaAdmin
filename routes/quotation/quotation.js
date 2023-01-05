@@ -77,7 +77,7 @@ router.get("/:QuotationId", async (req, res) => {
     if (typeof EmployeeApproveId == "object") {
       quotations.recordset[0].EmployeeApproveId = "";
     }
-    if (typeof QuotationDetail === "object" || QuotationDetail === "null") {
+    if (typeof QuotationDetail === "object" || QuotationDetail === "null" || QuotationDetail === "") {
       quotations.recordset[0].QuotationDetail = detailDefault;
     } else {
       quotations.recordset[0].QuotationDetail = JSON.parse(QuotationDetail);
@@ -116,7 +116,7 @@ router.get("/subitem/:ItemId", async (req, res) => {
     let ItemId = req.params.ItemId;
     let getQuotationSubItem = `SELECT row_number() over(order by a.SubItemId) as 'Index',
       c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode,
-      b.ProductName SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit,
+      a.SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit,
       CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
       FROM privanet.[QuotationSubItem] a
       LEFT JOIN privanet.[MasterProduct] b ON a.ProductId = b.ProductId
@@ -485,7 +485,7 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     let QuotationId = req.params.QuotationId;
     let { QuotationDetail } = req.body;
     console.log(QuotationDetail);
-    let Detail = null;
+    let Detail = '';
     if (QuotationDetail.blocks.length !== 0) {
       Detail = JSON.stringify(QuotationDetail);
     }
@@ -544,6 +544,7 @@ router.put("/edit_item/:ItemId", async (req, res) => {
 router.put("/edit_subitem/:SubItemId", async (req, res) => {
   try {
     let SubItemId = req.params.SubItemId;
+    console.log(SubItemId)
     let { SubItemName, SubItemPrice, SubItemQty, SubItemUnit } = req.body;
     console.log(req.body);
     if (SubItemName == "")
@@ -570,7 +571,7 @@ const detailDefault = {
       id: "cyZjplMOZ0",
       type: "paragraph",
       data: {
-        text: "<b>ตัวอย่างการพิมพ์(อย่าลืมลบออกถ้ามีการแก้ไข)</b>",
+        text: "<b>ตัวอย่างการพิมพ์(ไม่ต้องทำอะไรถ้าไม่มี Detail แต่ถ้ามีการแก้ไข ให้ลบตัวอย่าง 2 บรรทัดแรกออกแล้วกด Save)</b>",
       },
     },
     {

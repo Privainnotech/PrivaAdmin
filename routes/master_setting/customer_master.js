@@ -37,7 +37,7 @@ router.post("/add", async (req, res, next) => {
             FROM privanet.MasterCustomer
             WHERE CustomerEmail = N'${CustomerEmail}'`);
     if (!CheckCustomer.recordset.length) {
-      let InsertCustomer = `INSERT INTO privanet.MasterCustomer
+      let InsertCustomer = `INSERT INTO privanet.MasterCustomer(
         CustomerName, CustomerTel, CustomerEmail, CompanyId)
         VALUES (N'${CustomerName}', N'${CustomerTel}', N'${CustomerEmail}', ${CompanyId})`;
       await pool.request().query(InsertCustomer);
