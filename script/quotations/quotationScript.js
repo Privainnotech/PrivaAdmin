@@ -226,6 +226,31 @@ function fill_resetSubTable() {
 }
 
 //Quotation Table
+function searchTableQuoHead() {
+  $("#tableQuoHead thead tr")
+    .clone(true)
+    .addClass("filters")
+    .appendTo("#tableQuoHead thead");
+  $("#tableQuoHead .filters th").each(function (i) {
+    var title = $("#tableQuoHead thead th").eq($(this).index()).text();
+    disable = title == 'จัดการข้อมูล' ? 'disabled' : ''
+    $(this).html(
+      `<input class="form-control p-1" type="text" placeholder="${title}" ${disable}/>`
+    );
+  });
+  tableQuoHead
+    .columns()
+    .eq(0)
+    .each(function (colIdx) {
+      $("input", $("#SaTable .filters th")[colIdx]).on(
+        "keyup change",
+        function () {
+          console.log(colIdx, this.value);
+          tableQuoHead.column(colIdx).search(this.value).draw();
+        }
+      );
+    });
+}
 function fill_quotationHead() {
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
@@ -440,6 +465,7 @@ function fill_subitem(Id, status) {
 
 $(document).ready(function () {
   fill_quotationHead();
+  searchTableQuoHead()
   fill_resetQuoTable();
   // fill_quotation();
 
@@ -498,6 +524,18 @@ $(document).ready(function () {
   //clickTableQuotationHead
   $("#tableQuoHead tbody").unbind();
   $("#tableQuoHead tbody").on("click", "tr", function () {
+    $("#save-button").addClass("visually-hidden");
+      $("#btn-cancel").attr("disabled", "disabled");
+      $("#btn-quotation").attr("disabled", "disabled");
+      $("#btn-book").attr("disabled", "disabled");
+      $("#btn-loss").attr("disabled", "disabled");
+      removeDetailPaper();
+      hideAdd();
+      hideEdit();
+      hideSetting();
+      fill_resetTable();
+      RePro();
+      fill_resetQuoTable();
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
       //
@@ -547,6 +585,7 @@ $(document).ready(function () {
             timer: 1500,
           });
           tableQuo.ajax.reload(null, false);
+          tableQuoHead.ajax.reload(null, false);
         },
       });
       $("#modalDeleteConfirm").modal("hide");
