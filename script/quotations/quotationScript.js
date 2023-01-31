@@ -198,225 +198,274 @@ function removeDetailPaper() {
   }
 }
 
-$(document).ready(function () {
-  //Reset Item Table
-  function fill_resetTable() {
-    var trHTML = "";
-    trHTML += "<tr>";
-    trHTML += '<td colspan="6">Loading...</td>';
-    trHTML += "</tr>";
-    document.getElementById("showTable").innerHTML = trHTML;
-  }
+//Reset Item Table
+function fill_resetTable() {
+  var trHTML = "";
+  trHTML += "<tr>";
+  trHTML += '<td colspan="6">Loading...</td>';
+  trHTML += "</tr>";
+  document.getElementById("showTable").innerHTML = trHTML;
+}
 
-  //Reset Sub-Item Table
-  function fill_resetSubTable() {
-    var trHTML = "";
-    trHTML += "<tr>";
-    trHTML += '<td colspan="6">Loading...</td>';
-    trHTML += "</tr>";
-    document.getElementById("showSubTable").innerHTML = trHTML;
-  }
+//Reset Sub-Item Table
+function fill_resetSubTable() {
+  var trHTML = "";
+  trHTML += "<tr>";
+  trHTML += '<td colspan="6">Loading...</td>';
+  trHTML += "</tr>";
+  document.getElementById("showSubTable").innerHTML = trHTML;
+}
 
-  //Quotation Table
-  function fill_quotation() {
-    tableQuo = $("#tableQuo").DataTable({
-      bDestroy: true,
-      scrollY: "40vh",
-      // scrollX: true,
-      bPaginate: false,
-      // "bInfo": false,
-      // bLengthChange: false,
-      ajax: {
-        url: "/quotation/list",
-        dataSrc: "",
+//Quotation Table
+function fill_quotationHead() {
+  tableQuoHead = $("#tableQuoHead").DataTable({
+    bDestroy: true,
+    scrollY: "40vh",
+    scrollX: true,
+    searching: false,
+    bPaginate: false,
+    bInfo: false,
+    // bLengthChange: false,
+    ajax: {
+      url: "/quotation/quotation_no_list",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        width: "6%",
+        data: "index",
       },
-      columns: [
-        {
-          width: "6%",
-          data: "index",
-        },
-        {
-          width: "10%",
-          data: "QuotationNo",
-        },
-        {
-          width: "9%",
-          data: "QuotationRevised",
-        },
-        {
-          width: "20%",
-          data: "QuotationSubject",
-        },
-        {
-          width: "10%",
-          data: "CustomerName",
-        },
-        {
-          width: "10%",
-          data: "QuotationDate",
-          render: function (data, type, row) {
-            if (data != null) return data
-            else return data = '-'
+      {
+        // width: "10%",
+        data: "QuotationSubject",
+      },
+      {
+        // width: "20%",
+        data: "QuotationNo",
+      },
+      {
+        // width: "10%",
+        data: "CustomerName",
+      },
+      {
+        width: "7%",
+        data: "Action",
+        render: function (data, type, row) {
+          if (row.QuotationStatus === 1) {
+            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
+          } else {
+            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
           }
         },
-        {
-          width: "10%",
-          data: "QuotationUpdatedDate",
-        },
-        {
-          width: "10%",
-          data: "StatusName",
-        },
-        {
-          width: "8%",
-          data: "EmployeeFname",
-        },
-        {
-          width: "7%",
-          data: "Action",
-          render: function (data, type, row) {
-            if (row.QuotationStatus === 1) {
-              return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
-            } else {
-              return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
-            }
-          },
-        },
-        {
-          data: "QuotationId",
-        },
-      ],
-      // lengthMenu: [10,15],
-      columnDefs: [
-        {
-          targets: [10],
-          visible: false,
-        },
-      ],
-    });
-  }
-
-  //Item table
-  function fill_item(Id, status) {
-    tableItem = $("#tableItem").DataTable({
-      bDestroy: true,
-      scrollY: "28vh",
-      scrollX: true,
-      scrollCollapse: true,
-      searching: false,
-      bPaginate: false,
-      bInfo: false,
-      bLengthChange: false,
-      ajax: {
-        url: `/quotation/item/` + Id,
-        dataSrc: "",
       },
-      columns: [
-        {
-          width: "10%",
-          data: "Item",
-        },
-        {
-          width: "40%",
-          data: "ItemName",
-        },
-        {
-          width: "15%",
-          data: "ItemPrice",
-        },
-        {
-          width: "15%",
-          data: "ItemQty",
-        },
-        {
-          width: "20%",
-          data: "Action",
-          render: function () {
-            if (status === 1) {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>";
-            }
-            // disabled
-            else {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>";
-            }
-          },
-        },
-        {
-          data: "ItemId",
-          data: "QuotationId",
-          data: "QuotationStatus",
-        },
-      ],
-      columnDefs: [
-        {
-          targets: [5],
-          visible: false,
-        },
-      ],
-    });
-  }
+    ],
+    // lengthMenu: [10,15],
+  });
+}
 
-  //Sub-Item Table
-  function fill_subitem(Id, status) {
-    tableSubItem = $("#tableSubItem").DataTable({
-      bDestroy: true,
-      scrollY: "28vh",
-      scrollX: true,
-      scrollCollapse: true,
-      searching: false,
-      bPaginate: false,
-      bInfo: false,
-      bLengthChange: false,
-      ajax: {
-        url: `/quotation/subitem/` + Id,
-        dataSrc: "",
+function fill_quotation() {
+  tableQuo = $("#tableQuo").DataTable({
+    bDestroy: true,
+    scrollY: "40vh",
+    scrollX: true,
+    bPaginate: false,
+    // "bInfo": false,
+    // bLengthChange: false,
+    ajax: {
+      url: "/quotation/list",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        width: "6%",
+        data: "index",
       },
-      columns: [
-        {
-          width: "10%",
-          data: "Index",
+      {
+        width: "10%",
+        data: "QuotationNo",
+      },
+      {
+        width: "9%",
+        data: "QuotationRevised",
+      },
+      {
+        width: "20%",
+        data: "QuotationSubject",
+      },
+      {
+        width: "10%",
+        data: "CustomerName",
+      },
+      {
+        width: "10%",
+        data: "QuotationDate",
+        render: function (data, type, row) {
+          if (data != null) return data
+          else return data = '-'
+        }
+      },
+      {
+        width: "10%",
+        data: "QuotationUpdatedDate",
+      },
+      {
+        width: "10%",
+        data: "StatusName",
+      },
+      {
+        width: "8%",
+        data: "EmployeeFname",
+      },
+      {
+        width: "7%",
+        data: "Action",
+        render: function (data, type, row) {
+          if (row.QuotationStatus === 1) {
+            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
+          } else {
+            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
+          }
         },
-        {
-          width: "40%",
-          data: "SubItemName",
+      },
+      {
+        data: "QuotationId",
+      },
+    ],
+    // lengthMenu: [10,15],
+    columnDefs: [
+      {
+        targets: [10],
+        visible: false,
+      },
+    ],
+  });
+}
+
+//Item table
+function fill_item(Id, status) {
+  tableItem = $("#tableItem").DataTable({
+    bDestroy: true,
+    scrollY: "28vh",
+    scrollX: true,
+    scrollCollapse: true,
+    searching: false,
+    bPaginate: false,
+    bInfo: false,
+    bLengthChange: false,
+    ajax: {
+      url: `/quotation/item/` + Id,
+      dataSrc: "",
+    },
+    columns: [
+      {
+        width: "10%",
+        data: "Item",
+      },
+      {
+        width: "40%",
+        data: "ItemName",
+      },
+      {
+        width: "15%",
+        data: "ItemPrice",
+      },
+      {
+        width: "15%",
+        data: "ItemQty",
+      },
+      {
+        width: "20%",
+        data: "Action",
+        render: function () {
+          if (status === 1) {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>";
+          }
+          // disabled
+          else {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>";
+          }
         },
-        {
-          width: "15%",
-          data: "SubItemPrice",
+      },
+      {
+        data: "ItemId",
+        data: "QuotationId",
+        data: "QuotationStatus",
+      },
+    ],
+    columnDefs: [
+      {
+        targets: [5],
+        visible: false,
+      },
+    ],
+  });
+}
+
+//Sub-Item Table
+function fill_subitem(Id, status) {
+  tableSubItem = $("#tableSubItem").DataTable({
+    bDestroy: true,
+    scrollY: "28vh",
+    scrollX: true,
+    scrollCollapse: true,
+    searching: false,
+    bPaginate: false,
+    bInfo: false,
+    bLengthChange: false,
+    ajax: {
+      url: `/quotation/subitem/` + Id,
+      dataSrc: "",
+    },
+    columns: [
+      {
+        width: "10%",
+        data: "Index",
+      },
+      {
+        width: "40%",
+        data: "SubItemName",
+      },
+      {
+        width: "15%",
+        data: "SubItemPrice",
+      },
+      {
+        width: "15%",
+        data: "SubItemQtyUnit",
+      },
+      {
+        width: "20%",
+        data: "Action",
+        render: function () {
+          if (status === 1) {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem'><i class='fa fa-remove'></i></button></div></div>";
+          }
+          // disabled
+          else {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' disabled><i class='fa fa-remove'></i></button></div></div>";
+          }
         },
-        {
-          width: "15%",
-          data: "SubItemQtyUnit",
-        },
-        {
-          width: "20%",
-          data: "Action",
-          render: function () {
-            if (status === 1) {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem'><i class='fa fa-remove'></i></button></div></div>";
-            }
-            // disabled
-            else {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' disabled><i class='fa fa-remove'></i></button></div></div>";
-            }
-          },
-        },
-        {
-          data: "SubItemId",
-          data: "QuotationId",
-          data: "ProductId",
-          data: "ProductType",
-        },
-      ],
-      columnDefs: [
-        {
-          targets: [5],
-          visible: false,
-        },
-      ],
-    });
-  }
-  fill_quotation();
+      },
+      {
+        data: "SubItemId",
+        data: "QuotationId",
+        data: "ProductId",
+        data: "ProductType",
+      },
+    ],
+    columnDefs: [
+      {
+        targets: [5],
+        visible: false,
+      },
+    ],
+  });
+}
+
+$(document).ready(function () {
+  
+  fill_quotationHead();
+  // fill_quotation();
 
   //======================== Quotation =============================//
   //Create Project
