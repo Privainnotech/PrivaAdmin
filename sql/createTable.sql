@@ -9,34 +9,43 @@ DROP TABLE MasterStatus
 DROP TABLE MasterCustomer
 DROP TABLE MasterCompany
 
-CREATE Table [MasterCompany](
-    CompanyId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    CompanyName NVARCHAR(50) NOT NULL UNIQUE,
-    CompanyAddress NVARCHAR(255) NOT NULL,
+CREATE Table [MasterCompany]
+(
+	CompanyId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	CompanyName NVARCHAR(50) NOT NULL UNIQUE,
+	CompanyAddress NVARCHAR(255) NOT NULL,
 	CompanyEmail NVARCHAR(50) NULL,
 	CompanyTel NVARCHAR(20) NULL,
 	CompanyActive int NOT NULL DEFAULT 1
 )
 
-CREATE Table [MasterCustomer](
-    CustomerId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+CREATE Table [MasterCustomer]
+(
+	CustomerId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	CompanyId bigint NOT NULL,
 	CustomerName NVARCHAR(50) NOT NULL,
-    CustomerEmail NVARCHAR(50) NOT NULL,
+	CustomerEmail NVARCHAR(50) NOT NULL,
 	CustomerTel NVARCHAR(20) NULL,
 	CustomerActive int NOT NULL DEFAULT 1
-	CONSTRAINT FK_customer_company FOREIGN KEY (CompanyId) REFERENCES MasterCompany(CompanyId)
+		CONSTRAINT FK_customer_company FOREIGN KEY (CompanyId) REFERENCES MasterCompany(CompanyId)
 )
 
-CREATE Table [MasterStatus](
-    StatusId int PRIMARY KEY CLUSTERED NOT NULL,
+CREATE Table [MasterStatus]
+(
+	StatusId int PRIMARY KEY CLUSTERED NOT NULL,
 	StatusName NVARCHAR(20) NOT NULL UNIQUE
 )
 
-INSERT INTO MasterStatus(StatusId, StatusName)
-VALUES(1, N'Pre-Quotation'),(2, N'Quotation'),(3, N'Booking'),(4, N'Loss'),(5, N'Cancel')
+INSERT INTO MasterStatus
+	(StatusId, StatusName)
+VALUES(1, N'Pre-Quotation'),
+	(2, N'Quotation'),
+	(3, N'Booking'),
+	(4, N'Loss'),
+	(5, N'Cancel')
 
-CREATE Table [MasterEmployee](
+CREATE Table [MasterEmployee]
+(
 	EmployeeId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	EmployeeTitle NVARCHAR(10) NULL,
 	EmployeeFname NVARCHAR(50) NOT NULL,
@@ -50,24 +59,27 @@ CREATE Table [MasterEmployee](
 	Approver int NOT NULL DEFAULT 0
 )
 
-CREATE Table [MasterProduct](
+CREATE Table [MasterProduct]
+(
 	ProductId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	ProductCode NVARCHAR(20) NOT NULL UNIQUE,
 	ProductName NVARCHAR(255) NOT NULL UNIQUE,
-    ProductPrice money NULL,
+	ProductPrice money NULL,
 	ProductType NVARCHAR(10) NULL,
 )
 
-CREATE Table [QuotationNo](
-    QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
+CREATE Table [QuotationNo]
+(
+	QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
 	CustomerId bigint NOT NULL
-	FOREIGN KEY (CustomerId) REFERENCES MasterCustomer(CustomerId)
+		FOREIGN KEY (CustomerId) REFERENCES MasterCustomer(CustomerId)
 )
 
-CREATE Table [Quotation](
-    QuotationId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    QuotationNoId bigint NOT NULL,
+CREATE Table [Quotation]
+(
+	QuotationId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	QuotationNoId bigint NOT NULL,
 	QuotationRevised int NOT NULL DEFAULT 0,
 	QuotationSubject NVARCHAR(255) NOT NULL,
 	EndCustomer NVARCHAR(255) NOT NULL DEFAULT N'-',
@@ -89,12 +101,21 @@ CREATE Table [Quotation](
 	QuotationApproval int NOT NULL DEFAULT 0,
 	EmployeeApproveId bigint NULL,
 	EmployeeEditId bigint NULL
-	FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
+		FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
 	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
 	FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId),
 )
 
-CREATE Table [QuotationSetting](
+CREATE TABLE [QuotationPayTerm]
+(
+	QuotationId bigint NOT NULL,
+	IndexPayTerm int NOT NULL,
+	PayTerm NVARCHAR(255) NULL,
+	PayPercent int NULL
+)
+
+CREATE Table [QuotationSetting]
+(
 	QuotationSetId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	QuotationId bigint NOT NULL,
 	TableShow int NOT NULL DEFAULT 3,
@@ -104,24 +125,26 @@ CREATE Table [QuotationSetting](
 	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
-CREATE Table [QuotationItem](
+CREATE Table [QuotationItem]
+(
 	ItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    QuotationId bigint NOT NULL,
+	QuotationId bigint NOT NULL,
 	ItemName NVARCHAR(255) NOT NULL,
-    ItemPrice money NULL,
+	ItemPrice money NULL,
 	ItemQty int NULL
-	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
+		FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
-CREATE Table [QuotationSubItem](
+CREATE Table [QuotationSubItem]
+(
 	SubItemId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-    ItemId bigint NOT NULL,
+	ItemId bigint NOT NULL,
 	ProductId bigint NULL,
 	SubItemName NVARCHAR(255) NOT NULL,
 	SubItemPrice money NULL,
 	SubItemQty int NULL,
 	SubItemUnit NVARCHAR(10) NULL
-	FOREIGN KEY (ItemId) REFERENCES QuotationItem(ItemId),
+		FOREIGN KEY (ItemId) REFERENCES QuotationItem(ItemId),
 	FOREIGN KEY (ProductId) REFERENCES MasterProduct(ProductId)
 )
 

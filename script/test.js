@@ -112,7 +112,7 @@ function RePro() {
     $('#IP-Set-TablePrice').val('0');
     $('#IP-Set-TableQty').val('0');
     $('#IP-Set-TableTotal').val('0');
-    
+
 }
 
 
@@ -205,7 +205,6 @@ function removeDetailPaper() {
         });
     }
 }
-
 
 
 $(document).ready(function () {
@@ -305,16 +304,16 @@ $(document).ready(function () {
             success: async (itemData) => {
                 var items = JSON.parse(itemData);
                 table.html('')
-                if(items.length) for (let item of items) {
-                    let { Item, ItemName, ItemPrice, ItemQty, ItemId, QuotationId, QuotationStatus} = item
-                    let itemRow = $('<tr>').addClass('itemTr selected').attr('id',`Item${ItemId}`).appendTo(table)
-                        $('<td>').addClass('Id').text(ItemId).hide().appendTo(itemRow)
-                        $('<td>').addClass('QId').text(QuotationId).hide().appendTo(itemRow)
-                        $('<td>').addClass('QStatus').text(QuotationStatus).hide().appendTo(itemRow)
-                        $('<td>').text(Item).appendTo(itemRow)
-                        $('<td>').addClass('Name').text(ItemName).appendTo(itemRow)
-                        $('<td>').addClass('Price').text(ItemPrice).appendTo(itemRow)
-                        $('<td>').addClass('Qty').text(ItemQty).appendTo(itemRow)
+                if (items.length) for (let item of items) {
+                    let { Item, ItemName, ItemPrice, ItemQty, ItemId, QuotationId, QuotationStatus } = item
+                    let itemRow = $('<tr>').addClass('itemTr selected').attr('id', `Item${ItemId}`).appendTo(table)
+                    $('<td>').addClass('Id').text(ItemId).hide().appendTo(itemRow)
+                    $('<td>').addClass('QId').text(QuotationId).hide().appendTo(itemRow)
+                    $('<td>').addClass('QStatus').text(QuotationStatus).hide().appendTo(itemRow)
+                    $('<td>').text(Item).appendTo(itemRow)
+                    $('<td>').addClass('Name').text(ItemName).appendTo(itemRow)
+                    $('<td>').addClass('Price').text(ItemPrice).appendTo(itemRow)
+                    $('<td>').addClass('Qty').text(ItemQty).appendTo(itemRow)
                     let itemAction = $('<td>').appendTo(itemRow)
                     let itemAct;
                     if (QuotationStatus === '1') {
@@ -339,29 +338,29 @@ $(document).ready(function () {
             cache: false,
             success: function (subitemData) {
                 var subitems = JSON.parse(subitemData);
-                if(subitems.length) {
+                if (subitems.length) {
                     const subitemTr = $('<tr>').addClass('subitemTr').insertAfter($(`#Item${ItemId}`))
-                    const subitemTd = $('<td>').attr('colspan','5').appendTo(subitemTr)
+                    const subitemTd = $('<td>').attr('colspan', '5').appendTo(subitemTr)
                     const subitemTable = $('<table>').addClass('subitemTable').appendTo(subitemTd)
                     for (let subitem of subitems) {
                         let { Index, SubItemId, ProductId, ProductType, ProductCode, SubItemName, SubItemPrice, SubItemQty, SubItemUnit, SubItemQtyUnit, QuotationId } = subitem
-                        subitemTr.attr('id',`Subitem${ItemId}`)
+                        subitemTr.attr('id', `Subitem${ItemId}`)
                         let Description = `${Index}) ${SubItemName}`
                         let subitemRow = $('<tr>').appendTo(subitemTable)
-                            $('<td>').addClass('QId').text(QuotationId).hide().appendTo(subitemRow)
-                            $('<td>').addClass('IId').text(ItemId).hide().appendTo(subitemRow)
-                            $('<td>').addClass('PId').text(ProductId).hide().appendTo(subitemRow)
-                            $('<td>').addClass('PType').text(ProductType).hide().appendTo(subitemRow)
-                            $('<td>').addClass('PCode').text(ProductCode).hide().appendTo(subitemRow)
-                            $('<td>').addClass('Id').text(SubItemId).hide().appendTo(subitemRow)
-                            $('<td>').addClass('Name').text(SubItemName).hide().appendTo(subitemRow)
-                            $('<td>').addClass('Price').text(SubItemPrice).hide().appendTo(subitemRow)
-                            $('<td>').addClass('Qty').text(SubItemQty).hide().appendTo(subitemRow)
-                            $('<td>').addClass('Unit').text(SubItemUnit).hide().appendTo(subitemRow)
-                            $('<td>').text('').css('width', '8%').appendTo(subitemRow)
-                            $('<td>').text(Description).css('width', '50%').appendTo(subitemRow)
-                            $('<td>').text(SubItemPrice).css('width', '15%').appendTo(subitemRow)
-                            $('<td>').text(SubItemQtyUnit).css('width', '10%').appendTo(subitemRow)
+                        $('<td>').addClass('QId').text(QuotationId).hide().appendTo(subitemRow)
+                        $('<td>').addClass('IId').text(ItemId).hide().appendTo(subitemRow)
+                        $('<td>').addClass('PId').text(ProductId).hide().appendTo(subitemRow)
+                        $('<td>').addClass('PType').text(ProductType).hide().appendTo(subitemRow)
+                        $('<td>').addClass('PCode').text(ProductCode).hide().appendTo(subitemRow)
+                        $('<td>').addClass('Id').text(SubItemId).hide().appendTo(subitemRow)
+                        $('<td>').addClass('Name').text(SubItemName).hide().appendTo(subitemRow)
+                        $('<td>').addClass('Price').text(SubItemPrice).hide().appendTo(subitemRow)
+                        $('<td>').addClass('Qty').text(SubItemQty).hide().appendTo(subitemRow)
+                        $('<td>').addClass('Unit').text(SubItemUnit).hide().appendTo(subitemRow)
+                        $('<td>').text('').css('width', '8%').appendTo(subitemRow)
+                        $('<td>').text(Description).css('width', '50%').appendTo(subitemRow)
+                        $('<td>').text(SubItemPrice).css('width', '15%').appendTo(subitemRow)
+                        $('<td>').text(SubItemQtyUnit).css('width', '10%').appendTo(subitemRow)
                         let subitemAction = $('<td>').text('action').css('width', '15%').appendTo(subitemRow)
                         let subitemAct;
                         if (QuotationStatus === '1') {
@@ -519,10 +518,9 @@ $(document).ready(function () {
         }
         else {
             $('#tableQuo tr').removeClass('selected');
-            $(this).toggleClass('selected');
+            $(this).addClass('selected');
 
-            $('#save-button').removeClass('visually-hidden');
-            $('#save-button').toggleClass('visually-hidden');
+            $('#save-button').addClass('visually-hidden');
 
             $("#modalEditProject").removeClass('save');
 
@@ -1285,7 +1283,7 @@ $(document).ready(function () {
     $('#tableItem tbody').on('click', 'tr', function () {
         let rows = $(this).closest('tr');
         let ItemId = rows.find(".Id").text();
-        let QuotationStatus  = rows.find(".QStatus").text();
+        let QuotationStatus = rows.find(".QStatus").text();
 
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
@@ -1485,6 +1483,8 @@ $(document).ready(function () {
     });
 
 });
+
+
 
 
 

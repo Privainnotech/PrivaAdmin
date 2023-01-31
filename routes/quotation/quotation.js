@@ -6,6 +6,55 @@ const { dbconfig } = require("../../config");
 const { checkMonth, checkDate, checkTime } = require("../../libs/datetime");
 const { PriceS, PriceI, PriceQ } = require("../modules/price");
 
+router.get("/quotation_no_list", async (req, res, next) => {
+  try {
+    let getQuotationNoList = `SELECT
+        row_number() over(order by a.QuotationNo desc) as 'index',
+        a.QuotationNoId, a.QuotationNo, a.CustomerId, b.CustomerName,
+        b.CompanyId,c.CompanyName,
+        (SELECT TOP 1 QuotationSubject
+          FROM privanet.[Quotation]
+          ORDER BY QuotationStatus) QuotationSubject
+        (SELECT TOP 1 QuotationRevised
+          FROM privanet.[Quotation]
+          ORDER BY QuotationStatus) QuotationRevised
+      FROM privanet.[QuotationNo] a
+      LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
+      LEFT JOIN privanet.[MasterCompany] c ON c.CompanyId = c.CompanyId
+      WHERE NOT c.CustomerName = N'Fake'`;
+    let pool = await sql.connect(dbconfig);
+    let quotationNos = await pool.request().query(getQuotationNoList);
+    res.status(200).send(JSON.stringify(quotationNos.recordset));
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
+
+router.get("/quotation_list/:QuotationNoId", async (req, res, next) => {
+  try {
+    let { QuotationNoId } = req.params;
+    let getQuotationList = `SELECT
+        row_number() over(
+          order by a.QuotationStatus,a.QuotationRevised desc,a.QuotationUpdatedDate desc
+        ) as 'index',
+        b.QuotationNoId, a.QuotationId, a.QuotationStatus, b.QuotationNo,
+        a.QuotationRevised, a.QuotationSubject,
+        FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
+        FORMAT(a.QuotationUpdatedDate, 'dd-MM-yyyy HH:mm') QuotationUpdatedDate,
+        c.StatusName, a.EmployeeApproveId, d.EmployeeFname, a.QuotationApproval
+      FROM privanet.[Quotation] a
+      LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+      LEFT JOIN privanet.[MasterStatus] c ON a.QuotationStatus = c.StatusId
+      LEFT JOIN privanet.[MasterEmployee] d ON a.EmployeeEditId = d.EmployeeId
+      WHERE a.QuotationNoId = ${QuotationNoId}`;
+    let pool = await sql.connect(dbconfig);
+    let quotations = await pool.request().query(getQuotationList);
+    res.status(200).send(JSON.stringify(quotations.recordset));
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
+
 router.get("/list", async (req, res, next) => {
   try {
     getQuotationList = `SELECT
@@ -463,7 +512,7 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
     // Insert Quotation with QuotationNoId
     let UpdateQuotation = `UPDATE privanet.Quotation
       SET QuotationSubject = N'${QuotationSubject}',
-        QuotationDiscount = ${QuotationDiscount},
+        QuotationDiscount = ${QuotationDiscount || 0},
         QuotationValidityDate = N'${ValidityDateFilter}', 
         QuotationPayTerm = N'${PayTermFilter}',
         QuotationDelivery = N'${DeliveryFilter}',
@@ -492,7 +541,7 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     Detail = Detail.replaceAll("&nbsp;", " ")
       .replaceAll("'", "")
       .replaceAll("amp;", "");
-    console.log(Detail.length);
+    console.log(Detail);
     let UpdateDetail = `UPDATE privanet.Quotation
       SET QuotationDetail = N'${Detail}'
       WHERE QuotationId = ${QuotationId};`;
