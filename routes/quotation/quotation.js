@@ -10,15 +10,17 @@ router.get("/quotation_no_list", async (req, res, next) => {
   try {
     let getQuotationNoList = `SELECT
         row_number() over(order by a.QuotationNo desc) as 'index',
-        a.QuotationNoId, a.QuotationNo, a.CustomerId, c.CustomerName,
-        c.CompanyId,d.CompanyName,
+        a.QuotationNoId, a.QuotationNo, a.CustomerId, b.CustomerName,
+        b.CompanyId,c.CompanyName,
         (SELECT TOP 1 QuotationSubject
           FROM privanet.[Quotation]
-          ORDER BY )
+          ORDER BY QuotationStatus) QuotationSubject
+        (SELECT TOP 1 QuotationRevised
+          FROM privanet.[Quotation]
+          ORDER BY QuotationStatus) QuotationRevised
       FROM privanet.[QuotationNo] a
-      LEFT JOIN privanet.[Quotation] b ON a.QuotationNoId = b.QuotationNoId
-      LEFT JOIN privanet.[MasterCustomer] c ON a.CustomerId = c.CustomerId
-      LEFT JOIN privanet.[MasterCompany] d ON c.CompanyId = d.CompanyId
+      LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
+      LEFT JOIN privanet.[MasterCompany] c ON c.CompanyId = c.CompanyId
       WHERE NOT c.CustomerName = N'Fake'`;
     let pool = await sql.connect(dbconfig);
     let quotationNos = await pool.request().query(getQuotationNoList);
