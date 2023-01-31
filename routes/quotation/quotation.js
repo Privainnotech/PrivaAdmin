@@ -13,19 +13,22 @@ router.get("/quotation_no_list", async (req, res, next) => {
         a.QuotationNoId, a.QuotationNo, a.CustomerId, b.CustomerName,
         b.CompanyId,c.CompanyName,
         (SELECT TOP 1 QuotationSubject
-          FROM privanet.[Quotation]
-          ORDER BY QuotationStatus) QuotationSubject
+          FROM privanet.[Quotation] d
+          WHERE d.QuotationNoId = a.QuotationNoId
+          ORDER BY QuotationStatus) QuotationSubject,
         (SELECT TOP 1 QuotationRevised
-          FROM privanet.[Quotation]
+          FROM privanet.[Quotation] e
+          WHERE e.QuotationNoId = a.QuotationNoId
           ORDER BY QuotationStatus) QuotationRevised
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
-      LEFT JOIN privanet.[MasterCompany] c ON c.CompanyId = c.CompanyId
-      WHERE NOT c.CustomerName = N'Fake'`;
+      LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId
+      WHERE NOT b.CustomerName = N'Fake'`;
     let pool = await sql.connect(dbconfig);
     let quotationNos = await pool.request().query(getQuotationNoList);
     res.status(200).send(JSON.stringify(quotationNos.recordset));
   } catch (err) {
+    console.log(err)
     res.status(500).send({ message: `${err}` });
   }
 });
@@ -58,11 +61,11 @@ router.get("/quotation_list/:QuotationNoId", async (req, res, next) => {
 router.get("/list", async (req, res, next) => {
   try {
     getQuotationList = `SELECT
-      row_number() over(order by a.QuotationUpdatedDate desc) as 'index',
+      row_number() over(order by b.QuotationNo desc, a.QuotationRevised desc) as 'index',
       b.QuotationNoId, a.QuotationId, a.QuotationStatus, b.QuotationNo,
       a.QuotationRevised, a.QuotationSubject, c.CustomerName,
-      FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
-      FORMAT(a.QuotationUpdatedDate, 'dd-MM-yyyy HH:mm') QuotationUpdatedDate,
+      FORMAT(a.QuotationDate, 'yyyy-MM-dd') QuotationDate,
+      FORMAT(a.QuotationUpdatedDate, 'yyyy-MM-dd HH:mm') QuotationUpdatedDate,
       d.StatusName, a.EmployeeApproveId, e.EmployeeFname, a.QuotationApproval
       FROM privanet.[Quotation] a
       LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
@@ -107,35 +110,26 @@ router.get("/:QuotationId", async (req, res) => {
       LEFT JOIN privanet.[QuotationSetting] g ON a.QuotationId = g.QuotationId
       WHERE a.QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
-    let { QuotationNo, QuotationRevised } = quotations.recordset[0];
-    let { QuotationPayTerm, EmployeeApproveId } = quotations.recordset[0];
-    let { QuotationDetail } = quotations.recordset[0];
-    let Revised = "";
-    QuotationRevised < 10
-      ? (Revised = "0" + QuotationRevised.toString())
-      : (Revised = QuotationRevised.toString());
-    quotations.recordset[0].QuotationNo_Revised = `${QuotationNo}_${Revised}`;
-    if (
-      typeof QuotationPayTerm == "object" ||
-      !QuotationPayTerm.includes("QuotationPayTerm")
-    ) {
-      quotations.recordset[0].QuotationPayTerm = "";
-    } else {
-      quotations.recordset[0].QuotationPayTerm = JSON.parse(QuotationPayTerm);
-    }
-    if (typeof EmployeeApproveId == "object") {
-      quotations.recordset[0].EmployeeApproveId = "";
-    }
-    if (typeof QuotationDetail === "object" || QuotationDetail === "null" || QuotationDetail === "") {
-      quotations.recordset[0].QuotationDetail = detailDefault;
-    } else {
-      quotations.recordset[0].QuotationDetail = JSON.parse(QuotationDetail);
-      if (quotations.recordset[0].QuotationDetail.blocks.length === 0) {
-        quotations.recordset[0].QuotationDetail = detailDefault;
+    let quotation = quotations.recordset[0]
+    let { QuotationNo, QuotationRevised } = quotation;
+    let { QuotationPayTerm, EmployeeApproveId } = quotation;
+    let { QuotationDetail } = quotation;
+    let Revised = QuotationRevised < 10
+      ? "0" + QuotationRevised.toString()
+      : QuotationRevised.toString();
+    quotation.QuotationNo_Revised = `${QuotationNo}_${Revised}`;
+    if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) quotation.QuotationPayTerm = "";
+    else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm);
+    if (!EmployeeApproveId) quotation.EmployeeApproveId = "";
+    if (!QuotationDetail) quotation.QuotationDetail = detailDefault;
+    else {
+      quotation.QuotationDetail = JSON.parse(QuotationDetail);
+      if (quotation.QuotationDetail.blocks.length === 0) {
+        quotation.QuotationDetail = detailDefault;
       }
     }
-    quotations.recordset[0].QuotationRevised = Revised;
-    res.status(200).send(JSON.stringify(quotations.recordset[0]));
+    quotation.QuotationRevised = Revised;
+    res.status(200).send(JSON.stringify(quotation));
   } catch (err) {
     console.log(`${err}`);
     res.status(500).send({ message: `${err}` });
