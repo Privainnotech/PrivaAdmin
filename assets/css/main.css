@@ -260,6 +260,38 @@ nav.navbar {
     transparent
   );
 }
+.d-inline-block{
+  display: inline-block!important;
+}
+
+.status-pre-quotation {
+  color: var(--font-light);
+  background-color: var(--status-pre-quotation);
+}
+.status-quotation {
+  color: var(--font-light);
+  background-color: var(--status-quotation);
+}
+.status-cancel {
+  color: var(--font-light);
+  background-color: var(--status-cancel);
+}
+.status-booking {
+  color: var(--font-light);
+  background-color: var(--status-booking);
+}
+.status-loss {
+  color: var(--font-light);
+  background-color: var(--status-loss);
+}
+
+.status {
+  padding: 5px;
+  width: 120px;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
 @media only screen and (max-width: 768px) {
   * {
     font-size: 0.5rem;

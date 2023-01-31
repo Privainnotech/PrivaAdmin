@@ -198,11 +198,20 @@ function removeDetailPaper() {
   }
 }
 
+//Reset Quo Table
+function fill_resetQuoTable() {
+  var trHTML = "";
+  trHTML += "<tr>";
+  trHTML += '<td colspan="6">please select a project...</td>';
+  trHTML += "</tr>";
+  document.getElementById("showQuoTable").innerHTML = trHTML;
+}
+
 //Reset Item Table
 function fill_resetTable() {
   var trHTML = "";
   trHTML += "<tr>";
-  trHTML += '<td colspan="6">Loading...</td>';
+  trHTML += '<td colspan="6">please select a revised...</td>';
   trHTML += "</tr>";
   document.getElementById("showTable").innerHTML = trHTML;
 }
@@ -211,7 +220,7 @@ function fill_resetTable() {
 function fill_resetSubTable() {
   var trHTML = "";
   trHTML += "<tr>";
-  trHTML += '<td colspan="6">Loading...</td>';
+  trHTML += '<td colspan="6">please select a item...</td>';
   trHTML += "</tr>";
   document.getElementById("showSubTable").innerHTML = trHTML;
 }
@@ -220,89 +229,62 @@ function fill_resetSubTable() {
 function fill_quotationHead() {
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
-    scrollY: "40vh",
     scrollX: true,
-    searching: false,
-    bPaginate: false,
-    bInfo: false,
-    // bLengthChange: false,
+    pageLength: 5,
+    searching: true,
+    dom: "rtip",
     ajax: {
       url: "/quotation/quotation_no_list",
       dataSrc: "",
     },
     columns: [
       {
-        width: "6%",
+        width: "5%",
         data: "index",
       },
+
       {
-        // width: "10%",
-        data: "QuotationSubject",
-      },
-      {
-        // width: "20%",
+        width: "15%",
         data: "QuotationNo",
       },
       {
-        // width: "10%",
-        data: "CustomerName",
+        data: "CompanyName",
       },
       {
-        width: "7%",
-        data: "Action",
-        render: function (data, type, row) {
-          if (row.QuotationStatus === 1) {
-            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
-          } else {
-            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
-          }
-        },
+        data: "QuotationSubject",
+      },
+      {
+        data: "CustomerName",
       },
     ],
-    // lengthMenu: [10,15],
   });
 }
 
-function fill_quotation() {
+function fill_quotation(QuotationNoId) {
   tableQuo = $("#tableQuo").DataTable({
     bDestroy: true,
-    scrollY: "40vh",
     scrollX: true,
-    bPaginate: false,
+    pageLength: 5,
+    searching: true,
+    dom: "rtip",
     // "bInfo": false,
     // bLengthChange: false,
     ajax: {
-      url: "/quotation/list",
+      url: `/quotation/quotation_list/${QuotationNoId}`,
       dataSrc: "",
     },
     columns: [
       {
-        width: "6%",
-        data: "index",
-      },
-      {
-        width: "10%",
-        data: "QuotationNo",
-      },
-      {
-        width: "9%",
+        width: "5%",
         data: "QuotationRevised",
-      },
-      {
-        width: "20%",
-        data: "QuotationSubject",
-      },
-      {
-        width: "10%",
-        data: "CustomerName",
       },
       {
         width: "10%",
         data: "QuotationDate",
         render: function (data, type, row) {
-          if (data != null) return data
-          else return data = '-'
-        }
+          if (data != null) return data;
+          else return (data = "-");
+        },
       },
       {
         width: "10%",
@@ -311,13 +293,17 @@ function fill_quotation() {
       {
         width: "10%",
         data: "StatusName",
+        render: function (data, type, row) {
+          let L_Status = data.toLowerCase();
+          return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
+        },
       },
       {
         width: "8%",
         data: "EmployeeFname",
       },
       {
-        width: "7%",
+        width: "5%",
         data: "Action",
         render: function (data, type, row) {
           if (row.QuotationStatus === 1) {
@@ -326,16 +312,6 @@ function fill_quotation() {
             return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
           }
         },
-      },
-      {
-        data: "QuotationId",
-      },
-    ],
-    // lengthMenu: [10,15],
-    columnDefs: [
-      {
-        targets: [10],
-        visible: false,
       },
     ],
   });
@@ -463,8 +439,8 @@ function fill_subitem(Id, status) {
 }
 
 $(document).ready(function () {
-  
   fill_quotationHead();
+  fill_resetQuoTable();
   // fill_quotation();
 
   //======================== Quotation =============================//
@@ -497,7 +473,7 @@ $(document).ready(function () {
               showConfirmButton: false,
               timer: 1500,
             });
-            tableQuo.ajax.reload(null, false);
+            tableQuoHead.ajax.reload(null, false);
           },
           error: function (err) {
             errorText = err.responseJSON.message;
@@ -519,9 +495,37 @@ $(document).ready(function () {
       $("#modalQuotationMaster").modal("hide");
     });
   });
+  //clickTableQuotationHead
+  $("#tableQuoHead tbody").unbind();
+  $("#tableQuoHead tbody").on("click", "tr", function () {
+    if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
+      //
+      $("#save-button").addClass("visually-hidden");
+      $("#btn-cancel").attr("disabled", "disabled");
+      $("#btn-quotation").attr("disabled", "disabled");
+      $("#btn-book").attr("disabled", "disabled");
+      $("#btn-loss").attr("disabled", "disabled");
+      removeDetailPaper();
+      hideAdd();
+      hideEdit();
+      hideSetting();
+      fill_resetTable();
+      RePro();
+      fill_resetQuoTable();
+      // console.log("un selecte");
+    } else {
+      $("#tableQuoHead tr").removeClass("selected");
+      $(this).addClass("selected");
+      let rows = $(this).closest("tr");
+      let { QuotationNoId } = tableQuoHead.row(rows).data();
+      fill_quotation(QuotationNoId);
+    }
+  });
 
   //Delete Project
-  $(document).on("click", "#btnDelProject", function () {
+  $("#tableQuo").unbind();
+  $("#tableQuo").on("click", "#btnDelProject", function () {
     $("#modalDeleteConfirm").modal("show");
 
     rows = $(this).closest("tr");
@@ -553,6 +557,7 @@ $(document).ready(function () {
   });
 
   //clickTableQuotation
+  $("#tableQuo tbody").unbind();
   $("#tableQuo tbody").on("click", "tr", function () {
     fill_resetSubTable();
     $("#btn-text").text("Edit");
@@ -584,15 +589,10 @@ $(document).ready(function () {
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
       $("#save-button").addClass("visually-hidden");
-
       removeDetailPaper();
-
       hideAdd();
-
       hideEdit();
-
       hideSetting();
-
       fill_resetTable();
       RePro();
     } else {
@@ -1542,8 +1542,7 @@ $(document).ready(function () {
       let SubItemPrice = $.trim($("#modalInpEdSubPrice").val());
       let SubItemQty = $.trim($("#modalInpEdSubQty").val());
       let SubItemUnit = $.trim($("#modalInpEdSubUnit").val());
-      console.log(SubItemName)
-
+      console.log(SubItemName);
 
       $.ajax({
         url: "/quotation/edit_subitem/" + SubItemId,

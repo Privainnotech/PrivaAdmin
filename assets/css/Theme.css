@@ -1,0 +1,9 @@
+:root {
+  --font-text: #000;
+  --font-light: rgb(255, 255, 255);
+  --status-pre-quotation: #ff8e4d;
+  --status-quotation: #fcb92c;
+  --status-cancel: #dc3545;
+  --status-booking: #1cbb8c;
+  --status-loss: #17a2b8;
+}
