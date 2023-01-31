@@ -254,6 +254,10 @@ $(document).ready(function () {
         {
           width: "10%",
           data: "QuotationDate",
+          render: function (data, type, row) {
+            if (data != null) return data
+            else return data = '-'
+          }
         },
         {
           width: "10%",
