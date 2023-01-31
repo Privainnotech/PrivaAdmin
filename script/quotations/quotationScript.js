@@ -227,6 +227,7 @@ function fill_resetSubTable() {
 
 //Quotation Table
 function searchTableQuoHead() {
+  console.log('aaa')
   $("#tableQuoHead thead tr")
     .clone(true)
     .addClass("filters")
@@ -242,7 +243,7 @@ function searchTableQuoHead() {
     .columns()
     .eq(0)
     .each(function (colIdx) {
-      $("input", $("#SaTable .filters th")[colIdx]).on(
+      $("input", $("#tableQuoHead .filters th")[colIdx]).on(
         "keyup change",
         function () {
           console.log(colIdx, this.value);
@@ -254,10 +255,14 @@ function searchTableQuoHead() {
 function fill_quotationHead() {
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
-    scrollX: true,
-    pageLength: 5,
+    scrollCollapse: true,
     searching: true,
-    dom: "rtip",
+    paging: true,
+    pageLength: 5,
+    lengthChange: false,
+    info: false,
+    autoWidth: true,
+    dom: "rtp",
     ajax: {
       url: "/quotation/quotation_no_list",
       dataSrc: "",
@@ -269,16 +274,23 @@ function fill_quotationHead() {
       },
 
       {
-        width: "15%",
+        width: "10%",
         data: "QuotationNo",
       },
       {
         data: "CompanyName",
+        render: function (data,type,row) {
+          return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`
+        }
       },
       {
         data: "QuotationSubject",
+        render: function (data,type,row) {
+          return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`
+        }
       },
       {
+        width: "20%",
         data: "CustomerName",
       },
     ],
@@ -465,7 +477,7 @@ function fill_subitem(Id, status) {
 
 $(document).ready(function () {
   fill_quotationHead();
-  searchTableQuoHead()
+  searchTableQuoHead();
   fill_resetQuoTable();
   // fill_quotation();
 
