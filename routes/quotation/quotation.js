@@ -91,8 +91,10 @@ router.get("/:QuotationId", async (req, res) => {
     let QuotationId = req.params.QuotationId;
     let getQuotation = `SELECT
         b.QuotationNoId, b.QuotationNo, a.QuotationRevised, a.QuotationStatus, d.StatusName,
-        c.CustomerName, c.CustomerEmail, f.CompanyName,
-        f.CompanyAddress, a.QuotationId, a.QuotationSubject, a.EndCustomer,
+        c.CustomerName, c.CustomerEmail, f.CompanyName, f.CompanyAddress,
+        h.CustomerName CustomerNameQ, h.CustomerEmail CustomerEmailQ,
+        i.CompanyName CompanyNameQ, i.CompanyAddress CompanyAddressQ,
+        a.QuotationId, a.QuotationSubject, a.EndCustomer,
         FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
         FORMAT(a.QuotationUpdatedDate, 'dd-MM-yyyy HH:mm') QuotationUpdatedDate,
         a.QuotationTotalPrice, a.QuotationDiscount, a.QuotationNet,
@@ -112,19 +114,21 @@ router.get("/:QuotationId", async (req, res) => {
       LEFT JOIN privanet.[MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
       LEFT JOIN privanet.[MasterCompany] f ON c.CompanyId = f.CompanyId
       LEFT JOIN privanet.[QuotationSetting] g ON a.QuotationId = g.QuotationId
+      LEFT JOIN privanet.[MasterCustomer] h ON a.CustomerId = h.CustomerId
+      LEFT JOIN privanet.[MasterCompany] i ON h.CompanyId = i.CompanyId
       WHERE a.QuotationId = ${QuotationId}`;
+    let quotations = await pool.request().query(getQuotation);
     let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent FROM privanet.QuotationPayTerm
       WHERE QuotationId = ${QuotationId};`
-    let quotations = await pool.request().query(getQuotation);
     let payterms = await pool.request().query(getPayterm);
+    // console.log(payterms)
 
     let quotation = quotations.recordset[0]
+    // console.log(quotations)
     let { QuotationNo, QuotationRevised } = quotation;
     let { QuotationPayTerm, EmployeeApproveId } = quotation;
     let { QuotationDetail } = quotation;
-    let Revised = QuotationRevised < 10
-      ? "0" + QuotationRevised.toString()
-      : QuotationRevised.toString();
+    let Revised = QuotationRevised < 10 ? "0" + QuotationRevised.toString() : QuotationRevised.toString();
     quotation.QuotationNo_Revised = `${QuotationNo}_${Revised}`;
     if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) quotation.QuotationPayTerm = "";
     else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm.replaceAll("QuotationPayTerm", ""));
