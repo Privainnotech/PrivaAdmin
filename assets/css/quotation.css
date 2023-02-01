@@ -271,6 +271,16 @@ hr {
   margin-left: 5px;
   color: #dc3545;
 }
+input[type=number].payment {
+  width: 60px!important;
+  background-color: white;
+  border: 1px solid #ced4da;
+  text-align: center;
+}
+input[type=number].payment:disabled {
+  background-color: white;
+  border: 0;
+}
 
 @media only screen and (max-width: 768px) {
   .title h2 {

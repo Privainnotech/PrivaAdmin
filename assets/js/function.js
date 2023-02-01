@@ -109,7 +109,7 @@ function AjaxPutCheckbox(url, table, data = "", swalTitle) {
     },
   });
 }
-function AjaxPost(url, table, data, modalId = null) {
+function AjaxPost(url, table1, table2 = null, data, modalId = null) {
   $.ajax({
     url: url,
     method: "post",
@@ -125,7 +125,9 @@ function AjaxPost(url, table, data, modalId = null) {
         showConfirmButton: false,
         timer: 1500,
       });
-      table.ajax.reload(null, false);
+      table1.ajax.reload(null, false);
+      if (table2 != null) table2.ajax.reload(null, false);
+        
       modalId != null ? modalId.modal("hide") : console.log("no modal");
     },
     error: (err) => {
@@ -298,6 +300,7 @@ function searchTableQuoHead() {
 function fill_quotationHead() {
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
+    // scrollX: true,
     scrollCollapse: true,
     searching: true,
     paging: true,
@@ -338,7 +341,7 @@ function fill_quotationHead() {
     ],
   });
 }
-function fill_quotation(QuotationNoId) {
+function fill_quotation(QuotationNoId = null) {
   tableQuo = $("#tableQuo").DataTable({
     bDestroy: true,
     scrollX: true,

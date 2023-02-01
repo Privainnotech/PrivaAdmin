@@ -1,6 +1,10 @@
 const $fieldProject = $(
   "#PJ_Name, #PJ_Discount, #PJ_End_Customer, #PJ_Validity, #PJ_Delivery, #PJ_Remark, #PJ_Approve"
 );
+const $SettingTable = $(
+  "#IP-Set-TableShow, #IP-Set-TablePrice, #IP-Set-TableQty, #IP-Set-TableTotal"
+);
+const $StatusButton = $("#btn-cancel, #btn-quotation, #btn-book, #btn-loss");
 // let loadDetail = null;
 let $LoadingPreview = $("#loading-preview").hide();
 $("#loading-close").on("click", function () {
@@ -22,21 +26,13 @@ function hideAdd() {
 function hideSetting() {
   //   $("#modalSaveSetting").removeClass("visually-hidden");
   $("#modalSaveSetting").addClass("visually-hidden");
-
-  $("#IP-Set-TableShow").attr("disabled", "disabled");
-  $("#IP-Set-TablePrice").attr("disabled", "disabled");
-  $("#IP-Set-TableQty").attr("disabled", "disabled");
-  $("#IP-Set-TableTotal").attr("disabled", "disabled");
+  $SettingTable.attr("disabled", "disabled");
 }
 
 //Show Setting
 function ShowSetting() {
   $("#modalSaveSetting").removeClass("visually-hidden");
-
-  $("#IP-Set-TableShow").removeAttr("disabled");
-  $("#IP-Set-TablePrice").removeAttr("disabled");
-  $("#IP-Set-TableQty").removeAttr("disabled");
-  $("#IP-Set-TableTotal").removeAttr("disabled");
+  $SettingTable.removeAttr("disabled");
 }
 
 //Show Project
@@ -104,19 +100,22 @@ function ShowPro(QuotationId) {
       $("#PJ_Payment3").val(QuotationPayTerm.QuotationPayTerm3);
       if (typeof QuotationPayTerm == "object") {
         // console.log(Object.keys(QuotationPayTerm).length);
-        console.log(QuotationPayTerm[`QuotationPayTerm${1}`])
+        console.log(QuotationPayTerm[`QuotationPayTerm${1}`]);
         $(".box-payment .input-group").remove();
         for (let i = 1; i <= Object.keys(QuotationPayTerm).length; i++) {
           $(".box-payment").append(`
           	<div class="input-group mb-1">
-              <input type="text" class="form-control payment edit f-9 mb-0 me-3" id="Detail_${i}" placeholder="Detail" value="${QuotationPayTerm[`QuotationPayTerm${i}`]}" disabled>
-              <input type="text" class="form-control payment edit f-9 mb-0 me-1" id="Percent_${i}" placeholder="Percent" value="-" disabled>
-              <button class="btn btn-sm btn-danger payment" id="btn_DelPayTerm${i}" disabled >Del</button>
+              <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="${
+                QuotationPayTerm[`QuotationPayTerm${i}`]
+              }" disabled>
+              <input type="number" class=" edit f-9 mb-0 me-1 payment" value="0" disabled>
+              <span class = "bg-white border-0 input-group-text group-title edit f-9 mb-0 ps-2">%</span>
+              <button class="btn btn-sm btn-danger payment btn-del-payment" disabled >Del</button>
             </div>
         `);
         }
       } else {
-        console.log(QuotationPayTerm.length)
+        console.log(QuotationPayTerm.length);
       }
       $("#PJ_Delivery").val(QuotationDelivery);
       $("#PJ_Remark").val(QuotationRemark);
@@ -208,29 +207,15 @@ function RePro() {
   // QuotationId = null
   $("#btn-approve").hide();
   $("#ProNo").html("Project NO.");
-  $("#CusName").val("");
-  $("#QDate").val("");
-  $("#CusEmail").val("");
-  $("#ComName").val("");
-  $("#Adress").val("");
+  $("#CusName,#QDate,#CusEmail,#ComName,#Adress").val("");
 
-  $("#PJ_Name").val("");
-  $("#PJ_Discount").val("");
-  $("#PJ_Validity").val("");
-  $("#PJ_Delivery").val("");
-  $("#PJ_Remark").val("");
-  $("#PJ_End_Customer").val("");
+  $(
+    "#PJ_Name,#PJ_Discount,#PJ_Validity,#PJ_Delivery,#PJ_Remark,#PJ_End_Customer"
+  ).val("");
   $("#PJ_Approve").val("-");
 
-  $("#TotalPrice").val("");
-  $("#PriceAfter").val("");
-  $("#Vat").val("");
-  $("#NetTotal").val("");
-
-  $("#IP-Set-TableShow").val("0");
-  $("#IP-Set-TablePrice").val("0");
-  $("#IP-Set-TableQty").val("0");
-  $("#IP-Set-TableTotal").val("0");
+  $("#TotalPrice,#PriceAfter,#Vat,#NetTotal").val("");
+  $SettingTable.val("0");
 }
 
 //Remove Detail Paper
@@ -274,7 +259,9 @@ $(document).ready(function () {
   fill_quotationHead();
   searchTableQuoHead();
   fill_resetQuoTable();
-  // fill_quotation();
+  fill_quotation();
+
+  $("#save-button").hide();
 
   //======================== Quotation =============================//
   //Create Project
@@ -285,43 +272,12 @@ $(document).ready(function () {
     $(".modal-title").text("Add Project");
     $("#modalSaveProject").unbind();
     $("#modalSaveProject").click(function () {
-      let ProjectName = $.trim($("#modalInpProjectName").val());
-      let CustomerId = $.trim($("#modalInpCustomerId").val());
-      if (ProjectName !== null) {
-        $.ajax({
-          url: "/quotation/add_pre_quotation",
-          method: "post",
-          contentType: "application/json",
-          data: JSON.stringify({
-            QuotationSubject: ProjectName,
-            CustomerId: CustomerId,
-          }),
-          success: function () {
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Created",
-              text: "Successfully add Quotation",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            tableQuoHead.ajax.reload(null, false);
-          },
-          error: function (err) {
-            errorText = err.responseJSON.message;
-            Swal.fire({
-              position: "center",
-              icon: "warning",
-              title: "Warning",
-              text: errorText,
-              showConfirmButton: true,
-              confirmButtonText: "OK",
-              confirmButtonColor: "#FF5733",
-            });
-          },
-        });
-        $("#modalQuotationMaster").modal("hide");
-      }
+      let url = "/quotation/add_pre_quotation";
+      let Data = {
+        QuotationSubject: $("#modalInpProjectName").val(),
+        CustomerId: $("#modalInpCustomerId").val(),
+      };
+      AjaxPost(url, tableQuoHead, tableQuo, Data, $("#modalQuotationMaster"));
     });
     $(".close,.no").click(function () {
       $("#modalQuotationMaster").modal("hide");
@@ -330,11 +286,8 @@ $(document).ready(function () {
   //clickTableQuotationHead
   $("#tableQuoHead tbody").unbind();
   $("#tableQuoHead tbody").on("click", "tr", function () {
-    $("#save-button").addClass("visually-hidden");
-    $("#btn-cancel, #btn-quotation, #btn-book, #btn-loss").attr(
-      "disabled",
-      "disabled"
-    );
+    $("#save-button").hide();
+    $StatusButton.attr("disabled", "disabled");
     removeDetailPaper();
     hideAdd();
     hideEdit();
@@ -345,11 +298,8 @@ $(document).ready(function () {
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
       //
-      $("#save-button").addClass("visually-hidden");
-      $("#btn-cancel, #btn-quotation, #btn-book, #btn-loss").attr(
-        "disabled",
-        "disabled"
-      );
+      $("#save-button").hide();
+      $StatusButton.attr("disabled", "disabled");
       removeDetailPaper();
       hideAdd();
       hideEdit();
@@ -381,20 +331,9 @@ $(document).ready(function () {
   $("#tableQuo tbody").on("click", "tr", function () {
     fill_resetSubTable();
     $("#btn-text").text("Edit");
-    $fieldProject.attr("disabled", "disabled");
-
-    $("#PJ_Payment1").attr("disabled", "disabled");
-    $("#PJ_Payment2").attr("disabled", "disabled");
-    $("#PJ_Payment3").attr("disabled", "disabled");
-
-    $("#btn-cancel, #btn-quotation, #btn-book, #btn-loss").attr(
-      "disabled",
-      "disabled"
-    );
-
-    $(
-      "#IP-Set-TableShow, #IP-Set-TablePric, #IP-Set-TableQty, #IP-Set-TableTotal"
-    ).attr("disabled", "disabled");
+    $fieldProject.attr("disabled", "");
+    $StatusButton.attr("disabled", "");
+    $SettingTable.attr("disabled", "");
 
     rows = $(this).closest("tr");
     let { QuotationId, QuotationApproval, QuotationStatus } = tableQuo
@@ -403,7 +342,7 @@ $(document).ready(function () {
 
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
-      $("#save-button").addClass("visually-hidden");
+      $("#save-button").hide();
       removeDetailPaper();
       hideAdd();
       hideEdit();
@@ -414,13 +353,10 @@ $(document).ready(function () {
       $("#tableQuo tr").removeClass("selected");
       $(this).addClass("selected");
 
-      $("#save-button").addClass("visually-hidden");
-
+      $("#save-button").hide();
       $("#modalEditProject").removeClass("save");
       $("#btnExample").removeClass("invisible");
-
       removeDetailPaper();
-
       ShowPro(QuotationId);
       fill_item(QuotationId, QuotationStatus);
 
@@ -432,12 +368,13 @@ $(document).ready(function () {
         //Show Quotation Button
         $("#btn-quotation").removeAttr("disabled");
         //Show Detail Custom Button
-        $("#save-button").removeClass("visually-hidden");
+        $("#save-button").show();
         //Hide Revise Button
         $("#btnRevised").addClass("invisible");
 
         //Show Setting
         ShowSetting();
+
 
         $("#modalEditProject").unbind();
         $("#modalEditProject").click(function () {
@@ -447,67 +384,64 @@ $(document).ready(function () {
 
             $("#btnEditYes").unbind();
             $("#btnEditYes").click(function () {
-              let QuotationSubject = $.trim($("#PJ_Name").val());
-              let QuotationDiscount = $.trim($("#PJ_Discount").val());
-              let EndCustomer = $.trim($("#PJ_End_Customer").val());
-              let QuotationValidityDate = $.trim($("#PJ_Validity").val());
-              let QuotationPayTerm1 = $.trim($("#PJ_Payment1").val());
-              let QuotationPayTerm2 = $.trim($("#PJ_Payment2").val());
-              let QuotationPayTerm3 = $.trim($("#PJ_Payment3").val());
-              let QuotationDelivery = $.trim($("#PJ_Delivery").val());
-              let QuotationRemark = $.trim($("#PJ_Remark").val());
-              let EmployeeApproveId = $.trim($("#PJ_Approve").val());
+              let QuotationPayTerm = []
+              
+              console.log($(".box-payment .input-group").length);
+              
+              for (let i = 0; i < $(".box-payment .input-group").length; i++) {
+                let pay = $(".box-payment .input-group").eq(i);
+                console.log($(pay).children()[0].value);
+                let pay_detail = $(pay).children()[0].value;
+                let pay_percent = $(pay).children()[1].value;
+                if (pay_detail) QuotationPayTerm.push({PayTerm: pay_detail,Percent: pay_percent})
+              }
 
-              let QuotationPayTerm = {
-                QuotationPayTerm1: QuotationPayTerm1,
-                QuotationPayTerm2: QuotationPayTerm2,
-                QuotationPayTerm3: QuotationPayTerm3,
-              };
-              $.ajax({
-                url: "/quotation/edit_quotation/" + QuotationId,
-                method: "put",
-                contentType: "application/json",
-                data: JSON.stringify({
-                  QuotationSubject: QuotationSubject,
-                  QuotationDiscount: QuotationDiscount,
-                  QuotationValidityDate: QuotationValidityDate,
-                  QuotationPayTerm: QuotationPayTerm,
-                  QuotationDelivery: QuotationDelivery,
-                  QuotationRemark: QuotationRemark,
-                  EndCustomer: EndCustomer,
-                  EmployeeApproveId: EmployeeApproveId,
-                }),
-                success: function () {
-                  Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Saved",
-                    text: "Successfully Edit Quotation",
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                  tableQuo.ajax.reload(null, false);
-                  ShowPro(QuotationId);
-                  $("#modalEditProject").removeClass("save");
-                  $("#btn-text").text("Edit");
-                  $fieldProject.attr("disabled", "disabled");
-                  $("#PJ_Payment1").attr("disabled", "disabled");
-                  $("#PJ_Payment2").attr("disabled", "disabled");
-                  $("#PJ_Payment3").attr("disabled", "disabled");
-                },
-                error: function (err) {
-                  errorText = err.responseJSON.message;
-                  Swal.fire({
-                    position: "center",
-                    icon: "warning",
-                    title: "Warning",
-                    text: errorText,
-                    showConfirmButton: true,
-                    confirmButtonText: "OK",
-                    confirmButtonColor: "#FF5733",
-                  });
-                },
-              });
+              console.log(QuotationPayTerm)
+              // $.ajax({
+              //   url: "/quotation/edit_quotation/" + QuotationId,
+              //   method: "put",
+              //   contentType: "application/json",
+              //   data: JSON.stringify({
+              //     QuotationSubject: $("#PJ_Name").val(),
+              //     QuotationDiscount: $("#PJ_Discount").val(),
+              //     QuotationValidityDate: $("#PJ_Validity").val(),
+              //     QuotationPayTerm: QuotationPayTerm,
+              //     QuotationDelivery: $("#PJ_Delivery").val(),
+              //     QuotationRemark: $("#PJ_Remark").val(),
+              //     EndCustomer: $("#PJ_End_Customer").val(),
+              //     EmployeeApproveId: $("#PJ_Approve").val(),
+              //   }),
+              //   success: function () {
+              //     Swal.fire({
+              //       position: "center",
+              //       icon: "success",
+              //       title: "Saved",
+              //       text: "Successfully Edit Quotation",
+              //       showConfirmButton: false,
+              //       timer: 1500,
+              //     });
+              //     tableQuo.ajax.reload(null, false);
+              //     ShowPro(QuotationId);
+              //     $("#modalEditProject").removeClass("save");
+              //     $("#btn-text").text("Edit");
+              //     $fieldProject.attr("disabled", "disabled");
+              //     $("#PJ_Payment1").attr("disabled", "disabled");
+              //     $("#PJ_Payment2").attr("disabled", "disabled");
+              //     $("#PJ_Payment3").attr("disabled", "disabled");
+              //   },
+              //   error: function (err) {
+              //     errorText = err.responseJSON.message;
+              //     Swal.fire({
+              //       position: "center",
+              //       icon: "warning",
+              //       title: "Warning",
+              //       text: errorText,
+              //       showConfirmButton: true,
+              //       confirmButtonText: "OK",
+              //       confirmButtonColor: "#FF5733",
+              //     });
+              //   },
+              // });
               $("#modalEditConfirm").modal("hide");
             });
             $(".close,.no").click(function () {
@@ -517,12 +451,21 @@ $(document).ready(function () {
             // $("#modalEditProject").removeClass("save");
             $("#modalEditProject").addClass("save");
             $("#btn-text").text("Save");
-
-            $("#PJ_Name").removeAttr("disabled");
             $fieldProject.removeAttr("disabled");
-            $("#PJ_Payment1").removeAttr("disabled");
-            $("#PJ_Payment2").removeAttr("disabled");
-            $("#PJ_Payment3").removeAttr("disabled");
+            $(".payment").removeAttr('disabled')
+
+            $("#btn_AddPayment").unbind();
+            $("#btn_AddPayment").click(function () {
+
+              $(".box-payment").append(`
+                <div class="input-group mb-1">
+                  <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="">
+                  <input type="number" class="edit f-9 mb-0 me-1 payment" value="">
+                  <span class = "bg-white border-0 input-group-text group-title edit f-9 mb-0 ps-2">%</span>
+                  <button class="btn btn-sm btn-danger payment btn-del-payment" >Del</button>
+                </div>
+              `);
+            });
           }
         });
         // Save Setting
@@ -547,7 +490,6 @@ $(document).ready(function () {
           });
         });
       }
-
       //======================== Set Status =============================//
       // Status Quotation
       if (QuotationStatus === 2) {
