@@ -1,3 +1,6 @@
+const $fieldProject = $(
+  "#PJ_Name, #PJ_Discount, #PJ_End_Customer, #PJ_Validity, #PJ_Delivery, #PJ_Remark, #PJ_Approve"
+);
 // let loadDetail = null;
 let $LoadingPreview = $("#loading-preview").hide();
 $("#loading-close").on("click", function () {
@@ -13,7 +16,6 @@ function hideEdit() {
 //Hide Add Item Button
 function hideAdd() {
   $("#addItem").addClass("visually-hidden");
-  //   $("#addItem").toggleClass("visually-hidden");
 }
 
 //Hide Setting
@@ -45,52 +47,98 @@ function ShowPro(QuotationId) {
     cache: false,
     success: function (response) {
       var obj = JSON.parse(response);
-
+      // console.log(obj)
+      let {
+        QuotationApproval,
+        QuotationNo_Revised,
+        CustomerName,
+        QuotationDate,
+        CustomerEmail,
+        CompanyName,
+        CompanyAddress,
+        QuotationSubject,
+        QuotationDiscount,
+        QuotationValidityDate,
+        QuotationPayTerm,
+        QuotationDelivery,
+        QuotationRemark,
+        EndCustomer,
+        EmployeeApproveId,
+        QuotationTotalPrice,
+        QuotationNet,
+        QuotationVat,
+        QuotationNetVat,
+        TableShow,
+        TablePrice,
+        TableQty,
+        TableTotal,
+        DetailShow,
+        DetailQty,
+        DetailTotal,
+        QuotationDetail,
+      } = obj;
       let ApproveStatus = "";
-      if (obj.QuotationApproval == 2) {
+      if (QuotationApproval == 2) {
         $("#btn-approve").hide();
         ApproveStatus = '<i class="fa fa-check-circle"></i>';
       } else {
         $("#btn-approve").show();
-        if (obj.QuotationApproval == 1) {
+        if (QuotationApproval == 1) {
           ApproveStatus = '<i class="fa fa-hourglass"></i>';
         }
       }
-      $("#ProNo").html(`${obj.QuotationNo_Revised} ${ApproveStatus}`);
-      // $('#Revised').val("_"+obj.QuotationRevised);
-      $("#CusName").val(obj.CustomerName);
-      $("#QDate").val(obj.QuotationDate);
-      $("#CusEmail").val(obj.CustomerEmail);
-      $("#ComName").val(obj.CompanyName);
-      $("#Adress").val(obj.CompanyAddress);
+      $("#ProNo").html(`${QuotationNo_Revised} ${ApproveStatus}`);
+      // $('#Revised').val("_"+QuotationRevised);
+      $("#CusName").val(CustomerName);
+      $("#QDate").val(QuotationDate);
+      $("#CusEmail").val(CustomerEmail);
+      $("#ComName").val(CompanyName);
+      $("#Adress").val(CompanyAddress);
 
-      $("#PJ_Name").val(obj.QuotationSubject);
-      $("#PJ_Discount").val(obj.QuotationDiscount);
-      $("#PJ_Validity").val(obj.QuotationValidityDate);
-      $("#PJ_Payment1").val(obj.QuotationPayTerm.QuotationPayTerm1);
-      $("#PJ_Payment2").val(obj.QuotationPayTerm.QuotationPayTerm2);
-      $("#PJ_Payment3").val(obj.QuotationPayTerm.QuotationPayTerm3);
-      $("#PJ_Delivery").val(obj.QuotationDelivery);
-      $("#PJ_Remark").val(obj.QuotationRemark);
-      $("#PJ_End_Customer").val(obj.EndCustomer);
-      $("#PJ_Approve").val(obj.EmployeeApproveId);
+      $("#PJ_Name").val(QuotationSubject);
+      $("#PJ_Discount").val(QuotationDiscount);
+      $("#PJ_Validity").val(QuotationValidityDate);
+      console.log(typeof QuotationPayTerm);
+      $("#PJ_Payment1").val(QuotationPayTerm.QuotationPayTerm1);
+      $("#PJ_Payment2").val(QuotationPayTerm.QuotationPayTerm2);
+      $("#PJ_Payment3").val(QuotationPayTerm.QuotationPayTerm3);
+      if (typeof QuotationPayTerm == "object") {
+        // console.log(Object.keys(QuotationPayTerm).length);
+        console.log(QuotationPayTerm[`QuotationPayTerm${1}`])
+        $(".box-payment .input-group").remove();
+        for (let i = 1; i <= Object.keys(QuotationPayTerm).length; i++) {
+          $(".box-payment").append(`
+          	<div class="input-group mb-1">
+              <input type="text" class="form-control payment edit f-9 mb-0 me-3" id="Detail_${i}" placeholder="Detail" value="${QuotationPayTerm[`QuotationPayTerm${i}`]}" disabled>
+              <input type="text" class="form-control payment edit f-9 mb-0 me-1" id="Percent_${i}" placeholder="Percent" value="-" disabled>
+              <button class="btn btn-sm btn-danger payment" id="btn_DelPayTerm${i}" disabled >Del</button>
+            </div>
+        `);
+        }
+      } else {
+        console.log(QuotationPayTerm.length)
+      }
+      $("#PJ_Delivery").val(QuotationDelivery);
+      $("#PJ_Remark").val(QuotationRemark);
+      $("#PJ_End_Customer").val(EndCustomer);
+      $("#PJ_Approve").val(EmployeeApproveId);
 
-      $("#TotalPrice").val(obj.QuotationTotalPrice);
-      $("#PriceAfter").val(obj.QuotationNet);
-      $("#Vat").val(obj.QuotationVat);
-      $("#NetTotal").val(obj.QuotationNetVat);
+      $("#TotalPrice").val(QuotationTotalPrice);
+      $("#PriceAfter").val(QuotationNet);
+      $("#Vat").val(QuotationVat);
+      $("#NetTotal").val(QuotationNetVat);
 
       // setting show status
-      $("#IP-Set-TableShow").val(obj.TableShow);
-      $("#IP-Set-TablePrice").val(obj.TablePrice);
-      $("#IP-Set-TableQty").val(obj.TableQty);
-      $("#IP-Set-TableTotal").val(obj.TableTotal);
-      $("#IP-Set-DetailShow").val(obj.DetailShow);
-      $("#IP-Set-DetailQty").val(obj.DetailQty);
-      $("#IP-Set-DetailTotal").val(obj.DetailTotal);
+      $("#IP-Set-TableShow").val(TableShow);
+      $("#IP-Set-TablePrice").val(TablePrice);
+      $("#IP-Set-TableQty").val(TableQty);
+      $("#IP-Set-TableTotal").val(TableTotal);
+      $("#IP-Set-DetailShow").val(DetailShow);
+      $("#IP-Set-DetailQty").val(DetailQty);
+      $("#IP-Set-DetailTotal").val(DetailTotal);
 
       // getDetail
-      const loadDetail = JSON.stringify(obj.QuotationDetail);
+      const loadDetail = JSON.stringify(QuotationDetail);
       const editor = new EditorJS({
         tools: {
           text: {
@@ -169,9 +217,6 @@ function RePro() {
   $("#PJ_Name").val("");
   $("#PJ_Discount").val("");
   $("#PJ_Validity").val("");
-  $("#PJ_Payment1").val("");
-  $("#PJ_Payment2").val("");
-  $("#PJ_Payment3").val("");
   $("#PJ_Delivery").val("");
   $("#PJ_Remark").val("");
   $("#PJ_End_Customer").val("");
@@ -198,228 +243,44 @@ function removeDetailPaper() {
   }
 }
 
+//Reset Quo Table
+function fill_resetQuoTable() {
+  var trHTML = "";
+  trHTML += "<tr>";
+  trHTML += '<td colspan="6">please select a project...</td>';
+  trHTML += "</tr>";
+  document.getElementById("showQuoTable").innerHTML = trHTML;
+}
+
+//Reset Item Table
+function fill_resetTable() {
+  var trHTML = "";
+  trHTML += "<tr>";
+  trHTML += '<td colspan="6">please select a revised...</td>';
+  trHTML += "</tr>";
+  document.getElementById("showTable").innerHTML = trHTML;
+}
+
+//Reset Sub-Item Table
+function fill_resetSubTable() {
+  var trHTML = "";
+  trHTML += "<tr>";
+  trHTML += '<td colspan="6">please select a item...</td>';
+  trHTML += "</tr>";
+  document.getElementById("showSubTable").innerHTML = trHTML;
+}
+
 $(document).ready(function () {
-  //Reset Item Table
-  function fill_resetTable() {
-    var trHTML = "";
-    trHTML += "<tr>";
-    trHTML += '<td colspan="6">Loading...</td>';
-    trHTML += "</tr>";
-    document.getElementById("showTable").innerHTML = trHTML;
-  }
-
-  //Reset Sub-Item Table
-  function fill_resetSubTable() {
-    var trHTML = "";
-    trHTML += "<tr>";
-    trHTML += '<td colspan="6">Loading...</td>';
-    trHTML += "</tr>";
-    document.getElementById("showSubTable").innerHTML = trHTML;
-  }
-
-  //Quotation Table
-  function fill_quotation() {
-    tableQuo = $("#tableQuo").DataTable({
-      bDestroy: true,
-      scrollY: "40vh",
-      // scrollX: true,
-      bPaginate: false,
-      // "bInfo": false,
-      // bLengthChange: false,
-      ajax: {
-        url: "/quotation/list",
-        dataSrc: "",
-      },
-      columns: [
-        {
-          width: "6%",
-          data: "index",
-        },
-        {
-          width: "10%",
-          data: "QuotationNo",
-        },
-        {
-          width: "9%",
-          data: "QuotationRevised",
-        },
-        {
-          width: "20%",
-          data: "QuotationSubject",
-        },
-        {
-          width: "10%",
-          data: "CustomerName",
-        },
-        {
-          width: "10%",
-          data: "QuotationDate",
-        },
-        {
-          width: "10%",
-          data: "QuotationUpdatedDate",
-        },
-        {
-          width: "10%",
-          data: "StatusName",
-        },
-        {
-          width: "8%",
-          data: "EmployeeFname",
-        },
-        {
-          width: "7%",
-          data: "Action",
-          render: function (data, type, row) {
-            if (row.QuotationStatus === 1) {
-              return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
-            } else {
-              return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
-            }
-          },
-        },
-        {
-          data: "QuotationId",
-        },
-      ],
-      // lengthMenu: [10,15],
-      columnDefs: [
-        {
-          targets: [10],
-          visible: false,
-        },
-      ],
-    });
-  }
-
-  //Item table
-  function fill_item(Id, status) {
-    tableItem = $("#tableItem").DataTable({
-      bDestroy: true,
-      scrollY: "28vh",
-      scrollX: true,
-      scrollCollapse: true,
-      searching: false,
-      bPaginate: false,
-      bInfo: false,
-      bLengthChange: false,
-      ajax: {
-        url: `/quotation/item/` + Id,
-        dataSrc: "",
-      },
-      columns: [
-        {
-          width: "10%",
-          data: "Item",
-        },
-        {
-          width: "40%",
-          data: "ItemName",
-        },
-        {
-          width: "15%",
-          data: "ItemPrice",
-        },
-        {
-          width: "15%",
-          data: "ItemQty",
-        },
-        {
-          width: "20%",
-          data: "Action",
-          render: function () {
-            if (status === 1) {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>";
-            }
-            // disabled
-            else {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>";
-            }
-          },
-        },
-        {
-          data: "ItemId",
-          data: "QuotationId",
-          data: "QuotationStatus",
-        },
-      ],
-      columnDefs: [
-        {
-          targets: [5],
-          visible: false,
-        },
-      ],
-    });
-  }
-
-  //Sub-Item Table
-  function fill_subitem(Id, status) {
-    tableSubItem = $("#tableSubItem").DataTable({
-      bDestroy: true,
-      scrollY: "28vh",
-      scrollX: true,
-      scrollCollapse: true,
-      searching: false,
-      bPaginate: false,
-      bInfo: false,
-      bLengthChange: false,
-      ajax: {
-        url: `/quotation/subitem/` + Id,
-        dataSrc: "",
-      },
-      columns: [
-        {
-          width: "10%",
-          data: "Index",
-        },
-        {
-          width: "40%",
-          data: "SubItemName",
-        },
-        {
-          width: "15%",
-          data: "SubItemPrice",
-        },
-        {
-          width: "15%",
-          data: "SubItemQtyUnit",
-        },
-        {
-          width: "20%",
-          data: "Action",
-          render: function () {
-            if (status === 1) {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem'><i class='fa fa-remove'></i></button></div></div>";
-            }
-            // disabled
-            else {
-              return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' disabled><i class='fa fa-remove'></i></button></div></div>";
-            }
-          },
-        },
-        {
-          data: "SubItemId",
-          data: "QuotationId",
-          data: "ProductId",
-          data: "ProductType",
-        },
-      ],
-      columnDefs: [
-        {
-          targets: [5],
-          visible: false,
-        },
-      ],
-    });
-  }
-  fill_quotation();
+  fill_quotationHead();
+  searchTableQuoHead();
+  fill_resetQuoTable();
+  // fill_quotation();
 
   //======================== Quotation =============================//
   //Create Project
   $("#addProject").unbind();
   $("#addProject").on("click", function () {
     $("#modalQuotationMaster").modal("show");
-
     $("#formQuotation").trigger("reset");
     $(".modal-title").text("Add Project");
     $("#modalSaveProject").unbind();
@@ -444,7 +305,7 @@ $(document).ready(function () {
               showConfirmButton: false,
               timer: 1500,
             });
-            tableQuo.ajax.reload(null, false);
+            tableQuoHead.ajax.reload(null, false);
           },
           error: function (err) {
             errorText = err.responseJSON.message;
@@ -466,80 +327,87 @@ $(document).ready(function () {
       $("#modalQuotationMaster").modal("hide");
     });
   });
+  //clickTableQuotationHead
+  $("#tableQuoHead tbody").unbind();
+  $("#tableQuoHead tbody").on("click", "tr", function () {
+    $("#save-button").addClass("visually-hidden");
+    $("#btn-cancel, #btn-quotation, #btn-book, #btn-loss").attr(
+      "disabled",
+      "disabled"
+    );
+    removeDetailPaper();
+    hideAdd();
+    hideEdit();
+    hideSetting();
+    fill_resetTable();
+    RePro();
+    fill_resetQuoTable();
+    if ($(this).hasClass("selected")) {
+      $(this).removeClass("selected");
+      //
+      $("#save-button").addClass("visually-hidden");
+      $("#btn-cancel, #btn-quotation, #btn-book, #btn-loss").attr(
+        "disabled",
+        "disabled"
+      );
+      removeDetailPaper();
+      hideAdd();
+      hideEdit();
+      hideSetting();
+      fill_resetTable();
+      RePro();
+      fill_resetQuoTable();
+      // console.log("un selecte");
+    } else {
+      $("#tableQuoHead tr").removeClass("selected");
+      $(this).addClass("selected");
+      let rows = $(this).closest("tr");
+      let { QuotationNoId } = tableQuoHead.row(rows).data();
+      fill_quotation(QuotationNoId);
+    }
+  });
 
   //Delete Project
-  $(document).on("click", "#btnDelProject", function () {
-    $("#modalDeleteConfirm").modal("show");
-
+  $("#tableQuo").unbind();
+  $("#tableQuo").on("click", "#btnDelProject", function () {
     rows = $(this).closest("tr");
-    let QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
-    $(".modal-title").text("Confirm Delete");
-    $("#btnYes").unbind();
-    $("#btnYes").click(function () {
-      $.ajax({
-        url: "/quotation/delete_quotation/" + QuotationId,
-        method: "delete",
-        contentType: "application/json",
-        success: function () {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Deleted",
-            text: "Successfully delete pre-quotation",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          tableQuo.ajax.reload(null, false);
-        },
-      });
-      $("#modalDeleteConfirm").modal("hide");
-    });
-    $(".close,.no").click(function () {
-      $("#modalDeleteConfirm").modal("hide");
-    });
+    let { QuotationId } = tableQuo.row(rows).data();
+    let url = `/quotation/delete_quotation/${QuotationId}`;
+    AjaxDelete(url, tableQuo, tableQuoHead);
   });
 
   //clickTableQuotation
+  $("#tableQuo tbody").unbind();
   $("#tableQuo tbody").on("click", "tr", function () {
     fill_resetSubTable();
     $("#btn-text").text("Edit");
-    $("#PJ_Name").attr("disabled", "disabled");
-    $("#PJ_Discount").attr("disabled", "disabled");
-    $("#PJ_End_Customer").attr("disabled", "disabled");
-    $("#PJ_Validity").attr("disabled", "disabled");
+    $fieldProject.attr("disabled", "disabled");
+
     $("#PJ_Payment1").attr("disabled", "disabled");
     $("#PJ_Payment2").attr("disabled", "disabled");
     $("#PJ_Payment3").attr("disabled", "disabled");
-    $("#PJ_Delivery").attr("disabled", "disabled");
-    $("#PJ_Remark").attr("disabled", "disabled");
-    $("#PJ_Approve").attr("disabled", "disabled");
-    $("#btn-cancel").attr("disabled", "disabled");
-    $("#btn-quotation").attr("disabled", "disabled");
-    $("#btn-book").attr("disabled", "disabled");
-    $("#btn-loss").attr("disabled", "disabled");
 
-    $("#IP-Set-TableShow").attr("disabled", "disabled");
-    $("#IP-Set-TablePrice").attr("disabled", "disabled");
-    $("#IP-Set-TableQty").attr("disabled", "disabled");
-    $("#IP-Set-TableTotal").attr("disabled", "disabled");
+    $("#btn-cancel, #btn-quotation, #btn-book, #btn-loss").attr(
+      "disabled",
+      "disabled"
+    );
+
+    $(
+      "#IP-Set-TableShow, #IP-Set-TablePric, #IP-Set-TableQty, #IP-Set-TableTotal"
+    ).attr("disabled", "disabled");
 
     rows = $(this).closest("tr");
-    var QuotationId = tableQuo.rows(rows).data()[0].QuotationId;
-    var QuotationApproval = tableQuo.rows(rows).data()[0].QuotationApproval;
-    var QuotationStatus = tableQuo.rows(rows).data()[0].QuotationStatus;
+    let { QuotationId, QuotationApproval, QuotationStatus } = tableQuo
+      .row(rows)
+      .data();
 
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
       $("#save-button").addClass("visually-hidden");
-
       removeDetailPaper();
-
       hideAdd();
-
       hideEdit();
-
       hideSetting();
-
       fill_resetTable();
       RePro();
     } else {
@@ -622,16 +490,10 @@ $(document).ready(function () {
                   ShowPro(QuotationId);
                   $("#modalEditProject").removeClass("save");
                   $("#btn-text").text("Edit");
-                  $("#PJ_Name").attr("disabled", "disabled");
-                  $("#PJ_Discount").attr("disabled", "disabled");
-                  $("#PJ_End_Customer").attr("disabled", "disabled");
-                  $("#PJ_Validity").attr("disabled", "disabled");
+                  $fieldProject.attr("disabled", "disabled");
                   $("#PJ_Payment1").attr("disabled", "disabled");
                   $("#PJ_Payment2").attr("disabled", "disabled");
                   $("#PJ_Payment3").attr("disabled", "disabled");
-                  $("#PJ_Delivery").attr("disabled", "disabled");
-                  $("#PJ_Remark").attr("disabled", "disabled");
-                  $("#PJ_Approve").attr("disabled", "disabled");
                 },
                 error: function (err) {
                   errorText = err.responseJSON.message;
@@ -657,15 +519,10 @@ $(document).ready(function () {
             $("#btn-text").text("Save");
 
             $("#PJ_Name").removeAttr("disabled");
-            $("#PJ_Discount").removeAttr("disabled");
-            $("#PJ_End_Customer").removeAttr("disabled");
-            $("#PJ_Validity").removeAttr("disabled");
+            $fieldProject.removeAttr("disabled");
             $("#PJ_Payment1").removeAttr("disabled");
             $("#PJ_Payment2").removeAttr("disabled");
             $("#PJ_Payment3").removeAttr("disabled");
-            $("#PJ_Delivery").removeAttr("disabled");
-            $("#PJ_Remark").removeAttr("disabled");
-            $("#PJ_Approve").removeAttr("disabled");
           }
         });
         // Save Setting
@@ -674,49 +531,16 @@ $(document).ready(function () {
           $("#modalSettingConfirm").modal("show");
 
           $(".modal-title").text("Confirm Setting");
-
           $("#btnSettingYes").unbind();
           $("#btnSettingYes").click(function () {
-            let TableShow = $.trim($("#IP-Set-TableShow").val());
-            let TablePrice = $.trim($("#IP-Set-TablePrice").val());
-            let TableQty = $.trim($("#IP-Set-TableQty").val());
-            let TableTotal = $.trim($("#IP-Set-TableTotal").val());
-
-            $.ajax({
-              url: "/quotation/edit_setting/" + QuotationId,
-              method: "put",
-              contentType: "application/json",
-              data: JSON.stringify({
-                TableShow: TableShow,
-                TablePrice: TablePrice,
-                TableQty: TableQty,
-                TableTotal: TableTotal,
-              }),
-              success: function (success) {
-                successText = success.message;
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "Saved",
-                  text: successText,
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-              },
-              error: function (err) {
-                errorText = err.responseJSON.message;
-                Swal.fire({
-                  position: "center",
-                  icon: "warning",
-                  title: "Warning",
-                  text: errorText,
-                  showConfirmButton: true,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#FF5733",
-                });
-              },
-            });
-            $("#modalSettingConfirm").modal("hide");
+            let url = `/quotation/edit_setting/${QuotationId}`;
+            let Data = {
+              TableShow: $("#IP-Set-TableShow").val(),
+              TablePrice: $("#IP-Set-TablePrice").val(),
+              TableQty: $("#IP-Set-TableQty").val(),
+              TableTotal: $("#IP-Set-TableTotal").val(),
+            };
+            AjaxPut(url, null, Data, $("#modalSettingConfirm"));
           });
           $(".close,.no").click(function () {
             $("#modalSettingConfirm").modal("hide");
@@ -1489,8 +1313,7 @@ $(document).ready(function () {
       let SubItemPrice = $.trim($("#modalInpEdSubPrice").val());
       let SubItemQty = $.trim($("#modalInpEdSubQty").val());
       let SubItemUnit = $.trim($("#modalInpEdSubUnit").val());
-      console.log(SubItemName)
-
+      console.log(SubItemName);
 
       $.ajax({
         url: "/quotation/edit_subitem/" + SubItemId,

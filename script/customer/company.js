@@ -150,6 +150,7 @@ $(document).ready(function () {
       let CompanyEmail = $.trim($("#modalInpCompanyEmail").val());
       let CompanyTel = $.trim($("#modalInpCompanyTel").val());
 
+      console.log(CompanyName)
       $.ajax({
         url: "/company_master/edit/" + CompanyId,
         method: "put",
