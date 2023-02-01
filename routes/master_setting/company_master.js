@@ -55,8 +55,9 @@ router.post("/add", async (req, res, next) => {
 router.put("/edit/:CompanyId", async (req, res) => {
   try {
     let CompanyId = req.params.CompanyId;
+    console.log(req.body)
     let { CompanyName, CompanyAddress, CompanyTel, CompanyEmail } = req.body;
-    if ((CompanyName = "")) {
+    if ((CompanyName == "")) {
       res.status(400).send({ message: "Please enter company's name" });
       return;
     }

@@ -1,5 +1,5 @@
 function AjaxGetDownload(url) {
-  console.log('upload url : ', url)
+  console.log("upload url : ", url);
   $.ajax({
     url: url,
     method: "get",
@@ -9,13 +9,13 @@ function AjaxGetDownload(url) {
       window.open(url);
     },
     error: function (err) {
-      console.log(err)
+      console.log(err);
       let error = err.responseJSON.message;
       Swal.fire({
-        icon: 'error',
-        title: 'Error...',
+        icon: "error",
+        title: "Error...",
         text: error,
-      })
+      });
     },
   });
 }
@@ -35,8 +35,8 @@ function AjaxPut(url, table, data, modalId = null) {
         showConfirmButton: false,
         timer: 1500,
       });
-      table.ajax.reload(null, false);
-      modalId != null ? modalId.modal("hide") : console.log("no modal");
+      if (table != null) table.ajax.reload(null, false);
+      if (modalId != null) modalId.modal("hide");
     },
     error: (err) => {
       let error = err.responseJSON.message;
@@ -86,7 +86,7 @@ function AjaxPutWithImage(url, table, modalId, fileImg = JSON.stringify({})) {
     },
   });
 }
-function AjaxPutCheckbox(url, table, data = '', swalTitle) {
+function AjaxPutCheckbox(url, table, data = "", swalTitle) {
   $.ajax({
     url: url,
     method: "put",
@@ -220,8 +220,8 @@ const AjaxImportExcel = (url, table, exFile = {}) => {
       Swal.hideLoading();
     },
   });
-}
-function AjaxDelete(url, table, method = "delete") {
+};
+function AjaxDelete(url, table1, table2 = null) {
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -232,7 +232,7 @@ function AjaxDelete(url, table, method = "delete") {
     if (result.isConfirmed) {
       $.ajax({
         url: url,
-        method: method,
+        method: "delete",
         contentType: "application/json",
         success: (res) => {
           let success = res.message;
@@ -244,7 +244,8 @@ function AjaxDelete(url, table, method = "delete") {
             showConfirmButton: false,
             timer: 1500,
           });
-          table.ajax.reload(null, false);
+          table1.ajax.reload(null, false);
+          if (table2 != null) table2.ajax.reload(null, false);
         },
         error: (err) => {
           let error = err.responseJSON.message;
@@ -263,666 +264,254 @@ function AjaxDelete(url, table, method = "delete") {
     }
   });
 }
-function getFilter(ReportFilter) {
-  let Filter;
-  Filter = {
-    FromDate: $(`#ReportDateFrom_${ReportFilter}`).val(),
-    ToDate: $(`#ReportDateTo_${ReportFilter}`).val(),
-    FromTime: $(`#ReportTimeFrom_${ReportFilter}`).val(),
-    ToTime: $(`#ReportTimeTo_${ReportFilter}`).val(),
-  };
-  return Filter;
-}
 
 // Search Table Title
-function searchtbDailyReport() {
-  $("#DailyReportTable thead tr")
+//Quotation
+function searchTableQuoHead() {
+  $("#tableQuoHead thead tr")
     .clone(true)
     .addClass("filters")
-    .appendTo("#DailyReportTable thead");
-  $("#DailyReportTable .filters th").each(function (i) {
-    var title = $("#DailyReportTable thead th").eq($(this).index()).text();
-    disable = title == 'จัดการข้อมูล' ? 'disabled' : ''
+    .appendTo("#tableQuoHead thead");
+  $("#tableQuoHead .filters th").each(function (i) {
+    var title = $("#tableQuoHead thead th").eq($(this).index()).text();
+    disable = title == "จัดการข้อมูล" ? "disabled" : "";
     $(this).html(
       `<input class="form-control p-1" type="text" placeholder="${title}" ${disable}/>`
     );
   });
-  tbDailyReport
+  tableQuoHead
     .columns()
     .eq(0)
     .each(function (colIdx) {
-      $("input", $("#DailyReportTable .filters th")[colIdx]).on(
+      $("input", $("#tableQuoHead .filters th")[colIdx]).on(
         "keyup change",
         function () {
           console.log(colIdx, this.value);
-          tbDailyReport.column(colIdx).search(this.value).draw();
+          tableQuoHead.column(colIdx).search(this.value).draw();
         }
       );
     });
 }
-function searchtbSaTable() {
-  $("#SaTable thead tr")
-    .clone(true)
-    .addClass("filters")
-    .appendTo("#SaTable thead");
-  $("#SaTable .filters th").each(function (i) {
-    var title = $("#SaTable thead th").eq($(this).index()).text();
-    disable = title == 'จัดการข้อมูล' ? 'disabled' : ''
-    $(this).html(
-      `<input class="form-control p-1" type="text" placeholder="${title}" ${disable}/>`
-    );
-  });
-  tbSaTable
-    .columns()
-    .eq(0)
-    .each(function (colIdx) {
-      $("input", $("#SaTable .filters th")[colIdx]).on(
-        "keyup change",
-        function () {
-          console.log(colIdx, this.value);
-          tbSaTable.column(colIdx).search(this.value).draw();
-        }
-      );
-    });
-}
-function searchtbPoReport() {
-  $("#PoReportTable thead tr")
-    .clone(true)
-    .addClass("filters")
-    .appendTo("#PoReportTable thead");
-  $("#PoReportTable .filters th").each(function (i) {
-    var title = $("#PoReportTable thead th").eq($(this).index()).text();
-    disable = title == 'จัดการข้อมูล' ? 'disabled' : ''
-    $(this).html(
-      `<input class="form-control p-1" type="text" placeholder="${title}" ${disable}/>`
-    );
-  });
-  tbPoReport
-    .columns()
-    .eq(0)
-    .each(function (colIdx) {
-      $("input", $("#PoReportTable .filters th")[colIdx]).on(
-        "keyup change",
-        function () {
-          console.log(colIdx, this.value);
-          tbPoReport.column(colIdx).search(this.value).draw();
-        }
-      );
-    });
-}
-function searchtbUser() {
-  $("#tbUser thead tr")
-    .clone(true)
-    .addClass("filters")
-    .appendTo("#tbUser thead");
-  $("#tbUser .filters th").each(function (i) {
-    var title = $("#tbUser thead th").eq($(this).index()).text();
-    disable = title == 'action' || title == 'QA CHECK' ? 'disabled' : ''
-    $(this).html(
-      `<input class="form-control p-1" type="text" placeholder="${title}" ${disable}/>`
-    );
-  });
-  tbUser
-    .columns()
-    .eq(0)
-    .each(function (colIdx) {
-      $("input", $("#tbUser .filters th")[colIdx]).on(
-        "keyup change",
-        function () {
-          console.log(colIdx, this.value);
-          tbUser.column(colIdx).search(this.value).draw();
-        }
-      );
-    });
-}
-function searchtbDmUser() {
-  $("#tbDmUser thead tr")
-    .clone(true)
-    .addClass("filters")
-    .appendTo("#tbDmUser thead");
-  $("#tbDmUser .filters th").each(function (i) {
-    var title = $("#tbDmUser thead th").eq($(this).index()).text();
-    disable = title == 'action' || title == 'AlternateCheck' || title == 'AlternateApprove' ? 'disabled' : ''
-    $(this).html(
-      `<input class="form-control p-1" type="text" placeholder="${title}" ${disable}/>`
-    );
-  });
-  tbDmUser
-    .columns()
-    .eq(0)
-    .each(function (colIdx) {
-      $("input", $("#tbDmUser .filters th")[colIdx]).on(
-        "keyup change",
-        function () {
-          console.log(colIdx, this.value);
-          tbDmUser.column(colIdx).search(this.value).draw();
-        }
-      );
-    });
-}
-
-
 
 // Fill Table
-function filltbDailyReport(Filter) {
-  tbDailyReport = $("#DailyReportTable").DataTable({
+//Quotation
+function fill_quotationHead() {
+  tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
     scrollCollapse: true,
     searching: true,
     paging: true,
+    pageLength: 5,
     lengthChange: false,
     info: false,
-    autoWidth: false,
+    autoWidth: true,
     dom: "rtp",
     ajax: {
-      url: `/report/daily/${JSON.stringify(Filter)}`,
+      url: "/quotation/quotation_no_list",
       dataSrc: "",
     },
     columns: [
       {
-        data: "SlipNo", // เลขที่ใบแจ้ง
+        width: "10%",
+        data: "index",
+      },
+
+      {
+        data: "QuotationNo",
       },
       {
-        data: "RequestUser", // ชื่อผู้แจ้ง
-      },
-      {
-        data: "RepairUser", // ผู้ซ่อม
-      },
-      {
-        data: "InjShot", // จำนวน Shot
-      },
-      {
-        data: "OrderTypeText", // ประเภทงาน
-      },
-      {
-        data: "PartName", // ชื่อชิ้นงาน
-      },
-      {
-        data: "MoldName", // ชื่อแม่พิมพ์
-      },
-      {
-        data: "Section", // ส่วนงาน
-      },
-      {
-        data: "ProblemSource", // ที่มาของปัญหา
-      },
-      {
-        data: "ProblemNo", // ประเภทของปัญหา
-      },
-      {
-        data: "RequestTime", // วัน/เวลา แจ้ง
+        data: "CompanyName",
         render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
+          return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
-        data: "Problem", // อาการ
-      },
-      {
-        data: "Cause", // สาเหตุ
-      },
-      {
-        data: "FixDetail", // การแก้ไข
+        data: "QuotationSubject",
         render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "DmApproveTime", // วัน/เวลา เสร็จสิ้น
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "TryDate", // วัน/เวลา injection
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
+          return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
         width: "20%",
-        defaultContent:
-          '<div class="btn-group btn-group-sm" role="group"><button class="btn btn-warning" id="editDailyReportBtn" type="button"><i class="fa fa-pencil-square-o m-1"></i>แก้ไข</button></div>',
-      },
-    ],
-  });
-
-}
-function filltbMonthlyMoldProb(Month) {
-  tbMonthlyProb = $("#MonthlyProblemTable").DataTable({
-    bDestroy: true,
-    scrollCollapse: true,
-    scrollx: true,
-    searching: false,
-    paging: true,
-    lengthChange: false,
-    info: false,
-    autoWidth: false,
-    ajax: {
-      url: `/report/monthly/mold_problem/${Month}`,
-      dataSrc: "",
-    },
-    columns: [
-      {
-        data: "ProblemNo", // ลำดับ
-      },
-      {
-        data: "Problem", // ปัญหาแม่พิมพ์ Dc/Po
-      },
-      {
-        data: "ProblemCount", // จำนวน
-      },
-      {
-        data: "ProblemPercent", // %
-      },
-    ],
-  });
-
-  tbMonthlyTopProb = $("#MonthlyMoldProblemTable").DataTable({
-    bDestroy: true,
-    scrollCollapse: true,
-    scrollx: true,
-    searching: false,
-    paging: true,
-    lengthChange: false,
-    info: false,
-    autoWidth: false,
-    ajax: {
-      url: `/report/monthly/top_mold_problem/${Month}`,
-      dataSrc: "",
-    },
-    columns: [
-      {
-        data: "ProblemNo", // ลำดับ
-      },
-      {
-        data: "MoldName", // ชื่อแม่พิมพ์
-      },
-      {
-        data: "RequestTime", // วันที่
-      },
-      {
-        data: "Problem", // อาการ
-      },
-      {
-        data: "MoldCount", // จำนวนครั้ง
-      },
-    ],
-  });
-  tbMonthlyFix = $("#MonthlyFixTable").DataTable({
-    bDestroy: true,
-    scrollCollapse: true,
-    scrollx: true,
-    searching: false,
-    paging: false,
-    lengthChange: false,
-    info: false,
-    autoWidth: false,
-    ajax: {
-      url: `/report/monthly/mold_countermeasure/${Month}`,
-      dataSrc: "",
-    },
-    columns: [
-      {
-        data: "IndexMold", // ลำดับ
-      },
-      {
-        data: "MoldName", // ชื่อแม่พิมพ์
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "RepairDateShow", // วันที่
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "Cause", // สาเหตุ
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "FixDetail", // มาตรการแก้ไข
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "ResponsibleUser", // ผู้รับผิดชอบ	
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        width: "20%",
-        defaultContent:
-          '<div class="btn-group btn-group-sm" role="group"><button class="btn btn-warning" id="editMonthlyFixBtn" type="button"><i class="fa fa-pencil-square-o m-1"></i>แก้ไข</button></div>',
-      },
-    ],
-  });
-  tbMonthlyPre = $("#MonthlyPrepareTable").DataTable({
-    bDestroy: true,
-    scrollCollapse: true,
-    scrollx: true,
-    searching: false,
-    paging: true,
-    lengthChange: false,
-    info: false,
-    autoWidth: false,
-    ajax: {
-      url: `/report/monthly/mold_prepare/${Month}`,
-      dataSrc: "",
-    },
-    columns: [
-      {
-        data: "ProblemNo", // ลำดับ
-      },
-      {
-        data: "Problem", // เตรียมการแม่พิมพ์ Dc/Po
-      },
-      {
-        data: "ProblemCount", // จำนวนครั้ง
-      },
-      {
-        data: "ProblemPercent", // %
+        data: "CustomerName",
       },
     ],
   });
 }
-function filltbSaTable(Filter) {
-  tbSaTable = $("#SaTable").DataTable({
+function fill_quotation(QuotationNoId) {
+  tableQuo = $("#tableQuo").DataTable({
     bDestroy: true,
-    scrollCollapse: true,
+    scrollX: true,
+    pageLength: 5,
     searching: true,
-    paging: true,
-    lengthChange: false,
-    info: false,
-    autoWidth: false,
-    dom: "rtp",
+    dom: "rtip",
+    // "bInfo": false,
+    // bLengthChange: false,
     ajax: {
-      url: `/report/repair/${JSON.stringify(Filter)}`,
+      url: `/quotation/quotation_list/${QuotationNoId}`,
       dataSrc: "",
     },
     columns: [
       {
-        data: "SlipNo", // เลขที่ใบแจ้ง
+        width: "5%",
+        data: "QuotationRevised",
       },
       {
-        data: "InjShot", // จำนวน shot
-      },
-      {
-        data: "OrderTypeText", // ประเภทงาน
-      },
-      {
-        data: "PartName", // ชื่อชิ้นงาน
-      },
-      {
-        data: "PartNo", // หมายเลขชิ้นงาน
-      },
-      {
-        data: "MoldName", // ชื่อแม่พิมพ์
-      },
-      {
-        data: "McName", // ชื่อเครื่องจักร
-      },
-      {
-        data: "Section", // ส่วนงาน
-      },
-      {
-        data: "ProblemSource", // ที่มาของปัญหา
-      },
-      {
-        data: "ProblemNo", // ประเภทของปัญหา
-      },
-      {
-        data: "Problem", // อาการ
-      },
-      {
-        data: "Cause", // สาเหตุ
-      },
-      {
-        data: "FixDetail", // การแก้ไข
+        width: "10%",
+        data: "QuotationDate",
         render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
+          if (data != null) return data;
+          else return (data = "-");
         },
       },
       {
-        data: "QaResult", // ผลการทดลองผลิต
+        width: "10%",
+        data: "QuotationUpdatedDate",
       },
       {
-        data: "TryDate", // วัน/เวลา Injection
+        width: "10%",
+        data: "StatusName",
         render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
+          let L_Status = data.toLowerCase();
+          return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
         },
       },
       {
-        data: "RequestTime", // วัน/เวลาแจ้ง
+        width: "8%",
+        data: "EmployeeFname",
         render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
+          if (data != null) return data;
+          else return (data = "-");
         },
       },
       {
-        data: "RequestUser", // ชื่อผู้แจ้ง
+        width: "5%",
+        data: "Action",
         render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
+          if (row.QuotationStatus === 1) {
+            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-danger p-1 m-2' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
+          } else {
+            return "<div class='text-center'><div class='btn-group'><button  class='btn btn-dark p-1 m-2 disabled' id='btnDelProject' style='width: 2rem;''><i class='fa fa-remove'></i></button></div></div>";
+          }
         },
-      },
-      {
-        data: "ReceiveTime", // วัน/เวลา รับงาน
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "ReceiveUser", // ชื่อผู้รับงาน
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "RepairStart", // วัน/เวลา เริ่มทำงาน
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "RepairUser", // ชื่อผู้ทำงาน
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "DmCheckTime", // วัน/เวลา ตรวจสอบ
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "DmCheckUser", // ชื่อผู้ตรวจสอบ
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "DmApproveTime", // วัน/เวลา อนุมัติ
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "DmApproveUser", // ชื่อผู้อนุมัติ
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        data: "DmApproveTime", // วัน/เวลา แก้ไขเสร็จสิ้น
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "RepairFinishTime", // วัน/เวลา จบงาน
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "RepairTime", // เวลาที่ใช้
-      },
-      {
-        data: "QaUser", // ชื่อQAผู้ตรวจสอบ
-        render: function (data, type, row) {
-          if (data) return data;
-          else return "-";
-        },
-      },
-      {
-        width: "20%",
-        defaultContent:
-          '<div class="btn-group btn-group-sm" role="group"><button class="btn btn-warning" id="editSaTableBtn" type="button"><i class="fa fa-pencil-square-o m-1"></i>แก้ไข</button></div>',
       },
     ],
   });
 }
-
-function filltbPoReport(Filter) {
-  tbPoReport = $("#PoReportTable").DataTable({
+function fill_item(Id, status) {
+  tableItem = $("#tableItem").DataTable({
     bDestroy: true,
+    scrollY: "28vh",
+    scrollX: true,
     scrollCollapse: true,
-    searching: true,
-    paging: true,
-    lengthChange: false,
-    info: false,
-    autoWidth: false,
-    dom: "rtp",
+    searching: false,
+    bPaginate: false,
+    bInfo: false,
+    bLengthChange: false,
     ajax: {
-      url: `/report/po/${JSON.stringify(Filter)}`,
+      url: `/quotation/item/` + Id,
       dataSrc: "",
     },
     columns: [
       {
-        data: "index", // No
+        width: "10%",
+        data: "Item",
       },
       {
-        data: "RequestDate", // วันที่แจ้งซ่อม
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
+        width: "40%",
+        data: "ItemName",
       },
       {
-        data: "SlipNo", // เลขที่ใบแจ้ง
+        width: "15%",
+        data: "ItemPrice",
       },
       {
-        data: "Section", // แผนกที่แจ้ง
-      },
-      {
-        data: "PartNo", // DWG no.(PART NO) ที่มีการผลิตครั้งแรก
-      },
-      {
-        data: "PartName", // ชื่อชิ้นงาน
-      },
-      {
-        data: "McName", // MACHINE
-      },
-      {
-        data: "RequestTime", // เวลาที่แจ้ง TIME
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "NoHAT", // Control NO. HAT
-        render: function (data, type, row) {
-          if (data) return data
-          else return "-";
-        },
-      },
-      {
-        data: "AS400", // AS400  เปรียบเทียบList
-        render: function (data, type, row) {
-          if (data) return data
-          else return "-";
-        },
-      },
-      {
-        data: "Problem", // รายละเอียดการเปลี่ยนแปลง
-      },
-      {
-        data: "Document", // เอกสารแนบ
-      },
-      {
-        data: "RequestUser", // ผู้แจ้ง
-      },
-      {
-        data: "MgLeader", // หัวหน้า
-        render: function (data, type, row) {
-          if (data) return data
-          else return "-";
-        },
-      },
-      {
-        data: "MgMgr", // ผู้จัดการแผนก
-        render: function (data, type, row) {
-          if (data) return data
-          else return "-";
-        },
-      },
-      {
-        data: "FixDetail", // รายละเอียดการแก้ไข
-        render: function (data, type, row) {
-          if (data) return data
-          else return "-";
-        },
-      },
-      {
-        data: "TryDate", // วันดำเนินการใบสั่งซ่อมแม่พิมพ์
-        render: function (data, type, row) {
-          if (data) return data.replace(" ", "<br/>");
-          else return "-";
-        },
-      },
-      {
-        data: "QaResult", // ผลการตัดสินใบสั่งซ่อมแม่พิมพ์ (RESULT)
-      },
-      {
-        data: "QaRemark", // REMARK
+        width: "15%",
+        data: "ItemQty",
       },
       {
         width: "20%",
-        defaultContent:
-          '<div class="btn-group btn-group-sm" role="group"><button class="btn btn-warning" id="editPoReportBtn" type="button"><i class="fa fa-pencil-square-o m-1"></i>แก้ไข</button></div>',
+        data: "Action",
+        render: function () {
+          if (status === 1) {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;'><i class='fa fa-remove'></i></button></div></div>";
+          }
+          // disabled
+          else {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnSubItem' style='width: 2rem;' disabled onclick='LoadDropDown()'><i class='fa fa-plus'></i></button><button type='button' class='btn btn-danger p-1 ' id='btnDelItem' style='width: 2rem;' disabled><i class='fa fa-remove'></i></button></div></div>";
+          }
+        },
+      },
+      {
+        data: "ItemId",
+        data: "QuotationId",
+        data: "QuotationStatus",
+      },
+    ],
+    columnDefs: [
+      {
+        targets: [5],
+        visible: false,
       },
     ],
   });
 }
-
-
+function fill_subitem(Id, status) {
+  tableSubItem = $("#tableSubItem").DataTable({
+    bDestroy: true,
+    scrollY: "28vh",
+    scrollX: true,
+    scrollCollapse: true,
+    searching: false,
+    bPaginate: false,
+    bInfo: false,
+    bLengthChange: false,
+    ajax: {
+      url: `/quotation/subitem/` + Id,
+      dataSrc: "",
+    },
+    columns: [
+      {
+        width: "10%",
+        data: "Index",
+      },
+      {
+        width: "40%",
+        data: "SubItemName",
+      },
+      {
+        width: "15%",
+        data: "SubItemPrice",
+      },
+      {
+        width: "15%",
+        data: "SubItemQtyUnit",
+      },
+      {
+        width: "20%",
+        data: "Action",
+        render: function () {
+          if (status === 1) {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem'><i class='fa fa-remove'></i></button></div></div>";
+          }
+          // disabled
+          else {
+            return "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditSubItem' style='width: 2rem;' disabled><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelSubItem' disabled><i class='fa fa-remove'></i></button></div></div>";
+          }
+        },
+      },
+      {
+        data: "SubItemId",
+        data: "QuotationId",
+        data: "ProductId",
+        data: "ProductType",
+      },
+    ],
+    columnDefs: [
+      {
+        targets: [5],
+        visible: false,
+      },
+    ],
+  });
+}
