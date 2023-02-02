@@ -23,7 +23,7 @@ router.get("/quotation_no_list", async (req, res, next) => {
         (SELECT TOP 1 QuotationNet
           FROM privanet.[Quotation] f
           WHERE f.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationRevised
+          ORDER BY QuotationStatus) QuotationNet
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
       LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId`;
