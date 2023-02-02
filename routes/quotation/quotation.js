@@ -117,7 +117,7 @@ router.get("/:QuotationId", async (req, res) => {
     let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent FROM privanet.QuotationPayTerm
       WHERE QuotationId = ${QuotationId};`
     let payterms = await pool.request().query(getPayterm);
-    // console.log(payterms)
+    console.log(payterms)
 
     let quotation = quotations.recordset[0]
     // console.log(quotations)
@@ -142,7 +142,7 @@ router.get("/:QuotationId", async (req, res) => {
     }
     quotation.QuotationRevised = Revised;
     let PayTermArr = new Array
-    for (let idx = 1; idx <= payterms.recordset.length; idx++) {
+    for (let idx = 0; idx < payterms.recordset.length; idx++) {
       let { PayTerm, PayPercent } = payterms.recordset[idx]
       PayTermArr.push({ PayTerm, PayPercent })
     }
