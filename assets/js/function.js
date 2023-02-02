@@ -1,3 +1,27 @@
+function AjaxGetData(url) {
+  return new Promise(async (resolve, reject) => {
+    $.ajax({
+      url: url,
+      method: "get",
+      contentType: "application/json",
+      dataType: "json",
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (err) {
+        console.log(err);
+        let error = err.responseJSON.message;
+        Swal.fire({
+          icon: "error",
+          title: "Error...",
+          text: error,
+        });
+        reject(err)
+      },
+    });
+  })
+  
+}
 function AjaxGetDownload(url) {
   console.log("upload url : ", url);
   $.ajax({
@@ -335,8 +359,11 @@ function fill_quotationHead() {
         },
       },
       {
-        width: "20%",
         data: "CustomerName",
+      },
+      {
+        width: "20%",
+        data: "QuotationNet",
       },
     ],
   });

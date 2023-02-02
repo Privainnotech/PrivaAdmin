@@ -78,12 +78,12 @@ router.get("/product", async (req, res) => {
 
 // Get Data
 router.get("/customer/:CustomerId", async (req, res) => {
+  
   try {
     let pool = await sql.connect(dbconfig);
     let CustomerId = req.params.CustomerId;
     let SelectCustomer = `Select
-      a.CustomerId, a.CustomerTitle, a.CustomerFname, a.CustomerLname,
-      a.CustomerEmail, b.CompanyId, b.CompanyName, b.CompanyAddress
+      a.CustomerId, a.CustomerName, a.CustomerEmail, b.CompanyId, b.CompanyName, b.CompanyAddress
       FROM privanet.[MasterCustomer] a
       LEFT JOIN privanet.[MasterCompany] b ON a.CompanyId = b.CompanyId
       WHERE CustomerId = ${CustomerId}`;

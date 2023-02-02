@@ -95,17 +95,22 @@ function ShowPro(QuotationId) {
           console.log("dpMold: ", res);
           if (res.length == 0) {
             $("#CusName option").remove();
-            $("#CusName").append("<option value='No data'>");
+            $("#CusName").append("<option value=''>No data</option>");
             $("#CusName").attr("disabled", "");
           } else {
             $("#CusName option").remove();
             $("#CusName optgroup").remove();
-            $("#CusName").append("<option value=''> ");
+            // $("#CusName").append("<option value=''></option> ");
             res.forEach((obj) => {
-              console.log(obj);
-              $("#CusName").append(
-                `<option value='${obj.CustomerId}'>${obj.CustomerName}</option>`
-              );
+              if (obj.CustomerId == CustomerId) {
+                $("#CusName").append(
+                  `<option value='${obj.CustomerId}' selected>${obj.CustomerName}</option>`
+                );
+              } else {
+                $("#CusName").append(
+                  `<option value='${obj.CustomerId}'>${obj.CustomerName}</option>`
+                );
+              }
             });
           }
         },
@@ -115,9 +120,8 @@ function ShowPro(QuotationId) {
           $("#CusNameIp").attr("disabled", "");
         },
       });
-      console.log(CustomerId);
       $("#CusName").val(CustomerId);
-      $("#QDate").val(QuotationDate);
+      $("#QDate").val(QuotationDate || '-');
       $("#CusEmail").val(CustomerEmail);
       $("#ComName").val(CompanyName);
       $("#Adress").val(CompanyAddress);
@@ -125,15 +129,13 @@ function ShowPro(QuotationId) {
       $("#PJ_Name").val(QuotationSubject);
       $("#PJ_Discount").val(QuotationDiscount);
       $("#PJ_Validity").val(QuotationValidityDate);
-      // console.log(typeof QuotationPayTerm);
-      $("#PJ_Payment1").val(QuotationPayTerm.QuotationPayTerm1);
-      $("#PJ_Payment2").val(QuotationPayTerm.QuotationPayTerm2);
-      $("#PJ_Payment3").val(QuotationPayTerm.QuotationPayTerm3);
-      if (typeof QuotationPayTerm == "object") {
-        // console.log(Object.keys(QuotationPayTerm).length);
-        // console.log(QuotationPayTerm[`QuotationPayTerm${1}`]);
-        $(".box-payment .input-group").remove();
-        for (let i = 1; i <= Object.keys(QuotationPayTerm).length; i++) {
+      let PayTermLength;
+      typeof QuotationPayTerm == "object"
+        ? PayTermLength = Object.keys(QuotationPayTerm).length
+        : PayTermLength = QuotationPayTerm.length;
+      $(".box-payment .input-group").remove();
+      console.log(PayTermLength)
+        for (let i = 1; i <= PayTermLength; i++) {
           $(".box-payment").append(`
           	<div class="input-group mb-1">
               <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="${
@@ -145,9 +147,6 @@ function ShowPro(QuotationId) {
             </div>
         `);
         }
-      } else {
-        console.log(QuotationPayTerm.length);
-      }
       $("#PJ_Delivery").val(QuotationDelivery);
       $("#PJ_Remark").val(QuotationRemark);
       $("#PJ_End_Customer").val(EndCustomer);
@@ -297,8 +296,13 @@ $(document).ready(function () {
 
   //======================== Quotation =============================//
   $("#CusName").change(async (e) => {
-    let CusId = $(this).val();
-    console.log(CusId)
+    let CusId = $("#CusName").val();
+    let url = `/dropdown/customer/${CusId}`
+    data = await AjaxGetData(url);
+    let {CompanyAddress, CompanyName, CustomerEmail} = data;
+    $('#CusEmail').val(CustomerEmail);
+    $('#Adress').val(CompanyAddress);
+    $('#ComName').val(CompanyName);
   });
   //Create Project
   $("#addProject").unbind();
@@ -443,6 +447,7 @@ $(document).ready(function () {
                 method: "put",
                 contentType: "application/json",
                 data: JSON.stringify({
+                  CustomerId: $('#CusName').val(),
                   QuotationSubject: $("#PJ_Name").val(),
                   QuotationDiscount: $("#PJ_Discount").val(),
                   QuotationValidityDate: $("#PJ_Validity").val(),
