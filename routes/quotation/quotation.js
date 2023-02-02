@@ -20,16 +20,31 @@ router.get("/quotation_no_list", async (req, res, next) => {
           FROM privanet.[Quotation] e
           WHERE e.QuotationNoId = a.QuotationNoId
           ORDER BY QuotationStatus) QuotationRevised,
-        (SELECT TOP 1 QuotationNet
+        (SELECT TOP 1 CustomerId
           FROM privanet.[Quotation] f
           WHERE f.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationNet
+          ORDER BY QuotationStatus) CustomerIdQ,
+        (SELECT TOP 1 QuotationNet
+          FROM privanet.[Quotation] g
+          WHERE g.QuotationNoId = a.QuotationNoId
+          ORDER BY QuotationStatus) QuotationRevised
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
       LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId`;
     // WHERE NOT b.CustomerName = N'Fake'
     let pool = await sql.connect(dbconfig);
     let quotationNos = await pool.request().query(getQuotationNoList);
+    for (let Quotation of quotationNos.recordset) {
+      let { CustomerIdQ } = Quotation
+      if (!CustomerIdQ) continue;
+      let getCustomer = await pool.request().query(`SELECT a.CustomerName,b.CompanyName
+        FROM privanet.[MasterCustomer] a
+        LEFT JOIN privanet.[MasterCompany] b on a.CompanyId = b.CompanyId
+        WHERE CustomerId = ${CustomerIdQ}`)
+      let { CustomerName, CompanyName } = getCustomer.recordset[0]
+      Quotation.CustomerName = CustomerName
+      Quotation.CompanyName = CompanyName
+    }
     res.status(200).send(JSON.stringify(quotationNos.recordset));
   } catch (err) {
     console.log(err)

@@ -36,23 +36,21 @@ router.get("/:QuotationId", async (req, res) => {
     let getSetting = `SELECT TableShow, TablePrice, TableQty, TableTotal
       FROM privanet.QuotationSetting
       WHERE QuotationId = ${QuotationId}`;
+    let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent FROM privanet.QuotationPayTerm
+      WHERE QuotationId = ${QuotationId} ORDER BY IndexPayTerm;`
     let quotations = await pool.request().query(getQuotation);
     let settings = await pool.request().query(getSetting);
+    let payterms = await pool.request().query(getPayterm);
     let quotation = quotations.recordset[0];
     let setting = settings.recordset[0];
-    if (quotation.EmployeeApproveId == null)
-      return res.status(400).send({ message: "Please select Approver" });
+    let payterm = payterms.recordset;
+    if (quotation.EmployeeApproveId == null) return res.status(400).send({ message: "Please select Approver" });
     // console.log(setting)
     let quotationNo = "";
     if (quotation.QuotationRevised < 10)
       quotationNo = quotation.QuotationNo + "_0" + quotation.QuotationRevised;
     else quotationNo = quotation.QuotationNo + "_" + quotation.QuotationRevised;
-    let quotationPdf = await createPdf(
-      QuotationId,
-      quotationNo,
-      quotation,
-      setting
-    );
+    let quotationPdf = await createPdf(QuotationId, quotationNo, quotation, setting, payterm);
     let pdfCreator = new pdfMake(fonts);
     console.log("Creating quotation....");
     let pdfDoc = pdfCreator.createPdfKitDocument(quotationPdf, {

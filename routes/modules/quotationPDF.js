@@ -88,7 +88,7 @@ const applySpacing = (name) => {
   return spacebar;
 };
 
-const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
+const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) => {
   let { CustomerName, CustomerEmail, CompanyName, CompanyAddress } = quotation;
   let { EndCustomer, QuotationSubject, QuotationDate } = quotation;
   let { QuotationTotalPrice, QuotationDiscount, QuotationNet } = quotation;
@@ -263,28 +263,33 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
   ];
 
   // condition
-  let getPayTerm = (QuotationPayTerm) => {
-    if (
-      typeof QuotationPayTerm == "object" ||
-      !QuotationPayTerm.includes("QuotationPayTerm")
-    ) {
-      return "-";
-    } else {
-      QuotationPayTerm = JSON.parse(QuotationPayTerm);
-      let payTerms = Object.values(QuotationPayTerm);
-      let payTerm = "";
-      let i = 1;
-      // console.log(payTerms)
-      payTerms.map((term) => {
-        // console.log(term)
-        if (i == 1 && term == "") term = "-";
-        payTerm = payTerm + term + "\n";
-        i++;
-      });
-      return payTerm;
+  let getPayTerm = (QuotationPayTerm, payterm) => {
+    if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
+    QuotationPayTerm = JSON.parse(QuotationPayTerm);
+    let payTerms = Object.values(QuotationPayTerm);
+    let payTerm = "";
+    let i = 1;
+    // console.log(payTerms)
+    payTerms.map((term) => {
+      // console.log(term)
+      if (i == 1 && term == "") term = "-";
+      payTerm = payTerm + term + "\n";
+      i++;
+    });
+    let PayTermArr = "", idx = 1
+    while (idx <= payterm.length) {
+      let { PayTerm, PayPercent } = payterm[idx]
+      PayTermArr += `${PayTerm}  ${PayPercent}\n`
+      idx++
     }
+    if (PayTermArr) return { payTerm: PayTermArr, idx }
+    return { payTerm, idx: i };
   };
-  let payTerm = getPayTerm(QuotationPayTerm);
+  let { payTerm, idx } = getPayTerm(QuotationPayTerm, payterm);
+  let newline = "\n\n\n"
+  for (let i = 4; i < idx; i++) {
+    newline += '\n'
+  }
   let condition = [
     {
       margin: [25, 0, 0, 0],
@@ -295,7 +300,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting) => {
           stack: [
             { text: "CONDITION:", style: "condition", margin: [-22, 0, 0, 0] },
             { text: "Validity:", style: "conditiontext" },
-            { text: "Term of payment:\n\n\n", style: "conditiontext" },
+            { text: `Term of payment:${newline}`, style: "conditiontext" },
             { text: "Delivery:", style: "conditiontext" },
             { text: "Remark:", style: "conditiontext" },
             {
