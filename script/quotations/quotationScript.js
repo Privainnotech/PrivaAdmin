@@ -92,7 +92,6 @@ function ShowPro(QuotationId) {
         contentType: "application/json",
         dataType: "json",
         success: function (res) {
-          console.log("dpMold: ", res);
           if (res.length == 0) {
             $("#CusName option").remove();
             $("#CusName").append("<option value=''>No data</option>");
@@ -121,7 +120,7 @@ function ShowPro(QuotationId) {
         },
       });
       $("#CusName").val(CustomerId);
-      $("#QDate").val(QuotationDate || '-');
+      $("#QDate").val(QuotationDate || "-");
       $("#CusEmail").val(CustomerEmail);
       $("#ComName").val(CompanyName);
       $("#Adress").val(CompanyAddress);
@@ -129,24 +128,31 @@ function ShowPro(QuotationId) {
       $("#PJ_Name").val(QuotationSubject);
       $("#PJ_Discount").val(QuotationDiscount);
       $("#PJ_Validity").val(QuotationValidityDate);
-      let PayTermLength;
-      typeof QuotationPayTerm == "object"
-        ? PayTermLength = Object.keys(QuotationPayTerm).length
-        : PayTermLength = QuotationPayTerm.length;
+      let PayTermLength, PayTermDetail, PayTermPercent;
+      !Array.isArray(QuotationPayTerm)
+        ? (PayTermLength = Object.keys(QuotationPayTerm).length)
+        : (PayTermLength = QuotationPayTerm.length);
       $(".box-payment .input-group").remove();
-      console.log(PayTermLength)
+      if (PayTermLength != 0) {
         for (let i = 1; i <= PayTermLength; i++) {
+          if (!Array.isArray(QuotationPayTerm)) {
+            PayTermDetail = QuotationPayTerm[`QuotationPayTerm${i}`];
+            PayTermPercent = "0";
+          } else {
+            PayTermDetail = QuotationPayTerm[i - 1].PayTerm;
+            PayTermPercent = QuotationPayTerm[i - 1].PayPercent;
+          }
           $(".box-payment").append(`
           	<div class="input-group mb-1">
-              <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="${
-                QuotationPayTerm[`QuotationPayTerm${i}`]
-              }" disabled>
-              <input type="number" class=" edit f-9 mb-0 me-1 payment" value="0" disabled>
+              <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="${PayTermDetail}" disabled>
+              <input type="number" class=" edit f-9 mb-0 me-1 payment" value="${PayTermPercent}" disabled>
               <span class = "bg-white border-0 input-group-text group-title edit f-9 mb-0 ps-2">%</span>
               <button class="btn btn-sm btn-danger payment btn-del-payment" disabled >Del</button>
             </div>
         `);
         }
+      }
+
       $("#PJ_Delivery").val(QuotationDelivery);
       $("#PJ_Remark").val(QuotationRemark);
       $("#PJ_End_Customer").val(EndCustomer);
@@ -297,12 +303,12 @@ $(document).ready(function () {
   //======================== Quotation =============================//
   $("#CusName").change(async (e) => {
     let CusId = $("#CusName").val();
-    let url = `/dropdown/customer/${CusId}`
+    let url = `/dropdown/customer/${CusId}`;
     data = await AjaxGetData(url);
-    let {CompanyAddress, CompanyName, CustomerEmail} = data;
-    $('#CusEmail').val(CustomerEmail);
-    $('#Adress').val(CompanyAddress);
-    $('#ComName').val(CompanyName);
+    let { CompanyAddress, CompanyName, CustomerEmail } = data;
+    $("#CusEmail").val(CustomerEmail);
+    $("#Adress").val(CompanyAddress);
+    $("#ComName").val(CompanyName);
   });
   //Create Project
   $("#addProject").unbind();
@@ -426,28 +432,24 @@ $(document).ready(function () {
             $("#btnEditYes").unbind();
             $("#btnEditYes").click(function () {
               let QuotationPayTerm = [];
-
-              console.log($(".box-payment .input-group").length);
-
               for (let i = 0; i < $(".box-payment .input-group").length; i++) {
                 let pay = $(".box-payment .input-group").eq(i);
-                console.log($(pay).children()[0].value);
                 let pay_detail = $(pay).children()[0].value;
                 let pay_percent = $(pay).children()[1].value;
                 if (pay_detail)
                   QuotationPayTerm.push({
                     PayTerm: pay_detail,
-                    Percent: pay_percent,
+                    Percent: parseInt(pay_percent),
                   });
               }
 
-              console.log(QuotationPayTerm);
+              // console.log('send QuotationPayTerm: ',QuotationPayTerm);
               $.ajax({
                 url: "/quotation/edit_quotation/" + QuotationId,
                 method: "put",
                 contentType: "application/json",
                 data: JSON.stringify({
-                  CustomerId: $('#CusName').val(),
+                  CustomerId: $("#CusName").val(),
                   QuotationSubject: $("#PJ_Name").val(),
                   QuotationDiscount: $("#PJ_Discount").val(),
                   QuotationValidityDate: $("#PJ_Validity").val(),
@@ -473,6 +475,7 @@ $(document).ready(function () {
                   $("#btn-text").text("Edit");
                   $fieldProject.attr("disabled", "disabled");
                   $("#btn_AddPayment").hide();
+                  $(".payment").attr("disabled", "");
                 },
                 error: function (err) {
                   errorText = err.responseJSON.message;
@@ -498,6 +501,7 @@ $(document).ready(function () {
             $("#btn-text").text("Save");
             $fieldProject.removeAttr("disabled");
             $(".payment").removeAttr("disabled");
+
             $("#btn_AddPayment").show();
             $("#btn_AddPayment").unbind();
             $("#btn_AddPayment").click(function () {
@@ -509,6 +513,15 @@ $(document).ready(function () {
                   <button class="btn btn-sm btn-danger payment btn-del-payment" >Del</button>
                 </div>
               `);
+              $(".btn-del-payment").unbind();
+              $(".btn-del-payment").click(function (e) {
+                $(e.target).parent().remove();
+              });
+            });
+
+            $(".btn-del-payment").unbind();
+            $(".btn-del-payment").click(function (e) {
+              $(e.target).parent().remove();
             });
           }
         });
