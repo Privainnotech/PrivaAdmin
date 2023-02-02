@@ -196,6 +196,7 @@ hr {
 
 #ProNo {
   padding-left: 0;
+  display: inline-block;
   margin: 0;
 }
 
@@ -215,18 +216,12 @@ hr {
   text-align: right;
 }
 
-#CusName {
-  margin: 0;
-}
 
 .right {
   display: flex;
   justify-content: center;
 }
-#ProNo {
-  display: inline-block;
-  margin: 0;
-}
+
 .approve-float {
   display: inline-block;
   margin-left: auto;
@@ -282,8 +277,15 @@ input[type=number].payment:disabled {
   border: 0;
 }
 
+.group-title{
+  border: none;
+  background: white;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
 @media only screen and (max-width: 768px) {
-  .title h2 {
+  /* .title h2 {
     font-size: 20px;
   }
   span.group-title.input-group-text.mg-0 {
@@ -297,17 +299,17 @@ input[type=number].payment:disabled {
   }
   .btn-group.right button {
     font-size: 0.5rem;
-  }
+  } */
 }
 
 @media only screen and (min-width: 1024px) {
-  body {
+  /* body {
     font-size: 0.7rem;
   }
 
   .btn-group.right button {
     font-size: 0.7rem;
-  }
+  } */
 
   .title.v-2 {
     display: block;
@@ -330,7 +332,7 @@ input[type=number].payment:disabled {
     font-weight: 500;
   }
 
-  span.group-title.input-group-text.mg-0 {
+  /* span.group-title.input-group-text.mg-0 {
     font-size: 1rem;
   }
 
@@ -343,7 +345,7 @@ input[type=number].payment:disabled {
   }
   .no-bor {
     font-size: 0.8rem;
-  }
+  } */
 
   .textbox {
     width: 95px;
@@ -395,14 +397,14 @@ input[type=number].payment:disabled {
     color: #111;
   }
 
-  .input-group-text.mg-0 {
+  /* .input-group-text.mg-0 {
     font-size: 0.9rem;
   }
   .no-bor {
     font-size: 0.9rem;
-  }
+  } */
 
-  input.group-title {
+  /* input.group-title {
     font-size: 1.2rem;
-  }
+  } */
 }

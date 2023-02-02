@@ -143,10 +143,10 @@ function ShowPro(QuotationId) {
             PayTermPercent = QuotationPayTerm[i - 1].PayPercent;
           }
           $(".box-payment").append(`
-          	<div class="input-group mb-1">
-              <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="${PayTermDetail}" disabled>
-              <input type="number" class=" edit f-9 mb-0 me-1 payment" value="${PayTermPercent}" disabled>
-              <span class = "bg-white border-0 input-group-text group-title edit f-9 mb-0 ps-2">%</span>
+          	<div class="input-group mb-2">
+              <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
+              <input type="number" class=" mb-0 me-1 payment" value="${PayTermPercent}" disabled>
+              <span class = "bg-white border-0 input-group-text group-title mb-0 ps-2">%</span>
               <button class="btn btn-sm btn-danger payment btn-del-payment" disabled >Del</button>
             </div>
         `);
@@ -506,10 +506,10 @@ $(document).ready(function () {
             $("#btn_AddPayment").unbind();
             $("#btn_AddPayment").click(function () {
               $(".box-payment").append(`
-                <div class="input-group mb-1">
-                  <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="">
-                  <input type="number" class="edit f-9 mb-0 me-1 payment" value="">
-                  <span class = "bg-white border-0 input-group-text group-title edit f-9 mb-0 ps-2">%</span>
+                <div class="input-group mb-2">
+                  <input type="text" class="form-control mb-0 me-3 payment" value="">
+                  <input type="number" class="mb-0 me-1 payment" value="">
+                  <span class = "bg-white border-0 input-group-text group-title mb-0 ps-2">%</span>
                   <button class="btn btn-sm btn-danger payment btn-del-payment" >Del</button>
                 </div>
               `);
