@@ -72,7 +72,7 @@ CREATE Table [QuotationNo]
 (
 	QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
-
+	CustomerId bigint NULL
 )
 
 CREATE Table [Quotation]
