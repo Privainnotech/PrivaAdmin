@@ -19,11 +19,14 @@ router.get("/quotation_no_list", async (req, res, next) => {
         (SELECT TOP 1 QuotationRevised
           FROM privanet.[Quotation] e
           WHERE e.QuotationNoId = a.QuotationNoId
+          ORDER BY QuotationStatus) QuotationRevised,
+        (SELECT TOP 1 QuotationNet
+          FROM privanet.[Quotation] f
+          WHERE f.QuotationNoId = a.QuotationNoId
           ORDER BY QuotationStatus) QuotationRevised
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
       LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId`;
-
     // WHERE NOT b.CustomerName = N'Fake'
     let pool = await sql.connect(dbconfig);
     let quotationNos = await pool.request().query(getQuotationNoList);
@@ -42,7 +45,7 @@ router.get("/quotation_list/:QuotationNoId", async (req, res, next) => {
           order by a.QuotationStatus,a.QuotationRevised desc,a.QuotationUpdatedDate desc
         ) as 'index',
         b.QuotationNoId, a.QuotationId, a.QuotationStatus, b.QuotationNo,
-        a.QuotationRevised, a.QuotationSubject,
+        a.QuotationRevised, a.QuotationSubject,a.QuotationNet,
         FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
         FORMAT(a.QuotationUpdatedDate, 'dd-MM-yyyy HH:mm') QuotationUpdatedDate,
         c.StatusName, a.EmployeeApproveId, d.EmployeeFname, a.QuotationApproval
@@ -88,8 +91,8 @@ router.get("/:QuotationId", async (req, res) => {
     let QuotationId = req.params.QuotationId;
     let getQuotation = `SELECT
         b.QuotationNoId, b.QuotationNo, a.QuotationRevised, a.QuotationStatus, d.StatusName,
-        c.CustomerName, c.CustomerEmail, f.CompanyName,
-        f.CompanyAddress, a.QuotationId, a.QuotationSubject, a.EndCustomer,
+        a.CustomerId, c.CustomerName, c.CustomerEmail,f.CompanyName, f.CompanyAddress,
+        a.QuotationId, a.QuotationSubject, a.EndCustomer,
         FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
         FORMAT(a.QuotationUpdatedDate, 'dd-MM-yyyy HH:mm') QuotationUpdatedDate,
         a.QuotationTotalPrice, a.QuotationDiscount, a.QuotationNet,
@@ -104,32 +107,47 @@ router.get("/:QuotationId", async (req, res) => {
         g.TableShow, g.TablePrice, g.TableQty, g.TableTotal
       FROM privanet.[Quotation] a
       LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
-      LEFT JOIN privanet.[MasterCustomer] c ON b.CustomerId = c.CustomerId
+      LEFT JOIN privanet.[MasterCustomer] c ON a.CustomerId = c.CustomerId
       LEFT JOIN privanet.[MasterStatus] d ON a.QuotationStatus = d.StatusId
       LEFT JOIN privanet.[MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
       LEFT JOIN privanet.[MasterCompany] f ON c.CompanyId = f.CompanyId
       LEFT JOIN privanet.[QuotationSetting] g ON a.QuotationId = g.QuotationId
       WHERE a.QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
+    let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent FROM privanet.QuotationPayTerm
+      WHERE QuotationId = ${QuotationId};`
+    let payterms = await pool.request().query(getPayterm);
+    // console.log(payterms)
+
     let quotation = quotations.recordset[0]
+    // console.log(quotations)
     let { QuotationNo, QuotationRevised } = quotation;
     let { QuotationPayTerm, EmployeeApproveId } = quotation;
     let { QuotationDetail } = quotation;
-    let Revised = QuotationRevised < 10
-      ? "0" + QuotationRevised.toString()
-      : QuotationRevised.toString();
+    let Revised = QuotationRevised < 10 ? "0" + QuotationRevised.toString() : QuotationRevised.toString();
     quotation.QuotationNo_Revised = `${QuotationNo}_${Revised}`;
     if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) quotation.QuotationPayTerm = "";
-    else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm);
+    else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm.replaceAll("QuotationPayTerm", ""));
     if (!EmployeeApproveId) quotation.EmployeeApproveId = "";
     if (!QuotationDetail) quotation.QuotationDetail = detailDefault;
     else {
       quotation.QuotationDetail = JSON.parse(QuotationDetail);
-      if (quotation.QuotationDetail.blocks.length === 0) {
-        quotation.QuotationDetail = detailDefault;
+      if (Array.isArray(quotation.QuotationDetail)) {
+
+      } else {
+        if (quotation.QuotationDetail.blocks.length === 0) {
+          quotation.QuotationDetail = detailDefault;
+        }
       }
     }
     quotation.QuotationRevised = Revised;
+    let PayTermArr = new Array
+    for (let idx = 1; idx <= payterms.recordset.length; idx++) {
+      let { PayTerm, PayPercent } = payterms.recordset[idx]
+      PayTermArr.push({ PayTerm, PayPercent })
+    }
+    if (PayTermArr.length) quotation.QuotationPayTerm = PayTermArr
+    console.log(quotation)
     res.status(200).send(JSON.stringify(quotation));
   } catch (err) {
     console.log(`${err}`);
@@ -161,14 +179,16 @@ router.get("/subitem/:ItemId", async (req, res) => {
     let getQuotationSubItem = `SELECT row_number() over(order by a.SubItemId) as 'Index',
       c.QuotationId, a.SubItemId, b.ProductId, b.ProductType, b.ProductCode,
       a.SubItemName, a.SubItemPrice, a.SubItemQty, a.SubItemUnit,
-      CONVERT(nvarchar(5), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
+      CONVERT(nvarchar(10), a.SubItemQty)+' '+a.SubItemUnit SubItemQtyUnit
       FROM privanet.[QuotationSubItem] a
       LEFT JOIN privanet.[MasterProduct] b ON a.ProductId = b.ProductId
       LEFT JOIN privanet.[QuotationItem] c ON a.ItemId = c.ItemId
       WHERE a.ItemId = ${ItemId}`;
+    console.log(getQuotationSubItem)
     let quotations = await pool.request().query(getQuotationSubItem);
     res.status(200).send(JSON.stringify(quotations.recordset));
   } catch (err) {
+    console.log(err)
     res.status(500).send({ message: `${err}` });
   }
 });
@@ -185,10 +205,7 @@ router.post("/add_pre_quotation", async (req, res) => {
     let month = checkMonth();
     console.log(month);
     let genQuotationNo = "";
-    let SearchQuotationNo = await pool.request().query(`
-      SELECT *
-      FROM privanet.QuotationNo
-      WHERE QuotationNo LIKE N'pre_${month}%'`);
+    let SearchQuotationNo = await pool.request().query(`SELECT * FROM privanet.QuotationNo WHERE QuotationNo LIKE N'pre_${month}%'`);
     // Check QuotationNo
     let duplicateNo = true;
     let Number = SearchQuotationNo.recordset.length;
@@ -198,28 +215,22 @@ router.post("/add_pre_quotation", async (req, res) => {
       else genQuotationNo = "pre_" + month + Number;
 
       let CheckQuotationNo = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(
-          SELECT *
-          FROM privanet.QuotationNo
-          WHERE QuotationNo = N'${genQuotationNo}'
-        )
-        THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`);
+        WHEN EXISTS(SELECT * FROM privanet.QuotationNo WHERE QuotationNo = N'${genQuotationNo}')
+        THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
       duplicateNo = CheckQuotationNo.recordset[0].check;
       if (duplicateNo) Number++;
     } while (duplicateNo);
     // Insert QuotationNo
-    let InsertQuotationNo = `INSERT INTO privanet.QuotationNo(QuotationNo,CustomerId)
-      VALUES(N'${genQuotationNo}',${CustomerId})
-      SELECT SCOPE_IDENTITY() AS Id`;
+    let InsertQuotationNo = `INSERT INTO privanet.QuotationNo(QuotationNo)
+      VALUES(N'${genQuotationNo}') SELECT SCOPE_IDENTITY() AS Id`;
     let QuotationNo = await pool.request().query(InsertQuotationNo);
     console.log("Quotation NO");
     let QuotationNoId = QuotationNo.recordset[0].Id;
     // Insert Quotation with QuotationNoId
     let InsertQuotation = `INSERT INTO privanet.Quotation(
-        QuotationNoId, QuotationSubject, QuotationUpdatedDate, EmployeeEditId
+        QuotationNoId,CustomerId, QuotationSubject, QuotationUpdatedDate, EmployeeEditId
       )
-      VALUES(${QuotationNoId}, N'${QuotationSubject}', N'${checkTime()}', ${UserId})
+      VALUES(${QuotationNoId}, ${CustomerId}, N'${QuotationSubject}', N'${checkTime()}', ${UserId})
       SELECT SCOPE_IDENTITY() AS Id`;
     let Quotation = await pool.request().query(InsertQuotation);
     console.log("Quotation");
@@ -242,19 +253,13 @@ router.post("/add_item/:QuotationId", async (req, res) => {
     if (ItemName == "") return res.status(400).send({ message: "Please enter Item name" });
     if (ItemPrice == "") ItemPrice = 0;
     if (ItemQty == "") ItemQty = 0;
-    let CheckQuotationItem = await pool.request().query(`SELECT CASE
-      WHEN EXISTS(
-        SELECT *
-        FROM privanet.QuotationItem
-        WHERE ItemName = N'${ItemName}' AND QuotationId = ${QuotationId}
-      )
-      THEN CAST (1 AS BIT)
-      ELSE CAST (0 AS BIT) END AS 'check'`);
+    let CheckQuotationItem = await pool.request().query(`SELECT CASE WHEN EXISTS
+        (SELECT * FROM privanet.QuotationItem WHERE ItemName = N'${ItemName}' AND QuotationId = ${QuotationId})
+      THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
     if (CheckQuotationItem.recordset[0].check) return res.status(400).send({ message: "Duplicate item in quotation" });
     console.log("insert", QuotationId, ItemName, ItemPrice, ItemQty);
     let InsertItem = `INSERT INTO privanet.QuotationItem(QuotationId, ItemName, ItemPrice, ItemQty)
-      VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty})
-      SELECT SCOPE_IDENTITY() AS Id`;
+      VALUES(${QuotationId}, N'${ItemName}', ${ItemPrice}, ${ItemQty}) SELECT SCOPE_IDENTITY() AS Id`;
     let Item = await pool.request().query(InsertItem);
     if (!(ItemPrice === 0 || ItemQty === 0)) PriceQ(Item.recordset[0].Id);
     res.status(201).send({ message: "Successfully add Item" });
@@ -276,35 +281,23 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
     if (SubItemPrice == "") SubItemPrice = 0;
     if (SubItemQty == "") SubItemQty = 0;
     if (ProductId == "") { // Add new product
-      let CheckProduct = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(
-          SELECT *
-          FROM privanet.MasterProduct
-          WHERE ProductName = N'${SubItemName}'
-        )
-        THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`);
+      let CheckProduct = await pool.request().query(`SELECT CASE WHEN EXISTS
+          (SELECT * FROM privanet.MasterProduct WHERE ProductName = N'${SubItemName}')
+        THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
       if (CheckProduct.recordset[0].check) {
-        let getProductId = await pool.request().query(
-          `SELECT ProductId FROM privanet.MasterProduct
-            WHERE ProductName = N'${SubItemName}'`
-        );
+        let getProductId = await pool.request().query(`
+          SELECT ProductId FROM privanet.MasterProduct WHERE ProductName = N'${SubItemName}'`);
         let ProductId = getProductId.recordset[0].ProductId;
         console.log(ProductId, ItemId);
-        let CheckSubItem = await pool.request().query(`SELECT CASE
-          WHEN EXISTS(
-            SELECT *
-            FROM privanet.QuotationSubItem 
-            WHERE ProductId = ${ProductId} and ItemId = ${ItemId}
-          )
-          THEN CAST (1 AS BIT)
-          ELSE CAST (0 AS BIT) END AS 'check'`);
+        let CheckSubItem = await pool.request().query(`SELECT CASE WHEN EXISTS
+            (SELECT * FROM privanet.QuotationSubItem  WHERE ProductId = ${ProductId} and ItemId = ${ItemId})
+          THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
         if (CheckSubItem.recordset[0].check) return res.status(400).send({ message: "Duplicate Sub-item" })
         console.log("check");
         let InsertSubItem = `INSERT INTO privanet.QuotationSubItem
-            (ItemId, ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit)
-            VALUES(${ItemId}, ${ProductId}, N'${SubItemName}', ${SubItemPrice},
-              ${SubItemQty}, N'${SubItemUnit}')`;
+          (ItemId, ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit)
+          VALUES(${ItemId}, ${ProductId}, N'${SubItemName}', ${SubItemPrice},
+            ${SubItemQty}, N'${SubItemUnit}')`;
         await pool.request().query(InsertSubItem);
         if (!(SubItemPrice === 0 || SubItemQty === 0)) PriceI(ItemId);
         res.status(201).send({ message: "Sub-item has been added" });
@@ -312,17 +305,14 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
         let month = checkMonth();
         let ProductCode = "";
         let CheckProductCode = await pool.request().query(`
-          SELECT *
-          FROM privanet.MasterProduct
-          WHERE ProductCode LIKE N'%${month}%'`);
+          SELECT * FROM privanet.MasterProduct WHERE ProductCode LIKE N'%${month}%'`);
         let length = CheckProductCode.recordset.length;
         if (length < 10) ProductCode = ProductType[0] + "_" + month + "00" + length;
         else if (length < 100) ProductCode = ProductType[0] + "_" + month + "0" + length;
         else ProductCode = ProductType[0] + "_" + month + length;
         console.log("Gen ProductCode: " + ProductCode);
         let InsertProduct = `INSERT INTO privanet.MasterProduct(ProductCode, ProductName, ProductType)
-          VALUES(N'${ProductCode}', N'${SubItemName}', N'${ProductType}')
-          SELECT SCOPE_IDENTITY() AS Id`;
+          VALUES(N'${ProductCode}', N'${SubItemName}', N'${ProductType}') SELECT SCOPE_IDENTITY() AS Id`;
         let newProduct = await pool.request().query(InsertProduct);
         console.log("ProductId: " + newProduct.recordset[0].Id);
         let InsertSubItem = `INSERT INTO privanet.QuotationSubItem
@@ -334,19 +324,13 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
         res.status(201).send({ message: "Sub-item has been added" });
       }
     } else { // Already have product
-      let CheckSubItem = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(
-          SELECT *
-          FROM privanet.QuotationSubItem
-          WHERE ProductId = ${ProductId} and ItemId = ${ItemId}
-        )
-        THEN CAST (1 AS BIT)
-        ELSE CAST (0 AS BIT) END AS 'check'`);
+      let CheckSubItem = await pool.request().query(`SELECT CASE WHEN EXISTS
+          (SELECT * FROM privanet.QuotationSubItem WHERE ProductId = ${ProductId} and ItemId = ${ItemId})
+        THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
       if (CheckSubItem.recordset[0].check) return res.status(400).send({ message: "Duplicate Sub-item" });
       let InsertSubItem = `INSERT INTO privanet.QuotationSubItem
         (ItemId, ProductId, SubItemName, SubItemPrice,SubItemQty, SubItemUnit)
-        VALUES(${ItemId}, ${ProductId}, N'${SubItemName}', ${SubItemPrice},
-          N'${SubItemQty}', N'${SubItemUnit}')`;
+        VALUES(${ItemId}, ${ProductId}, N'${SubItemName}', ${SubItemPrice}, N'${SubItemQty}', N'${SubItemUnit}')`;
       await pool.request().query(InsertSubItem);
       if (!(SubItemPrice === 0 || SubItemQty === 0)) PriceI(ItemId);
       res.status(201).send({ message: "Sub-item has been added" });
@@ -363,8 +347,7 @@ router.delete("/delete_quotation/:QuotationId", async (req, res) => {
     let Status = await pool.request().query(`SELECT QuotationStatus, QuotationRevised
       FROM privanet.Quotation WHERE QuotationId = ${QuotationId}`);
     if (Status.recordset[0].QuotationStatus != 1) return res.status(400).send({ message: "Cannot delete quotation" });
-    let selectItem = await pool.request().query(`SELECT ItemId FROM privanet.QuotationItem
-      WHERE QuotationId = ${QuotationId}`);
+    let selectItem = await pool.request().query(`SELECT ItemId FROM privanet.QuotationItem WHERE QuotationId = ${QuotationId}`);
     if (selectItem.recordset.length) for (const item of selectItem.recordset) // Delete SubItem
       await pool.request().query(`DELETE FROM privanet.QuotationSubItem WHERE ItemId=${item.ItemId}`);
     let DeleteQuotation = `DECLARE @QuotationNoId bigint;
@@ -432,31 +415,61 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
     let UserId = req.session.UserId;
     if (!UserId) return res.status(400).send({ message: "Please login" });
     let QuotationId = req.params.QuotationId;
-    let { QuotationSubject, QuotationValidityDate } = req.body;
+    let { QuotationSubject, QuotationValidityDate, CustomerId } = req.body;
     let { QuotationPayTerm, QuotationDelivery, QuotationDiscount } = req.body;
     let { QuotationRemark, EmployeeApproveId, EndCustomer } = req.body;
-    let PayTerm = JSON.stringify(QuotationPayTerm);
+    if (!CustomerId) return res.status(400).send({ message: "Please select Customer" });
+    if (!EmployeeApproveId) return res.status(400).send({ message: "Please select Approver" });
     let ValidityDateFilter = QuotationValidityDate.replace(/'/g, "''");
-    let PayTermFilter = PayTerm.replace(/'/g, "''");
     let DeliveryFilter = QuotationDelivery.replace(/'/g, "''");
     let RemarkFilter = QuotationRemark.replace(/'/g, "''");
     let EndCustomerFilter = EndCustomer.replace(/'/g, "''");
-    if (EmployeeApproveId == "") return res.status(400).send({ message: "Please select Approver" });
-
     // Update Quotation
-    let UpdateQuotation = `UPDATE privanet.Quotation
-      SET QuotationSubject = N'${QuotationSubject}', QuotationDiscount = ${QuotationDiscount || 0},
-        QuotationValidityDate = N'${ValidityDateFilter}',  QuotationPayTerm = N'${PayTermFilter}',
-        QuotationDelivery = N'${DeliveryFilter}', QuotationRemark = N'${RemarkFilter}',
-        EmployeeApproveId = ${EmployeeApproveId}, EndCustomer = N'${EndCustomerFilter}',
-        EmployeeEditId = ${UserId}
-      WHERE QuotationId = ${QuotationId};`;
-    await pool.request().query(UpdateQuotation);
+    if (Array.isArray(QuotationPayTerm)) { // Array
+      let UpdateQuotation = `UPDATE privanet.Quotation
+        SET QuotationSubject = N'${QuotationSubject}', CustomerId = ${CustomerId}, QuotationDiscount = ${QuotationDiscount || 0},
+          QuotationValidityDate = N'${ValidityDateFilter}', QuotationDelivery = N'${DeliveryFilter}',
+          QuotationRemark = N'${RemarkFilter}', EmployeeApproveId = ${EmployeeApproveId},
+          EndCustomer = N'${EndCustomerFilter}', EmployeeEditId = ${UserId}
+        WHERE QuotationId = ${QuotationId};`;
+      await pool.request().query(UpdateQuotation);
+      let QuotationPayLength = QuotationPayTerm.length
+      for (let idx = 0; idx < QuotationPayLength; idx++) {
+        let { PayTerm, PayPercent } = QuotationPayTerm[idx]
+        let checkPayTerm = await pool.request().query(`SELECT IndexPayTerm
+          FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1}`)
+        if (checkPayTerm.recordset.length) await pool.request().query(`UPDATE privanet.QuotationPayTerm
+          SET PayTerm = N'${PayTerm}', PayPercent = ${PayPercent || 0}
+          WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
+        else await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
+          (QuotationId,IndexPayTerm,PayTerm,PayPercent)
+          VALUES(${QuotationId},${idx + 1},N'${PayTerm}',${PayPercent || 0});`);
+      }
+      let checkPayTermLength = await pool.request().query(`SELECT COUNT(IndexPayTerm) PayTermLength
+        FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId}`)
+      let { PayTermLength } = checkPayTermLength.recordset[0]
+      for (let idx = 0; idx < PayTermLength - QuotationPayLength; idx++)
+        await pool.request().query(`DELETE FROM privanet.QuotationPayTerm
+          WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${PayTermLength - idx};`)
+    } else { // JSON
+      let PayTerm = JSON.stringify(QuotationPayTerm);
+      let PayTermFilter = PayTerm.replace(/'/g, "''");
+      let UpdateQuotation = `UPDATE privanet.Quotation
+        SET QuotationSubject = N'${QuotationSubject}', CustomerId = ${CustomerId},
+          QuotationDiscount = ${QuotationDiscount || 0}, QuotationValidityDate = N'${ValidityDateFilter}',
+          QuotationPayTerm = N'${PayTermFilter}', QuotationDelivery = N'${DeliveryFilter}',
+          QuotationRemark = N'${RemarkFilter}', EmployeeApproveId = ${EmployeeApproveId},
+          EndCustomer = N'${EndCustomerFilter}', EmployeeEditId = ${UserId}
+        WHERE QuotationId = ${QuotationId};`;
+      await pool.request().query(UpdateQuotation);
+    }
     res.status(201).send({ message: "Successfully Edit Quotation" });
   } catch (err) {
     res.status(500).send({ message: `${err}` });
   }
 });
+
+
 
 router.put("/edit_detail/:QuotationId", async (req, res) => {
   try {
@@ -465,16 +478,10 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     let { QuotationDetail } = req.body;
     console.log(QuotationDetail);
     let Detail = '';
-    if (QuotationDetail.blocks.length !== 0) {
-      Detail = JSON.stringify(QuotationDetail);
-    }
-    Detail = Detail.replaceAll("&nbsp;", " ")
-      .replaceAll("'", "")
-      .replaceAll("amp;", "");
+    if (QuotationDetail.blocks.length !== 0) Detail = JSON.stringify(QuotationDetail);
+    Detail = Detail.replaceAll("&nbsp;", " ").replaceAll("'", "").replaceAll("amp;", "");
     console.log(Detail);
-    let UpdateDetail = `UPDATE privanet.Quotation
-      SET QuotationDetail = N'${Detail}'
-      WHERE QuotationId = ${QuotationId};`;
+    let UpdateDetail = `UPDATE privanet.Quotation SET QuotationDetail = N'${Detail}' WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(UpdateDetail);
     res.status(201).send({ message: "Successfully Edit Quotation Detail" });
   } catch (err) {

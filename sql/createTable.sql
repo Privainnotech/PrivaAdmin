@@ -72,20 +72,20 @@ CREATE Table [QuotationNo]
 (
 	QuotationNoId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
 	QuotationNo NVARCHAR(20) NOT NULL UNIQUE,
-	CustomerId bigint NOT NULL
-		FOREIGN KEY (CustomerId) REFERENCES MasterCustomer(CustomerId)
+
 )
 
 CREATE Table [Quotation]
 (
 	QuotationId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
-	QuotationNoId bigint NOT NULL,
+	QuotationNoId bigint NOT NULL FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
+	CustomerId bigint NULL FOREIGN KEY (CustomerId) REFERENCES privanet.MasterCustomer(CustomerId),
 	QuotationRevised int NOT NULL DEFAULT 0,
 	QuotationSubject NVARCHAR(255) NOT NULL,
 	EndCustomer NVARCHAR(255) NOT NULL DEFAULT N'-',
 	QuotationDate date NULL,
 	QuotationUpdatedDate datetime NULL,
-	QuotationStatus int NOT NULL DEFAULT 1,
+	QuotationStatus int NOT NULL DEFAULT 1 FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
 	QuotationTotalPrice money NULL DEFAULT 0,
 	QuotationDiscount money NULL DEFAULT 0,
 	QuotationNet AS QuotationTotalPrice - QuotationDiscount,
@@ -99,11 +99,8 @@ CREATE Table [Quotation]
 	QuotationDetail1 NVARCHAR(MAX) NULL,
 	QuotationDetail2 NVARCHAR(MAX) NULL,
 	QuotationApproval int NOT NULL DEFAULT 0,
-	EmployeeApproveId bigint NULL,
+	EmployeeApproveId bigint NULL FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId),
 	EmployeeEditId bigint NULL
-		FOREIGN KEY (QuotationNoId) REFERENCES QuotationNo(QuotationNoId),
-	FOREIGN KEY (QuotationStatus) REFERENCES MasterStatus(StatusId),
-	FOREIGN KEY (EmployeeApproveId) REFERENCES MasterEmployee(EmployeeId),
 )
 
 CREATE TABLE [QuotationPayTerm]
@@ -111,7 +108,7 @@ CREATE TABLE [QuotationPayTerm]
 	QuotationId bigint NOT NULL,
 	IndexPayTerm int NOT NULL,
 	PayTerm NVARCHAR(255) NULL,
-	PayPercent int NULL
+	PayPercent float NULL
 )
 
 CREATE Table [QuotationSetting]
