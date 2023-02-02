@@ -221,8 +221,8 @@ router.post("/add_pre_quotation", async (req, res) => {
       if (duplicateNo) Number++;
     } while (duplicateNo);
     // Insert QuotationNo
-    let InsertQuotationNo = `INSERT INTO privanet.QuotationNo(QuotationNo)
-      VALUES(N'${genQuotationNo}') SELECT SCOPE_IDENTITY() AS Id`;
+    let InsertQuotationNo = `INSERT INTO privanet.QuotationNo(QuotationNo,CustomerId)
+      VALUES(N'${genQuotationNo}', ${CustomerId}) SELECT SCOPE_IDENTITY() AS Id`;
     let QuotationNo = await pool.request().query(InsertQuotationNo);
     console.log("Quotation NO");
     let QuotationNoId = QuotationNo.recordset[0].Id;
