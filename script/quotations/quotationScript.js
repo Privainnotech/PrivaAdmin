@@ -1,5 +1,5 @@
 const $fieldProject = $(
-  "#PJ_Name, #PJ_Discount, #PJ_End_Customer, #PJ_Validity, #PJ_Delivery, #PJ_Remark, #PJ_Approve"
+  "#PJ_Name, #PJ_Discount, #PJ_End_Customer, #PJ_Validity, #PJ_Delivery, #PJ_Remark, #PJ_Approve, #CusName"
 );
 const $SettingTable = $(
   "#IP-Set-TableShow, #IP-Set-TablePrice, #IP-Set-TableQty, #IP-Set-TableTotal"
@@ -47,7 +47,7 @@ function ShowPro(QuotationId) {
       let {
         QuotationApproval,
         QuotationNo_Revised,
-        CustomerName,
+        CustomerId,
         QuotationDate,
         CustomerEmail,
         CompanyName,
@@ -85,7 +85,38 @@ function ShowPro(QuotationId) {
       }
       $("#ProNo").html(`${QuotationNo_Revised} ${ApproveStatus}`);
       // $('#Revised').val("_"+QuotationRevised);
-      $("#CusName").val(CustomerName);
+      //dropdown customer
+      $.ajax({
+        url: `/dropdown/customer`,
+        method: "get",
+        contentType: "application/json",
+        dataType: "json",
+        success: function (res) {
+          console.log("dpMold: ", res);
+          if (res.length == 0) {
+            $("#CusName option").remove();
+            $("#CusName").append("<option value='No data'>");
+            $("#CusName").attr("disabled", "");
+          } else {
+            $("#CusName option").remove();
+            $("#CusName optgroup").remove();
+            $("#CusName").append("<option value=''> ");
+            res.forEach((obj) => {
+              console.log(obj);
+              $("#CusName").append(
+                `<option value='${obj.CustomerId}'>${obj.CustomerName}</option>`
+              );
+            });
+          }
+        },
+        error: function (err) {
+          $("#CusName option").remove();
+          $("#CusName").append("<option value='No data'>");
+          $("#CusNameIp").attr("disabled", "");
+        },
+      });
+      console.log(CustomerId);
+      $("#CusName").val(CustomerId);
       $("#QDate").val(QuotationDate);
       $("#CusEmail").val(CustomerEmail);
       $("#ComName").val(CompanyName);
@@ -94,13 +125,13 @@ function ShowPro(QuotationId) {
       $("#PJ_Name").val(QuotationSubject);
       $("#PJ_Discount").val(QuotationDiscount);
       $("#PJ_Validity").val(QuotationValidityDate);
-      console.log(typeof QuotationPayTerm);
+      // console.log(typeof QuotationPayTerm);
       $("#PJ_Payment1").val(QuotationPayTerm.QuotationPayTerm1);
       $("#PJ_Payment2").val(QuotationPayTerm.QuotationPayTerm2);
       $("#PJ_Payment3").val(QuotationPayTerm.QuotationPayTerm3);
       if (typeof QuotationPayTerm == "object") {
         // console.log(Object.keys(QuotationPayTerm).length);
-        console.log(QuotationPayTerm[`QuotationPayTerm${1}`]);
+        // console.log(QuotationPayTerm[`QuotationPayTerm${1}`]);
         $(".box-payment .input-group").remove();
         for (let i = 1; i <= Object.keys(QuotationPayTerm).length; i++) {
           $(".box-payment").append(`
@@ -262,8 +293,13 @@ $(document).ready(function () {
   fill_quotation();
 
   $("#save-button").hide();
+  $("#btn_AddPayment").hide();
 
   //======================== Quotation =============================//
+  $("#CusName").change(async (e) => {
+    let CusId = $(this).val();
+    console.log(CusId)
+  });
   //Create Project
   $("#addProject").unbind();
   $("#addProject").on("click", function () {
@@ -287,6 +323,7 @@ $(document).ready(function () {
   $("#tableQuoHead tbody").unbind();
   $("#tableQuoHead tbody").on("click", "tr", function () {
     $("#save-button").hide();
+    $("#btn_AddPayment").hide();
     $StatusButton.attr("disabled", "disabled");
     removeDetailPaper();
     hideAdd();
@@ -329,6 +366,7 @@ $(document).ready(function () {
   //clickTableQuotation
   $("#tableQuo tbody").unbind();
   $("#tableQuo tbody").on("click", "tr", function () {
+    $("#btn_AddPayment").hide();
     fill_resetSubTable();
     $("#btn-text").text("Edit");
     $fieldProject.attr("disabled", "");
@@ -375,7 +413,6 @@ $(document).ready(function () {
         //Show Setting
         ShowSetting();
 
-
         $("#modalEditProject").unbind();
         $("#modalEditProject").click(function () {
           if ($("#modalEditProject").hasClass("save")) {
@@ -384,64 +421,67 @@ $(document).ready(function () {
 
             $("#btnEditYes").unbind();
             $("#btnEditYes").click(function () {
-              let QuotationPayTerm = []
-              
+              let QuotationPayTerm = [];
+
               console.log($(".box-payment .input-group").length);
-              
+
               for (let i = 0; i < $(".box-payment .input-group").length; i++) {
                 let pay = $(".box-payment .input-group").eq(i);
                 console.log($(pay).children()[0].value);
                 let pay_detail = $(pay).children()[0].value;
                 let pay_percent = $(pay).children()[1].value;
-                if (pay_detail) QuotationPayTerm.push({PayTerm: pay_detail,Percent: pay_percent})
+                if (pay_detail)
+                  QuotationPayTerm.push({
+                    PayTerm: pay_detail,
+                    Percent: pay_percent,
+                  });
               }
 
-              console.log(QuotationPayTerm)
-              // $.ajax({
-              //   url: "/quotation/edit_quotation/" + QuotationId,
-              //   method: "put",
-              //   contentType: "application/json",
-              //   data: JSON.stringify({
-              //     QuotationSubject: $("#PJ_Name").val(),
-              //     QuotationDiscount: $("#PJ_Discount").val(),
-              //     QuotationValidityDate: $("#PJ_Validity").val(),
-              //     QuotationPayTerm: QuotationPayTerm,
-              //     QuotationDelivery: $("#PJ_Delivery").val(),
-              //     QuotationRemark: $("#PJ_Remark").val(),
-              //     EndCustomer: $("#PJ_End_Customer").val(),
-              //     EmployeeApproveId: $("#PJ_Approve").val(),
-              //   }),
-              //   success: function () {
-              //     Swal.fire({
-              //       position: "center",
-              //       icon: "success",
-              //       title: "Saved",
-              //       text: "Successfully Edit Quotation",
-              //       showConfirmButton: false,
-              //       timer: 1500,
-              //     });
-              //     tableQuo.ajax.reload(null, false);
-              //     ShowPro(QuotationId);
-              //     $("#modalEditProject").removeClass("save");
-              //     $("#btn-text").text("Edit");
-              //     $fieldProject.attr("disabled", "disabled");
-              //     $("#PJ_Payment1").attr("disabled", "disabled");
-              //     $("#PJ_Payment2").attr("disabled", "disabled");
-              //     $("#PJ_Payment3").attr("disabled", "disabled");
-              //   },
-              //   error: function (err) {
-              //     errorText = err.responseJSON.message;
-              //     Swal.fire({
-              //       position: "center",
-              //       icon: "warning",
-              //       title: "Warning",
-              //       text: errorText,
-              //       showConfirmButton: true,
-              //       confirmButtonText: "OK",
-              //       confirmButtonColor: "#FF5733",
-              //     });
-              //   },
-              // });
+              console.log(QuotationPayTerm);
+              $.ajax({
+                url: "/quotation/edit_quotation/" + QuotationId,
+                method: "put",
+                contentType: "application/json",
+                data: JSON.stringify({
+                  QuotationSubject: $("#PJ_Name").val(),
+                  QuotationDiscount: $("#PJ_Discount").val(),
+                  QuotationValidityDate: $("#PJ_Validity").val(),
+                  QuotationPayTerm: QuotationPayTerm,
+                  QuotationDelivery: $("#PJ_Delivery").val(),
+                  QuotationRemark: $("#PJ_Remark").val(),
+                  EndCustomer: $("#PJ_End_Customer").val(),
+                  EmployeeApproveId: $("#PJ_Approve").val(),
+                }),
+                success: function () {
+                  Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Saved",
+                    text: "Successfully Edit Quotation",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                  tableQuo.ajax.reload(null, false);
+                  tableQuoHead.ajax.reload(null, false);
+                  ShowPro(QuotationId);
+                  $("#modalEditProject").removeClass("save");
+                  $("#btn-text").text("Edit");
+                  $fieldProject.attr("disabled", "disabled");
+                  $("#btn_AddPayment").hide();
+                },
+                error: function (err) {
+                  errorText = err.responseJSON.message;
+                  Swal.fire({
+                    position: "center",
+                    icon: "warning",
+                    title: "Warning",
+                    text: errorText,
+                    showConfirmButton: true,
+                    confirmButtonText: "OK",
+                    confirmButtonColor: "#FF5733",
+                  });
+                },
+              });
               $("#modalEditConfirm").modal("hide");
             });
             $(".close,.no").click(function () {
@@ -452,11 +492,10 @@ $(document).ready(function () {
             $("#modalEditProject").addClass("save");
             $("#btn-text").text("Save");
             $fieldProject.removeAttr("disabled");
-            $(".payment").removeAttr('disabled')
-
+            $(".payment").removeAttr("disabled");
+            $("#btn_AddPayment").show();
             $("#btn_AddPayment").unbind();
             $("#btn_AddPayment").click(function () {
-
               $(".box-payment").append(`
                 <div class="input-group mb-1">
                   <input type="text" class="form-control edit f-9 mb-0 me-3 payment" value="">
@@ -1130,6 +1169,7 @@ $(document).ready(function () {
   });
 
   //dropdown Product
+  $("#modalInpProduct").unbind();
   $("#modalInpProduct").click(function () {
     let ProductId = $.trim($("#modalInpProduct").val());
     if (ProductId !== "null") {
