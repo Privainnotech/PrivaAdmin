@@ -355,6 +355,7 @@ function fill_quotationHead() {
       {
         data: "QuotationSubject",
         render: function (data, type, row) {
+          console.log(row)
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
@@ -364,6 +365,9 @@ function fill_quotationHead() {
       {
         width: "20%",
         data: "QuotationNet",
+        render: function (data,type,row) {
+          if(!data) return data = "-"  
+        }
       },
     ],
   });
