@@ -42,7 +42,7 @@ function ShowPro(QuotationId) {
     method: "get",
     cache: false,
     success: function (response) {
-      var obj = JSON.parse(response);
+      let obj = JSON.parse(response);
       console.log(obj);
       let {
         QuotationApproval,
@@ -192,54 +192,31 @@ function ShowPro(QuotationId) {
       $(".ql-editor").empty();
       $(".ql-editor").append(QuotationDetail);
       $("#test_send_data").unbind();
-      $("#test_send_data").on("click", () => {
-        console.log(Data);
+      $("#test_send_data").on("click", async () => {
+        let test;
+
+        try {
+          test = await Test(`/quotation/${QuotationId + 2}`);
+          console.log(223);
+        } catch (error) {
+          console.log("error: ", error);
+        }
+        console.log(test);
+
         $(".ql-editor").empty();
         $(".ql-editor").append("");
       });
       //  Edit Detail
       const saveButton = document.getElementById("save-button");
-
       saveButton.addEventListener("click", () => {
         $("#modalEditConfirm").modal("show");
         $(".modal-title").text("Confirm Edit Detail");
         let Data = $(".ql-editor").html();
         $("#btnEditYes").unbind();
         $("#btnEditYes").click(function () {
-          editor.save().then((savedData) => {
-            load = JSON.stringify(savedData, null, 4);
-            $.ajax({
-              url: "/quotation/edit_detail/" + QuotationId,
-              method: "put",
-              contentType: "application/json",
-              data: JSON.stringify({
-                QuotationDetail: savedData,
-              }),
-              success: function () {
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "Edit",
-                  text: "Successfully Edit Detail",
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-              },
-              error: function (err) {
-                errorText = err.responseJSON.message;
-                Swal.fire({
-                  position: "center",
-                  icon: "warning",
-                  title: "Warning",
-                  text: errorText,
-                  showConfirmButton: true,
-                  confirmButtonText: "OK",
-                  confirmButtonColor: "#FF5733",
-                });
-              },
-            });
-            $("#modalEditConfirm").modal("hide");
-          });
+          let url = `/quotation/edit_detail/${QuotationId}`;
+          AjaxPut(url, null, Data);
+          $("#modalEditConfirm").modal("hide");
         });
       });
       $(".close,.no").click(function () {
@@ -267,12 +244,7 @@ function RePro() {
 
 //Remove Detail(Old) Paper
 function removeDetailPaper() {
-  // const detailPaper = document.querySelectorAll(".codex-editor");
-  // if ($("div").hasClass("codex-editor")) {
-  //   detailPaper.forEach((paper) => {
-  //     paper.remove();
-  //   });
-  // }
+  createEditor(true);
 }
 
 //Reset Quo Table
@@ -312,7 +284,9 @@ const createEditor = (readStatus = false) => {
     modules: {
       toolbar: toolbarOption,
     },
-    placeholder: "ตัวอย่างการพิมพ์: 1 รายละเอียด; จำนวน หน่วย; ราคา",
+    placeholder: !readStatus
+      ? "ตัวอย่างการพิมพ์: 1 รายละเอียด; จำนวน หน่วย; ราคา"
+      : "",
     theme: "snow",
     // readOnly: readStatus,
   };
@@ -327,6 +301,7 @@ $(document).ready(function () {
   searchTableQuoHead();
   fill_resetQuoTable();
   fill_quotation();
+  removeDetailPaper();
 
   $("#save-button").hide();
   $("#btn_AddPayment").hide();
@@ -463,18 +438,43 @@ $(document).ready(function () {
             $("#btnEditYes").unbind();
             $("#btnEditYes").click(function () {
               let QuotationPayTerm = [];
-              for (let i = 0; i < $(".box-payment .input-group").length; i++) {
-                let pay = $(".box-payment .input-group").eq(i);
-                let pay_detail = $(pay).children()[0].value;
-                let pay_percent = $(pay).children()[1].value;
-                if (pay_detail)
+              if ($(".box-payment .input-group").length != 0) {
+                for (
+                  let i = 0;
+                  i < $(".box-payment .input-group").length;
+                  i++
+                ) {
+                  let pay = $(".box-payment .input-group").eq(i);
+                  let pay_detail = $(pay).children()[0].value;
+                  let pay_percent = $(pay).children()[1].value;
+                  if (pay_detail) {
+                  }
                   QuotationPayTerm.push({
                     PayTerm: pay_detail,
                     Percent: parseInt(pay_percent),
                   });
+                }
+              } else {
+                QuotationPayTerm.push({
+                  PayTerm: "",
+                  Percent: 0,
+                });
               }
 
               // console.log('send QuotationPayTerm: ',QuotationPayTerm);
+              let url = `/quotation/edit_quotation/${QuotationId}`;
+              let Data = {
+                CustomerId: $("#CusName").val(),
+                QuotationSubject: $("#PJ_Name").val(),
+                QuotationDiscount: $("#PJ_Discount").val(),
+                QuotationValidityDate: $("#PJ_Validity").val(),
+                QuotationPayTerm: QuotationPayTerm,
+                QuotationDelivery: $("#PJ_Delivery").val(),
+                QuotationRemark: $("#PJ_Remark").val(),
+                EndCustomer: $("#PJ_End_Customer").val(),
+                EmployeeApproveId: $("#PJ_Approve").val(),
+              };
+
               $.ajax({
                 url: "/quotation/edit_quotation/" + QuotationId,
                 method: "put",

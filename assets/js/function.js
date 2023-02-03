@@ -16,14 +16,94 @@ function AjaxGetData(url) {
           title: "Error...",
           text: error,
         });
-        reject(err)
+        reject(err);
       },
     });
-  })
-  
+  });
 }
+
+function Test(url) {
+  return new Promise(async (resolve, reject) => {
+    $.ajax({
+      url: url,
+      method: "get",
+      contentType: "application/json",
+      dataType: "json",
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (err) {
+        reject(err);
+      },
+    });
+  });
+}
+
+function AjaxDataJson(url, method, data = null) {
+  return new Promise(async (resolve, reject) => {
+    $.ajax({
+      url: url,
+      method: method,
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (err) {
+        reject(err);
+      },
+    });
+  });
+}
+
+function SwalAddSuccess(res) {
+  successText = res.message;
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: "Created",
+    text: successText,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
+function SwalEditSuccess(res) {
+  successText = res.message;
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: "Updated",
+    text: successText,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
+function SwalDeleteSuccess(res) {
+  successText = res.message;
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: "Deleted",
+    text: successText,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
+
+function SwalError(err) {
+  errorText = err.responseJSON.message;
+  Swal.fire({
+    position: "center",
+    icon: "warning",
+    title: "Warning",
+    text: errorText,
+    showConfirmButton: true,
+    confirmButtonText: "OK",
+    confirmButtonColor: "#FF5733",
+  });
+}
+
 function AjaxGetDownload(url) {
-  console.log("upload url : ", url);
   $.ajax({
     url: url,
     method: "get",
@@ -151,7 +231,7 @@ function AjaxPost(url, table1, table2 = null, data, modalId = null) {
       });
       table1.ajax.reload(null, false);
       if (table2 != null) table2.ajax.reload(null, false);
-        
+
       modalId != null ? modalId.modal("hide") : console.log("no modal");
     },
     error: (err) => {
@@ -247,48 +327,35 @@ const AjaxImportExcel = (url, table, exFile = {}) => {
     },
   });
 };
-function AjaxDelete(url, table1, table2 = null) {
-  Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      $.ajax({
-        url: url,
-        method: "delete",
-        contentType: "application/json",
-        success: (res) => {
-          let success = res.message;
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Deleted",
-            text: success,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          table1.ajax.reload(null, false);
-          if (table2 != null) table2.ajax.reload(null, false);
-        },
-        error: (err) => {
-          let error = err.responseJSON.message;
-          console.log(err);
-          Swal.fire({
-            position: "center",
-            icon: "warning",
-            title: "Warning",
-            text: error,
-            showConfirmButton: true,
-            confirmButtonText: "OK",
-            confirmButtonColor: "#FF5733",
-          });
-        },
-      });
-    }
-  });
+function AjaxDelete(url) {
+  return new Promise(async (resolve, reject) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: url,
+          method: "delete",
+          contentType: "application/json",
+          success: (res) => {
+            resolve(res);
+            // SwalDeleteSuccess(res)
+            // table1.ajax.reload(null, false);
+            // if (table2 != null) table2.ajax.reload(null, false);
+          },
+          error: (err) => {
+            reject(err);
+            // SwalError(err);
+          },
+        });
+      }
+    });
+  })
+  
 }
 
 // Search Table Title
@@ -364,9 +431,9 @@ function fill_quotationHead() {
       {
         width: "20%",
         data: "QuotationNet",
-        render: function (data,type,row) {
-          if(!data) return data = "-"  
-        }
+        render: function (data, type, row) {
+          if (!data) return (data = "-");
+        },
       },
     ],
   });
