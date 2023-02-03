@@ -173,45 +173,19 @@ function ShowPro(QuotationId) {
       $("#IP-Set-DetailQty").val(DetailQty);
       $("#IP-Set-DetailTotal").val(DetailTotal);
 
-      // getDetail(Old)
-      // const loadDetail = JSON.stringify(QuotationDetail);
-      // const editor = new EditorJS({
-      //   tools: {
-      //     text: {
-      //       class: SimpleText,
-      //       inlineToolbar: ["link"],
-      //     },
-      //   },
-      // });
-
-      // editor.isReady.then(() => {
-      //   editor.render(JSON.parse(loadDetail));
-      // });
+      
       // getDetail(New)
       QuotationStatus == 1 ? createEditor() : createEditor(true);
       $(".ql-editor").empty();
       $(".ql-editor").append(QuotationDetail);
-      $("#test_send_data").unbind();
-      $("#test_send_data").on("click", async () => {
-        let test;
-
-        try {
-          test = await Test(`/quotation/${QuotationId + 2}`);
-          console.log(223);
-        } catch (error) {
-          console.log("error: ", error);
-        }
-        console.log(test);
-
-        $(".ql-editor").empty();
-        $(".ql-editor").append("");
-      });
+      
       //  Edit Detail
       const saveButton = document.getElementById("save-button");
       saveButton.addEventListener("click", () => {
         $("#modalEditConfirm").modal("show");
         $(".modal-title").text("Confirm Edit Detail");
-        let Data = $(".ql-editor").html();
+        let Data = {QuotationDetail :$(".ql-editor").html()};
+        console.log('Data: ',Data)
         $("#btnEditYes").unbind();
         $("#btnEditYes").click(function () {
           let url = `/quotation/edit_detail/${QuotationId}`;
