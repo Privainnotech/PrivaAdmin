@@ -139,16 +139,25 @@ router.get("/:QuotationId", async (req, res) => {
     let Revised = QuotationRevised < 10 ? "0" + QuotationRevised.toString() : QuotationRevised.toString();
     quotation.QuotationNo_Revised = `${QuotationNo}_${Revised}`;
     if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) quotation.QuotationPayTerm = "";
-    else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm.replaceAll("QuotationPayTerm", ""));
+    else {
+      let PaytermArr = []
+      QuotationPayTerm = JSON.parse(QuotationPayTerm);
+      for (let [key, value] of Object.entries(QuotationPayTerm)) {
+        if (value) PaytermArr.push({ PayTerm: value, PayPercent: 0 })
+      }
+      quotation.QuotationPayTerm = PaytermArr
+    }
     if (!EmployeeApproveId) quotation.EmployeeApproveId = "";
     if (QuotationDetail) {
-      if (QuotationDetail[0] == '<') {
-        quotation.QuotationDetail = QuotationDetail
-      } else {
+      if (QuotationDetail[0] == '<') quotation.QuotationDetail = QuotationDetail
+      else {
         // console.log(JSON.parse(QuotationDetail))
+        console.log(QuotationDetail)
         QuotationDetail = JSON.parse(QuotationDetail);
         let Details = ''
-        if (QuotationDetail.blocks) {
+        console.log(QuotationDetail)
+        if (!QuotationDetail || QuotationDetail == 'null') quotation.QuotationDetail = ''
+        else {
           QuotationDetail.blocks.forEach(block => {
             let { data } = block
             Details += `<p>${data.text}</p>`
@@ -156,9 +165,9 @@ router.get("/:QuotationId", async (req, res) => {
           console.log(Details)
           quotation.QuotationDetail = Details
         }
-
       }
-    }
+    } else quotation.QuotationDetail = ''
+
     quotation.QuotationRevised = Revised;
     let PayTermArr = new Array
     for (let idx = 0; idx < payterms.recordset.length; idx++) {
