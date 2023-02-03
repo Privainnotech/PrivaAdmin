@@ -185,7 +185,7 @@ function ShowPro(QuotationId) {
         $("#modalEditConfirm").modal("show");
         $(".modal-title").text("Confirm Edit Detail");
         let Data = {QuotationDetail :$(".ql-editor").html()};
-        console.log('Data: ',Data)
+        
         $("#btnEditYes").unbind();
         $("#btnEditYes").click(function () {
           let url = `/quotation/edit_detail/${QuotationId}`;
@@ -250,10 +250,8 @@ function fill_resetSubTable() {
 
 // getDetail New
 const createEditor = (readStatus = false) => {
-  
   let toolbarOption = [
     ["bold", "underline"],
-    [{ list: "ordered" }, { list: "bullet" }],
   ];
   let options = {
     modules: {
@@ -424,11 +422,11 @@ $(document).ready(function () {
                   let pay_detail = $(pay).children()[0].value;
                   let pay_percent = $(pay).children()[1].value;
                   if (pay_detail) {
+                    QuotationPayTerm.push({
+                      PayTerm: pay_detail,
+                      Percent: parseInt(pay_percent),
+                    });
                   }
-                  QuotationPayTerm.push({
-                    PayTerm: pay_detail,
-                    Percent: parseInt(pay_percent),
-                  });
                 }
               } else {
                 QuotationPayTerm.push({
@@ -670,8 +668,8 @@ $(document).ready(function () {
 
       // Preview PDF
       $("#btnExample").unbind();
-      $("#btnExample").on("click", function () {
-        $.ajax({
+      $("#btnExample").on("click", async function () {
+       await $.ajax({
           url: "/quotation_report/" + QuotationId,
           method: "get",
           contentType: "application/json",
@@ -686,28 +684,21 @@ $(document).ready(function () {
             $(".loading-title").text("Loading Complete!!");
           },
           success: function (success) {
-            document.getElementById("PreviewPDF").src = "";
+            // document.getElementById("PreviewPDF").src = "";
+            // $('#PreviewPDF').attr('src',``);
             QuotationApproval == 2
               ? $("#btnReqApprove").hide()
               : $("#btnReqApprove").show();
             $("#modalPreview").modal("show");
             $(".modal-title").text("Preview PDF");
             fileName = success.message;
-            document.getElementById("PreviewPDF").src = fileName + "#toolbar=0";
+            // document.getElementById("PreviewPDF").src = fileName + "#toolbar=0";
+            $('#PreviewPDF').attr('src',`${fileName}#toolbar=0`);
             $("#loading-preview i").removeClass("fa-check-circle");
             //
           },
           error: function (err) {
-            errorText = err.responseJSON.message;
-            Swal.fire({
-              position: "center",
-              icon: "warning",
-              title: "Warning",
-              text: errorText,
-              showConfirmButton: true,
-              confirmButtonText: "OK",
-              confirmButtonColor: "#FF5733",
-            });
+            SwalError(err)
           },
         });
 
