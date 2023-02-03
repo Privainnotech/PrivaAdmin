@@ -145,8 +145,18 @@ router.get("/:QuotationId", async (req, res) => {
       if (QuotationDetail[0] == '<') {
         quotation.QuotationDetail = QuotationDetail
       } else {
-        console.log(JSON.parse(QuotationDetail))
-        quotation.QuotationDetail = JSON.parse(QuotationDetail);
+        // console.log(JSON.parse(QuotationDetail))
+        QuotationDetail = JSON.parse(QuotationDetail);
+        let Details = ''
+        if (QuotationDetail.blocks) {
+          QuotationDetail.blocks.forEach(block => {
+            let { data } = block
+            Details += `<p>${data.text}</p>`
+          })
+          console.log(Details)
+          quotation.QuotationDetail = Details
+        }
+
       }
     }
     quotation.QuotationRevised = Revised;

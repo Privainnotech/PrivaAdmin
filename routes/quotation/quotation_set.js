@@ -39,7 +39,7 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
     if (!QuotationPayTerm) QuotationPayTerm = "-";
     if (!QuotationDelivery) QuotationDelivery = "-";
     if (!QuotationRemark) QuotationRemark = "-";
-    let Detail = (!QuotationDetail) ? Detail = null : QuotationDetail;
+    let Detail = (!QuotationDetail) ? null : QuotationDetail;
     if (QuotationStatus == 1) return res.status(400).send({ message: "Cannot revise pre-quotation" });
     // InsertQuotationRevised
     let getRevise = await pool.request()
