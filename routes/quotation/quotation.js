@@ -135,18 +135,19 @@ router.get("/:QuotationId", async (req, res) => {
 
     let quotation = quotations.recordset[0]
     // console.log(quotations)
-    let { QuotationNo, QuotationRevised } = quotation;
-    let { QuotationPayTerm, EmployeeApproveId } = quotation;
-    let { QuotationDetail } = quotation;
+    let { QuotationNo, QuotationRevised, QuotationPayTerm, EmployeeApproveId, QuotationDetail } = quotation;
     let Revised = QuotationRevised < 10 ? "0" + QuotationRevised.toString() : QuotationRevised.toString();
     quotation.QuotationNo_Revised = `${QuotationNo}_${Revised}`;
     if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) quotation.QuotationPayTerm = "";
     else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm.replaceAll("QuotationPayTerm", ""));
     if (!EmployeeApproveId) quotation.EmployeeApproveId = "";
     if (QuotationDetail) {
-      console.log(QuotationDetail)
-      console.log(JSON.parse(QuotationDetail))
-      quotation.QuotationDetail = JSON.parse(QuotationDetail);
+      if (QuotationDetail[0] == '<') {
+        quotation.QuotationDetail = QuotationDetail
+      } else {
+        console.log(JSON.parse(QuotationDetail))
+        quotation.QuotationDetail = JSON.parse(QuotationDetail);
+      }
     }
     quotation.QuotationRevised = Revised;
     let PayTermArr = new Array

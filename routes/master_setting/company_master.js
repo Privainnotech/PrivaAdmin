@@ -94,7 +94,7 @@ router.delete("/delete/:CompanyId", async (req, res) => {
     let DeleteCompany = `UPDATE privanet.MasterCompany
       SET CompanyActive = 0
       WHERE CompanyId = ${CompanyId};
-      UPDATE MasterCustomer
+      UPDATE privanet.MasterCustomer
       SET CustomerActive = 0
       WHERE CompanyId = ${CompanyId};`;
     let pool = await sql.connect(dbconfig);
