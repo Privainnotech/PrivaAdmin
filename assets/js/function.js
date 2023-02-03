@@ -124,6 +124,7 @@ function AjaxGetDownload(url) {
   });
 }
 function AjaxPut(url, table, data, modalId = null) {
+  console.log('data :',data)
   $.ajax({
     url: url,
     method: "put",
@@ -354,8 +355,7 @@ function AjaxDelete(url) {
         });
       }
     });
-  })
-  
+  });
 }
 
 // Search Table Title
