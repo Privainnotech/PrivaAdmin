@@ -132,7 +132,6 @@ router.get("/:QuotationId", async (req, res) => {
     let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent FROM privanet.QuotationPayTerm
       WHERE QuotationId = ${QuotationId};`
     let payterms = await pool.request().query(getPayterm);
-    console.log(payterms)
 
     let quotation = quotations.recordset[0]
     // console.log(quotations)
@@ -144,16 +143,10 @@ router.get("/:QuotationId", async (req, res) => {
     if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) quotation.QuotationPayTerm = "";
     else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm.replaceAll("QuotationPayTerm", ""));
     if (!EmployeeApproveId) quotation.EmployeeApproveId = "";
-    if (!QuotationDetail) quotation.QuotationDetail = detailDefault;
-    else {
+    if (QuotationDetail) {
+      console.log(QuotationDetail)
+      console.log(JSON.parse(QuotationDetail))
       quotation.QuotationDetail = JSON.parse(QuotationDetail);
-      if (Array.isArray(quotation.QuotationDetail)) {
-
-      } else {
-        if (quotation.QuotationDetail.blocks.length === 0) {
-          quotation.QuotationDetail = detailDefault;
-        }
-      }
     }
     quotation.QuotationRevised = Revised;
     let PayTermArr = new Array
@@ -493,7 +486,8 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     let { QuotationDetail } = req.body;
     console.log(QuotationDetail);
     let Detail = '';
-    if (QuotationDetail.blocks.length !== 0) Detail = JSON.stringify(QuotationDetail);
+    if (typeof QuotationDetail == 'object' && QuotationDetail.blocks.length !== 0) Detail = JSON.stringify(QuotationDetail);
+    else Detail = QuotationDetail
     Detail = Detail.replaceAll("&nbsp;", " ").replaceAll("'", "").replaceAll("amp;", "");
     console.log(Detail);
     let UpdateDetail = `UPDATE privanet.Quotation SET QuotationDetail = N'${Detail}' WHERE QuotationId = ${QuotationId};`;
