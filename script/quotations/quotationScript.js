@@ -193,18 +193,16 @@ function ShowPro(QuotationId) {
       $(".ql-editor").append(QuotationDetail);
       $("#test_send_data").unbind();
       $("#test_send_data").on("click", async () => {
-        let test
+        let test;
 
         try {
-          test = await Test(`/quotation/${QuotationId+2}`)
-          console.log(223)
-
+          test = await Test(`/quotation/${QuotationId + 2}`);
+          console.log(223);
         } catch (error) {
-          console.log('error: ',error)
+          console.log("error: ", error);
         }
-        console.log(test)
-          
-        
+        console.log(test);
+
         $(".ql-editor").empty();
         $(".ql-editor").append("");
       });
@@ -286,7 +284,9 @@ const createEditor = (readStatus = false) => {
     modules: {
       toolbar: toolbarOption,
     },
-    placeholder: "ตัวอย่างการพิมพ์: 1 รายละเอียด; จำนวน หน่วย; ราคา",
+    placeholder: !readStatus
+      ? "ตัวอย่างการพิมพ์: 1 รายละเอียด; จำนวน หน่วย; ราคา"
+      : "",
     theme: "snow",
     // readOnly: readStatus,
   };
@@ -438,19 +438,31 @@ $(document).ready(function () {
             $("#btnEditYes").unbind();
             $("#btnEditYes").click(function () {
               let QuotationPayTerm = [];
-              for (let i = 0; i < $(".box-payment .input-group").length; i++) {
-                let pay = $(".box-payment .input-group").eq(i);
-                let pay_detail = $(pay).children()[0].value;
-                let pay_percent = $(pay).children()[1].value;
-                if (pay_detail)
+              if ($(".box-payment .input-group").length != 0) {
+                for (
+                  let i = 0;
+                  i < $(".box-payment .input-group").length;
+                  i++
+                ) {
+                  let pay = $(".box-payment .input-group").eq(i);
+                  let pay_detail = $(pay).children()[0].value;
+                  let pay_percent = $(pay).children()[1].value;
+                  if (pay_detail) {
+                  }
                   QuotationPayTerm.push({
                     PayTerm: pay_detail,
                     Percent: parseInt(pay_percent),
                   });
+                }
+              } else {
+                QuotationPayTerm.push({
+                  PayTerm: "",
+                  Percent: 0,
+                });
               }
 
               // console.log('send QuotationPayTerm: ',QuotationPayTerm);
-              let url = `/quotation/edit_quotation/${QuotationId}`
+              let url = `/quotation/edit_quotation/${QuotationId}`;
               let Data = {
                 CustomerId: $("#CusName").val(),
                 QuotationSubject: $("#PJ_Name").val(),
@@ -462,7 +474,7 @@ $(document).ready(function () {
                 EndCustomer: $("#PJ_End_Customer").val(),
                 EmployeeApproveId: $("#PJ_Approve").val(),
               };
-              
+
               $.ajax({
                 url: "/quotation/edit_quotation/" + QuotationId,
                 method: "put",
