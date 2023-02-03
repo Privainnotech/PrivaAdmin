@@ -276,6 +276,7 @@ function fill_resetSubTable() {
 
 // getDetail New
 const createEditor = (readStatus = false) => {
+  
   let toolbarOption = [
     ["bold", "underline"],
     [{ list: "ordered" }, { list: "bullet" }],
@@ -293,6 +294,7 @@ const createEditor = (readStatus = false) => {
   if ($(".ql-toolbar.ql-snow")) $(".ql-toolbar.ql-snow").remove();
   $(".ql-editor").empty();
   let quill = new Quill("#editorjs", options);
+  if (readStatus) $(".ql-toolbar.ql-snow").remove();
   quill.enable(!readStatus);
 };
 
