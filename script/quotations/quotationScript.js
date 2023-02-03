@@ -668,8 +668,8 @@ $(document).ready(function () {
 
       // Preview PDF
       $("#btnExample").unbind();
-      $("#btnExample").on("click", function () {
-        $.ajax({
+      $("#btnExample").on("click", async function () {
+       await $.ajax({
           url: "/quotation_report/" + QuotationId,
           method: "get",
           contentType: "application/json",
@@ -684,28 +684,21 @@ $(document).ready(function () {
             $(".loading-title").text("Loading Complete!!");
           },
           success: function (success) {
-            document.getElementById("PreviewPDF").src = "";
+            // document.getElementById("PreviewPDF").src = "";
+            // $('#PreviewPDF').attr('src',``);
             QuotationApproval == 2
               ? $("#btnReqApprove").hide()
               : $("#btnReqApprove").show();
             $("#modalPreview").modal("show");
             $(".modal-title").text("Preview PDF");
             fileName = success.message;
-            document.getElementById("PreviewPDF").src = fileName + "#toolbar=0";
+            // document.getElementById("PreviewPDF").src = fileName + "#toolbar=0";
+            $('#PreviewPDF').attr('src',`${fileName}#toolbar=0`);
             $("#loading-preview i").removeClass("fa-check-circle");
             //
           },
           error: function (err) {
-            errorText = err.responseJSON.message;
-            Swal.fire({
-              position: "center",
-              icon: "warning",
-              title: "Warning",
-              text: errorText,
-              showConfirmButton: true,
-              confirmButtonText: "OK",
-              confirmButtonColor: "#FF5733",
-            });
+            SwalError(err)
           },
         });
 
