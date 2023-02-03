@@ -263,31 +263,40 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
   ];
 
   // condition
-  let getPayTerm = (QuotationPayTerm, payterm) => {
-    if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
-    QuotationPayTerm = JSON.parse(QuotationPayTerm);
-    let payTerms = Object.values(QuotationPayTerm);
-    let payTerm = "";
-    let i = 1;
-    // console.log(payTerms)
-    payTerms.map((term) => {
-      // console.log(term)
-      if (i == 1 && term == "") term = "-";
-      payTerm = payTerm + term + "\n";
-      i++;
-    });
-    let PayTermArr = "", idx = 1
-    while (idx <= payterm.length) {
+  let getPayTerm = async (QuotationPayTerm, payterm) => {
+    console.log(QuotationPayTerm, payterm)
+    // if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
+    if (typeof QuotationPayTerm == 'object') {
+      QuotationPayTerm = JSON.parse(QuotationPayTerm);
+      let payTerms = Object.values(QuotationPayTerm);
+      let payTerm = "";
+      let i = 1;
+      payTerms.map((term) => {
+        // console.log(term)
+        if (i == 1 && term == "") term = "-";
+        payTerm += `${term}\n`;
+        i++;
+      });
+    }
+
+    let PayTermArr = "", idx = 0
+    while (idx < payterm.length) {
+      console.log(payterm[idx])
       let { PayTerm, PayPercent } = payterm[idx]
-      PayTermArr += `${PayTerm}  ${PayPercent}\n`
+      if (PayTerm == '') {
+        PayTermArr += '-'
+        break;
+      }
+      PayTermArr += `${PayTerm}  ${PayPercent}%\n`
       idx++
     }
     if (PayTermArr) return { payTerm: PayTermArr, idx }
     return { payTerm, idx: i };
   };
-  let { payTerm, idx } = getPayTerm(QuotationPayTerm, payterm);
-  let newline = "\n\n\n"
-  for (let i = 4; i < idx; i++) {
+  let { payTerm, idx } = await getPayTerm(QuotationPayTerm, payterm);
+  console.log(payTerm)
+  let newline = ""
+  for (let i = 0; i < idx; i++) {
     newline += '\n'
   }
   let condition = [
@@ -634,8 +643,26 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
       body: [],
     };
   };
-
-  if (QuotationDetail !== '' && JSON.parse(QuotationDetail) != null) {
+  if (QuotationDetail) {
+    if (QuotationDetail[0] == '<') quotation.QuotationDetail = QuotationDetail
+    else {
+      // console.log(JSON.parse(QuotationDetail))
+      console.log(QuotationDetail)
+      QuotationDetail = JSON.parse(QuotationDetail);
+      let Details = ''
+      console.log(QuotationDetail)
+      if (!QuotationDetail || QuotationDetail == 'null') quotation.QuotationDetail = ''
+      else {
+        QuotationDetail.blocks.forEach(block => {
+          let { data } = block
+          Details += `<p>${data.text}</p>`
+        })
+        console.log(Details)
+        quotation.QuotationDetail = Details
+      }
+    }
+  } else quotation.QuotationDetail = ''
+  if (QuotationDetail) {
     let detailTable1 = detailTable();
     let detailTable2 = detailTable();
     let detailTable3 = detailTable();
@@ -654,43 +681,50 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
       layout: "noBorders",
       table: detailTable3,
     };
-    let Details = JSON.parse(QuotationDetail).blocks;
+    let Details;
+    if (QuotationDetail[0] == '<') {
+      // let DetailArr = []
+      Details = QuotationDetail.replaceAll('<p>', '').split('</p>')
+    }
+    else Details = JSON.parse(QuotationDetail).blocks;
     let i = 0;
     Details.forEach((Detail) => {
-      let isBold,
-        text = Detail.data.text;
+
+      let text = Detail.data ? Detail.data.text : Detail
       if (text.includes("ตัวอย่างการพิมพ์")) {
         throw new Error("Please delete detail example");
       }
-      text.includes("<b>") ? (isBold = "btext") : (isBold = "blacktext");
-      text = text.replace(/<b>|<\/b>|&nbsp;/g, " ");
+      let isBold = text.includes("<strong>") ? true : false;
+      let isUnderline = text.includes("<u>") ? 'underline' : '';
+      text = text.replace(/<strong>|<\/strong>|<u>|<\/u>/g, "");
+      text = text.replace(/&nbsp;/g, " ");
       text = text.split("; ");
       if (i < 40) {
         if (i === 0) {
           doc["content"].push(pageBreak(), detailHeader(), detail1);
         }
         detailTable1["body"].push([
-          { text: text[0], style: isBold },
-          { text: text[1] ? text[1] : "", style: isBold },
-          { text: text[2] ? text[2] : "", style: isBold },
+          { text: text[0], bold: isBold, decoration: isUnderline },
+          { text: text[1] ? text[1] : "", bold: isBold },
+          { text: text[2] ? text[2] : "", bold: isBold },
         ]);
       } else if (i < 80) {
         if (i === 40) {
           doc["content"].push(pageBreak(), detailHeader(), detail2);
         }
         detailTable2["body"].push([
-          { text: text[0], style: isBold },
-          { text: text[1] ? text[1] : "", style: isBold },
-          { text: text[2] ? text[2] : "", style: isBold },
+          { text: text[0], bold: isBold, decoration: isUnderline },
+          { text: text[1] ? text[1] : "", bold: isBold },
+          { text: text[2] ? text[2] : "", bold: isBold },
         ]);
       } else {
         if (i === 80) {
           doc["content"].push(pageBreak(), detailHeader(), detail3);
         }
         detailTable3["body"].push([
-          { text: text[0], style: isBold },
-          { text: text[1] ? text[1] : "", style: isBold },
-          { text: text[2] ? text[2] : "", style: isBold },
+          { text: text[0], bold: isBold, decoration: isUnderline },
+          { text: text[1] ? text[1] : "", bold: isBold },
+          { text: text[2] ? text[2] : "", bold: isBold },
         ]);
       }
       i++;
