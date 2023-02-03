@@ -20,7 +20,5 @@ input {
   width: 210mm;
 }
 .ql-editor {
-  height: auto;
-  max-height: 370mm;
   padding-bottom: 100px;
 }

@@ -43,7 +43,7 @@ function ShowPro(QuotationId) {
     cache: false,
     success: function (response) {
       var obj = JSON.parse(response);
-      // console.log(obj)
+      console.log(obj);
       let {
         QuotationApproval,
         QuotationNo_Revised,
@@ -72,6 +72,7 @@ function ShowPro(QuotationId) {
         DetailQty,
         DetailTotal,
         QuotationDetail,
+        QuotationStatus,
       } = obj;
       let ApproveStatus = "";
       if (QuotationApproval == 2) {
@@ -172,27 +173,37 @@ function ShowPro(QuotationId) {
       $("#IP-Set-DetailQty").val(DetailQty);
       $("#IP-Set-DetailTotal").val(DetailTotal);
 
-      // getDetail
-      const loadDetail = JSON.stringify(QuotationDetail);
-      const editor = new EditorJS({
-        tools: {
-          text: {
-            class: SimpleText,
-            inlineToolbar: ["link"],
-          },
-        },
-      });
+      // getDetail(Old)
+      // const loadDetail = JSON.stringify(QuotationDetail);
+      // const editor = new EditorJS({
+      //   tools: {
+      //     text: {
+      //       class: SimpleText,
+      //       inlineToolbar: ["link"],
+      //     },
+      //   },
+      // });
 
-      editor.isReady.then(() => {
-        editor.render(JSON.parse(loadDetail));
+      // editor.isReady.then(() => {
+      //   editor.render(JSON.parse(loadDetail));
+      // });
+      // getDetail(New)
+      QuotationStatus == 1 ? createEditor() : createEditor(true);
+      $(".ql-editor").empty();
+      $(".ql-editor").append(QuotationDetail);
+      $("#test_send_data").unbind();
+      $("#test_send_data").on("click", () => {
+        console.log(Data);
+        $(".ql-editor").empty();
+        $(".ql-editor").append("");
       });
-
       //  Edit Detail
       const saveButton = document.getElementById("save-button");
 
       saveButton.addEventListener("click", () => {
         $("#modalEditConfirm").modal("show");
         $(".modal-title").text("Confirm Edit Detail");
+        let Data = $(".ql-editor").html();
         $("#btnEditYes").unbind();
         $("#btnEditYes").click(function () {
           editor.save().then((savedData) => {
@@ -254,14 +265,14 @@ function RePro() {
   $SettingTable.val("0");
 }
 
-//Remove Detail Paper
+//Remove Detail(Old) Paper
 function removeDetailPaper() {
-  const detailPaper = document.querySelectorAll(".codex-editor");
-  if ($("div").hasClass("codex-editor")) {
-    detailPaper.forEach((paper) => {
-      paper.remove();
-    });
-  }
+  // const detailPaper = document.querySelectorAll(".codex-editor");
+  // if ($("div").hasClass("codex-editor")) {
+  //   detailPaper.forEach((paper) => {
+  //     paper.remove();
+  //   });
+  // }
 }
 
 //Reset Quo Table
@@ -290,6 +301,26 @@ function fill_resetSubTable() {
   trHTML += "</tr>";
   document.getElementById("showSubTable").innerHTML = trHTML;
 }
+
+// getDetail New
+const createEditor = (readStatus = false) => {
+  let toolbarOption = [
+    ["bold", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+  ];
+  let options = {
+    modules: {
+      toolbar: toolbarOption,
+    },
+    placeholder: "ตัวอย่างการพิมพ์: 1 รายละเอียด; จำนวน หน่วย; ราคา",
+    theme: "snow",
+    // readOnly: readStatus,
+  };
+  if ($(".ql-toolbar.ql-snow")) $(".ql-toolbar.ql-snow").remove();
+  $(".ql-editor").empty();
+  let quill = new Quill("#editorjs", options);
+  quill.enable(!readStatus);
+};
 
 $(document).ready(function () {
   fill_quotationHead();
@@ -639,6 +670,7 @@ $(document).ready(function () {
                 timer: 1500,
               });
               tableQuo.ajax.reload(null, false);
+              tableQuoHead.ajax.reload(null, false);
             },
             error: function (err) {
               errorText = err.responseJSON.message;
@@ -847,6 +879,7 @@ $(document).ready(function () {
                 timer: 1500,
               });
               tableQuo.ajax.reload(null, false);
+              tableQuoHead.ajax.reload(null, false);
               ShowPro(QuotationId);
               //Eidt button
               hideEdit();
@@ -904,6 +937,8 @@ $(document).ready(function () {
                 timer: 1500,
               });
               tableQuo.ajax.reload(null, false);
+              tableQuoHead.ajax.reload(null, false);
+
               $("#btn-quotation").removeAttr("disabled");
               $("#btn-loss").removeAttr("disabled");
               $("#btn-book").removeAttr("disabled");
@@ -951,6 +986,8 @@ $(document).ready(function () {
                 timer: 1500,
               });
               tableQuo.ajax.reload(null, false);
+              tableQuoHead.ajax.reload(null, false);
+
               $("#btn-quotation").removeAttr("disabled");
               $("#btn-loss").removeAttr("disabled");
               $("#btn-book").attr("disabled", "");
@@ -998,6 +1035,8 @@ $(document).ready(function () {
                 timer: 1500,
               });
               tableQuo.ajax.reload(null, false);
+              tableQuoHead.ajax.reload(null, false);
+
               $("#btn-quotation").removeAttr("disabled");
               $("#btn-loss").attr("disabled", "");
               $("#btn-book").removeAttr("disabled");

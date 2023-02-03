@@ -355,7 +355,6 @@ function fill_quotationHead() {
       {
         data: "QuotationSubject",
         render: function (data, type, row) {
-          console.log(row)
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
