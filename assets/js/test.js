@@ -3,7 +3,7 @@ const createEditor = () => {
         // [{ size: ['small', false, 'large', 'huge'] }],
         ['bold', 'italic', 'underline'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        // [{ 'indent': '-1' }, { 'indent': '+1' }],
     ]
     let options = {
         // debug: 'info',

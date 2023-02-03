@@ -32,11 +32,14 @@
 
   <link rel="stylesheet" href="/css/Theme.css">
   <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/font.css">
   <link rel="stylesheet" href="/css/table.css">
   <link rel="stylesheet" href="/css/app.css">
 
   <link rel="stylesheet" href="/css/quotation.css">
   <link rel="stylesheet" href="/css/simple-image.css" />
+
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 
 <body>
@@ -461,7 +464,7 @@
                       <button type="button" class="btn btn-sm btn-success" id="addProject">New Project</button>
                     </div>
                     <div class="table-responsive text-center mb-2">
-                      <table id="tableQuoHead" class="table table-sm table-hover my-0 ">
+                      <table id="tableQuoHead" class="table table-sm table-hover my-0  w-100">
                         <thead class="thead-dark">
                           <tr>
                             <th>Index</th>
@@ -469,6 +472,7 @@
                             <th>Company</th>
                             <th>Project</th>
                             <th>Customer</th>
+                            <th>Net Price</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -520,107 +524,163 @@
                       </div>
                       <div class="align-self-center chart chart-lg">
                         <!-- set -->
-                        <div class="input-group">
-                          <span class="input-group-text group-title mg-0 f-9">Project :</span>
-                          <input type="text" class="form-control group-title edit f-9" id="PJ_Name" disabled>
+
+                        <div class="row mb-1">
+                          <div class="col-3 px-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title fs-3">Project :</span>
+                          </div>
+                          <div class="col-9 px-0 d-flex justify-content-center align-items-center">
+                            <input type="text" class="form-control fs-3" id="PJ_Name" disabled>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div
+                            class="col-3 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center mb-1">
+                            <span class="input-group-text group-title">Customer :</span>
+                          </div>
+                          <div
+                            class="col-9 col-lg-8 col-xxl-4 px-0 d-flex justify-content-center align-items-center mb-1">
+                            <select class="form-select" id="CusName" disabled>
+                              <option value="" selected>-</option>
+                            </select>
+                          </div>
+                          <div
+                            class="col-3 col-lg-4 col-xxl-2 pe-0 d-flex justify-content-start align-items-center mb-1">
+                            <span class="input-group-text group-title">Date :</span>
+                          </div>
+                          <div
+                            class="col-9 col-lg-8 col-xxl-3 ps-0 d-flex justify-content-center align-items-center mb-1">
+                            <input id="QDate" class="form-control" disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group">
-                          <span class="input-group-text mg-0">Customer:</span>
-                          <input id="CusName" class="no-bor form-control" disabled>
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">Company :</span>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9 px-0 d-flex justify-content-center align-items-center">
+                            <input id="ComName" class="form-control " disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group">
-                          <span class="input-group-text mg-0">Date:</span>
-                          <input id="QDate" class="no-bor form-control disabled" disabled>
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">Email :</span>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9 px-0 d-flex justify-content-center align-items-center">
+                            <input id="CusEmail" class="form-control " disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group ">
-                          <span class="input-group-text mg-0">Email: </span>
-                          <input id="CusEmail" class="no-bor form-control " disabled>
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">Address :</span>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9 px-0 d-flex justify-content-center align-items-center">
+                            <textarea id="Adress" class="form-control" disabled></textarea>
+                          </div>
                         </div>
-
-                        <div class="input-group ">
-                          <span class="input-group-text mg-0">Company:</span>
-                          <input id="ComName" class="no-bor form-control " disabled>
-                        </div>
-
-                        <div class="input-group ">
-                          <span style="width: 94px;" class="input-group-text mg-0" rows="1" cols="1"
-                            disabled>Address:</span>
-                          <textarea id="Adress" class="no-bor form-control" disabled></textarea>
-                        </div>
-                        <br>
-                        <div class="input-group">
-                          <span class="input-group-text textbox4 mg-0 f-9">End Customer:</span>
-                          <input type="text" class="form-control edit f-9" id="PJ_End_Customer" disabled>
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">End Customer :</span>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9 px-0 d-flex justify-content-center align-items-center">
+                            <input type="text" class="form-control" id="PJ_End_Customer" disabled>
+                          </div>
                         </div>
                         <hr>
-                        <span class="input-group-text group-title mg-0 f-9">Condition</span>
+                        <span class="input-group-text group-title fs-3 px-0 mb-1">Condition</span>
 
-                        <div class="input-group">
-                          <span class="input-group-text textbox4 mg-0 f-9">Validity:</span>
-                          <input type="text" class="form-control edit  f-9" id="PJ_Validity" disabled>
-                          <span class="input-group-text textbox2 mg-0 f-9">Delivery:</span>
-                          <input type="text" class="form-control edit f-9" id="PJ_Delivery" disabled>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <span class="input-group-text textbox4 mg-0 f-9">Term of Payment:</span>
-                            <!-- <input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled> -->
-                          <button type="button" class="btn btn-sm btn-success" style="border-radius: 0.2rem;">Add Payment</button>
-                        </div>
-                        <div class="box-payment"></div>
-                        
-                        <!-- <div class="input-group">
-                          <input type="text" class="form-control edit f-9" id="PJ_Payment1" disabled>
-                        </div>
-                        <div class="input-group">
-                          <input type="text" class="form-control edit f-9" id="PJ_Payment2" disabled>
+                        <div class="row">
+                          <div class="col-3 pe-0 d-flex justify-content-start align-items-center mb-1">
+                            <span class="input-group-text group-title">Validity :</span>
+                          </div>
+                          <div
+                            class="col-9 col-lg-9 col-xxl-4 px-0 d-flex justify-content-center align-items-center mb-1">
+                            <input class="form-control" id="PJ_Validity" disabled>
+                          </div>
+                          <div
+                            class="col-3 col-lg-3 col-xxl-2 pe-0 d-flex justify-content-start align-items-center mb-1">
+                            <span class="input-group-text group-title">Delivery :</span>
+                          </div>
+                          <div
+                            class="col-9 col-lg-9 col-xxl-3 ps-0 d-flex justify-content-center align-items-center mb-1">
+                            <input type="text" class="form-control" id="PJ_Delivery" disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group">
-                          <input type="text" class="form-control edit f-9" id="PJ_Payment3" disabled>
-                        </div> -->
-
-                        <div class="input-group">
-                          <span class="input-group-text textbox4 mg-0 f-9">Remark:</span>
-                          <input type="text" class="form-control edit f-9" id="PJ_Remark" disabled>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <span class="input-group-text group-title">Term of Payment :</span>
+                          <button type="button" class="btn btn-sm btn-success" id="btn_AddPayment">Add Payment</button>
                         </div>
-
+                        <div class="box-payment mb-1"></div>
+                        <div class="row mb-1">
+                          <div class="col-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">Remark :</span>
+                          </div>
+                          <div class="col-9 px-0 d-flex justify-content-center align-items-center">
+                            <input type="text" class="form-control" id="PJ_Remark" disabled>
+                          </div>
+                        </div>
                         <hr>
-                        <span class="input-group-text group-title mg-0 f-9">Price</span>
+                        <span class="input-group-text group-title fs-3 px-0 mb-1">Price</span>
 
-                        <div class="input-group ">
-                          <span class="input-group-text mg-0">Sub Total:</span>
-                          <input id="TotalPrice" class="no-bor form-control" disabled>
+                        <div class="row">
+                          <div
+                            class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center mb-1">
+                            <span class="input-group-text group-title">Sub Total :</span>
+                          </div>
+                          <div
+                            class="col-7 col-lg-8 col-xxl-4 px-0 d-flex justify-content-center align-items-center mb-1">
+                            <input type="text" class="form-control" id="TotalPrice" disabled>
+                          </div>
+                          <div
+                            class="col-5 col-lg-4 col-xxl-2 pe-0 d-flex justify-content-start align-items-center mb-1">
+                            <span class="input-group-text group-title">Discount :</span>
+                          </div>
+                          <div
+                            class="col-7 col-lg-8 col-xxl-3 px-0 d-flex justify-content-center align-items-center mb-1">
+                            <input type="text" class="form-control" id="PJ_Discount" disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group ">
-                          <span class="input-group-text textbox2 mg-0 f-9">Discount: </span>
-                          <input type="text" class="form-control edit f-9" id="PJ_Discount" disabled>
+
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">After Discount :</span>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9 px-0 d-flex justify-content-center align-items-center">
+                            <input type="text" class="form-control" id="PriceAfter" disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group ">
-                          <span class="input-group-text mg-0">Price after discount:</span>
-                          <input id="PriceAfter" class="no-bor form-control" disabled>
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">VAT Including 7% :</span>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9 px-0 d-flex justify-content-center align-items-center">
+                            <input type="text" class="form-control" id="Vat" disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group ">
-                          <span class="input-group-text mg-0">VAT Including 7%:</span>
-                          <input id="Vat" class="no-bor form-control" disabled>
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <span class="input-group-text group-title">Net Total :</span>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9 px-0 d-flex justify-content-center align-items-center">
+                            <input type="text" class="form-control" id="NetTotal" disabled>
+                          </div>
                         </div>
 
-                        <div class="input-group ">
-                          <span class="input-group-text mg-0">Net Total:</span>
-                          <input id="NetTotal" class="no-bor form-control" disabled>
-                        </div>
-
-                        <div class="input-group ">
-                          <label class="input-group-text textbox mg-0 f-91" for="PJ_Approve">Approve
-                            By:</label>
-                          <select class="form-select edit f-91" id="PJ_Approve" disabled>
-                            <option value="" selected>-</option>
-                          </select>
+                        <div class="row mb-1">
+                          <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
+                            <label class="input-group-text group-title" for="PJ_Approve">Approve By :</label>
+                          </div>
+                          <div class="col-7 col-lg-8 col-xxl-9  px-0 d-flex justify-content-center align-items-center">
+                            <select class="form-select" id="PJ_Approve" disabled>
+                              <option value="" selected>-</option>
+                            </select>
+                          </div>
                         </div>
 
                         <div class="footer v-2">
@@ -646,8 +706,9 @@
                           <h1>Item</h1><button type="button" class="btn btn-sm btn-success visually-hidden"
                             id="addItem">Add Item</button>
                         </div>
-                        <table id="tableItem" class="table table-sm text-center table-hover my-0" style="width:100%">
-                          <thead>
+                        <table id="tableItem" class="table table-sm text-nowrap text-center table-hover my-0"
+                          style="width:100%">
+                          <thead class="thead-dark">
                             <tr>
                               <th style="width: 10%;">Item</th>
                               <th style="width: 40%;">Item Name</th>
@@ -672,8 +733,9 @@
                         <div class="card-header title v">
                           <h1>Description</h1>
                         </div>
-                        <table id="tableSubItem" class="table table-sm text-center table-hover my-0" style="width:100%">
-                          <thead>
+                        <table id="tableSubItem" class="table table-sm text-nowrap text-center table-hover my-0"
+                          style="width:100%">
+                          <thead class="thead-dark">
                             <tr>
                               <th style="width: 10%;">Index</th>
                               <th style="width: 40%;">Description</th>
@@ -697,47 +759,67 @@
                       <div class="card flex-fill">
                         <div class="card-header title v">
                           <h1>Table Setting</h1>
-                          <button type="button" class="btn btn-sm btn-success visually-hidden" id="modalSaveSetting">Save
+                          <button type="button" class="btn btn-sm btn-success visually-hidden"
+                            id="modalSaveSetting">Save
                             Setting</button>
                         </div>
                         <div class="card-body w-100">
-                          <div class="form-check form-switch">
-                            <div class="input-group mb-3">
-                              <label class="input-group-text mg-0 f-9" for="IP-Set-TableShow">Show:</label>
-                              <select class="form-select" id="IP-Set-TableShow" disabled>
-                                <option value="0">None</option>
-                                <option value="1">Item only</option>
-                                <option value="2">Description only</option>
-                                <option value="3" selected>Both</option>
-                              </select>
-                            </div>
-                            <div class="input-group mb-3">
-                              <label class="input-group-text mg-0 f-9" for="IP-Set-TablePrice">Show Unit Price:</label>
-                              <select class="form-select" id="IP-Set-TablePrice" disabled>
-                                <option value="0">None</option>
-                                <option value="1" selected>Item only</option>
-                                <option value="2">Description only</option>
-                                <option value="3">Both</option>
-                              </select>
-                            </div>
+                          <div class="form-check form-switch px-2">
+                            <div class="row mb-2">
+                              <div class="col-5">
+                                <label class="input-group-text group-title" for="IP-Set-TableShow">Show :</label>
 
-                            <div class="input-group mb-3">
-                              <label class="input-group-text mg-0 f-9" for="IP-Set-TableQty">Show Quantity:</label>
-                              <select class="form-select" id="IP-Set-TableQty" disabled>
-                                <option value="0">None</option>
-                                <option value="1" selected>Item only</option>
-                                <option value="2">Description only</option>
-                                <option value="3">Both</option>
-                              </select>
+                              </div>
+                              <div class="col-7">
+                                <select class="form-select" id="IP-Set-TableShow" disabled>
+                                  <option value="0">None</option>
+                                  <option value="1">Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3" selected>Both</option>
+                                </select>
+                              </div>
                             </div>
-                            <div class="input-group mb-3">
-                              <label class="input-group-text mg-0 f-9" for="IP-Set-TableTotal">Show Total Price:</label>
-                              <select class="form-select" id="IP-Set-TableTotal" disabled>
-                                <option value="0">None</option>
-                                <option value="1" selected>Item only</option>
-                                <option value="2">Description only</option>
-                                <option value="3">Both</option>
-                              </select>
+                            <div class="row mb-2">
+                              <div class="col-5">
+                                <label class="input-group-text group-title" for="IP-Set-TablePrice">Show Unit
+                                  Price :</label>
+                              </div>
+                              <div class="col-7">
+                                <select class="form-select" id="IP-Set-TablePrice" disabled>
+                                  <option value="0">None</option>
+                                  <option value="1" selected>Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-5">
+                                <label class="input-group-text group-title" for="IP-Set-TableQty">Show Quantity
+                                  :</label>
+                              </div>
+                              <div class="col-7">
+                                <select class="form-select" id="IP-Set-TableQty" disabled>
+                                  <option value="0">None</option>
+                                  <option value="1" selected>Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="row mb-2">
+                              <div class="col-5">
+                                <label class="input-group-text group-title" for="IP-Set-TableTotal">Show Total
+                                  Price :</label>
+                              </div>
+                              <div class="col-7">
+                                <select class="form-select" id="IP-Set-TableTotal" disabled>
+                                  <option value="0">None</option>
+                                  <option value="1" selected>Item only</option>
+                                  <option value="2">Description only</option>
+                                  <option value="3">Both</option>
+                                </select>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -749,11 +831,15 @@
                   <div class="card flex-fill">
                     <div class="card-header title v">
                       <h1>Detail</h1>
-                      <button id="save-button" class="btn btn-sm btn-success visually-hidden">Save</button>
-                    </div>
-                    <div class="card-body w-100">
-                      <div id="editorjs" class="center"></div>
+                      <button id="save-button" class="btn btn-sm btn-success">Save</button>
+                      <button id="test_send_data" class="btn btn-sm btn-success">button</button>
 
+                    </div>
+                    <div class="card-body w-100 d-flex justify-content-center align-items-center">
+                      <div>
+                        <div id="editorjs" class="center">
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -775,6 +861,8 @@
   <script src="/js/app.js"></script>
   <script src="/js/editor.js"></script>
   <script src="/js/editorInnerline.js"></script>
+
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <script src="/js/function.js"></script>
   <script src="/quotations/quotationScript.js"></script>
   <script src="/quotations/quotationDropdown.js"></script>

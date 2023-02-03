@@ -1,3 +1,27 @@
+function AjaxGetData(url) {
+  return new Promise(async (resolve, reject) => {
+    $.ajax({
+      url: url,
+      method: "get",
+      contentType: "application/json",
+      dataType: "json",
+      success: function (res) {
+        resolve(res);
+      },
+      error: function (err) {
+        console.log(err);
+        let error = err.responseJSON.message;
+        Swal.fire({
+          icon: "error",
+          title: "Error...",
+          text: error,
+        });
+        reject(err)
+      },
+    });
+  })
+  
+}
 function AjaxGetDownload(url) {
   console.log("upload url : ", url);
   $.ajax({
@@ -109,7 +133,7 @@ function AjaxPutCheckbox(url, table, data = "", swalTitle) {
     },
   });
 }
-function AjaxPost(url, table, data, modalId = null) {
+function AjaxPost(url, table1, table2 = null, data, modalId = null) {
   $.ajax({
     url: url,
     method: "post",
@@ -125,7 +149,9 @@ function AjaxPost(url, table, data, modalId = null) {
         showConfirmButton: false,
         timer: 1500,
       });
-      table.ajax.reload(null, false);
+      table1.ajax.reload(null, false);
+      if (table2 != null) table2.ajax.reload(null, false);
+        
       modalId != null ? modalId.modal("hide") : console.log("no modal");
     },
     error: (err) => {
@@ -298,6 +324,7 @@ function searchTableQuoHead() {
 function fill_quotationHead() {
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
+    // scrollX: true,
     scrollCollapse: true,
     searching: true,
     paging: true,
@@ -332,13 +359,19 @@ function fill_quotationHead() {
         },
       },
       {
-        width: "20%",
         data: "CustomerName",
+      },
+      {
+        width: "20%",
+        data: "QuotationNet",
+        render: function (data,type,row) {
+          if(!data) return data = "-"  
+        }
       },
     ],
   });
 }
-function fill_quotation(QuotationNoId) {
+function fill_quotation(QuotationNoId = null) {
   tableQuo = $("#tableQuo").DataTable({
     bDestroy: true,
     scrollX: true,

@@ -3,6 +3,8 @@ $(document).ready(function () {
   function fill_employee() {
     tableEmploy = $("#tableEmploy").DataTable({
       bDestroy: true,
+      scrollX: true,
+      scrollCollapse: true,
       ajax: {
         url: "/employee_master/data",
         dataSrc: "",
