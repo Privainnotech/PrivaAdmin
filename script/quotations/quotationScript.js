@@ -185,7 +185,7 @@ function ShowPro(QuotationId) {
         $("#modalEditConfirm").modal("show");
         $(".modal-title").text("Confirm Edit Detail");
         let Data = {QuotationDetail :$(".ql-editor").html()};
-        console.log('Data: ',Data)
+        
         $("#btnEditYes").unbind();
         $("#btnEditYes").click(function () {
           let url = `/quotation/edit_detail/${QuotationId}`;
@@ -250,10 +250,8 @@ function fill_resetSubTable() {
 
 // getDetail New
 const createEditor = (readStatus = false) => {
-  
   let toolbarOption = [
     ["bold", "underline"],
-    [{ list: "ordered" }, { list: "bullet" }],
   ];
   let options = {
     modules: {
