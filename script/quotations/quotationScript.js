@@ -422,11 +422,11 @@ $(document).ready(function () {
                   let pay_detail = $(pay).children()[0].value;
                   let pay_percent = $(pay).children()[1].value;
                   if (pay_detail) {
+                    QuotationPayTerm.push({
+                      PayTerm: pay_detail,
+                      Percent: parseInt(pay_percent),
+                    });
                   }
-                  QuotationPayTerm.push({
-                    PayTerm: pay_detail,
-                    Percent: parseInt(pay_percent),
-                  });
                 }
               } else {
                 QuotationPayTerm.push({

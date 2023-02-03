@@ -136,10 +136,7 @@ $(document).ready(function () {
 
         $("#modalSaveCustomer").unbind();
         $("#modalSaveCustomer").click(async function () {
-          let CustomerName = $.trim($("#modalInpCustomerName").val());
-          let CustomerEmail = $.trim($("#modalInpCustomerEmail").val());
-          let CustomerTel = $.trim($("#modalInpCustomerTel").val());
-          let CompanyId = $.trim($("#modalInpCompanyId").val());
+          
           let data = {
             CustomerName: $("#modalInpCustomerName").val(),
             CustomerEmail: $("#modalInpCustomerEmail").val(),
