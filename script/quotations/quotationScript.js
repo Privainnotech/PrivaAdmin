@@ -171,12 +171,16 @@ function ShowPro(QuotationId) {
       saveButton.addEventListener("click", () => {
         $("#modalEditConfirm").modal("show");
         $(".modal-title").text("Confirm Edit Detail");
-        let Data = { QuotationDetail: $(".ql-editor").html() };
+        let data = { QuotationDetail: $(".ql-editor").html() };
 
         $("#btnEditYes").unbind();
-        $("#btnEditYes").click(function () {
-          let url = `/quotation/edit_detail/${QuotationId}`;
-          AjaxPut(url, null, Data);
+        $("#btnEditYes").click(async function () {
+          try {
+            let res = await AjaxDataJson(`/quotation/edit_detail/${QuotationId}`,`put`,data)
+            SwalEditSuccess(res);
+          } catch (error) {
+            SwalError(error);
+          }
           $("#modalEditConfirm").modal("hide");
         });
       });
@@ -311,10 +315,7 @@ $(document).ready(function () {
     RePro();
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
-      fill_resetTable();
-      fill_resetQuoTable();
-      RePro();
-      // console.log("un selecte");
+      
     } else {
       $("#tableQuoHead tr").removeClass("selected");
       $(this).addClass("selected");
@@ -351,39 +352,36 @@ $(document).ready(function () {
     $StatusButton.attr("disabled", "");
     $SettingTable.attr("disabled", "");
 
-    rows = $(this).closest("tr");
+    let rows = $(this).closest("tr");
     let { QuotationId, QuotationApproval, QuotationStatus } = tableQuo
       .row(rows)
       .data();
 
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
-      $("#save-button").hide();
-      fill_resetTable();
       RePro();
     } else {
       $("#tableQuo tr").removeClass("selected");
       $(this).addClass("selected");
 
-      $("#save-button").hide();
+      // $("#save-button").hide();
       $("#modalEditProject").removeClass("save");
       $("#btnExample").removeClass("invisible");
       createEditor(true);
       ShowPro(QuotationId);
       fill_item(QuotationId, QuotationStatus);
-
+      console.log('QuotationStatus: ',QuotationStatus)
       if (QuotationStatus === 1) {
         //Show Edit Button
-        $("#modalEditProject").removeClass("invisible");
+        $EditGroup.removeClass("invisible");
+        $("#btnRevised").addClass("invisible");
         //Show AddItem Button
         $("#addItem").show();
         //Show Quotation Button
+        $StatusButton.attr('disabled','')
         $("#btn-quotation").removeAttr("disabled");
         //Show Detail Custom Button
         $("#save-button").show();
-        //Hide Revise Button
-        $("#btnRevised").addClass("invisible");
-
         //Show Setting
         ShowSetting();
 
@@ -419,9 +417,6 @@ $(document).ready(function () {
                   Percent: 0,
                 });
               }
-
-              // console.log('send QuotationPayTerm: ',QuotationPayTerm);
-              let url = `/quotation/edit_quotation/${QuotationId}`;
               let data = {
                 CustomerId: $("#CusName").val(),
                 QuotationSubject: $("#PJ_Name").val(),
@@ -446,14 +441,13 @@ $(document).ready(function () {
                 ShowPro(QuotationId);
                 $("#modalEditProject").removeClass("save");
                 $("#btn-text").text("Edit");
-                $fieldProject.attr("disabled", "disabled");
+                $fieldProject.attr("disabled", "");
                 $("#btn_AddPayment").hide();
                 $(".payment").attr("disabled", "");
-                $("#modalEditConfirm").modal("hide");
               } catch (error) {
                 SwalError(error);
-                $("#modalEditConfirm").modal("hide");
               }
+              $("#modalEditConfirm").modal("hide");
             });
             $(".close,.no").click(function () {
               $("#modalEditConfirm").modal("hide");
@@ -940,6 +934,7 @@ $(document).ready(function () {
       let res = await AjaxDelete(`/quotation/delete_item/${ItemId}`);
       SwalDeleteSuccess(res);
       tableItem.ajax.reload(null, false);
+      fill_resetSubTable();
       ShowPro(QuotationId);
     } catch (error) {
       SwalError(error);
