@@ -70,10 +70,7 @@ router.put("/edit/:EmployeeId", async (req, res) => {
     let { EmployeeTitle, EmployeeFname, EmployeeLname } = req.body;
     let { EmployeeTel, EmployeeEmail, EmployeePosition } = req.body;
     if (EmployeeFname == "" || EmployeeEmail == "") {
-      res
-        .status(400)
-        .send({ message: "Please enter Employee's firstname and email" });
-      return;
+      return res.status(400).send({ message: "Please enter Employee's firstname and email" });
     }
     let pool = await sql.connect(dbconfig);
     let CheckEmployee = await pool.request().query(`SELECT CASE
@@ -156,14 +153,17 @@ router.put("/change_approval/:EmployeeId", async (req, res) => {
 
 router.delete("/delete/:EmployeeId", async (req, res) => {
   try {
+    let UserId = req.session.UserId;
     let EmployeeId = req.params.EmployeeId;
     let DeleteEmployee = `UPDATE privanet.MasterEmployee
       SET EmployeeActive = 0
       WHERE EmployeeId = ${EmployeeId}`;
     let pool = await sql.connect(dbconfig);
     await pool.request().query(DeleteEmployee);
-    req.session.destroy();
-    req.isAuth = false;
+    if (EmployeeId == UserId) {
+      req.session = null;
+      req.isAuth = false;
+    }
     res.status(200).send({ message: `Successfully delete Employee` });
   } catch (err) {
     res.status(500).send({ message: `${err}` });
