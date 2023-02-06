@@ -13,7 +13,7 @@ function AjaxGetData(url) {
         let error = err.responseJSON.message;
         Swal.fire({
           icon: "error",
-          title: "Error...",
+          title: "Get Data Error...",
           text: error,
         });
         reject(err);
@@ -38,11 +38,12 @@ function AjaxDataJson(url, method, data = null) {
     });
   });
 }
-function SwalSuccess(res) {
+function SwalSuccess(res,SwalTitle = `Success`) {
   successText = res.message;
   Swal.fire({
     position: "center",
     icon: "success",
+    title: SwalTitle,
     text: successText,
     showConfirmButton: false,
     timer: 1500,
@@ -81,7 +82,6 @@ function SwalDeleteSuccess(res) {
     timer: 1500,
   });
 }
-
 function SwalError(err) {
   errorText = err.responseJSON.message;
   Swal.fire({
@@ -95,229 +95,54 @@ function SwalError(err) {
   });
 }
 
-function AjaxGetDownload(url) {
-  $.ajax({
-    url: url,
-    method: "get",
-    contentType: "application/json",
-    dataType: "json",
-    success: function (res) {
-      window.open(url);
-    },
-    error: function (err) {
-      console.log(err);
-      let error = err.responseJSON.message;
-      Swal.fire({
-        icon: "error",
-        title: "Error...",
-        text: error,
-      });
-    },
-  });
-}
-function AjaxPut(url, table, data, modalId = null) {
-  $.ajax({
-    url: url,
-    method: "put",
-    contentType: "application/json",
-    data: JSON.stringify(data),
-    success: (res) => {
-      let success = res.message;
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Updated",
-        text: success,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      if (table != null) table.ajax.reload(null, false);
-      if (modalId != null) modalId.modal("hide");
-    },
-    error: (err) => {
-      let error = err.responseJSON.message;
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "Warning",
-        text: error,
-        showConfirmButton: true,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#FF5733",
-      });
-    },
-  });
-}
-function AjaxPutWithImage(url, table, modalId, fileImg = JSON.stringify({})) {
-  $.ajax({
-    url: url,
-    method: "put",
-    processData: false,
-    contentType: false,
-    data: fileImg,
-    success: (res) => {
-      let success = res.message;
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Updated",
-        text: success,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      table.ajax.reload(null, false);
-      modalId.modal("hide");
-    },
-    error: (err) => {
-      let error = err.responseJSON.message;
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "Warning",
-        text: error,
-        showConfirmButton: true,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#FF5733",
-      });
-    },
-  });
-}
-function AjaxPutCheckbox(url, table, data = "", swalTitle) {
-  $.ajax({
-    url: url,
-    method: "put",
-    contentType: "application/json",
-    data: JSON.stringify(data),
-    success: function (succ) {
-      successText = succ.message;
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: swalTitle,
-        text: successText,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      table.ajax.reload(null, false);
-    },
-    error: function (err) {
-      table.ajax.reload(null, false);
-    },
-  });
-}
-function AjaxPost(url, table1, table2 = null, data, modalId = null) {
-  $.ajax({
-    url: url,
-    method: "post",
-    contentType: "application/json",
-    data: JSON.stringify(data),
-    success: (res) => {
-      let successText = res.message;
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Created",
-        text: successText,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      table1.ajax.reload(null, false);
-      if (table2 != null) table2.ajax.reload(null, false);
+function AjaxPutWithImage(url,fileImg = {}) {
+  return new Promise(async (resolve, reject) => {
+    $.ajax({
+      url: url,
+      method: "put",
+      processData: false,
+      contentType: false,
+      data: JSON.stringify(fileImg),
+      success: (res) => {
+        resolve(res);
 
-      modalId != null ? modalId.modal("hide") : console.log("no modal");
-    },
-    error: (err) => {
-      let errorText = err.responseJSON.message;
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "Warning",
-        text: errorText,
-        showConfirmButton: true,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#FF5733",
-      });
-    },
-  });
+      },
+      error: (err) => {
+        reject(err);
+      },
+    });
+  })
+  
 }
-function AjaxPostWithImage(url, table, modalId, fileImg = JSON.stringify({})) {
-  $.ajax({
-    url: url,
-    method: "post",
-    processData: false,
-    contentType: false,
-    data: fileImg,
-    success: (res) => {
-      let success = res.message;
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Created",
-        text: success,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      table.ajax.reload(null, false);
-      modalId.modal("hide");
-    },
-    error: (err) => {
-      let error = err.responseJSON.message;
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "Warning",
-        text: error,
-        showConfirmButton: true,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#FF5733",
-      });
-    },
-  });
-}
-const AjaxImportExcel = (url, table, exFile = {}) => {
-  $.ajax({
-    url: url,
-    method: "post",
-    processData: false,
-    contentType: false,
-    data: JSON.stringify(exFile),
-    beforeSend: function () {
-      Swal.fire({
-        title: "Upload",
-        text: "Please wait, uploading file",
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-    },
-    success: (res) => {
-      let success = res.message;
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Uploaded",
-        text: success,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      table.ajax.reload(null, false);
-    },
-    error: (err) => {
-      let error = err.responseJSON.message;
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "Warning",
-        text: error,
-        showConfirmButton: true,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#FF5733",
-      });
-    },
-    complete: function () {
-      Swal.hideLoading();
-    },
-  });
+function AjaxImportFile (url, exFile = {}) {
+  return new Promise(async (resolve, reject) => {
+    $.ajax({
+      url: url,
+      method: "post",
+      processData: false,
+      contentType: false,
+      data: JSON.stringify(exFile),
+      beforeSend: function () {
+        Swal.fire({
+          title: "Upload",
+          text: "Please wait, uploading file",
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+      },
+      success: (res) => {
+        resolve(res)
+      },
+      error: (err) => {
+        reject(err)
+      },
+      complete: function () {
+        Swal.hideLoading();
+      },
+    });
+  })
+  
 };
 function AjaxDelete(url) {
   return new Promise(async (resolve, reject) => {
@@ -439,6 +264,7 @@ function fill_quotation(QuotationNoId = null) {
     },
     columns: [
       {
+        width:'50px',
         data: "QuotationRevised",
       },
       {
@@ -450,6 +276,9 @@ function fill_quotation(QuotationNoId = null) {
       },
       {
         data: "QuotationUpdatedDate",
+        render: function (data,type,row) {
+          return data = data.replaceAll(' ','<br>')
+        }
       },
       {
         data: "StatusName",
@@ -466,6 +295,7 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
+        width:'60px',
         data: "Action",
         render: function (data, type, row) {
           if (row.QuotationStatus === 1) {

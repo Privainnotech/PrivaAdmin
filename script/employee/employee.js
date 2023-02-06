@@ -192,105 +192,52 @@ $(document).ready(function () {
   });
 
   //Delete Employee
-  $("#tableEmploy").on("click", "#btnDelEmploy", function () {
+  $("#tableEmploy").on("click", "#btnDelEmploy", async function () {
     let rows = $(this).closest("tr");
     let { EmployeeId } = tableEmploy.row(rows).data();
-    $(".modal-title").text("Confirm Delete");
-
-    $("#btnYes").unbind();
-    $("#btnYes").click(async function () {
-      try {
-        let res = await AjaxDelete(`/employee_master/delete/${EmployeeId}`);
-        SwalDeleteSuccess(res);
-        tableEmploy.ajax.reload(null, false);
-      } catch (error) {
-        SwalError(error);
-      }
-      // $.ajax({
-      //   url: "/employee_master/delete/" + EmployeeId,
-      //   method: "delete",
-      //   contentType: "application/json",
-      //   success: function (succ) {
-      //     successText = succ.message;
-      //     Swal.fire({
-      //       position: "center",
-      //       icon: "success",
-      //       title: "Deleted",
-      //       text: successText,
-      //       showConfirmButton: false,
-      //       timer: 1500,
-      //     });
-      //     tableEmploy.ajax.reload(null, false);
-      //   },
-      // });
-    });
+    try {
+      let res = await AjaxDelete(`/employee_master/delete/${EmployeeId}`);
+      SwalDeleteSuccess(res);
+      tableEmploy.ajax.reload(null, false);
+    } catch (error) {
+      SwalError(error);
+    }
   });
 
   //Change Authority
-  $("#tableEmploy").on("click", "#AuthCheck", function () {
+  $("#tableEmploy").on("click", "#AuthCheck",async function () {
     let rows = $(this).closest("tr");
     let { EmployeeId } = tableEmploy.row(rows).data();
     let Authority = 0;
     $(this).is(":checked") ? (Authority = 1) : "";
     // checkbox is not checked -> do something different
-
-    $.ajax({
-      url: "/employee_master/change_authority/" + EmployeeId,
-      method: "put",
-      contentType: "application/json",
-      data: JSON.stringify({
-        Authority: Authority,
-      }),
-      success: function (succ) {
-        successText = succ.message;
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Change Authority",
-          text: successText,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        tableEmploy.ajax.reload(null, false);
-        $("#modalPassMaster").modal("hide");
-      },
-      error: function (err) {
-        tableEmploy.ajax.reload(null, false);
-      },
-    });
+    let data = {Authority: Authority};
+    try {
+      let res = await AjaxDataJson(`/employee_master/change_authority/${EmployeeId}`,`put`,data);
+      SwalSuccess(res);
+      tableEmploy.ajax.reload(null, false);
+    } catch (error) {
+      SwalError(error);
+      tableEmploy.ajax.reload(null, false);
+    }
   });
 
   //Change Approver
-  $(document).on("click", "#ApproveCheck", function () {
-    rows = $(this).closest("tr");
-    let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
+  $("#tableEmploy").on("click", "#ApproveCheck",async function () {
+    let rows = $(this).closest("tr");
+    let {EmployeeId} = tableEmploy.row(rows).data();
     let Approver = 0;
     $(this).is(":checked") ? (Approver = 1) : "";
     // checkbox is not checked -> do something different
-
-    $.ajax({
-      url: "/employee_master/change_approval/" + EmployeeId,
-      method: "put",
-      contentType: "application/json",
-      data: JSON.stringify({
-        Approver: Approver,
-      }),
-      success: function (succ) {
-        successText = succ.message;
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Change Approver",
-          text: successText,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        tableEmploy.ajax.reload(null, false);
-        $("#modalPassMaster").modal("hide");
-      },
-      error: function (err) {
-        tableEmploy.ajax.reload(null, false);
-      },
-    });
+    let data = {Approver: Approver}
+    try {
+      let res = await AjaxDataJson(`/employee_master/change_approval/${EmployeeId}`,`put`,data);
+      SwalSuccess(res);
+      tableEmploy.ajax.reload(null, false);
+    } catch (error) {
+      SwalError(error);
+      tableEmploy.ajax.reload(null, false);
+    }
+    
   });
 });
