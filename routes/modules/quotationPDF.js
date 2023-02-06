@@ -88,14 +88,43 @@ const applySpacing = (name) => {
   return spacebar;
 };
 
+let getPayTerm = async (QuotationPayTerm, payterm) => {
+  console.log(QuotationPayTerm, payterm)
+  // if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
+  if (typeof QuotationPayTerm == 'object') {
+    QuotationPayTerm = JSON.parse(QuotationPayTerm);
+    let payTerms = Object.values(QuotationPayTerm);
+    let payTerm = "";
+    let i = 1;
+    payTerms.map((term) => {
+      // console.log(term)
+      if (i == 1 && term == "") term = "-";
+      payTerm += `${term}\n`;
+      i++;
+    });
+  }
+
+  let PayTermArr = "", idx = 0
+  while (idx < payterm.length) {
+    console.log(payterm[idx])
+    let { PayTerm, PayPercent } = payterm[idx]
+    if (PayTerm == '') {
+      PayTermArr += '-'
+      break;
+    }
+    PayTermArr += `${PayTerm}  ${PayPercent}%\n`
+    idx++
+  }
+  if (PayTermArr) return { payTerm: PayTermArr, idx }
+  return { payTerm, idx: i };
+};
+
 const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) => {
-  let { CustomerName, CustomerEmail, CompanyName, CompanyAddress } = quotation;
-  let { EndCustomer, QuotationSubject, QuotationDate } = quotation;
-  let { QuotationTotalPrice, QuotationDiscount, QuotationNet } = quotation;
-  let { QuotationVat, QuotationNetVat, QuotationValidityDate } = quotation;
-  let { QuotationPayTerm, QuotationDelivery, QuotationRemark } = quotation;
-  let { QuotationDetail, EmployeeName, EmployeeFname } = quotation;
-  let { EmployeeLname, EmployeePosition, QuotationApproval } = quotation;
+  let { CustomerName, CustomerEmail, CompanyName, CompanyAddress, EndCustomer,
+    QuotationSubject, QuotationDate, QuotationTotalPrice, QuotationDiscount,
+    QuotationNet, QuotationVat, QuotationNetVat, QuotationValidityDate,
+    QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail,
+    EmployeeName, EmployeeFname, EmployeeLname, EmployeePosition, QuotationApproval } = quotation;
   let { TableShow, TablePrice, TableQty, TableTotal } = setting;
   // head
   let head = [
@@ -263,36 +292,6 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
   ];
 
   // condition
-  let getPayTerm = async (QuotationPayTerm, payterm) => {
-    console.log(QuotationPayTerm, payterm)
-    // if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
-    if (typeof QuotationPayTerm == 'object') {
-      QuotationPayTerm = JSON.parse(QuotationPayTerm);
-      let payTerms = Object.values(QuotationPayTerm);
-      let payTerm = "";
-      let i = 1;
-      payTerms.map((term) => {
-        // console.log(term)
-        if (i == 1 && term == "") term = "-";
-        payTerm += `${term}\n`;
-        i++;
-      });
-    }
-
-    let PayTermArr = "", idx = 0
-    while (idx < payterm.length) {
-      console.log(payterm[idx])
-      let { PayTerm, PayPercent } = payterm[idx]
-      if (PayTerm == '') {
-        PayTermArr += '-'
-        break;
-      }
-      PayTermArr += `${PayTerm}  ${PayPercent}%\n`
-      idx++
-    }
-    if (PayTermArr) return { payTerm: PayTermArr, idx }
-    return { payTerm, idx: i };
-  };
   let { payTerm, idx } = await getPayTerm(QuotationPayTerm, payterm);
   console.log(payTerm)
   let newline = ""
@@ -610,62 +609,35 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
   };
 
   // Detail
-  let pageBreak = () => {
-    return {
-      text: "",
-      pageBreak: "before",
-    };
+  let pageBreak = {
+    text: "",
+    pageBreak: "before",
   };
-  let detailHeader = () => {
-    return {
-      columns: [
-        {
-          width: "*",
-          text: `\n\nQuotation Detail :\n\n`,
-          style: "btext",
-          fontSize: 8,
-        },
-        {
-          width: "50%",
-          margin: [0, -15, 0, 0],
-          text: `Quotation No. : ${quotationNo}`,
-          alignment: "right",
-          fontSize: 8,
-        },
-      ],
-    };
-  };
-  let detailTable = () => {
-    return {
-      headerRows: 0,
-      widths: ["*", "10%", "10%"],
-      style: "text",
-      body: [],
-    };
+  let detailHeader = {
+    columns: [
+      {
+        width: "*",
+        text: `\n\nQuotation Detail :\n\n`,
+        style: "btext",
+        fontSize: 8,
+      },
+      {
+        width: "50%",
+        margin: [0, -15, 0, 0],
+        text: `Quotation No. : ${quotationNo}`,
+        alignment: "right",
+        fontSize: 8,
+      },
+    ],
+  }
+  let detailTable = {
+    headerRows: 0,
+    widths: ["*", "10%", "10%"],
+    style: "text",
+    body: [],
   };
   if (QuotationDetail) {
-    if (QuotationDetail[0] == '<') quotation.QuotationDetail = QuotationDetail
-    else {
-      // console.log(JSON.parse(QuotationDetail))
-      console.log(QuotationDetail)
-      QuotationDetail = JSON.parse(QuotationDetail);
-      let Details = ''
-      console.log(QuotationDetail)
-      if (!QuotationDetail || QuotationDetail == 'null') quotation.QuotationDetail = ''
-      else {
-        QuotationDetail.blocks.forEach(block => {
-          let { data } = block
-          Details += `<p>${data.text}</p>`
-        })
-        console.log(Details)
-        quotation.QuotationDetail = Details
-      }
-    }
-  } else quotation.QuotationDetail = ''
-  if (QuotationDetail) {
-    let detailTable1 = detailTable();
-    let detailTable2 = detailTable();
-    let detailTable3 = detailTable();
+    let detailTable1 = detailTable, detailTable2 = detailTable, detailTable3 = detailTable;
     let detail1 = {
       margin: [15, 0, 50, 0],
       layout: "noBorders",
@@ -701,7 +673,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
       text = text.split("; ");
       if (i < 40) {
         if (i === 0) {
-          doc["content"].push(pageBreak(), detailHeader(), detail1);
+          doc["content"].push(pageBreak, detailHeader, detail1);
         }
         detailTable1["body"].push([
           { text: text[0], bold: isBold, decoration: isUnderline },
@@ -710,7 +682,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
         ]);
       } else if (i < 80) {
         if (i === 40) {
-          doc["content"].push(pageBreak(), detailHeader(), detail2);
+          doc["content"].push(pageBreak, detailHeader, detail2);
         }
         detailTable2["body"].push([
           { text: text[0], bold: isBold, decoration: isUnderline },
@@ -719,7 +691,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
         ]);
       } else {
         if (i === 80) {
-          doc["content"].push(pageBreak(), detailHeader(), detail3);
+          doc["content"].push(pageBreak, detailHeader, detail3);
         }
         detailTable3["body"].push([
           { text: text[0], bold: isBold, decoration: isUnderline },
