@@ -242,9 +242,6 @@ function fill_quotationHead() {
       },
       {
         data: "QuotationNet",
-        render: function (data, type, row) {
-          if (!data) return (data = "-");
-        },
       },
     ],
   });

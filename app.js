@@ -21,8 +21,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(
   cookieSession({
-    name: "session",
-    keys: ["key1, key2"],
+    name: "privauser",
+    keys: ["priva, dashboard"],
     maxAge: 1000 * 60 * 60 * 24,
   })
 );
@@ -59,16 +59,16 @@ app.use("/quotation_report", quotationReportRoute);
 app.use("/quotation_approval", quotationApproveRoute);
 app.use("/dropdown", dropdownRoute);
 
-const sql = require("mssql");
-const { dbconfig } = require("./config");
-app.use("/testconnect", async (req, res, next) => {
-  try {
-    let pool = await sql.connect(dbconfig);
-    res.status(200).send({ message: "Connect SQL Server Success" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send({ message: err });
-  }
-});
+// const sql = require("mssql");
+// const { dbconfig } = require("./config");
+// app.use("/testconnect", async (req, res, next) => {
+//   try {
+//     let pool = await sql.connect(dbconfig);
+//     res.status(200).send({ message: "Connect SQL Server Success" });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send({ message: err });
+//   }
+// });
 
 module.exports = app;

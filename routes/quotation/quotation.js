@@ -27,7 +27,7 @@ router.get("/quotation_no_list", async (req, res, next) => {
         (SELECT TOP 1 QuotationNet
           FROM privanet.[Quotation] g
           WHERE g.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationRevised
+          ORDER BY QuotationStatus) QuotationNet
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
       LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId`;
@@ -212,7 +212,6 @@ router.get("/subitem/:ItemId", async (req, res) => {
       LEFT JOIN privanet.[MasterProduct] b ON a.ProductId = b.ProductId
       LEFT JOIN privanet.[QuotationItem] c ON a.ItemId = c.ItemId
       WHERE a.ItemId = ${ItemId}`;
-    console.log(getQuotationSubItem)
     let quotations = await pool.request().query(getQuotationSubItem);
     res.status(200).send(JSON.stringify(quotations.recordset));
   } catch (err) {
@@ -421,9 +420,16 @@ router.delete("/delete_subitem/:SubItemId", async (req, res) => {
       SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId = @ItemId);
       DELETE FROM privanet.QuotationSubItem WHERE SubItemId = ${SubItemId};
       UPDATE privanet.QuotationItem
-      SET ItemPrice = (SELECT SUM(SubItemQty * SubItemPrice) 
-        FROM privanet.QuotationSubItem 
-        WHERE ItemId = @ItemId)
+      SET ItemPrice = (SELECT CASE
+        WHEN EXISTS(
+          SELECT *
+          FROM privanet.QuotationSubItem
+          WHERE ItemId = @ItemId
+        )
+        THEN CAST ((SELECT SUM(SubItemQty * SubItemPrice) 
+          FROM privanet.QuotationSubItem 
+          WHERE ItemId = @ItemId) as int)
+        ELSE CAST (0 as int) END)
       WHERE ItemId = @ItemId;
       UPDATE privanet.Quotation
       SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
