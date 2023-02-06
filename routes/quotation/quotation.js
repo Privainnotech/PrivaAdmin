@@ -34,7 +34,6 @@ router.get("/quotation_no_list", async (req, res, next) => {
     // WHERE NOT b.CustomerName = N'Fake'
     let pool = await sql.connect(dbconfig);
     let quotationNos = await pool.request().query(getQuotationNoList);
-    console.log(quotationNos.recordset)
     for (let Quotation of quotationNos.recordset) {
       let { CustomerIdQ } = Quotation
       if (!CustomerIdQ) continue;
@@ -421,9 +420,16 @@ router.delete("/delete_subitem/:SubItemId", async (req, res) => {
       SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId = @ItemId);
       DELETE FROM privanet.QuotationSubItem WHERE SubItemId = ${SubItemId};
       UPDATE privanet.QuotationItem
-      SET ItemPrice = (SELECT SUM(SubItemQty * SubItemPrice) 
-        FROM privanet.QuotationSubItem 
-        WHERE ItemId = @ItemId)
+      SET ItemPrice = (SELECT CASE
+        WHEN EXISTS(
+          SELECT *
+          FROM privanet.QuotationSubItem
+          WHERE ItemId = @ItemId
+        )
+        THEN CAST ((SELECT SUM(SubItemQty * SubItemPrice) 
+          FROM privanet.QuotationSubItem 
+          WHERE ItemId = @ItemId) as int)
+        ELSE CAST (0 as int) END)
       WHERE ItemId = @ItemId;
       UPDATE privanet.Quotation
       SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 

@@ -388,7 +388,6 @@ function searchTableQuoHead() {
 // Fill Table
 //Quotation
 function fill_quotationHead() {
-  console.log('fill quo')
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
     // scrollX: true,
