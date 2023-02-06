@@ -388,6 +388,7 @@ function searchTableQuoHead() {
 // Fill Table
 //Quotation
 function fill_quotationHead() {
+  console.log('fill quo')
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
     // scrollX: true,
@@ -430,9 +431,6 @@ function fill_quotationHead() {
       {
         width: "20%",
         data: "QuotationNet",
-        render: function (data, type, row) {
-          if (!data) return (data = "-");
-        },
       },
     ],
   });

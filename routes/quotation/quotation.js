@@ -27,13 +27,14 @@ router.get("/quotation_no_list", async (req, res, next) => {
         (SELECT TOP 1 QuotationNet
           FROM privanet.[Quotation] g
           WHERE g.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationRevised
+          ORDER BY QuotationStatus) QuotationNet
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
       LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId`;
     // WHERE NOT b.CustomerName = N'Fake'
     let pool = await sql.connect(dbconfig);
     let quotationNos = await pool.request().query(getQuotationNoList);
+    console.log(quotationNos.recordset)
     for (let Quotation of quotationNos.recordset) {
       let { CustomerIdQ } = Quotation
       if (!CustomerIdQ) continue;
@@ -212,7 +213,6 @@ router.get("/subitem/:ItemId", async (req, res) => {
       LEFT JOIN privanet.[MasterProduct] b ON a.ProductId = b.ProductId
       LEFT JOIN privanet.[QuotationItem] c ON a.ItemId = c.ItemId
       WHERE a.ItemId = ${ItemId}`;
-    console.log(getQuotationSubItem)
     let quotations = await pool.request().query(getQuotationSubItem);
     res.status(200).send(JSON.stringify(quotations.recordset));
   } catch (err) {
