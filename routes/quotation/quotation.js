@@ -139,16 +139,25 @@ router.get("/:QuotationId", async (req, res) => {
     let Revised = QuotationRevised < 10 ? "0" + QuotationRevised.toString() : QuotationRevised.toString();
     quotation.QuotationNo_Revised = `${QuotationNo}_${Revised}`;
     if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) quotation.QuotationPayTerm = "";
-    else quotation.QuotationPayTerm = JSON.parse(QuotationPayTerm.replaceAll("QuotationPayTerm", ""));
+    else {
+      let PaytermArr = []
+      QuotationPayTerm = JSON.parse(QuotationPayTerm);
+      for (let [key, value] of Object.entries(QuotationPayTerm)) {
+        if (value) PaytermArr.push({ PayTerm: value, PayPercent: 0 })
+      }
+      quotation.QuotationPayTerm = PaytermArr
+    }
     if (!EmployeeApproveId) quotation.EmployeeApproveId = "";
     if (QuotationDetail) {
-      if (QuotationDetail[0] == '<') {
-        quotation.QuotationDetail = QuotationDetail
-      } else {
+      if (QuotationDetail[0] == '<') quotation.QuotationDetail = QuotationDetail
+      else {
         // console.log(JSON.parse(QuotationDetail))
+        console.log(QuotationDetail)
         QuotationDetail = JSON.parse(QuotationDetail);
         let Details = ''
-        if (QuotationDetail.blocks) {
+        console.log(QuotationDetail)
+        if (!QuotationDetail || QuotationDetail == 'null') quotation.QuotationDetail = ''
+        else {
           QuotationDetail.blocks.forEach(block => {
             let { data } = block
             Details += `<p>${data.text}</p>`
@@ -156,9 +165,9 @@ router.get("/:QuotationId", async (req, res) => {
           console.log(Details)
           quotation.QuotationDetail = Details
         }
-
       }
-    }
+    } else quotation.QuotationDetail = ''
+
     quotation.QuotationRevised = Revised;
     let PayTermArr = new Array
     for (let idx = 0; idx < payterms.recordset.length; idx++) {
@@ -454,15 +463,16 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
       await pool.request().query(UpdateQuotation);
       let QuotationPayLength = QuotationPayTerm.length
       for (let idx = 0; idx < QuotationPayLength; idx++) {
-        let { PayTerm, PayPercent } = QuotationPayTerm[idx]
+
+        let { PayTerm, Percent } = QuotationPayTerm[idx]
         let checkPayTerm = await pool.request().query(`SELECT IndexPayTerm
           FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1}`)
         if (checkPayTerm.recordset.length) await pool.request().query(`UPDATE privanet.QuotationPayTerm
-          SET PayTerm = N'${PayTerm}', PayPercent = ${PayPercent || 0}
+          SET PayTerm = N'${PayTerm}', PayPercent = ${Percent || 0}
           WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
         else await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
           (QuotationId,IndexPayTerm,PayTerm,PayPercent)
-          VALUES(${QuotationId},${idx + 1},N'${PayTerm}',${PayPercent || 0});`);
+          VALUES(${QuotationId},${idx + 1},N'${PayTerm}',${Percent || 0});`);
       }
       let checkPayTermLength = await pool.request().query(`SELECT COUNT(IndexPayTerm) PayTermLength
         FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId}`)
@@ -499,7 +509,7 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     let Detail = '';
     if (typeof QuotationDetail == 'object' && QuotationDetail.blocks.length !== 0) Detail = JSON.stringify(QuotationDetail);
     else Detail = QuotationDetail
-    Detail = Detail.replaceAll("&nbsp;", " ").replaceAll("'", "").replaceAll("amp;", "");
+    Detail = Detail.replaceAll("&nbsp;", " ").replaceAll("'", "''").replaceAll("amp;", "&");
     console.log(Detail);
     let UpdateDetail = `UPDATE privanet.Quotation SET QuotationDetail = N'${Detail}' WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(UpdateDetail);
