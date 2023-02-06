@@ -22,23 +22,6 @@ function AjaxGetData(url) {
   });
 }
 
-function Test(url) {
-  return new Promise(async (resolve, reject) => {
-    $.ajax({
-      url: url,
-      method: "get",
-      contentType: "application/json",
-      dataType: "json",
-      success: function (res) {
-        resolve(res);
-      },
-      error: function (err) {
-        reject(err);
-      },
-    });
-  });
-}
-
 function AjaxDataJson(url, method, data = null) {
   return new Promise(async (resolve, reject) => {
     $.ajax({
@@ -55,7 +38,16 @@ function AjaxDataJson(url, method, data = null) {
     });
   });
 }
-
+function SwalSuccess(res) {
+  successText = res.message;
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    text: successText,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+}
 function SwalAddSuccess(res) {
   successText = res.message;
   Swal.fire({
@@ -343,13 +335,9 @@ function AjaxDelete(url) {
           contentType: "application/json",
           success: (res) => {
             resolve(res);
-            // SwalDeleteSuccess(res)
-            // table1.ajax.reload(null, false);
-            // if (table2 != null) table2.ajax.reload(null, false);
           },
           error: (err) => {
             reject(err);
-            // SwalError(err);
           },
         });
       }
@@ -405,7 +393,7 @@ function fill_quotationHead() {
     },
     columns: [
       {
-        width: "10%",
+        width:'50px',
         data: "index",
       },
 
@@ -428,7 +416,6 @@ function fill_quotationHead() {
         data: "CustomerName",
       },
       {
-        width: "20%",
         data: "QuotationNet",
         render: function (data, type, row) {
           if (!data) return (data = "-");
@@ -452,11 +439,9 @@ function fill_quotation(QuotationNoId = null) {
     },
     columns: [
       {
-        width: "5%",
         data: "QuotationRevised",
       },
       {
-        width: "10%",
         data: "QuotationDate",
         render: function (data, type, row) {
           if (data != null) return data;
@@ -464,11 +449,9 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
-        width: "10%",
         data: "QuotationUpdatedDate",
       },
       {
-        width: "10%",
         data: "StatusName",
         render: function (data, type, row) {
           let L_Status = data.toLowerCase();
@@ -476,7 +459,6 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
-        width: "8%",
         data: "EmployeeFname",
         render: function (data, type, row) {
           if (data != null) return data;
@@ -484,7 +466,6 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
-        width: "5%",
         data: "Action",
         render: function (data, type, row) {
           if (row.QuotationStatus === 1) {

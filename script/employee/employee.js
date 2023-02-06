@@ -1,72 +1,74 @@
+function fill_employee() {
+  tableEmploy = $("#tableEmploy").DataTable({
+    bDestroy: true,
+    scrollX: true,
+    scrollCollapse: true,
+    ajax: {
+      url: "/employee_master/data",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "index",
+      },
+      {
+        data: "EmployeeName",
+      },
+      {
+        data: "EmployeePosition",
+      },
+      {
+        data: "EmployeeEmail",
+      },
+      {
+        data: "EmployeeTel",
+      },
+      {
+        data: "Authority",
+        render: function (data, type, row) {
+          if (row.Authority == 1) {
+            return " <div class='form-check'><input class='form-check-input' type='checkbox' value='1' id='AuthCheck' checked></div>";
+          } else {
+            return " <div class='form-check'><input class='form-check-input' type='checkbox' value='0' id='AuthCheck'></div>";
+          }
+        },
+      },
+      {
+        data: "Approver",
+        render: function (data, type, row) {
+          if (row.Approver == 1) {
+            return " <div class='form-check'><input class='form-check-input' type='checkbox' value='1' id='ApproveCheck' checked></div>";
+          } else {
+            return " <div class='form-check'><input class='form-check-input' type='checkbox' value='0' id='ApproveCheck'></div>";
+          }
+        },
+      },
+      {
+        defaultContent:
+          "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnEditPass' style='width: 2rem;'><i class='fa fa-key' aria-hidden='true'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy'><i class='fa fa-remove'></i></button></div></div>",
+      },
+      {
+        data: "EmployeeId",
+        data: "Password",
+        data: "Authority",
+      },
+    ],
+    columnDefs: [
+      {
+        targets: [8],
+        visible: false,
+      },
+    ],
+  });
+}
 $(document).ready(function () {
   //Employee Table
-  function fill_employee() {
-    tableEmploy = $("#tableEmploy").DataTable({
-      bDestroy: true,
-      scrollX: true,
-      scrollCollapse: true,
-      ajax: {
-        url: "/employee_master/data",
-        dataSrc: "",
-      },
-      columns: [
-        {
-          data: "index",
-        },
-        {
-          data: "EmployeeName",
-        },
-        {
-          data: "EmployeePosition",
-        },
-        {
-          data: "EmployeeEmail",
-        },
-        {
-          data: "EmployeeTel",
-        },
-        {
-          data: "Authority",
-          render: function (data, type, row) {
-            if (row.Authority == 1) {
-              return " <div class='form-check'><input class='form-check-input' type='checkbox' value='1' id='AuthCheck' checked></div>";
-            } else {
-              return " <div class='form-check'><input class='form-check-input' type='checkbox' value='0' id='AuthCheck'></div>";
-            }
-          },
-        },
-        {
-          data: "Approver",
-          render: function (data, type, row) {
-            if (row.Approver == 1) {
-              return " <div class='form-check'><input class='form-check-input' type='checkbox' value='1' id='ApproveCheck' checked></div>";
-            } else {
-              return " <div class='form-check'><input class='form-check-input' type='checkbox' value='0' id='ApproveCheck'></div>";
-            }
-          },
-        },
-        {
-          defaultContent:
-            "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnEditPass' style='width: 2rem;'><i class='fa fa-key' aria-hidden='true'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy'><i class='fa fa-remove'></i></button></div></div>",
-        },
-        {
-          data: "EmployeeId",
-          data: "Password",
-          data: "Authority",
-        },
-      ],
-      columnDefs: [
-        {
-          targets: [8],
-          visible: false,
-        },
-      ],
-    });
-  }
+
   fill_employee();
 
   //Add Employee
-  $(document).on("click", "#addEmploy", function () {
+  $("#addEmploy").unbind();
+  $("#addEmploy").click(function () {
     $("#modalEmployeeMaster").modal("show");
 
     $("#passbox").removeClass("visually-hidden");
@@ -75,59 +77,26 @@ $(document).ready(function () {
     $("#formEmployee").trigger("reset");
     $(".modal-title").text("Add Employee");
     $("#modalSaveEmployee").unbind();
-    $("#modalSaveEmployee").click(function () {
-      let EmployeeTitle = $.trim($("#modalInpEmployTitle").val());
-      let EmployeeFname = $.trim($("#modalInpEmployFname").val());
-      let EmployeeLname = $.trim($("#modalInpEmployLname").val());
-      let Password = $.trim($("#modalInpEmployPassword").val());
-      let Authority = $.trim($("#modalInpAut").val());
-      let Approver = $.trim($("#modalInpApprove").val());
-      let EmployeePosition = $.trim($("#modalInpEmployPosition").val());
-      let EmployeeEmail = $.trim($("#modalInpEmployEmail").val());
-      let EmployeeTel = $.trim($("#modalInpEmployTel").val());
-      console.log(EmployeeTitle);
-      $.ajax({
-        url: "/employee_master/add",
-        method: "post",
-        contentType: "application/json",
-        data: JSON.stringify({
-          EmployeeTitle: EmployeeTitle,
-          EmployeeFname: EmployeeFname,
-          EmployeeLname: EmployeeLname,
-          Password: Password,
-          Authority: Authority,
-          Approver: Approver,
-          EmployeePosition: EmployeePosition,
-          EmployeeEmail: EmployeeEmail,
-          EmployeeTel: EmployeeTel,
-        }),
-        success: function (succ) {
-          successText = succ.message;
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Created",
-            text: successText,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          tableEmploy.ajax.reload(null, false);
-          $("#modalEmployeeMaster").modal("hide");
-        },
-        error: function (err) {
-          console.log(err);
-          errorText = err.responseJSON.message;
-          Swal.fire({
-            position: "center",
-            icon: "warning",
-            title: "Warning",
-            text: errorText,
-            showConfirmButton: true,
-            confirmButtonText: "OK",
-            confirmButtonColor: "#FF5733",
-          });
-        },
-      });
+    $("#modalSaveEmployee").click(async function () {
+      let data = {
+        EmployeeTitle: $("#modalInpEmployTitle").val(),
+        EmployeeFname: $("#modalInpEmployFname").val(),
+        EmployeeLname: $("#modalInpEmployLname").val(),
+        Password: $("#modalInpEmployPassword").val(),
+        Authority: $("#modalInpAut").val(),
+        Approver: $("#modalInpApprove").val(),
+        EmployeePosition: $("#modalInpEmployPosition").val(),
+        EmployeeEmail: $("#modalInpEmployEmail").val(),
+        EmployeeTel: $("#modalInpEmployTel").val(),
+      };
+      try {
+        let res = await AjaxDataJson(`/employee_master/add`, `post`, data);
+        SwalAddSuccess(res);
+        tableEmploy.ajax.reload(null, false);
+        $("#modalEmployeeMaster").modal("hide");
+      } catch (error) {
+        SwalError(error);
+      }
     });
     $(".close,.no").click(function () {
       $("#modalEmployeeMaster").modal("hide");
@@ -135,7 +104,8 @@ $(document).ready(function () {
   });
 
   //Edit Employee
-  $(document).on("click", "#btnEditEmploy", function () {
+  $("#tableEmploy").unbind();
+  $("#tableEmploy").on("click", "#btnEditEmploy", function () {
     $("#modalEmployeeMaster").modal("show");
 
     $("#passbox").addClass("visually-hidden");
@@ -143,15 +113,16 @@ $(document).ready(function () {
 
     $("#formCompany").trigger("reset");
     $(".modal-title").text("Edit Company");
-    rows = $(this).closest("tr");
-    let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
-    let EmployeeTitle = tableEmploy.rows(rows).data()[0].EmployeeTitle;
-    let EmployeeFname = tableEmploy.rows(rows).data()[0].EmployeeFname;
-    let EmployeeLname = tableEmploy.rows(rows).data()[0].EmployeeLname;
-
-    let EmployeePosition = tableEmploy.rows(rows).data()[0].EmployeePosition;
-    let EmployeeEmail = tableEmploy.rows(rows).data()[0].EmployeeEmail;
-    let EmployeeTel = tableEmploy.rows(rows).data()[0].EmployeeTel;
+    let rows = $(this).closest("tr");
+    let {
+      EmployeeId,
+      EmployeeTitle,
+      EmployeeFname,
+      EmployeeLname,
+      EmployeePosition,
+      EmployeeEmail,
+      EmployeeTel,
+    } = tableEmploy.row(rows).data();
 
     $("#modalInpEmployTitle").val(EmployeeTitle);
     $("#modalInpEmployFname").val(EmployeeFname);
@@ -161,52 +132,27 @@ $(document).ready(function () {
     $("#modalInpEmployTel").val(EmployeeTel);
 
     $("#modalSaveEmployee").unbind();
-    $("#modalSaveEmployee").click(function () {
-      let EmployeeTitle = $.trim($("#modalInpEmployTitle").val());
-      let EmployeeFname = $.trim($("#modalInpEmployFname").val());
-      let EmployeeLname = $.trim($("#modalInpEmployLname").val());
-      let EmployeePosition = $.trim($("#modalInpEmployPosition").val());
-      let EmployeeEmail = $.trim($("#modalInpEmployEmail").val());
-      let EmployeeTel = $.trim($("#modalInpEmployTel").val());
-
-      $.ajax({
-        url: "/employee_master/edit/" + EmployeeId,
-        method: "put",
-        contentType: "application/json",
-        data: JSON.stringify({
-          EmployeeTitle: EmployeeTitle,
-          EmployeeFname: EmployeeFname,
-          EmployeeLname: EmployeeLname,
-          EmployeePosition: EmployeePosition,
-          EmployeeEmail: EmployeeEmail,
-          EmployeeTel: EmployeeTel,
-        }),
-        success: function (succ) {
-          successText = succ.message;
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Edited",
-            text: successText,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          tableEmploy.ajax.reload(null, false);
-          $("#modalEmployeeMaster").modal("hide");
-        },
-        error: function (err) {
-          errorText = err.responseJSON.message;
-          Swal.fire({
-            position: "center",
-            icon: "warning",
-            title: "Warning",
-            text: errorText,
-            showConfirmButton: true,
-            confirmButtonText: "OK",
-            confirmButtonColor: "#FF5733",
-          });
-        },
-      });
+    $("#modalSaveEmployee").click(async function () {
+      let data = {
+        EmployeeTitle: $("#modalInpEmployTitle").val(),
+        EmployeeFname: $("#modalInpEmployFname").val(),
+        EmployeeLname: $("#modalInpEmployLname").val(),
+        EmployeePosition: $("#modalInpEmployPosition").val(),
+        EmployeeEmail: $("#modalInpEmployEmail").val(),
+        EmployeeTel: $("#modalInpEmployTel").val(),
+      };
+      try {
+        let res = await AjaxDataJson(
+          `/employee_master/edit/${EmployeeId}`,
+          `put`,
+          data
+        );
+        SwalEditSuccess(res);
+        tableEmploy.ajax.reload(null, false);
+        $("#modalEmployeeMaster").modal("hide");
+      } catch (error) {
+        SwalError(error);
+      }
     });
     $(".close,.no").click(function () {
       $("#modalEmployeeMaster").modal("hide");
@@ -214,51 +160,31 @@ $(document).ready(function () {
   });
 
   //Change Pass
-  $(document).on("click", "#btnEditPass", function () {
+  $("#tableEmploy").on("click", "#btnEditPass", function () {
     $("#modalPassMaster").modal("show");
     $("#formPass").trigger("reset");
     $(".modal-title").text("Change Password");
 
-    rows = $(this).closest("tr");
-    let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
+    let rows = $(this).closest("tr");
+    let { EmployeeId } = tableEmploy.row(rows).data();
 
     $("#modalSaveEdit").unbind();
-    $("#modalSaveEdit").click(function () {
-      let Password = $.trim($("#modalInpEdEmployPassword").val());
-
-      $.ajax({
-        url: "/employee_master/change_password/" + EmployeeId,
-        method: "put",
-        contentType: "application/json",
-        data: JSON.stringify({
-          Password: Password,
-        }),
-        success: function (succ) {
-          successText = succ.message;
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Change Success",
-            text: successText,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          tableEmploy.ajax.reload(null, false);
-          $("#modalPassMaster").modal("hide");
-        },
-        error: function (err) {
-          errorText = err.responseJSON.message;
-          Swal.fire({
-            position: "center",
-            icon: "warning",
-            title: "Warning",
-            text: errorText,
-            showConfirmButton: true,
-            confirmButtonText: "OK",
-            confirmButtonColor: "#FF5733",
-          });
-        },
-      });
+    $("#modalSaveEdit").click(async function () {
+      let data = {
+        Password: $("#modalInpEdEmployPassword").val(),
+      };
+      try {
+        let res = await AjaxDataJson(
+          `/employee_master/change_password/${EmployeeId}`,
+          `put`,
+          data
+        );
+        SwalEditSuccess(res);
+        tableEmploy.ajax.reload(null, false);
+        $("#modalPassMaster").modal("hide");
+      } catch (error) {
+        SwalError(error);
+      }
     });
     $(".close,.no").click(function () {
       $("#modalPassMaster").modal("hide");
@@ -266,43 +192,44 @@ $(document).ready(function () {
   });
 
   //Delete Employee
-  $(document).on("click", "#btnDelEmploy", function () {
-    $("#modalDeleteConfirm").modal("show");
-
-    rows = $(this).closest("tr");
-    let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
+  $("#tableEmploy").on("click", "#btnDelEmploy", function () {
+    let rows = $(this).closest("tr");
+    let { EmployeeId } = tableEmploy.row(rows).data();
     $(".modal-title").text("Confirm Delete");
 
     $("#btnYes").unbind();
-    $("#btnYes").click(function () {
-      $.ajax({
-        url: "/employee_master/delete/" + EmployeeId,
-        method: "delete",
-        contentType: "application/json",
-        success: function (succ) {
-          successText = succ.message;
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Deleted",
-            text: successText,
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          tableEmploy.ajax.reload(null, false);
-        },
-      });
-      $("#modalDeleteConfirm").modal("hide");
-    });
-    $(".close,.no").click(function () {
-      $("#modalDeleteConfirm").modal("hide");
+    $("#btnYes").click(async function () {
+      try {
+        let res = await AjaxDelete(`/employee_master/delete/${EmployeeId}`);
+        SwalDeleteSuccess(res);
+        tableEmploy.ajax.reload(null, false);
+      } catch (error) {
+        SwalError(error);
+      }
+      // $.ajax({
+      //   url: "/employee_master/delete/" + EmployeeId,
+      //   method: "delete",
+      //   contentType: "application/json",
+      //   success: function (succ) {
+      //     successText = succ.message;
+      //     Swal.fire({
+      //       position: "center",
+      //       icon: "success",
+      //       title: "Deleted",
+      //       text: successText,
+      //       showConfirmButton: false,
+      //       timer: 1500,
+      //     });
+      //     tableEmploy.ajax.reload(null, false);
+      //   },
+      // });
     });
   });
 
   //Change Authority
-  $(document).on("click", "#AuthCheck", function () {
-    rows = $(this).closest("tr");
-    let EmployeeId = tableEmploy.rows(rows).data()[0].EmployeeId;
+  $("#tableEmploy").on("click", "#AuthCheck", function () {
+    let rows = $(this).closest("tr");
+    let { EmployeeId } = tableEmploy.row(rows).data();
     let Authority = 0;
     $(this).is(":checked") ? (Authority = 1) : "";
     // checkbox is not checked -> do something different

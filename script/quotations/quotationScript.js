@@ -346,11 +346,17 @@ $(document).ready(function () {
 
   //Delete Project
   $("#tableQuo").unbind();
-  $("#tableQuo").on("click", "#btnDelProject", function () {
-    rows = $(this).closest("tr");
+  $("#tableQuo").on("click", "#btnDelProject", async function () {
+    let rows = $(this).closest("tr");
     let { QuotationId } = tableQuo.row(rows).data();
-    let url = `/quotation/delete_quotation/${QuotationId}`;
-    AjaxDelete(url, tableQuo, tableQuoHead);
+    try {
+      let res = await AjaxDelete(`/quotation/delete_quotation/${QuotationId}`);
+      SwalDeleteSuccess(res);
+      tableQuoHead.ajax.reload(null, false);
+      tableQuo.ajax.reload(null, false);
+    } catch (error) {
+      SwalError(error);
+    }
   });
 
   //clickTableQuotation
