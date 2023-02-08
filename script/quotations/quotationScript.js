@@ -219,7 +219,6 @@ function RePro() {
 
 //Reset Quo Table
 function fill_resetQuoTable() {
-  console.log('resrtQuotb')
   var trHTML = "";
   trHTML += "<tr>";
   trHTML += '<td colspan="6">please select a project...</td>';
@@ -230,7 +229,7 @@ function fill_resetQuoTable() {
 function fill_resetTable() {
   var trHTML = "";
   trHTML += "<tr>";
-  trHTML += '<td colspan="6">please select a revised...</td>';
+  trHTML += '<td colspan="6">please select a quatation...</td>';
   trHTML += "</tr>";
   document.getElementById("showTable").innerHTML = trHTML;
 }

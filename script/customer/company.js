@@ -27,16 +27,15 @@ function fill_company() {
         defaultContent:
           "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditCompany' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelCompany'><i class='fa fa-remove'></i></button></div></div>",
       },
-      {
-        data: "CompanyId",
-      },
+      
     ],
-    columnDefs: [
-      {
-        targets: [6],
-        visible: false,
-      },
-    ],
+    
+    createdRow: function( row, data, dataIndex ) {
+      console.log($(row).children())
+      let last =  $(row).children().length - 1
+
+      $($( row ).children()[last]).addClass('test');
+  }
   });
 }
 async function LoadDropDown() {
