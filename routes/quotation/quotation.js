@@ -129,8 +129,8 @@ router.get("/:QuotationId", async (req, res) => {
       LEFT JOIN privanet.[QuotationSetting] g ON a.QuotationId = g.QuotationId
       WHERE a.QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
-    let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent,PayForecast FROM privanet.QuotationPayTerm
-      WHERE QuotationId = ${QuotationId};`
+    let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent,FORMAT(PayForecast, 'yyyy-MM-dd') PayForecast
+      FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId};`
     let payterms = await pool.request().query(getPayterm);
 
     let quotation = quotations.recordset[0]
