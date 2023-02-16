@@ -117,26 +117,40 @@ function ShowPro(QuotationId) {
       $("#PJ_Name").val(QuotationSubject);
       $("#PJ_Discount").val(QuotationDiscount);
       $("#PJ_Validity").val(QuotationValidityDate);
-      let PayTermLength, PayTermDetail, PayTermPercent;
+      let PayTermLength, PayTermDetail, PayTermPercent, PayTermForecast;
       !Array.isArray(QuotationPayTerm)
         ? (PayTermLength = Object.keys(QuotationPayTerm).length)
         : (PayTermLength = QuotationPayTerm.length);
-      $(".box-payment .input-group").remove();
+      $(".box-payment .row").remove();
       if (PayTermLength != 0) {
+        console.log("QuotationPayTerm:", QuotationPayTerm);
         for (let i = 1; i <= PayTermLength; i++) {
           if (!Array.isArray(QuotationPayTerm)) {
             PayTermDetail = QuotationPayTerm[`QuotationPayTerm${i}`];
             PayTermPercent = "0";
+            PayTermForecast = "";
           } else {
             PayTermDetail = QuotationPayTerm[i - 1].PayTerm;
             PayTermPercent = QuotationPayTerm[i - 1].PayPercent;
+            PayTermForecast = QuotationPayTerm[i - 1].PayForecast || "";
           }
           $(".box-payment").append(`
-          	<div class="input-group mb-2">
-              <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
-              <input type="number" class=" mb-0 me-1 payment" value="${PayTermPercent}" disabled>
-              <span class = "bg-white border-0 input-group-text group-title mb-0 ps-2">%</span>
-              <button class="btn btn-sm btn-danger payment btn-del-payment" disabled >Del</button>
+            <div class="row mb-2">
+              <div class="col">
+                <div class="input-group input-group-sm mb-1">
+                  <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
+                  <input type="number" class=" mb-0 me-1 payment" value="${PayTermPercent}" disabled>
+                  <span class="input-group-text bg-white border-0">%</span>
+                </div>
+                <div class="input-group input-group-sm">
+                  <input type="date" class="form-control  mb-0 payment" value="${PayTermForecast}" disabled>
+                  <button class="btn btn-primary payment btn-edit-date-payment"><i class="fas fa-edit"></i></button>
+                  <button class="btn btn-primary payment btn-save-date-payment" style="display: none;" disabled ><i class="fa-solid fa-square-check"></i></button>
+                </div>
+              </div>
+              <div class="col-auto px-1">
+                <button class="btn btn-danger payment btn-del-payment" disabled >Del</button>
+              </div>
             </div>
         `);
         }
@@ -176,7 +190,11 @@ function ShowPro(QuotationId) {
         $("#btnEditYes").unbind();
         $("#btnEditYes").click(async function () {
           try {
-            let res = await AjaxDataJson(`/quotation/edit_detail/${QuotationId}`,`put`,data)
+            let res = await AjaxDataJson(
+              `/quotation/edit_detail/${QuotationId}`,
+              `put`,
+              data
+            );
             SwalEditSuccess(res);
           } catch (error) {
             SwalError(error);
@@ -197,24 +215,23 @@ function RePro() {
   $("#btn-approve").hide();
   $("#addItem").hide();
   $("#modalSaveSetting").hide();
-  $('#save-button').hide();
+  $("#save-button").hide();
   $("#btn_AddPayment").hide();
   $EditGroup.addClass("invisible");
 
   // Fill Data
   $("#ProNo").html("Project NO.");
-  $(".box-payment .input-group").remove();
+  $(".box-payment .row").remove();
   $fieldProject.val("-");
   $("#QDate,#CusEmail,#ComName,#Adress").val("-");
   $("#TotalPrice,#PriceAfter,#Vat,#NetTotal").val("-");
   $SettingTable.val("0").attr("disabled", "");
-  $StatusButton.attr('disabled','')
+  $StatusButton.attr("disabled", "");
 
   // reset table
   fill_resetTable();
   fill_resetSubTable();
   createEditor(true);
-
 }
 
 //Reset Quo Table
@@ -223,7 +240,7 @@ function fill_resetQuoTable() {
   trHTML += "<tr>";
   trHTML += '<td colspan="6">please select a project...</td>';
   trHTML += "</tr>";
-  $('#showQuoTable').html(trHTML);
+  $("#showQuoTable").html(trHTML);
 }
 //Reset Item Table
 function fill_resetTable() {
@@ -291,15 +308,19 @@ $(document).ready(function () {
         CustomerId: $("#modalInpCustomerId").val(),
       };
       try {
-        let res = await AjaxDataJson(`/quotation/add_pre_quotation`,`post`,data);
+        let res = await AjaxDataJson(
+          `/quotation/add_pre_quotation`,
+          `post`,
+          data
+        );
         SwalAddSuccess(res);
         tableQuoHead.ajax.reload(null, false);
         tableQuo.ajax.reload(null, false);
         RePro();
         fill_resetQuoTable();
-        $("#modalQuotationMaster").modal('hide');
+        $("#modalQuotationMaster").modal("hide");
       } catch (error) {
-        SwalError(error)
+        SwalError(error);
       }
     });
     $(".close,.no").click(function () {
@@ -314,7 +335,6 @@ $(document).ready(function () {
     RePro();
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
-      
     } else {
       $("#tableQuoHead tr").removeClass("selected");
       $(this).addClass("selected");
@@ -369,7 +389,7 @@ $(document).ready(function () {
       createEditor(true);
       ShowPro(QuotationId);
       fill_item(QuotationId, QuotationStatus);
-      console.log('QuotationStatus: ',QuotationStatus)
+      console.log("QuotationStatus: ", QuotationStatus);
       if (QuotationStatus === 1) {
         //Show Edit Button
         $EditGroup.removeClass("invisible");
@@ -377,7 +397,7 @@ $(document).ready(function () {
         //Show AddItem Button
         $("#addItem").show();
         //Show Quotation Button
-        $StatusButton.attr('disabled','')
+        $StatusButton.attr("disabled", "");
         $("#btn-quotation").removeAttr("disabled");
         //Show Detail Custom Button
         $("#save-button").show();
@@ -394,19 +414,22 @@ $(document).ready(function () {
             $("#btnEditYes").unbind();
             $("#btnEditYes").click(async function () {
               let QuotationPayTerm = [];
-              if ($(".box-payment .input-group").length != 0) {
-                for (
-                  let i = 0;
-                  i < $(".box-payment .input-group").length;
-                  i++
-                ) {
-                  let pay = $(".box-payment .input-group").eq(i);
-                  let pay_detail = $(pay).children()[0].value;
-                  let pay_percent = $(pay).children()[1].value;
+              let rowTerm = $(".box-payment").children();
+              console.log('Term : ',rowTerm)
+              if (rowTerm != 0) {
+                for (let i = 0; i < rowTerm.length; i++) {
+                  let row = $(rowTerm[i]).children();
+                  let col = $(row[0]).children();
+                  let group1 = col[0];
+                  let group2 = col[1];
+                  let pay_detail = $(group1).children()[0].value;
+                  let pay_percent = $(group1).children()[1].value;
+                  let pay_forecast = $(group2).children()[0].value;
                   if (pay_detail) {
                     QuotationPayTerm.push({
                       PayTerm: pay_detail,
-                      Percent: parseInt(pay_percent),
+                      Percent: parseInt(pay_percent) || 0,
+                      PayForecast: pay_forecast,
                     });
                   }
                 }
@@ -414,8 +437,10 @@ $(document).ready(function () {
                 QuotationPayTerm.push({
                   PayTerm: "",
                   Percent: 0,
+                  PayForecast: "",
                 });
               }
+              console.log(QuotationPayTerm);
               let data = {
                 CustomerId: $("#CusName").val(),
                 QuotationSubject: $("#PJ_Name").val(),
@@ -457,27 +482,41 @@ $(document).ready(function () {
             $("#btn-text").text("Save");
             $fieldProject.removeAttr("disabled");
             $(".payment").removeAttr("disabled");
+            $('.btn-edit-date-payment').hide();
 
             $("#btn_AddPayment").show();
             $("#btn_AddPayment").unbind();
             $("#btn_AddPayment").click(function () {
               $(".box-payment").append(`
-                <div class="input-group mb-2">
-                  <input type="text" class="form-control mb-0 me-3 payment" value="">
-                  <input type="number" class="mb-0 me-1 payment" value="">
-                  <span class = "bg-white border-0 input-group-text group-title mb-0 ps-2">%</span>
-                  <button class="btn btn-sm btn-danger payment btn-del-payment" >Del</button>
+              <div class="row mb-2">
+                <div class="col">
+                  <div class="input-group input-group-sm mb-1">
+                    <input type="text" class="form-control mb-0 me-3 payment" value="">
+                    <input type="number" class=" mb-0 me-1 payment" value="">
+                    <span class="input-group-text bg-white border-0">%</span>
+                  </div>
+                  <div class="input-group input-group-sm">
+                    <input type="date" class="form-control  mb-0 payment" value="">
+                    <button class="btn btn-primary payment btn-edit-date-payment" style="display: none;"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-primary payment btn-save-date-payment" style="display: none;"><i class="fa-solid fa-square-check"></i></button>
+                  </div>
                 </div>
+                <div class="col-auto px-1">
+                  <button class="btn btn-danger payment btn-del-payment" >Del</button>
+                </div>
+              </div>
+                
+                
               `);
               $(".btn-del-payment").unbind();
               $(".btn-del-payment").click(function (e) {
-                $(e.target).parent().remove();
+                $(e.target).parent().parent().remove();
               });
             });
 
             $(".btn-del-payment").unbind();
             $(".btn-del-payment").click(function (e) {
-              $(e.target).parent().remove();
+              $(e.target).parent().parent().remove();
             });
           }
         });
@@ -525,8 +564,8 @@ $(document).ready(function () {
 
         hideSetting();
 
-        $StatusButton.removeAttr('disabled');
-        $("#btn-quotation").attr("disabled","");
+        $StatusButton.removeAttr("disabled");
+        $("#btn-quotation").attr("disabled", "");
       }
 
       // Status booking
@@ -539,8 +578,8 @@ $(document).ready(function () {
         $("#addItem").hide();
 
         hideSetting();
-        $StatusButton.removeAttr('disabled');
-        $("#btn-book").attr("disabled","");
+        $StatusButton.removeAttr("disabled");
+        $("#btn-book").attr("disabled", "");
       }
 
       // Status loss
@@ -554,8 +593,8 @@ $(document).ready(function () {
 
         hideSetting();
 
-        $StatusButton.removeAttr('disabled');
-        $("#btn-loss").attr("disabled","");
+        $StatusButton.removeAttr("disabled");
+        $("#btn-loss").attr("disabled", "");
       }
 
       // Status cancel
@@ -569,8 +608,8 @@ $(document).ready(function () {
 
         hideSetting();
 
-        $StatusButton.removeAttr('disabled');
-        $("#btn-cancel").attr("disabled","");
+        $StatusButton.removeAttr("disabled");
+        $("#btn-cancel").attr("disabled", "");
       }
 
       // Revised
@@ -591,7 +630,7 @@ $(document).ready(function () {
             RePro();
           } catch (error) {
             SwalError(error);
-          };
+          }
           $("#modalRevisedConfirm").modal("hide");
         });
         $(".close,.no").click(function () {
@@ -749,8 +788,8 @@ $(document).ready(function () {
             //AddItem button
             $("#addItem").hide();
             hideSetting();
-            $StatusButton.removeAttr('disabled');
-            $("#btn-quotation").attr("disabled","");
+            $StatusButton.removeAttr("disabled");
+            $("#btn-quotation").attr("disabled", "");
           } catch (error) {
             SwalError(error);
           }
