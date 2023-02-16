@@ -63,8 +63,8 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
     let selectOldPayterm = await pool.request().query(`SELECT * FROM privanet.QuotationPayTerm
       WHERE QuotationId = ${OldQuotationId}`);
     for (const payterm of selectOldPayterm.recordset) await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
-      (QuotationId, IndexPayTerm, PayTerm, PayPercent)
-      VALUES(${NewQuotationId}, ${payterm.IndexPayTerm}, N'${payterm.PayTerm}', ${payterm.PayPercent})
+      (QuotationId, IndexPayTerm, PayTerm, PayPercent, PayForecast)
+      VALUES(${NewQuotationId}, ${payterm.IndexPayTerm}, N'${payterm.PayTerm}', ${payterm.PayPercent}, N'${payterm.PayForecast}')
       SELECT SCOPE_IDENTITY() AS Id`);
 
     // Copy Setting

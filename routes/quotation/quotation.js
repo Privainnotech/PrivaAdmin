@@ -129,7 +129,7 @@ router.get("/:QuotationId", async (req, res) => {
       LEFT JOIN privanet.[QuotationSetting] g ON a.QuotationId = g.QuotationId
       WHERE a.QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
-    let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent FROM privanet.QuotationPayTerm
+    let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent,PayForecast FROM privanet.QuotationPayTerm
       WHERE QuotationId = ${QuotationId};`
     let payterms = await pool.request().query(getPayterm);
 
@@ -171,8 +171,8 @@ router.get("/:QuotationId", async (req, res) => {
     quotation.QuotationRevised = Revised;
     let PayTermArr = new Array
     for (let idx = 0; idx < payterms.recordset.length; idx++) {
-      let { PayTerm, PayPercent } = payterms.recordset[idx]
-      PayTermArr.push({ PayTerm, PayPercent })
+      let { PayTerm, PayPercent, PayForecast } = payterms.recordset[idx]
+      PayTermArr.push({ PayTerm, PayPercent, PayForecast })
     }
     if (PayTermArr.length) quotation.QuotationPayTerm = PayTermArr
     console.log(quotation)
