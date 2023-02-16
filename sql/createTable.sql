@@ -108,8 +108,11 @@ CREATE TABLE [QuotationPayTerm]
 	QuotationId bigint NOT NULL,
 	IndexPayTerm int NOT NULL,
 	PayTerm NVARCHAR(255) NULL,
-	PayPercent float NULL
+	PayPercent float NULL,
+	PayForecast date NULL
 )
+ALTER TABLE [QuotationPayTerm]
+ADD PayForecast date NULL
 
 CREATE Table [QuotationSetting]
 (

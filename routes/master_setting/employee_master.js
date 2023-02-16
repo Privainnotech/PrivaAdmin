@@ -31,8 +31,8 @@ router.post("/add", async (req, res, next) => {
     }
     let pool = await sql.connect(dbconfig);
     let CheckEmployee = await pool.request().query(`SELECT *
-        FROM privanet.MasterEmployee
-        WHERE EmployeeEmail = N'${EmployeeEmail}'`);
+      FROM privanet.MasterEmployee
+      WHERE EmployeeEmail = N'${EmployeeEmail}'`);
     let Hashpass = await bcrypt.hash(Password, 12);
     if (!CheckEmployee.recordset.length) {
       let InsertEmployee = `INSERT INTO privanet.MasterEmployee

@@ -454,6 +454,12 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
     let { QuotationRemark, EmployeeApproveId, EndCustomer } = req.body;
     if (!CustomerId) return res.status(400).send({ message: "Please select Customer" });
     if (!EmployeeApproveId) return res.status(400).send({ message: "Please select Approver" });
+    if (!QuotationPayTerm.length) return res.status(400).send({ message: "Please add Term of Payment" });
+    let QuotationPayLength = QuotationPayTerm.length
+    for (let idx = 0; idx < QuotationPayLength; idx++) {
+      let { PayTerm, Percent, PayForecast } = QuotationPayTerm[idx]
+      if (!PayTerm || !Percent || !PayForecast) return res.status(400).send({ message: "Please fill every field in Term of Payment" });
+    }
     let ValidityDateFilter = QuotationValidityDate.replace(/'/g, "''");
     let DeliveryFilter = QuotationDelivery.replace(/'/g, "''");
     let RemarkFilter = QuotationRemark.replace(/'/g, "''");
@@ -467,18 +473,16 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
           EndCustomer = N'${EndCustomerFilter}', EmployeeEditId = ${UserId}
         WHERE QuotationId = ${QuotationId};`;
       await pool.request().query(UpdateQuotation);
-      let QuotationPayLength = QuotationPayTerm.length
       for (let idx = 0; idx < QuotationPayLength; idx++) {
-
-        let { PayTerm, Percent } = QuotationPayTerm[idx]
+        let { PayTerm, Percent, PayForecast } = QuotationPayTerm[idx]
         let checkPayTerm = await pool.request().query(`SELECT IndexPayTerm
           FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1}`)
         if (checkPayTerm.recordset.length) await pool.request().query(`UPDATE privanet.QuotationPayTerm
-          SET PayTerm = N'${PayTerm}', PayPercent = ${Percent || 0}
+          SET PayTerm = N'${PayTerm}', PayPercent = ${Percent || 0}, PayForecast = N'${PayForecast}'
           WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
         else await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
-          (QuotationId,IndexPayTerm,PayTerm,PayPercent)
-          VALUES(${QuotationId},${idx + 1},N'${PayTerm}',${Percent || 0});`);
+          (QuotationId,IndexPayTerm,PayTerm,PayPercent,PayForecast)
+          VALUES(${QuotationId},${idx + 1},N'${PayTerm}',${Percent || 0},N'${PayForecast}');`);
       }
       let checkPayTermLength = await pool.request().query(`SELECT COUNT(IndexPayTerm) PayTermLength
         FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId}`)
@@ -503,9 +507,30 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
     res.status(500).send({ message: `${err}` });
   }
 });
-
-
-
+router.put("/edit_payforecast/:QuotationId", async (req, res) => {
+  try {
+    let pool = await sql.connect(dbconfig);
+    let UserId = req.session.UserId;
+    if (!UserId) return res.status(400).send({ message: "Please login" });
+    let QuotationId = req.params.QuotationId;
+    let { QuotationPayTerm } = req.body;
+    let QuotationPayLength = QuotationPayTerm.length
+    for (let idx = 0; idx < QuotationPayLength; idx++) {
+      let { PayForecast } = QuotationPayTerm[idx]
+      if (!PayForecast) return res.status(400).send({ message: "Please fill Payment Forecast" });
+    }
+    // Update Quotation
+    for (let idx = 0; idx < QuotationPayLength; idx++) {
+      let { PayForecast } = QuotationPayTerm[idx]
+      await pool.request().query(`UPDATE privanet.QuotationPayTerm
+        SET PayForecast = N'${PayForecast}'
+        WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
+    }
+    res.status(201).send({ message: "Successfully Edit Quotation" });
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
 router.put("/edit_detail/:QuotationId", async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
