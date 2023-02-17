@@ -135,7 +135,7 @@ function ShowPro(QuotationId) {
             PayTermForecast = QuotationPayTerm[i - 1].PayForecast || "";
           }
           $(".box-payment").append(`
-            <div class="row mb-2">
+            <div class="row mb-3">
               <div class="col">
                 <div class="input-group input-group-sm mb-1">
                   <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
@@ -144,12 +144,11 @@ function ShowPro(QuotationId) {
                 </div>
                 <div class="input-group input-group-sm">
                   <input type="date" class="form-control  mb-0 payment" value="${PayTermForecast}" disabled>
-                  <button class="btn btn-primary payment btn-edit-date-payment"><i class="fas fa-edit"></i></button>
-                  <button class="btn btn-primary payment btn-save-date-payment" style="display: none;" disabled ><i class="fa-solid fa-square-check"></i></button>
+                  <button class="btn btn-primary payment btn-edit-date-payment" ><i class="fas fa-edit"></i></button>
                 </div>
               </div>
               <div class="col-auto px-1">
-                <button class="btn btn-danger payment btn-del-payment" disabled >Del</button>
+                <button class="btn btn-sm btn-danger payment btn-del-payment" disabled style="display: none;"><i class="fa fa-remove"></i></button>
               </div>
             </div>
         `);
@@ -370,6 +369,7 @@ $(document).ready(function () {
     $fieldProject.attr("disabled", "");
     $StatusButton.attr("disabled", "");
     $SettingTable.attr("disabled", "");
+    $(".btn-save-date-payment").hide();
 
     let rows = $(this).closest("tr");
     let { QuotationId, QuotationApproval, QuotationStatus } = tableQuo
@@ -389,7 +389,41 @@ $(document).ready(function () {
       createEditor(true);
       ShowPro(QuotationId);
       fill_item(QuotationId, QuotationStatus);
-      console.log("QuotationStatus: ", QuotationStatus);
+
+      $(document).on("click", ".btn-edit-date-payment", function (e) {
+        $(this).hide();
+        $($(this).siblings()[0]).removeAttr("disabled");
+        $(".btn-save-date-payment").show();
+      });
+      $(".btn-save-date-payment").unbind();
+      $(".btn-save-date-payment").on("click",async function (e) {
+       
+        let QuotationPayTerm = [];
+        let rowTerm = $(".box-payment").children();
+        if (rowTerm != 0) {
+          for (let i = 0; i < rowTerm.length; i++) {
+            let row = $(rowTerm[i]).children();
+            let col = $(row[0]).children();
+            let group2 = col[1];
+            let pay_forecast = $(group2).children()[0].value;
+            QuotationPayTerm.push({
+              PayForecast: pay_forecast,
+            });
+          }
+        }
+        let Data = { QuotationPayTerm: QuotationPayTerm };
+        console.log(Data)
+        try {
+          let res = await AjaxDataJson(`/quotation/edit_payforecast/${QuotationId}`, `put`, Data);
+          SwalEditSuccess(res);
+          $(this).hide();
+          $(".btn-edit-date-payment").show();
+          $(`input[type='date'].payment`).attr('disabled','')
+          // $('.btn-edit-date-payment').attr('disabled','')
+        } catch (error) {
+          SwalError(error)
+        }
+      });
       if (QuotationStatus === 1) {
         //Show Edit Button
         $EditGroup.removeClass("invisible");
@@ -415,7 +449,7 @@ $(document).ready(function () {
             $("#btnEditYes").click(async function () {
               let QuotationPayTerm = [];
               let rowTerm = $(".box-payment").children();
-              console.log('Term : ',rowTerm)
+              console.log("Term : ", rowTerm);
               if (rowTerm != 0) {
                 for (let i = 0; i < rowTerm.length; i++) {
                   let row = $(rowTerm[i]).children();
@@ -482,13 +516,14 @@ $(document).ready(function () {
             $("#btn-text").text("Save");
             $fieldProject.removeAttr("disabled");
             $(".payment").removeAttr("disabled");
-            $('.btn-edit-date-payment').hide();
+            $(".btn-del-payment").show();
+            $(".btn-edit-date-payment,.btn-save-date-payment").hide();
 
             $("#btn_AddPayment").show();
             $("#btn_AddPayment").unbind();
             $("#btn_AddPayment").click(function () {
               $(".box-payment").append(`
-              <div class="row mb-2">
+              <div class="row mb-3">
                 <div class="col">
                   <div class="input-group input-group-sm mb-1">
                     <input type="text" class="form-control mb-0 me-3 payment" value="">
@@ -498,11 +533,10 @@ $(document).ready(function () {
                   <div class="input-group input-group-sm">
                     <input type="date" class="form-control  mb-0 payment" value="">
                     <button class="btn btn-primary payment btn-edit-date-payment" style="display: none;"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-primary payment btn-save-date-payment" style="display: none;"><i class="fa-solid fa-square-check"></i></button>
                   </div>
                 </div>
                 <div class="col-auto px-1">
-                  <button class="btn btn-danger payment btn-del-payment" >Del</button>
+                  <button class="btn btn-sm btn-danger payment btn-del-payment" ><i class="fa fa-remove"></i></button>
                 </div>
               </div>
                 
@@ -510,13 +544,13 @@ $(document).ready(function () {
               `);
               $(".btn-del-payment").unbind();
               $(".btn-del-payment").click(function (e) {
-                $(e.target).parent().parent().remove();
+                $(this).parent().parent().remove();
               });
             });
 
             $(".btn-del-payment").unbind();
             $(".btn-del-payment").click(function (e) {
-              $(e.target).parent().parent().remove();
+              $(this).parent().parent().remove();
             });
           }
         });
