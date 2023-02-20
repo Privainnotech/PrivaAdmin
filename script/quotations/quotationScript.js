@@ -396,8 +396,8 @@ $(document).ready(function () {
         $(".btn-save-date-payment").show();
       });
       $(".btn-save-date-payment").unbind();
-      $(".btn-save-date-payment").on("click",async function (e) {
-       
+      $(".btn-save-date-payment").on("click", async function (e) {
+
         let QuotationPayTerm = [];
         let rowTerm = $(".box-payment").children();
         if (rowTerm != 0) {
@@ -418,7 +418,7 @@ $(document).ready(function () {
           SwalEditSuccess(res);
           $(this).hide();
           $(".btn-edit-date-payment").show();
-          $(`input[type='date'].payment`).attr('disabled','')
+          $(`input[type='date'].payment`).attr('disabled', '')
           // $('.btn-edit-date-payment').attr('disabled','')
         } catch (error) {
           SwalError(error)

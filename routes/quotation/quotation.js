@@ -129,8 +129,8 @@ router.get("/:QuotationId", async (req, res) => {
       LEFT JOIN privanet.[QuotationSetting] g ON a.QuotationId = g.QuotationId
       WHERE a.QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
-    let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent,FORMAT(PayForecast, 'yyyy-MM-dd') PayForecast
-      FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId};`
+    let getPayterm = `SELECT PayTerm,PayPercent,FORMAT(PayForecast, 'yyyy-MM-dd') PayForecast
+      FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} ORDER BY IndexPayTerm;`
     let payterms = await pool.request().query(getPayterm);
 
     let quotation = quotations.recordset[0]
@@ -169,13 +169,13 @@ router.get("/:QuotationId", async (req, res) => {
     } else quotation.QuotationDetail = ''
 
     quotation.QuotationRevised = Revised;
-    let PayTermArr = new Array
+    let PayTermArr = new Array;
     for (let idx = 0; idx < payterms.recordset.length; idx++) {
       let { PayTerm, PayPercent, PayForecast } = payterms.recordset[idx]
       PayTermArr.push({ PayTerm, PayPercent, PayForecast })
     }
     if (PayTermArr.length) quotation.QuotationPayTerm = PayTermArr
-    console.log(quotation)
+    // console.log(quotation)
     res.status(200).send(JSON.stringify(quotation));
   } catch (err) {
     console.log(`${err}`);
@@ -520,6 +520,7 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
       if (!PayForecast) return res.status(400).send({ message: "Please fill Payment Forecast" });
     }
     // Update Quotation
+    console.log(QuotationPayTerm)
     for (let idx = 0; idx < QuotationPayLength; idx++) {
       let { PayForecast } = QuotationPayTerm[idx]
       await pool.request().query(`UPDATE privanet.QuotationPayTerm
