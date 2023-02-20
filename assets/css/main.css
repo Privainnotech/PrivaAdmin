@@ -260,8 +260,8 @@ nav.navbar {
     transparent
   );
 }
-.d-inline-block{
-  display: inline-block!important;
+.d-inline-block {
+  display: inline-block !important;
 }
 
 .status-pre-quotation {
@@ -293,9 +293,16 @@ nav.navbar {
 }
 
 button i {
-  display: flex!important;
-  justify-content: center!important;
-  align-items: center!important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.sorting input {
+  font-size: 0.4rem;
+}
+
+input[type="date"].payment {
+  width: 20%;
 }
 
 @media only screen and (max-width: 768px) {

@@ -123,9 +123,9 @@ function ShowPro(QuotationId) {
         : (PayTermLength = QuotationPayTerm.length);
       $(".box-payment .row").remove();
       if (PayTermLength != 0) {
-        console.log("QuotationPayTerm:", QuotationPayTerm);
+        // console.log("QuotationPayTerm:", QuotationPayTerm);
         for (let i = 1; i <= PayTermLength; i++) {
-          console.log(QuotationPayTerm)
+          // console.log(QuotationPayTerm)
           if (!Array.isArray(QuotationPayTerm)) {
             PayTermDetail = QuotationPayTerm[`QuotationPayTerm${i}`];
             PayTermPercent = "0";
@@ -247,7 +247,7 @@ function fill_resetQuoTable() {
 function fill_resetTable() {
   var trHTML = "";
   trHTML += "<tr>";
-  trHTML += '<td colspan="6">please select a quatation...</td>';
+  trHTML += '<td colspan="5">please select a quatation...</td>';
   trHTML += "</tr>";
   document.getElementById("showTable").innerHTML = trHTML;
 }
@@ -255,7 +255,7 @@ function fill_resetTable() {
 function fill_resetSubTable() {
   var trHTML = "";
   trHTML += "<tr>";
-  trHTML += '<td colspan="6">please select a item...</td>';
+  trHTML += '<td colspan="5">please select a item...</td>';
   trHTML += "</tr>";
   document.getElementById("showSubTable").innerHTML = trHTML;
 }
