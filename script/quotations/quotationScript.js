@@ -144,6 +144,7 @@ function ShowPro(QuotationId) {
                   <span class="input-group-text bg-white border-0">%</span>
                 </div>
                 <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white border-0 fw-bold">Payment Forecast: </span>
                   <input type="date" class="form-control  mb-0 payment" value="${PayTermForecast}" disabled>
                   <button class="btn btn-primary payment btn-edit-date-payment" ><i class="fas fa-edit"></i></button>
                 </div>
