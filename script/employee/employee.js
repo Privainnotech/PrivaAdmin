@@ -8,20 +8,30 @@ function fill_employee() {
       dataSrc: "",
     },
     columns: [
-      {
-        data: "index",
-      },
+      
       {
         data: "EmployeeName",
       },
       {
         data: "EmployeePosition",
+        render: function (data,type,row) {
+          let show = !data ? '-' : data
+          return show;
+        }
       },
       {
         data: "EmployeeEmail",
+        render: function (data,type,row) {
+          let show = !data ? '-' : data
+          return show;
+        }
       },
       {
         data: "EmployeeTel",
+        render: function (data,type,row) {
+          let show = !data ? '-' : data
+          return show;
+        }
       },
       {
         data: "Authority",
@@ -48,19 +58,20 @@ function fill_employee() {
           "<div class='text-center'><div class='btn-group' role='group' aria-label='Basic mixed styles example'><button type='button' class='btn btn-primary p-1' id='btnEditEmploy' style='width: 2rem;'><i class='fa fa-pencil-square-o'></i></button><button type='button' class='btn btn-warning p-1' id='btnEditPass' style='width: 2rem;'><i class='fa fa-key' aria-hidden='true'></i></button><button type='button' style='width: 2rem;' class='btn btn-danger p-1 ' id='btnDelEmploy'><i class='fa fa-remove'></i></button></div></div>",
       },
       {
-        data: "EmployeeId",
-        data: "Password",
-        data: "Authority",
+        data: "index",
       },
     ],
     columnDefs: [
+      { orderData: [7], targets: [0] },
       {
-        targets: [8],
+        targets: [7],
         visible: false,
+        searchable: false,
       },
     ],
   });
 }
+
 $(document).ready(function () {
   //Employee Table
 

@@ -38,7 +38,6 @@
 									<div class="text-center mt-4">
 										<h1 class="lead">Sign in to continue</h1>
 									</div>
-									
 									<form action="/user/login" method="post">
 										<div class="mb-3">
 											<label class="form-label">Email</label>
@@ -49,29 +48,12 @@
 											<input class="form-control form-control-lg" type="password" name="Password" placeholder="Enter your password" />
 										</div>
 										<div class="text-center mt-3">
-											<button type="submit" class="btn btn-lg btn-primary">Sign in</button>
+											<button type="submit" class="btn btn-sm btn-primary">Sign in</button>
 										</div>
 										<% if (messages.login) { %>
 											<div class="alert alert-danger mt-2" role="alert"><%= messages.login %></div>
 										<% } %>
 									</form>
-
-									<!-- <form action="/user/register" method="post">
-										<div class="mb-3">
-											<label class="form-label">Username</label>
-											<input class="form-control form-control-lg" type="text" name="Username" placeholder="Enter your username" />
-										</div>
-										<div class="mb-3">
-											<label class="form-label">Password</label>
-											<input class="form-control form-control-lg" type="password" name="Password" placeholder="Enter your password" />
-										</div>
-										<div class="text-center mt-3">
-											<button type="submit" class="btn btn-lg btn-primary">Sign in</button>
-										</div>
-										
-											<div class="alert alert-danger" role="alert"></div>
-						
-									</form> -->
 								</div>
 							</div>
 						</div>

@@ -297,6 +297,9 @@ button i {
   justify-content: center!important;
   align-items: center!important;
 }
+.sorting input {
+  font-size: 0.4rem;
+ }
 
 @media only screen and (max-width: 768px) {
   * {
