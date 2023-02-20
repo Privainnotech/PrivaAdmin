@@ -134,7 +134,6 @@ router.get("/:QuotationId", async (req, res) => {
     let payterms = await pool.request().query(getPayterm);
 
     let quotation = quotations.recordset[0]
-    // console.log(quotations)
     let { QuotationNo, QuotationRevised, QuotationPayTerm, EmployeeApproveId, QuotationDetail } = quotation;
     let Revised = QuotationRevised < 10 ? "0" + QuotationRevised.toString() : QuotationRevised.toString();
     quotation.QuotationNo_Revised = `${QuotationNo}_${Revised}`;
@@ -151,18 +150,14 @@ router.get("/:QuotationId", async (req, res) => {
     if (QuotationDetail) {
       if (QuotationDetail[0] == '<') quotation.QuotationDetail = QuotationDetail
       else {
-        // console.log(JSON.parse(QuotationDetail))
-        console.log(QuotationDetail)
         QuotationDetail = JSON.parse(QuotationDetail);
         let Details = ''
-        console.log(QuotationDetail)
         if (!QuotationDetail || QuotationDetail == 'null') quotation.QuotationDetail = ''
         else {
           QuotationDetail.blocks.forEach(block => {
             let { data } = block
             Details += `<p>${data.text}</p>`
           })
-          console.log(Details)
           quotation.QuotationDetail = Details
         }
       }
@@ -175,7 +170,6 @@ router.get("/:QuotationId", async (req, res) => {
       PayTermArr.push({ PayTerm, PayPercent, PayForecast })
     }
     if (PayTermArr.length) quotation.QuotationPayTerm = PayTermArr
-    // console.log(quotation)
     res.status(200).send(JSON.stringify(quotation));
   } catch (err) {
     console.log(`${err}`);
@@ -299,7 +293,6 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let ItemId = req.params.ItemId;
-    console.log(req.body);
     let { ProductId, ProductType, SubItemName } = req.body;
     let { SubItemPrice, SubItemQty, SubItemUnit } = req.body;
     // ProductType = {Labor, Material, Internal, Unknown} => Dropdown
@@ -315,12 +308,10 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
         let getProductId = await pool.request().query(`
           SELECT ProductId FROM privanet.MasterProduct WHERE ProductName = N'${SubItemName}'`);
         let ProductId = getProductId.recordset[0].ProductId;
-        console.log(ProductId, ItemId);
         let CheckSubItem = await pool.request().query(`SELECT CASE WHEN EXISTS
             (SELECT * FROM privanet.QuotationSubItem  WHERE ProductId = ${ProductId} and ItemId = ${ItemId})
           THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
         if (CheckSubItem.recordset[0].check) return res.status(400).send({ message: "Duplicate Sub-item" })
-        console.log("check");
         let InsertSubItem = `INSERT INTO privanet.QuotationSubItem
           (ItemId, ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit)
           VALUES(${ItemId}, ${ProductId}, N'${SubItemName}', ${SubItemPrice},
@@ -341,7 +332,6 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
         let InsertProduct = `INSERT INTO privanet.MasterProduct(ProductCode, ProductName, ProductType)
           VALUES(N'${ProductCode}', N'${SubItemName}', N'${ProductType}') SELECT SCOPE_IDENTITY() AS Id`;
         let newProduct = await pool.request().query(InsertProduct);
-        console.log("ProductId: " + newProduct.recordset[0].Id);
         let InsertSubItem = `INSERT INTO privanet.QuotationSubItem
           (ItemId, ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit)
           VALUES(${ItemId}, ${newProduct.recordset[0].Id}, N'${SubItemName}', ${SubItemPrice},
@@ -362,82 +352,6 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
       if (!(SubItemPrice === 0 || SubItemQty === 0)) PriceI(ItemId);
       res.status(201).send({ message: "Sub-item has been added" });
     }
-  } catch (err) {
-    res.status(500).send({ message: `${err}` });
-  }
-});
-
-router.delete("/delete_quotation/:QuotationId", async (req, res) => {
-  try {
-    let pool = await sql.connect(dbconfig);
-    let QuotationId = req.params.QuotationId;
-    let Status = await pool.request().query(`SELECT QuotationStatus, QuotationRevised
-      FROM privanet.Quotation WHERE QuotationId = ${QuotationId}`);
-    if (Status.recordset[0].QuotationStatus != 1) return res.status(400).send({ message: "Cannot delete quotation" });
-    let selectItem = await pool.request().query(`SELECT ItemId FROM privanet.QuotationItem WHERE QuotationId = ${QuotationId}`);
-    if (selectItem.recordset.length) for (const item of selectItem.recordset) // Delete SubItem
-      await pool.request().query(`DELETE FROM privanet.QuotationSubItem WHERE ItemId=${item.ItemId}`);
-    let DeleteQuotation = `DECLARE @QuotationNoId bigint;
-      SET @QuotationNoId = (SELECT QuotationNoId FROM privanet.Quotation WHERE QuotationId =  ${QuotationId});
-      DELETE FROM privanet.QuotationItem WHERE QuotationId=${QuotationId}
-      DELETE FROM privanet.QuotationSetting WHERE QuotationId=${QuotationId}
-      DELETE FROM privanet.Quotation WHERE QuotationId=${QuotationId}
-      DELETE FROM privanet.QuotationNo WHERE QuotationNoId = @QuotationNoId AND QuotationNo LIKE N'pre_%'`;
-    await pool.request().query(DeleteQuotation);
-    res.status(200).send({ message: "Successfully delete pre-quotation" });
-  } catch (err) {
-    res.status(500).send({ message: `${err}` });
-  }
-});
-
-router.delete("/delete_item/:ItemId", async (req, res) => {
-  try {
-    let pool = await sql.connect(dbconfig);
-    let { ItemId } = req.params;
-    let DeleteItem = `DECLARE @QuotationId bigint;
-      SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId =  ${ItemId});
-      DELETE FROM privanet.QuotationSubItem WHERE ItemId = ${ItemId};
-      UPDATE privanet.QuotationItem
-        SET ItemQty = 0 WHERE ItemId = ${ItemId};
-      UPDATE privanet.Quotation
-      SET QuotationTotalPrice = (
-        SELECT SUM(ItemQty * ItemPrice) FROM privanet.QuotationItem WHERE QuotationId = @QuotationId)
-        WHERE QuotationId = @QuotationId;
-      DELETE FROM privanet.QuotationItem WHERE ItemId=${ItemId}`;
-    await pool.request().query(DeleteItem);
-    res.status(200).send({ message: "Successfully delete Item" });
-  } catch (err) {
-    res.status(500).send({ message: `${err}` });
-  }
-});
-
-router.delete("/delete_subitem/:SubItemId", async (req, res) => {
-  try {
-    let pool = await sql.connect(dbconfig);
-    let { SubItemId } = req.params;
-    let DeleteSubItem = `DECLARE @QuotationId bigint, @ItemId bigint;
-      SET @ItemId = (SELECT ItemId FROM privanet.QuotationSubItem WHERE SubItemId = ${SubItemId});
-      SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId = @ItemId);
-      DELETE FROM privanet.QuotationSubItem WHERE SubItemId = ${SubItemId};
-      UPDATE privanet.QuotationItem
-      SET ItemPrice = (SELECT CASE
-        WHEN EXISTS(
-          SELECT *
-          FROM privanet.QuotationSubItem
-          WHERE ItemId = @ItemId
-        )
-        THEN CAST ((SELECT SUM(SubItemQty * SubItemPrice) 
-          FROM privanet.QuotationSubItem 
-          WHERE ItemId = @ItemId) as int)
-        ELSE CAST (0 as int) END)
-      WHERE ItemId = @ItemId;
-      UPDATE privanet.Quotation
-      SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
-        FROM privanet.QuotationItem 
-        WHERE QuotationId = @QuotationId)
-      WHERE QuotationId = @QuotationId;`;
-    await pool.request().query(DeleteSubItem);
-    res.status(200).send({ message: "Successfully delete Sub-item" });
   } catch (err) {
     res.status(500).send({ message: `${err}` });
   }
@@ -520,12 +434,21 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
       if (!PayForecast) return res.status(400).send({ message: "Please fill Payment Forecast" });
     }
     // Update Quotation
-    console.log(QuotationPayTerm)
+    let quotation = await pool.request().query(`SELECT CONVERT(nvarchar(max), QuotationPayTerm) AS 'OldPayTerm'
+      FROM privanet.[Quotation] WHERE QuotationId = ${QuotationId}`);
+    let { OldPayTerm } = quotation.recordset[0]
+    OldPayTerm = JSON.parse(OldPayTerm)
     for (let idx = 0; idx < QuotationPayLength; idx++) {
       let { PayForecast } = QuotationPayTerm[idx]
-      await pool.request().query(`UPDATE privanet.QuotationPayTerm
+      let getPayterm = `SELECT PayTerm,PayPercent
+        FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`
+      let payterms = await pool.request().query(getPayterm);
+      if (payterms.recordset.length) await pool.request().query(`UPDATE privanet.QuotationPayTerm
         SET PayForecast = N'${PayForecast}'
         WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
+      else await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
+          (QuotationId,IndexPayTerm,PayTerm,PayPercent,PayForecast)
+        VALUES(${QuotationId},${idx + 1},N'${OldPayTerm[`QuotationPayTerm${idx + 1}`]}',0,N'${PayForecast}');`);
     }
     res.status(201).send({ message: "Successfully Edit Quotation" });
   } catch (err) {
@@ -537,12 +460,12 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
     let { QuotationDetail } = req.body;
-    console.log(QuotationDetail);
+    // console.log(QuotationDetail);
     let Detail = '';
     if (typeof QuotationDetail == 'object' && QuotationDetail.blocks.length !== 0) Detail = JSON.stringify(QuotationDetail);
     else Detail = QuotationDetail
     Detail = Detail.replaceAll("&nbsp;", " ").replaceAll("'", "''").replaceAll("amp;", "&");
-    console.log(Detail);
+    // console.log(Detail);
     let UpdateDetail = `UPDATE privanet.Quotation SET QuotationDetail = N'${Detail}' WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(UpdateDetail);
     res.status(201).send({ message: "Successfully Edit Quotation Detail" });
@@ -607,6 +530,82 @@ router.put("/edit_subitem/:SubItemId", async (req, res) => {
     await pool.request().query(UpdateQuotationSubItem);
     if (!(SubItemPrice === 0 || SubItemQty === 0)) PriceS(SubItemId);
     res.status(200).send({ message: "Successfully Edit Sub-Item" });
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
+
+router.delete("/delete_quotation/:QuotationId", async (req, res) => {
+  try {
+    let pool = await sql.connect(dbconfig);
+    let QuotationId = req.params.QuotationId;
+    let Status = await pool.request().query(`SELECT QuotationStatus, QuotationRevised
+      FROM privanet.Quotation WHERE QuotationId = ${QuotationId}`);
+    if (Status.recordset[0].QuotationStatus != 1) return res.status(400).send({ message: "Cannot delete quotation" });
+    let selectItem = await pool.request().query(`SELECT ItemId FROM privanet.QuotationItem WHERE QuotationId = ${QuotationId}`);
+    if (selectItem.recordset.length) for (const item of selectItem.recordset) // Delete SubItem
+      await pool.request().query(`DELETE FROM privanet.QuotationSubItem WHERE ItemId=${item.ItemId}`);
+    let DeleteQuotation = `DECLARE @QuotationNoId bigint;
+      SET @QuotationNoId = (SELECT QuotationNoId FROM privanet.Quotation WHERE QuotationId =  ${QuotationId});
+      DELETE FROM privanet.QuotationItem WHERE QuotationId=${QuotationId}
+      DELETE FROM privanet.QuotationSetting WHERE QuotationId=${QuotationId}
+      DELETE FROM privanet.Quotation WHERE QuotationId=${QuotationId}
+      DELETE FROM privanet.QuotationNo WHERE QuotationNoId = @QuotationNoId AND QuotationNo LIKE N'pre_%'`;
+    await pool.request().query(DeleteQuotation);
+    res.status(200).send({ message: "Successfully delete pre-quotation" });
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
+
+router.delete("/delete_item/:ItemId", async (req, res) => {
+  try {
+    let pool = await sql.connect(dbconfig);
+    let { ItemId } = req.params;
+    let DeleteItem = `DECLARE @QuotationId bigint;
+      SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId =  ${ItemId});
+      DELETE FROM privanet.QuotationSubItem WHERE ItemId = ${ItemId};
+      UPDATE privanet.QuotationItem
+        SET ItemQty = 0 WHERE ItemId = ${ItemId};
+      UPDATE privanet.Quotation
+      SET QuotationTotalPrice = (
+        SELECT SUM(ItemQty * ItemPrice) FROM privanet.QuotationItem WHERE QuotationId = @QuotationId)
+        WHERE QuotationId = @QuotationId;
+      DELETE FROM privanet.QuotationItem WHERE ItemId=${ItemId}`;
+    await pool.request().query(DeleteItem);
+    res.status(200).send({ message: "Successfully delete Item" });
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
+
+router.delete("/delete_subitem/:SubItemId", async (req, res) => {
+  try {
+    let pool = await sql.connect(dbconfig);
+    let { SubItemId } = req.params;
+    let DeleteSubItem = `DECLARE @QuotationId bigint, @ItemId bigint;
+      SET @ItemId = (SELECT ItemId FROM privanet.QuotationSubItem WHERE SubItemId = ${SubItemId});
+      SET @QuotationId = (SELECT QuotationId FROM privanet.QuotationItem WHERE ItemId = @ItemId);
+      DELETE FROM privanet.QuotationSubItem WHERE SubItemId = ${SubItemId};
+      UPDATE privanet.QuotationItem
+      SET ItemPrice = (SELECT CASE
+        WHEN EXISTS(
+          SELECT *
+          FROM privanet.QuotationSubItem
+          WHERE ItemId = @ItemId
+        )
+        THEN CAST ((SELECT SUM(SubItemQty * SubItemPrice) 
+          FROM privanet.QuotationSubItem 
+          WHERE ItemId = @ItemId) as int)
+        ELSE CAST (0 as int) END)
+      WHERE ItemId = @ItemId;
+      UPDATE privanet.Quotation
+      SET QuotationTotalPrice = (SELECT SUM(ItemQty * ItemPrice) 
+        FROM privanet.QuotationItem 
+        WHERE QuotationId = @QuotationId)
+      WHERE QuotationId = @QuotationId;`;
+    await pool.request().query(DeleteSubItem);
+    res.status(200).send({ message: "Successfully delete Sub-item" });
   } catch (err) {
     res.status(500).send({ message: `${err}` });
   }

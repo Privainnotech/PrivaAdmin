@@ -89,13 +89,13 @@ const applySpacing = (name) => {
 };
 
 let getPayTerm = async (QuotationPayTerm, payterm) => {
-  console.log(QuotationPayTerm, payterm)
+  // console.log(QuotationPayTerm, payterm)
   // if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
+  let payTerm = "";
+  let i = 1;
   if (typeof QuotationPayTerm == 'object') {
     QuotationPayTerm = JSON.parse(QuotationPayTerm);
     let payTerms = Object.values(QuotationPayTerm);
-    let payTerm = "";
-    let i = 1;
     payTerms.map((term) => {
       // console.log(term)
       if (i == 1 && term == "") term = "-";
@@ -106,7 +106,7 @@ let getPayTerm = async (QuotationPayTerm, payterm) => {
 
   let PayTermArr = "", idx = 0
   while (idx < payterm.length) {
-    console.log(payterm[idx])
+    // console.log(payterm[idx])
     let { PayTerm, PayPercent } = payterm[idx]
     if (PayTerm == '') {
       PayTermArr += '-'
@@ -293,7 +293,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
 
   // condition
   let { payTerm, idx } = await getPayTerm(QuotationPayTerm, payterm);
-  console.log(payTerm)
+  // console.log(payTerm)
   let newline = ""
   for (let i = 0; i < idx; i++) {
     newline += '\n'
@@ -636,7 +636,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
     style: "text",
     body: [],
   };
-  if (QuotationDetail) {
+  if (QuotationDetail && QuotationDetail != 'null') {
     let detailTable1 = detailTable, detailTable2 = detailTable, detailTable3 = detailTable;
     let detail1 = {
       margin: [15, 0, 50, 0],
@@ -654,52 +654,42 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
       table: detailTable3,
     };
     let Details;
+    // console.log(QuotationDetail)
     if (QuotationDetail[0] == '<') {
       // let DetailArr = []
       Details = QuotationDetail.replaceAll('<p>', '').split('</p>')
     }
     else Details = JSON.parse(QuotationDetail).blocks;
-    let i = 0;
-    Details.forEach((Detail) => {
-
+    Details.forEach((Detail, i) => {
       let text = Detail.data ? Detail.data.text : Detail
-      if (text.includes("ตัวอย่างการพิมพ์")) {
-        throw new Error("Please delete detail example");
-      }
-      let isBold = text.includes("<strong>") ? true : false;
+      if (text.includes("ตัวอย่างการพิมพ์")) throw new Error("Please delete detail example");
+      let isBold = text.includes("<strong>") || text.includes("<b>") ? true : false;
       let isUnderline = text.includes("<u>") ? 'underline' : '';
-      text = text.replace(/<strong>|<\/strong>|<u>|<\/u>/g, "");
+      text = text.replace(/<b>|<\/b>|<strong>|<\/strong>|<u>|<\/u>/g, "");
       text = text.replace(/&nbsp;/g, " ");
       text = text.split("; ");
       if (i < 40) {
-        if (i === 0) {
-          doc["content"].push(pageBreak, detailHeader, detail1);
-        }
+        if (i === 0) doc["content"].push(pageBreak, detailHeader, detail1);
         detailTable1["body"].push([
           { text: text[0], bold: isBold, decoration: isUnderline },
           { text: text[1] ? text[1] : "", bold: isBold },
           { text: text[2] ? text[2] : "", bold: isBold },
         ]);
       } else if (i < 80) {
-        if (i === 40) {
-          doc["content"].push(pageBreak, detailHeader, detail2);
-        }
+        if (i === 40) doc["content"].push(pageBreak, detailHeader, detail2);
         detailTable2["body"].push([
           { text: text[0], bold: isBold, decoration: isUnderline },
           { text: text[1] ? text[1] : "", bold: isBold },
           { text: text[2] ? text[2] : "", bold: isBold },
         ]);
       } else {
-        if (i === 80) {
-          doc["content"].push(pageBreak, detailHeader, detail3);
-        }
+        if (i === 80) doc["content"].push(pageBreak, detailHeader, detail3);
         detailTable3["body"].push([
           { text: text[0], bold: isBold, decoration: isUnderline },
           { text: text[1] ? text[1] : "", bold: isBold },
           { text: text[2] ? text[2] : "", bold: isBold },
         ]);
       }
-      i++;
     });
   }
   return doc;

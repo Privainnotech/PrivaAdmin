@@ -125,6 +125,7 @@ function ShowPro(QuotationId) {
       if (PayTermLength != 0) {
         console.log("QuotationPayTerm:", QuotationPayTerm);
         for (let i = 1; i <= PayTermLength; i++) {
+          console.log(QuotationPayTerm)
           if (!Array.isArray(QuotationPayTerm)) {
             PayTermDetail = QuotationPayTerm[`QuotationPayTerm${i}`];
             PayTermPercent = "0";
@@ -406,9 +407,7 @@ $(document).ready(function () {
             let col = $(row[0]).children();
             let group2 = col[1];
             let pay_forecast = $(group2).children()[0].value;
-            QuotationPayTerm.push({
-              PayForecast: pay_forecast,
-            });
+            QuotationPayTerm.push({ PayForecast: pay_forecast, });
           }
         }
         let Data = { QuotationPayTerm: QuotationPayTerm };
