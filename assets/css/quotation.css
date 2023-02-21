@@ -286,7 +286,9 @@ input[type=number].payment:disabled {
 
 .ql-toolbar,
 #editorjs {
-  width: 210mm;
+  /* min-width: 100mm; */
+  width: 100%;
+  max-width: 200mm;
 }
 .ql-editor {
   padding-bottom: 100px;

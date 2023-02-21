@@ -169,7 +169,6 @@ function AjaxDelete(url) {
     });
   });
 }
-
 // Search Table Title
 //Quotation
 function searchTableQuoHead() {
@@ -197,7 +196,6 @@ function searchTableQuoHead() {
       );
     });
 }
-
 // Fill Table
 //Quotation
 function fill_quotationHead() {

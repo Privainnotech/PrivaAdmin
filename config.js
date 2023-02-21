@@ -1,11 +1,11 @@
 const PORT = 2999;
 const dbconfig = {
-  user: "privaadmin",
-  password: "Bvc7f&07",
-  server: "119.59.96.61",
-  // user: "sa",
-  // password: "P@ssw0rd",
-  // server: "192.168.1.6",
+  // user: "privaadmin",
+  // password: "Bvc7f&07",
+  // server: "119.59.96.61",
+  user: "sa",
+  password: "P@ssw0rd",
+  server: "192.168.1.6",
   database: "PrivaDashboard",
   port: 1433,
   options: {
