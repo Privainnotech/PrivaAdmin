@@ -204,10 +204,12 @@ function fill_quotationHead() {
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
     // scrollX: true,
+    // scrollY: '25vh',
     scrollCollapse: true,
     searching: true,
+    ordering: false,
     paging: true,
-    pageLength: 5,
+    pageLength: 10,
     lengthChange: false,
     info: false,
     autoWidth: true,
@@ -223,6 +225,7 @@ function fill_quotationHead() {
       },
 
       {
+        width: '100px',
         data: "QuotationNo",
       },
       {
@@ -238,10 +241,19 @@ function fill_quotationHead() {
         },
       },
       {
+        width: '150px',
         data: "CustomerName",
+        render: function (data, type, row) {
+          return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
+        },
       },
       {
+        width: '100px',
         data: "QuotationNet",
+        render: function (data, type, row) {
+          let [bath, stang] = data.toFixed(2).split('.')
+          return `<div class = "d-flex justify-content-end align-items-center"><span class="text-end">${parseInt(bath).toLocaleString()}.${stang}</span></div>`;
+        },
       },
     ],
   });
@@ -265,6 +277,14 @@ function fill_quotation(QuotationNoId = null) {
         data: "QuotationRevised",
       },
       {
+        width: '150px',
+        data: "StatusName",
+        render: function (data, type, row) {
+          let L_Status = data.toLowerCase();
+          return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
+        },
+      },
+      {
         data: "QuotationDate",
         render: function (data, type, row) {
           if (data != null) return data;
@@ -273,18 +293,9 @@ function fill_quotation(QuotationNoId = null) {
       },
       {
         data: "QuotationUpdatedDate",
-        render: function (data, type, row) {
-          return data = data.replaceAll(' ', '<br>')
-        }
       },
       {
-        data: "StatusName",
-        render: function (data, type, row) {
-          let L_Status = data.toLowerCase();
-          return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
-        },
-      },
-      {
+        width: '100px',
         data: "EmployeeFname",
         render: function (data, type, row) {
           if (data != null) return data;
@@ -327,10 +338,16 @@ function fill_item(Id, status) {
       {
         width: "40%",
         data: "ItemName",
+        render: function (data, type, row) {
+          return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start text-wrap">${data}</span></div>`;
+        },
       },
       {
         width: "15%",
         data: "ItemPrice",
+        render: function (data, type, row) {
+          return data.toLocaleString();
+        },
       },
       {
         width: "15%",
@@ -385,10 +402,16 @@ function fill_subitem(Id, status) {
       {
         width: "40%",
         data: "SubItemName",
+        render: function (data, type, row) {
+          return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start text-wrap">${data}</span></div>`;
+        },
       },
       {
         width: "15%",
         data: "SubItemPrice",
+        render: function (data, type, row) {
+          return data.toLocaleString();
+        },
       },
       {
         width: "15%",

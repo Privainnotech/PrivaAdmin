@@ -381,7 +381,7 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
     // Update Quotation
     if (Array.isArray(QuotationPayTerm)) { // Array
       let UpdateQuotation = `UPDATE privanet.Quotation
-        SET QuotationSubject = N'${QuotationSubject}', CustomerId = ${CustomerId}, QuotationDiscount = ${QuotationDiscount || 0},
+        SET QuotationSubject = N'${QuotationSubject}', CustomerId = ${CustomerId}, QuotationDiscount = ${parseFloat(QuotationDiscount.replaceAll(',', '')) || 0},
           QuotationValidityDate = N'${ValidityDateFilter}', QuotationDelivery = N'${DeliveryFilter}',
           QuotationRemark = N'${RemarkFilter}', EmployeeApproveId = ${EmployeeApproveId},
           EndCustomer = N'${EndCustomerFilter}', EmployeeEditId = ${UserId}
@@ -463,9 +463,9 @@ router.put("/edit_detail/:QuotationId", async (req, res) => {
     // console.log(QuotationDetail);
     let Detail = '';
     if (typeof QuotationDetail == 'object' && QuotationDetail.blocks.length !== 0) Detail = JSON.stringify(QuotationDetail);
-    else Detail = QuotationDetail
+    else Detail = QuotationDetail == '<p><br></p>' ? '' : QuotationDetail
     Detail = Detail.replaceAll("&nbsp;", " ").replaceAll("'", "''").replaceAll("amp;", "&");
-    // console.log(Detail);
+    console.log(Detail);
     let UpdateDetail = `UPDATE privanet.Quotation SET QuotationDetail = N'${Detail}' WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(UpdateDetail);
     res.status(201).send({ message: "Successfully Edit Quotation Detail" });

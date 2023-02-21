@@ -162,10 +162,10 @@ function ShowPro(QuotationId) {
       $("#PJ_End_Customer").val(EndCustomer);
       $("#PJ_Approve").val(EmployeeApproveId);
 
-      $("#TotalPrice").val(QuotationTotalPrice);
-      $("#PriceAfter").val(QuotationNet);
-      $("#Vat").val(QuotationVat);
-      $("#NetTotal").val(QuotationNetVat);
+      $("#TotalPrice").val(QuotationTotalPrice.toLocaleString());
+      $("#PriceAfter").val(QuotationNet.toLocaleString());
+      $("#Vat").val(QuotationVat.toLocaleString());
+      $("#NetTotal").val(QuotationNetVat.toLocaleString());
 
       // setting show status
       $("#IP-Set-TableShow").val(TableShow);
