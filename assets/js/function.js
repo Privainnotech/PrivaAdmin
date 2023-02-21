@@ -38,7 +38,7 @@ function AjaxDataJson(url, method, data = null) {
     });
   });
 }
-function SwalSuccess(res,SwalTitle = `Success`) {
+function SwalSuccess(res, SwalTitle = `Success`) {
   successText = res.message;
   Swal.fire({
     position: "center",
@@ -95,7 +95,7 @@ function SwalError(err) {
   });
 }
 
-function AjaxPutWithImage(url,fileImg = {}) {
+function AjaxPutWithImage(url, fileImg = {}) {
   return new Promise(async (resolve, reject) => {
     $.ajax({
       url: url,
@@ -112,9 +112,9 @@ function AjaxPutWithImage(url,fileImg = {}) {
       },
     });
   })
-  
+
 }
-function AjaxImportFile (url, exFile = {}) {
+function AjaxImportFile(url, exFile = {}) {
   return new Promise(async (resolve, reject) => {
     $.ajax({
       url: url,
@@ -142,7 +142,7 @@ function AjaxImportFile (url, exFile = {}) {
       },
     });
   })
-  
+
 };
 function AjaxDelete(url) {
   return new Promise(async (resolve, reject) => {
@@ -216,7 +216,7 @@ function fill_quotationHead() {
     },
     columns: [
       {
-        width:'50px',
+        width: '50px',
         data: "index",
       },
 
@@ -259,7 +259,7 @@ function fill_quotation(QuotationNoId = null) {
     },
     columns: [
       {
-        width:'50px',
+        width: '50px',
         data: "QuotationRevised",
       },
       {
@@ -271,8 +271,8 @@ function fill_quotation(QuotationNoId = null) {
       },
       {
         data: "QuotationUpdatedDate",
-        render: function (data,type,row) {
-          return data = data.replaceAll(' ','<br>')
+        render: function (data, type, row) {
+          return data = data.replaceAll(' ', '<br>')
         }
       },
       {
@@ -290,7 +290,7 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
-        width:'60px',
+        width: '60px',
         data: "Action",
         render: function (data, type, row) {
           if (row.QuotationStatus === 1) {
