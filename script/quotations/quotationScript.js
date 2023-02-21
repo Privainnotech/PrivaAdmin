@@ -699,7 +699,10 @@ $(document).ready(function () {
             $(".modal-title").text("Preview PDF");
             fileName = success.message;
             // document.getElementById("PreviewPDF").src = fileName + "#toolbar=0";
-            $("#PreviewPDF").attr("src", `${fileName}#toolbar=0`);
+            // $("#PreviewPDF").attr("src", `${fileName}#toolbar=0`);
+            $("#PreviewPDF").replaceWith(`
+            <iframe id="PreviewPDF" src="${fileName}#toolbar=0" width="100%" height="500px"></iframe>
+            `)
             $("#loading-preview i").removeClass("fa-check-circle");
             //
           },
