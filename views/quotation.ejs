@@ -9,43 +9,30 @@
   <meta name="author" content="AdminKit">
   <meta name="keywords"
     content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-
   <link rel="preconnect" href="https://fonts.gstatic.com">
-
   <link rel="canonical" href="https://demo-basic.adminkit.io/" />
-
-
-
-
   <title>Quotation</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
   <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
-
   <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
   <link rel="stylesheet" href="/fonts/font-awesome.min.css">
   <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css">
-
   <link rel="stylesheet" href="/css/Theme.css">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/font.css">
   <link rel="stylesheet" href="/css/table.css">
   <link rel="stylesheet" href="/css/app.css">
-
   <link rel="stylesheet" href="/css/quotation.css">
   <link rel="stylesheet" href="/css/simple-image.css" />
-
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 
 <body>
   <div class="wrapper">
     <%- include('./partials/sidebar'); %>
-
       <!-- Add From -->
       <!-- form Add Quatation -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalQuotationMaster">
@@ -84,7 +71,6 @@
           </div>
         </div>
       </div>
-
       <!-- form Add item -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalAddItemMaster">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -124,7 +110,6 @@
           </div>
         </div>
       </div>
-
       <!-- form Add Sub -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalAddSubMaster">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -194,7 +179,6 @@
           </div>
         </div>
       </div>
-
       <!-- Edit From -->
       <!-- form Edit item -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalItemMaster">
@@ -228,8 +212,6 @@
                   <div class="col-xl-8 d-xl-flex align-items-xl-center" id="M_RecpCookCnt-1"><input class="form-control"
                       type="text" id="modalInpQty" style="width: 100%;" required=""></div>
                 </div>
-
-
               </div>
               <div class="modal-footer"><button class="btn btn-primary" id="modalEditItem" type="button">Save</button>
               </div>
@@ -237,7 +219,6 @@
           </div>
         </div>
       </div>
-
       <!-- form Edit Sub -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalSubMaster">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -308,7 +289,6 @@
           </div>
         </div>
       </div>
-
       <!-- form Preview -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalPreview">
         <div class="modal-dialog modal-dialog-centered modal-80" role="document">
@@ -332,7 +312,6 @@
           </div>
         </div>
       </div>
-
       <!-- Delete From -->
       <!-- form Confirm delete -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalDeleteConfirm">
@@ -351,7 +330,6 @@
           </div>
         </div>
       </div>
-
       <!-- Confirm From -->
       <!-- form Confirm revised -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalRevisedConfirm">
@@ -370,7 +348,6 @@
           </div>
         </div>
       </div>
-
       <!-- form Confirm Print -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalPrintConfirm">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -388,7 +365,6 @@
           </div>
         </div>
       </div>
-
       <!-- form confirm Edit -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalEditConfirm">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -406,7 +382,6 @@
           </div>
         </div>
       </div>
-
       <!-- form confirm Setting -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalSettingConfirm">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -424,7 +399,6 @@
           </div>
         </div>
       </div>
-
       <!-- form Confirm Set Status -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalStatusConfirm">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -442,7 +416,6 @@
           </div>
         </div>
       </div>
-
       <!-- Loading -->
       <div id="loading-preview" class="shadow">
         <div class="modal-header">
@@ -451,7 +424,6 @@
           <button type="button" id="loading-close" class="close"><span aria-hidden="true">×</span></button>
         </div>
       </div>
-
       <div class="main">
         <%- include('./partials/navbar'); %>
           <main class="content">
@@ -521,7 +493,6 @@
                       </div>
                       <div class="align-self-center chart chart-lg">
                         <!-- set -->
-
                         <div class="row mb-1">
                           <div class="col-3 px-0 d-flex justify-content-start align-items-center">
                             <span class="input-group-text group-title fs-3">Project :</span>
@@ -550,7 +521,6 @@
                             <input id="QDate" class="form-control" disabled>
                           </div>
                         </div>
-
                         <div class="row mb-1">
                           <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
                             <span class="input-group-text group-title">Company :</span>
@@ -559,7 +529,6 @@
                             <input id="ComName" class="form-control " disabled>
                           </div>
                         </div>
-
                         <div class="row mb-1">
                           <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
                             <span class="input-group-text group-title">Email :</span>
@@ -587,7 +556,6 @@
                         </div>
                         <hr>
                         <span class="input-group-text group-title fs-3 px-0 mb-1">Condition</span>
-
                         <div class="row">
                           <div class="col-3 pe-0 d-flex justify-content-start align-items-center mb-1">
                             <span class="input-group-text group-title">Validity :</span>
@@ -605,7 +573,6 @@
                             <input type="text" class="form-control" id="PJ_Delivery" disabled>
                           </div>
                         </div>
-
                         <div class="d-flex justify-content-between align-items-center mb-1">
                           <span class="input-group-text group-title">Term of Payment :</span>
                           <button type="button" class="btn btn-sm btn-success" id="btn_AddPayment">Add Payment</button>
@@ -627,7 +594,6 @@
                         </div>
                         <hr>
                         <span class="input-group-text group-title fs-3 px-0 mb-1">Price</span>
-
                         <div class="row">
                           <div
                             class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center mb-1">
@@ -646,8 +612,6 @@
                             <input type="text" class="form-control" id="PJ_Discount" disabled>
                           </div>
                         </div>
-
-
                         <div class="row mb-1">
                           <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
                             <span class="input-group-text group-title">After Discount :</span>
@@ -656,7 +620,6 @@
                             <input type="text" class="form-control" id="PriceAfter" disabled>
                           </div>
                         </div>
-
                         <div class="row mb-1">
                           <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
                             <span class="input-group-text group-title">VAT Including 7% :</span>
@@ -665,7 +628,6 @@
                             <input type="text" class="form-control" id="Vat" disabled>
                           </div>
                         </div>
-
                         <div class="row mb-1">
                           <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
                             <span class="input-group-text group-title">Net Total :</span>
@@ -674,7 +636,6 @@
                             <input type="text" class="form-control" id="NetTotal" disabled>
                           </div>
                         </div>
-
                         <div class="row mb-1">
                           <div class="col-5 col-lg-4 col-xxl-3 pe-0 d-flex justify-content-start align-items-center">
                             <label class="input-group-text group-title" for="PJ_Approve">Approve By :</label>
@@ -685,7 +646,6 @@
                             </select>
                           </div>
                         </div>
-
                         <div class="footer v-2">
                           <div class="btn-group right ti" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-dark invisible" id="modalEditProject">
@@ -833,7 +793,6 @@
                     <div class="card-header title v">
                       <h1>Detail</h1>
                       <button id="save-button" class="btn btn-sm btn-success">Save</button>
-
                     </div>
                     <div class="card-body w-100 d-flex justify-content-center align-items-center">
                       <div>
@@ -846,7 +805,6 @@
               </div>
             </div>
           </main>
-
       </div>
   </div>
 
