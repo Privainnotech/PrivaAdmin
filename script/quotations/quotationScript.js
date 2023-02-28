@@ -407,7 +407,7 @@ $(document).ready(function () {
             let row = $(rowTerm[i]).children();
             let col = $(row[0]).children();
             let group2 = col[1];
-            let pay_forecast = $(group2).children()[0].value;
+            let pay_forecast = $(group2).children()[1].value;
             QuotationPayTerm.push({ PayForecast: pay_forecast, });
           }
         }
@@ -458,7 +458,8 @@ $(document).ready(function () {
                   let group2 = col[1];
                   let pay_detail = $(group1).children()[0].value;
                   let pay_percent = $(group1).children()[1].value;
-                  let pay_forecast = $(group2).children()[0].value;
+                  let pay_forecast = $(group2).children()[1].value;
+
                   if (pay_detail) {
                     QuotationPayTerm.push({
                       PayTerm: pay_detail,

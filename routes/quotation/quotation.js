@@ -366,6 +366,7 @@ router.put("/edit_quotation/:QuotationId", async (req, res) => {
     let { QuotationSubject, QuotationValidityDate, CustomerId } = req.body;
     let { QuotationPayTerm, QuotationDelivery, QuotationDiscount } = req.body;
     let { QuotationRemark, EmployeeApproveId, EndCustomer } = req.body;
+    console.log(QuotationPayTerm)
     if (!CustomerId) return res.status(400).send({ message: "Please select Customer" });
     if (!EmployeeApproveId) return res.status(400).send({ message: "Please select Approver" });
     if (!QuotationPayTerm.length) return res.status(400).send({ message: "Please add Term of Payment" });
@@ -427,6 +428,7 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
     let UserId = req.session.UserId;
     if (!UserId) return res.status(400).send({ message: "Please login" });
     let QuotationId = req.params.QuotationId;
+    console.log(req.body)
     let { QuotationPayTerm } = req.body;
     let QuotationPayLength = QuotationPayTerm.length
     for (let idx = 0; idx < QuotationPayLength; idx++) {
@@ -437,21 +439,24 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
     let quotation = await pool.request().query(`SELECT CONVERT(nvarchar(max), QuotationPayTerm) AS 'OldPayTerm'
       FROM privanet.[Quotation] WHERE QuotationId = ${QuotationId}`);
     let { OldPayTerm } = quotation.recordset[0]
-    OldPayTerm = JSON.parse(OldPayTerm)
-    for (let idx = 0; idx < QuotationPayLength; idx++) {
-      let { PayForecast } = QuotationPayTerm[idx]
-      let getPayterm = `SELECT PayTerm,PayPercent
-        FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`
-      let payterms = await pool.request().query(getPayterm);
-      if (payterms.recordset.length) await pool.request().query(`UPDATE privanet.QuotationPayTerm
-        SET PayForecast = N'${PayForecast}'
-        WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
-      else await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
-          (QuotationId,IndexPayTerm,PayTerm,PayPercent,PayForecast)
-        VALUES(${QuotationId},${idx + 1},N'${OldPayTerm[`QuotationPayTerm${idx + 1}`]}',0,N'${PayForecast}');`);
+    if (OldPayTerm != '-') {
+      OldPayTerm = JSON.parse(OldPayTerm)
+      for (let idx = 0; idx < QuotationPayLength; idx++) {
+        let { PayForecast } = QuotationPayTerm[idx]
+        let getPayterm = `SELECT PayTerm,PayPercent
+          FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`
+        let payterms = await pool.request().query(getPayterm);
+        if (payterms.recordset.length) await pool.request().query(`UPDATE privanet.QuotationPayTerm
+          SET PayForecast = N'${PayForecast}'
+          WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
+        else await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
+            (QuotationId,IndexPayTerm,PayTerm,PayPercent,PayForecast)
+          VALUES(${QuotationId},${idx + 1},N'${OldPayTerm[`QuotationPayTerm${idx + 1}`]}',0,N'${PayForecast}');`);
+      }
     }
     res.status(201).send({ message: "Successfully Edit Quotation" });
   } catch (err) {
+    console.log(err)
     res.status(500).send({ message: `${err}` });
   }
 });
