@@ -159,7 +159,7 @@ function ShowPro(QuotationId) {
       $("#PJ_Name").val(QuotationSubject);
       $("#PJ_Discount").val(QuotationDiscount.toLocaleString());
       $("#PJ_Validity").val(QuotationValidityDate);
-      
+
       $("#PJ_Delivery").val(QuotationDelivery);
       $("#PJ_Remark").val(QuotationRemark);
       $("#PJ_End_Customer").val(EndCustomer);
@@ -397,12 +397,12 @@ $(document).ready(function () {
 
       $(document).on("click", ".btn-edit-date-payment", function (e) {
         $(this).hide();
-        $($(this).siblings()[0]).removeAttr("disabled");
+        $($(this).prev()).removeAttr("disabled");
         $(".btn-save-date-payment").show();
       });
       $(".btn-save-date-payment").unbind();
       $(".btn-save-date-payment").on("click", async function (e) {
-
+        // console.log($($(this).prev()).val())
         let QuotationPayTerm = [];
         let rowTerm = $(".box-payment").children();
         if (rowTerm != 0) {
@@ -411,7 +411,7 @@ $(document).ready(function () {
             let col = $(row[0]).children();
             let group2 = col[1];
             let pay_forecast = $(group2).children()[1].value;
-            QuotationPayTerm.push({ PayForecast: pay_forecast, });
+            QuotationPayTerm.push({ PayForecast: pay_forecast});
           }
         }
         let Data = { QuotationPayTerm: QuotationPayTerm };
