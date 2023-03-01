@@ -60,7 +60,8 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
     let Quotation = await pool.request().query(InsertQuotation);
     let NewQuotationId = Quotation.recordset[0].Id;
     // Copy PayTerm
-    let selectOldPayterm = await pool.request().query(`SELECT * FROM privanet.QuotationPayTerm
+    let selectOldPayterm = await pool.request().query(`SELECT QuotationId, IndexPayTerm, PayTerm, PayPercent,
+      FORMAT(PayForecast,'yyyy-MM-dd') PayForecast FROM privanet.QuotationPayTerm
       WHERE QuotationId = ${OldQuotationId}`);
     for (const payterm of selectOldPayterm.recordset) await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
       (QuotationId, IndexPayTerm, PayTerm, PayPercent, PayForecast)
