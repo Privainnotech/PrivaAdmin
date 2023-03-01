@@ -9,7 +9,11 @@ const { PriceS, PriceI, PriceQ } = require("../modules/price");
 router.get("/quotation_no_list", async (req, res, next) => {
   try {
     let getQuotationNoList = `SELECT
-        row_number() over(order by a.QuotationNo desc) as 'index',
+        row_number() over(order by 
+          (
+            SELECT TOP 1 QuotationUpdatedDate FROM privanet.[Quotation] h
+            WHERE h.QuotationNoId = a.QuotationNoId ORDER BY QuotationStatus
+          ) desc, a.QuotationNo desc) as 'index',
         a.QuotationNoId, a.QuotationNo, a.CustomerId, b.CustomerName,
         b.CompanyId,c.CompanyName,
         (SELECT TOP 1 QuotationSubject
@@ -27,7 +31,11 @@ router.get("/quotation_no_list", async (req, res, next) => {
         (SELECT TOP 1 QuotationNet
           FROM privanet.[Quotation] g
           WHERE g.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationNet
+          ORDER BY QuotationStatus) QuotationNet,
+        (SELECT TOP 1 QuotationUpdatedDate
+          FROM privanet.[Quotation] h
+          WHERE h.QuotationNoId = a.QuotationNoId
+          ORDER BY QuotationStatus) QuotationUpdatedDate
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
       LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId`;
