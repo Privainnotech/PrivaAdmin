@@ -23,16 +23,14 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
         CONVERT(nvarchar(max), a.QuotationDelivery) AS 'QuotationDelivery',
         CONVERT(nvarchar(max), a.QuotationRemark) AS 'QuotationRemark',
         CONVERT(nvarchar(max), a.QuotationDetail) AS 'QuotationDetail',
-        a.EmployeeApproveId
+        a.CustomerId, a.EmployeeApproveId
       FROM privanet.[Quotation] a
       LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
       WHERE a.QuotationId = ${OldQuotationId}`;
     let Oldquotations = await pool.request().query(getOldQuotation);
     let Oldquotation = Oldquotations.recordset[0];
-    let { QuotationNoId, QuotationSubject, QuotationStatus } = Oldquotation;
-    let { EndCustomer, QuotationTotalPrice, QuotationDiscount } = Oldquotation;
-    let { QuotationValidityDate, QuotationPayTerm, QuotationDelivery } =
-      Oldquotation;
+    let { QuotationNoId, CustomerId, QuotationSubject, QuotationStatus, EndCustomer, QuotationTotalPrice,
+      QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery } = Oldquotation;
     let { QuotationRemark, QuotationDetail, EmployeeApproveId } = Oldquotation;
     if (!EndCustomer) EndCustomer = "-";
     if (!QuotationValidityDate) QuotationValidityDate = "-";
@@ -53,9 +51,9 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
         QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice,
         QuotationDiscount, QuotationValidityDate, QuotationPayTerm,
         QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate,
-        EmployeeApproveId, EmployeeEditId, EndCustomer
+        EmployeeApproveId, EmployeeEditId, EndCustomer, CustomerId
       )
-      VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkTime()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}')
+      VALUES(${QuotationNoId}, ${newRevise}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkTime()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}',${CustomerId})
       SELECT SCOPE_IDENTITY() AS Id`;
     let Quotation = await pool.request().query(InsertQuotation);
     let NewQuotationId = Quotation.recordset[0].Id;
