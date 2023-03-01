@@ -108,15 +108,8 @@ function ShowPro(QuotationId) {
           $("#CusNameIp").attr("disabled", "");
         },
       });
-      $("#CusName").val(CustomerId);
-      $("#QDate").val(QuotationDate || "-");
-      $("#CusEmail").val(CustomerEmail);
-      $("#ComName").val(CompanyName);
-      $("#Adress").val(CompanyAddress);
+      
 
-      $("#PJ_Name").val(QuotationSubject);
-      $("#PJ_Discount").val(QuotationDiscount);
-      $("#PJ_Validity").val(QuotationValidityDate);
       let PayTermLength, PayTermDetail, PayTermPercent, PayTermForecast;
       !Array.isArray(QuotationPayTerm)
         ? (PayTermLength = Object.keys(QuotationPayTerm).length)
@@ -140,8 +133,8 @@ function ShowPro(QuotationId) {
               <div class="col">
                 <div class="input-group input-group-sm mb-1">
                   <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
-                  <input type="number" class=" mb-0 me-1 payment" value="${PayTermPercent}" disabled>
-                  <span class="input-group-text bg-white border-0">%</span>
+                  <input type="number" class="p-0 mb-0 payment text-end" value="${PayTermPercent}" disabled>
+                  <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                 </div>
                 <div class="input-group input-group-sm">
                   <span class="input-group-text bg-white border-0 fw-bold">Payment Forecast: </span>
@@ -157,6 +150,16 @@ function ShowPro(QuotationId) {
         }
       }
 
+      $("#CusName").val(CustomerId);
+      $("#QDate").val(QuotationDate || "-");
+      $("#CusEmail").val(CustomerEmail);
+      $("#ComName").val(CompanyName);
+      $("#Adress").val(CompanyAddress);
+
+      $("#PJ_Name").val(QuotationSubject);
+      $("#PJ_Discount").val(QuotationDiscount.toLocaleString());
+      $("#PJ_Validity").val(QuotationValidityDate);
+      
       $("#PJ_Delivery").val(QuotationDelivery);
       $("#PJ_Remark").val(QuotationRemark);
       $("#PJ_End_Customer").val(EndCustomer);
@@ -528,8 +531,8 @@ $(document).ready(function () {
                 <div class="col">
                   <div class="input-group input-group-sm mb-1">
                     <input type="text" class="form-control mb-0 me-3 payment" value="">
-                    <input type="number" class=" mb-0 me-1 payment" value="">
-                    <span class="input-group-text bg-white border-0">%</span>
+                    <input type="number" class="p-0 mb-0 payment text-end" value="">
+                    <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                   </div>
                   <div class="input-group input-group-sm">
                     <input type="date" class="form-control  mb-0 payment" value="">
