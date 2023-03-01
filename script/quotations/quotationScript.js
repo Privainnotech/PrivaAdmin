@@ -108,7 +108,7 @@ function ShowPro(QuotationId) {
           $("#CusNameIp").attr("disabled", "");
         },
       });
-      
+
 
       let PayTermLength, PayTermDetail, PayTermPercent, PayTermForecast;
       !Array.isArray(QuotationPayTerm)
@@ -336,6 +336,7 @@ $(document).ready(function () {
   $("#tableQuoHead tbody").on("click", "tr", function () {
     fill_resetTable();
     fill_resetQuoTable();
+    $(".btn-save-date-payment").hide();
     RePro();
     if ($(this).hasClass("selected")) {
       $(this).removeClass("selected");
@@ -411,7 +412,7 @@ $(document).ready(function () {
             let col = $(row[0]).children();
             let group2 = col[1];
             let pay_forecast = $(group2).children()[1].value;
-            QuotationPayTerm.push({ PayForecast: pay_forecast});
+            QuotationPayTerm.push({ PayForecast: pay_forecast });
           }
         }
         let Data = { QuotationPayTerm: QuotationPayTerm };
@@ -535,7 +536,8 @@ $(document).ready(function () {
                     <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                   </div>
                   <div class="input-group input-group-sm">
-                    <input type="date" class="form-control  mb-0 payment" value="">
+                  <span class="input-group-text bg-white border-0 fw-bold">Payment Forecast: </span>
+                  <input type="date" class="form-control  mb-0 payment" value="">
                     <button class="btn btn-primary payment btn-edit-date-payment" style="display: none;"><i class="fas fa-edit"></i></button>
                   </div>
                 </div>
