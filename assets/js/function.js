@@ -221,7 +221,14 @@ function fill_quotationHead() {
         width: '50px',
         data: "index",
       },
-
+      {
+        width: '150px',
+        data: "StatusName",
+        render: function (data, type, row) {
+          let L_Status = data.toLowerCase();
+          return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
+        },
+      },
       {
         width: '100px',
         data: "QuotationNo",
