@@ -12,30 +12,35 @@ router.get("/quotation_no_list", async (req, res, next) => {
         row_number() over(order by 
           (
             SELECT TOP 1 QuotationUpdatedDate FROM privanet.[Quotation] h
-            WHERE h.QuotationNoId = a.QuotationNoId ORDER BY QuotationStatus
+            WHERE h.QuotationNoId = a.QuotationNoId ORDER BY QuotationStatus,QuotationRevised desc
           ) desc, a.QuotationNo desc) as 'index',
         a.QuotationNoId, a.QuotationNo, a.CustomerId, b.CustomerName,
         b.CompanyId,c.CompanyName,
         (SELECT TOP 1 QuotationSubject
           FROM privanet.[Quotation] d
           WHERE d.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationSubject,
+          ORDER BY QuotationStatus,QuotationRevised desc ) QuotationSubject,
         (SELECT TOP 1 QuotationRevised
           FROM privanet.[Quotation] e
           WHERE e.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationRevised,
+          ORDER BY QuotationStatus,QuotationRevised desc ) QuotationRevised,
         (SELECT TOP 1 CustomerId
           FROM privanet.[Quotation] f
           WHERE f.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) CustomerIdQ,
+          ORDER BY QuotationStatus,QuotationRevised desc ) CustomerIdQ,
         (SELECT TOP 1 QuotationNet
           FROM privanet.[Quotation] g
           WHERE g.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationNet,
+          ORDER BY QuotationStatus,QuotationRevised desc ) QuotationNet,
         (SELECT TOP 1 QuotationUpdatedDate
           FROM privanet.[Quotation] h
           WHERE h.QuotationNoId = a.QuotationNoId
-          ORDER BY QuotationStatus) QuotationUpdatedDate
+          ORDER BY QuotationStatus,QuotationRevised desc ) QuotationUpdatedDate,
+        (SELECT TOP 1 j.StatusName
+          FROM privanet.[Quotation] i
+          LEFT JOIN privanet.[MasterStatus] j on i.QuotationStatus = j.StatusId
+          WHERE i.QuotationNoId = a.QuotationNoId
+          ORDER BY QuotationStatus,QuotationRevised desc) StatusName
       FROM privanet.[QuotationNo] a
       LEFT JOIN privanet.[MasterCustomer] b ON a.CustomerId = b.CustomerId
       LEFT JOIN privanet.[MasterCompany] c ON b.CompanyId = c.CompanyId`;
