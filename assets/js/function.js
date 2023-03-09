@@ -105,14 +105,12 @@ function AjaxPutWithImage(url, fileImg = {}) {
       data: JSON.stringify(fileImg),
       success: (res) => {
         resolve(res);
-
       },
       error: (err) => {
         reject(err);
       },
     });
-  })
-
+  });
 }
 function AjaxImportFile(url, exFile = {}) {
   return new Promise(async (resolve, reject) => {
@@ -132,18 +130,17 @@ function AjaxImportFile(url, exFile = {}) {
         });
       },
       success: (res) => {
-        resolve(res)
+        resolve(res);
       },
       error: (err) => {
-        reject(err)
+        reject(err);
       },
       complete: function () {
         Swal.hideLoading();
       },
     });
-  })
-
-};
+  });
+}
 function AjaxDelete(url) {
   return new Promise(async (resolve, reject) => {
     Swal.fire({
@@ -170,6 +167,7 @@ function AjaxDelete(url) {
   });
 }
 // Search Table Title
+
 //Quotation
 function searchTableQuoHead() {
   $("#tableQuoHead thead tr")
@@ -180,37 +178,22 @@ function searchTableQuoHead() {
     var title = $("#tableQuoHead thead th").eq($(this).index()).text();
     disable = title == "จัดการข้อมูล" ? "disabled" : "";
     $(this).html(
-      `<input class="form-control p-1" type="text" placeholder="${title}" ${disable}/>`
+      `<input class="form-control p-1 column-search" type="text" placeholder="${title}" ${disable}/>`
     );
   });
-  tableQuoHead
-    .columns()
-    .eq(0)
-    .each(function (colIdx) {
-      $("input", $("#tableQuoHead .filters th")[colIdx]).on(
-        "keyup change",
-        function () {
-          console.log(colIdx, this.value);
-          tableQuoHead.column(colIdx).search(this.value).draw();
-        }
-      );
-    });
 }
 // Fill Table
 //Quotation
 function fill_quotationHead() {
+  searchTableQuoHead();
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
-    // scrollX: true,
-    // scrollY: '25vh',
-    scrollCollapse: true,
+    scrollX: true,
+    scrollY: "40vh",
     searching: true,
     ordering: false,
-    paging: true,
-    pageLength: 10,
-    lengthChange: false,
-    info: false,
-    autoWidth: true,
+    paging: false,
+    autoWidth: false,
     dom: "rtp",
     ajax: {
       url: "/quotation/quotation_no_list",
@@ -218,50 +201,72 @@ function fill_quotationHead() {
     },
     columns: [
       {
-        width: '50px',
+        width: "10px",
+        // width: "5%",
         data: "index",
       },
       {
-        width: '150px',
+        // width: "10%",
         data: "StatusName",
         render: function (data, type, row) {
-          let L_Status = data.toLowerCase();
-          return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
+          // let L_Status = data.toLowerCase();
+          // return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
+          return `<div class = "d-flex justify-content-center align-items-center"><span >${data}</span></div>`;
         },
       },
       {
-        width: '100px',
+        // width: "10%",
         data: "QuotationNo",
       },
       {
+        // width: "25%",
         data: "CompanyName",
         render: function (data, type, row) {
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
+        // width: "25%",
         data: "QuotationSubject",
         render: function (data, type, row) {
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
-        width: '150px',
+        // width: "15%",
         data: "CustomerName",
         render: function (data, type, row) {
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
-        width: '100px',
+        // width: "10%",
         data: "QuotationNet",
         render: function (data, type, row) {
-          let [bath, stang] = data.toFixed(2).split('.')
-          return `<div class = "d-flex justify-content-end align-items-center"><span class="text-end">${parseInt(bath).toLocaleString()}.${stang}</span></div>`;
+          let [bath, stang] = data.toFixed(2).split(".");
+          return `<div class = "d-flex justify-content-end align-items-center"><span class="text-end">${parseInt(
+            bath
+          ).toLocaleString()}.${stang}</span></div>`;
         },
       },
     ],
+    initComplete: function () {
+      let thisTable = this.api();
+      thisTable
+        .columns()
+        .eq(0)
+        .each(function (colIdx) {
+          $("input", $(".filters th")[colIdx]).on(
+            "keyup change clear",
+            function (e) {
+              // console.log(colIdx, this.value);
+              thisTable.column(colIdx).search(this.value).draw();
+            }
+          );
+        });
+    },
   });
+
 }
 function fill_quotation(QuotationNoId = null) {
   tableQuo = $("#tableQuo").DataTable({
@@ -278,11 +283,11 @@ function fill_quotation(QuotationNoId = null) {
     },
     columns: [
       {
-        width: '50px',
+        width: "10%",
         data: "QuotationRevised",
       },
       {
-        width: '150px',
+        width: "25%",
         data: "StatusName",
         render: function (data, type, row) {
           let L_Status = data.toLowerCase();
@@ -290,6 +295,7 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
+        width: "15%",
         data: "QuotationDate",
         render: function (data, type, row) {
           if (data != null) return data;
@@ -297,10 +303,15 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
+        width: "15%",
         data: "QuotationUpdatedDate",
+        render: function (data, type, row) {
+          if (data != null) return data.replaceAll(" ", "<br/>");
+          else return (data = "-");
+        },
       },
       {
-        width: '100px',
+        width: "25%",
         data: "EmployeeFname",
         render: function (data, type, row) {
           if (data != null) return data;
@@ -308,7 +319,7 @@ function fill_quotation(QuotationNoId = null) {
         },
       },
       {
-        width: '60px',
+        width: "10%",
         data: "Action",
         render: function (data, type, row) {
           if (row.QuotationStatus === 1) {

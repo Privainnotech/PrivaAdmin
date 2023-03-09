@@ -285,7 +285,7 @@ const createEditor = (readStatus = false) => {
 $(document).ready(function () {
   RePro();
   fill_quotationHead();
-  searchTableQuoHead();
+  // searchTableQuoHead();
   fill_quotation();
   fill_resetQuoTable();
 
