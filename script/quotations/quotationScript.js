@@ -109,8 +109,13 @@ function ShowPro(QuotationId) {
         },
       });
 
-
-      let PayTermLength, PayTermDetail, PayTermPercent, PayTermForecast;
+      let PayTermLength,
+        PayTermDetail,
+        PayTermPercent,
+        PayTermForecast,
+        PayInvoiced,
+        show;
+      show = QuotationStatus == 1 ? 'style="display: none;"' : "";
       !Array.isArray(QuotationPayTerm)
         ? (PayTermLength = Object.keys(QuotationPayTerm).length)
         : (PayTermLength = QuotationPayTerm.length);
@@ -123,10 +128,13 @@ function ShowPro(QuotationId) {
             PayTermDetail = QuotationPayTerm[`QuotationPayTerm${i}`];
             PayTermPercent = "0";
             PayTermForecast = "";
+            PayInvoiced = "";
           } else {
             PayTermDetail = QuotationPayTerm[i - 1].PayTerm;
             PayTermPercent = QuotationPayTerm[i - 1].PayPercent;
             PayTermForecast = QuotationPayTerm[i - 1].PayForecast || "";
+            PayInvoiced =
+              QuotationPayTerm[i - 1].PayInvoiced == 1 ? "checked" : "";
           }
           $(".box-payment").append(`
             <div class="row mb-3">
@@ -137,13 +145,13 @@ function ShowPro(QuotationId) {
                   <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                   <span class="input-group-text bg-white fw-bold border-0">Invoice: </span>
                   <div class="form-check d-flex justify-content-center align-items-center">
-                    <input class="form-check-input payment check-invoice" type="checkbox" disabled>
+                    <input class="form-check-input check-invoice" type="checkbox" disabled ${PayInvoiced}>
                   </div>
                 </div>
                 <div class="input-group input-group-sm">
                   <span class="input-group-text bg-white border-0 fw-bold">Payment Forecast: </span>
                   <input type="date" class="form-control  mb-0 payment" value="${PayTermForecast}" disabled>
-                  <button class="btn btn-primary payment btn-edit-date-payment" ><i class="fas fa-edit"></i></button>
+                  <button class="btn btn-primary payment btn-edit-date-payment" ${show}><i class="fas fa-edit"></i></button>
                 </div>
               </div>
               <div class="col-auto px-1">
@@ -403,7 +411,9 @@ $(document).ready(function () {
       $(document).on("click", ".btn-edit-date-payment", function (e) {
         $(this).hide();
         $($(this).prev()).removeAttr("disabled");
-        $($($(this).parent().prev().children()[4]).children()[0]).removeAttr("disabled")
+        $($($(this).parent().prev().children()[4]).children()[0]).removeAttr(
+          "disabled"
+        );
         $(".btn-save-date-payment").show();
       });
       $(".btn-save-date-payment").unbind();
@@ -415,24 +425,43 @@ $(document).ready(function () {
           for (let i = 0; i < rowTerm.length; i++) {
             let row = $(rowTerm[i]).children();
             let col = $(row[0]).children();
+            let group1 = col[0];
             let group2 = col[1];
+            let pay_invoiced = $($(group1).children()[4]).children()[0].checked
+              ? 1
+              : 0;
             let pay_forecast = $(group2).children()[1].value;
-            QuotationPayTerm.push({ PayForecast: pay_forecast });
+            QuotationPayTerm.push({
+              PayForecast: pay_forecast,
+              PayInvoiced: pay_invoiced,
+            });
           }
         }
         let Data = { QuotationPayTerm: QuotationPayTerm };
-        console.log(Data)
+        // console.log(Data);
         try {
-          let res = await AjaxDataJson(`/quotation/edit_payforecast/${QuotationId}`, `put`, Data);
+          let res = await AjaxDataJson(
+            `/quotation/edit_payforecast/${QuotationId}`,
+            `put`,
+            Data
+          );
           SwalEditSuccess(res);
           $(this).hide();
           $(".btn-edit-date-payment").show();
-          $(`input[type='date'].payment`).attr('disabled', '')
-          // $('.btn-edit-date-payment').attr('disabled','')
+          $(`input.payment`).attr("disabled", "");
+          tableQuoHead.ajax.reload(null, false);
+          fill_resetQuoTable();
+          RePro();
         } catch (error) {
-          SwalError(error)
+          SwalError(error);
         }
       });
+      // invoice
+      if (QuotationStatus === 0) {
+        $StatusButton.attr("disabled", "");
+        $("#btn-cancel").removeAttr("disabled");
+      }
+      // pre quotation
       if (QuotationStatus === 1) {
         //Show Edit Button
         $EditGroup.removeClass("invisible");
@@ -527,7 +556,7 @@ $(document).ready(function () {
             $fieldProject.removeAttr("disabled");
             $(".payment").removeAttr("disabled");
             $(".btn-del-payment").show();
-            $(".btn-edit-date-payment,.btn-save-date-payment").hide();
+            
 
             $("#btn_AddPayment").show();
             $("#btn_AddPayment").unbind();
@@ -539,6 +568,10 @@ $(document).ready(function () {
                     <input type="text" class="form-control mb-0 me-3 payment" value="">
                     <input type="number" class="p-0 mb-0 payment text-end" value="">
                     <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
+                    <span class="input-group-text bg-white fw-bold border-0">Invoice: </span>
+                    <div class="form-check d-flex justify-content-center align-items-center">
+                      <input class="form-check-input check-invoice" type="checkbox" disabled>
+                    </div>
                   </div>
                   <div class="input-group input-group-sm">
                   <span class="input-group-text bg-white border-0 fw-bold">Payment Forecast: </span>
@@ -713,7 +746,7 @@ $(document).ready(function () {
             // $("#PreviewPDF").attr("src", `${fileName}#toolbar=0`);
             $("#PreviewPDF").replaceWith(`
             <iframe id="PreviewPDF" src="${fileName}#toolbar=0" width="100%" height="500px"></iframe>
-            `)
+            `);
             $("#loading-preview i").removeClass("fa-check-circle");
             //
           },

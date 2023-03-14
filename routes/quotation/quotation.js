@@ -59,7 +59,7 @@ router.get("/quotation_no_list", async (req, res, next) => {
           WHERE QuotationId = ${QuotationId} AND PayInvoiced = 1;`;
         let payterms = await pool.request().query(getPayterm);
         let { TotalInvoice } = payterms.recordset[0];
-        Quotation.StatusName += `${TotalInvoice}%`;
+        Quotation.StatusName += ` ${TotalInvoice}%`;
       }
       if (!CustomerIdQ) continue;
       let getCustomer = await pool.request()
@@ -106,7 +106,7 @@ router.get("/quotation_list/:QuotationNoId", async (req, res, next) => {
           WHERE QuotationId = ${QuotationId} AND PayInvoiced = 1;`;
         let payterms = await pool.request().query(getPayterm);
         let { TotalInvoice } = payterms.recordset[0];
-        Quotation.StatusName += `${TotalInvoice}%`;
+        Quotation.StatusName += ` ${TotalInvoice}%`;
       }
     }
     // console.log(quotations.recordset);
@@ -538,6 +538,7 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
       FROM privanet.[Quotation] WHERE QuotationId = ${QuotationId}`);
     let { OldPayTerm } = quotation.recordset[0];
     let InvoicePercent = 0;
+    console.log(OldPayTerm)
     if (OldPayTerm != "-") {
       OldPayTerm = JSON.parse(OldPayTerm);
       for (let idx = 0; idx < QuotationPayLength; idx++) {
@@ -547,9 +548,10 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
           idx + 1
         };`;
         let payterms = await pool.request().query(getPayterm);
-        let { PayPercent } = payterms;
         if (payterms.recordset.length) {
+          let { PayPercent } = payterms.recordset[0];
           if (PayInvoiced) InvoicePercent += PayPercent;
+          console.log(InvoicePercent)
           await pool.request().query(`UPDATE privanet.QuotationPayTerm
           SET PayForecast = N'${PayForecast}', PayInvoiced = ${PayInvoiced}
           WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
@@ -560,7 +562,25 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
             N'${OldPayTerm[`QuotationPayTerm${idx + 1}`]}',
           0,N'${PayForecast}',${PayInvoiced});`);
       }
+    }else{
+      for (let idx = 0; idx < QuotationPayLength; idx++) {
+        let { PayForecast, PayInvoiced } = QuotationPayTerm[idx];
+        let getPayterm = `SELECT PayTerm,PayPercent
+          FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${
+          idx + 1
+        };`;
+        let payterms = await pool.request().query(getPayterm);
+        if (payterms.recordset.length) {
+          let { PayPercent } = payterms.recordset[0];
+          if (PayInvoiced) InvoicePercent += PayPercent;
+          console.log(InvoicePercent)
+          await pool.request().query(`UPDATE privanet.QuotationPayTerm
+          SET PayForecast = N'${PayForecast}', PayInvoiced = ${PayInvoiced}
+          WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
+        }
+      }
     }
+    console.log(InvoicePercent)
     if (InvoicePercent)
       await pool.request().query(`Update privanet.Quotation
         SET QuotationStatus = 0, QuotationUpdatedDate = N'${checkTime()}'
@@ -568,7 +588,7 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
     else {
       let getStatus = await pool.request().query(`SELECT QuotationStatus
         FROM privanet.Quotation WHERE QuotationId = ${QuotationId}`);
-      if (getStatus.recordset[0].QuotationStatus == 6)
+      if (getStatus.recordset[0].QuotationStatus == 0)
         await pool.request().query(`Update privanet.Quotation
           SET QuotationStatus = 2, QuotationUpdatedDate = N'${checkTime()}'
           WHERE QuotationId = ${QuotationId}`);

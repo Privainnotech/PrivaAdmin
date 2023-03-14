@@ -284,6 +284,10 @@ nav.navbar {
   color: var(--font-light);
   background-color: var(--status-loss);
 }
+.status-invoice {
+  color: var(--font-light);
+  background-color: var(--status-invoice);
+}
 
 .status {
   padding: 5px;

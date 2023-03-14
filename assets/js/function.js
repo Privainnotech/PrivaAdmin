@@ -290,7 +290,8 @@ function fill_quotation(QuotationNoId = null) {
         width: "25%",
         data: "StatusName",
         render: function (data, type, row) {
-          let L_Status = data.toLowerCase();
+          let status = data.split(" ")
+          let L_Status = status[0].toLowerCase();
           return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
         },
       },
