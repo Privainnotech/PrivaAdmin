@@ -112,7 +112,7 @@ CREATE TABLE [QuotationPayTerm]
 	PayForecast date NULL
 )
 ALTER TABLE [QuotationPayTerm]
-ADD PayForecast date NULL
+ADD PayInvoiced int NOT NULL DEFAULT 0
 
 CREATE Table [QuotationSetting]
 (
@@ -122,6 +122,7 @@ CREATE Table [QuotationSetting]
 	TablePrice int NOT NULL DEFAULT 1,
 	TableQty int NOT NULL DEFAULT 1,
 	TableTotal int NOT NULL DEFAULT 1,
+	PayInvoiced int NOT NULL DEFAULT 0
 	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 
