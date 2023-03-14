@@ -135,6 +135,10 @@ function ShowPro(QuotationId) {
                   <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
                   <input type="number" class="p-0 mb-0 payment text-end" value="${PayTermPercent}" disabled>
                   <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
+                  <span class="input-group-text bg-white fw-bold border-0">Invoice: </span>
+                  <div class="form-check d-flex justify-content-center align-items-center">
+                    <input class="form-check-input payment check-invoice" type="checkbox" disabled>
+                  </div>
                 </div>
                 <div class="input-group input-group-sm">
                   <span class="input-group-text bg-white border-0 fw-bold">Payment Forecast: </span>
@@ -399,7 +403,9 @@ $(document).ready(function () {
       $(document).on("click", ".btn-edit-date-payment", function (e) {
         $(this).hide();
         $($(this).prev()).removeAttr("disabled");
+        $($($(this).parent().prev().children()[4]).children()[0]).removeAttr("disabled")
         $(".btn-save-date-payment").show();
+        console.log()
       });
       $(".btn-save-date-payment").unbind();
       $(".btn-save-date-payment").on("click", async function (e) {
