@@ -405,7 +405,6 @@ $(document).ready(function () {
         $($(this).prev()).removeAttr("disabled");
         $($($(this).parent().prev().children()[4]).children()[0]).removeAttr("disabled")
         $(".btn-save-date-payment").show();
-        console.log()
       });
       $(".btn-save-date-payment").unbind();
       $(".btn-save-date-payment").on("click", async function (e) {
