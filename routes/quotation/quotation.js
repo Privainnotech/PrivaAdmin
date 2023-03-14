@@ -366,7 +366,7 @@ router.post("/add_subitem/:ItemId", async (req, res) => {
     if (SubItemPrice == "") SubItemPrice = 0;
     if (SubItemQty == "") SubItemQty = 0;
     if (ProductId == "") {
-      // Add new product
+      // Add new produc
       let CheckProduct = await pool.request().query(`SELECT CASE WHEN EXISTS
           (SELECT * FROM privanet.MasterProduct WHERE ProductName = N'${SubItemName}')
         THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
@@ -538,7 +538,7 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
       FROM privanet.[Quotation] WHERE QuotationId = ${QuotationId}`);
     let { OldPayTerm } = quotation.recordset[0];
     let InvoicePercent = 0;
-    console.log(OldPayTerm)
+    console.log(OldPayTerm);
     if (OldPayTerm != "-") {
       OldPayTerm = JSON.parse(OldPayTerm);
       for (let idx = 0; idx < QuotationPayLength; idx++) {
@@ -551,7 +551,7 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
         if (payterms.recordset.length) {
           let { PayPercent } = payterms.recordset[0];
           if (PayInvoiced) InvoicePercent += PayPercent;
-          console.log(InvoicePercent)
+          console.log(InvoicePercent);
           await pool.request().query(`UPDATE privanet.QuotationPayTerm
           SET PayForecast = N'${PayForecast}', PayInvoiced = ${PayInvoiced}
           WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
@@ -562,7 +562,7 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
             N'${OldPayTerm[`QuotationPayTerm${idx + 1}`]}',
           0,N'${PayForecast}',${PayInvoiced});`);
       }
-    }else{
+    } else {
       for (let idx = 0; idx < QuotationPayLength; idx++) {
         let { PayForecast, PayInvoiced } = QuotationPayTerm[idx];
         let getPayterm = `SELECT PayTerm,PayPercent
@@ -573,14 +573,14 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
         if (payterms.recordset.length) {
           let { PayPercent } = payterms.recordset[0];
           if (PayInvoiced) InvoicePercent += PayPercent;
-          console.log(InvoicePercent)
+          console.log(InvoicePercent);
           await pool.request().query(`UPDATE privanet.QuotationPayTerm
           SET PayForecast = N'${PayForecast}', PayInvoiced = ${PayInvoiced}
           WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
         }
       }
     }
-    console.log(InvoicePercent)
+    console.log(InvoicePercent);
     if (InvoicePercent)
       await pool.request().query(`Update privanet.Quotation
         SET QuotationStatus = 0, QuotationUpdatedDate = N'${checkTime()}'
