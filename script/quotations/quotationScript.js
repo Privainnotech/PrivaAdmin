@@ -238,7 +238,7 @@ function RePro() {
   // Fill Data
   $("#ProNo").html("Project NO.");
   $(".box-payment .row").remove();
-  $fieldProject.val("-");
+  $fieldProject.val("-").attr("disabled", "");
   $("#QDate,#CusEmail,#ComName,#Adress").val("-");
   $("#TotalPrice,#PriceAfter,#Vat,#NetTotal").val("-");
   $SettingTable.val("0").attr("disabled", "");
