@@ -48,7 +48,7 @@ router.post("/request", async (req, res) => {
     if (!checkItem.recordset.length) {
       return res.status(400).send({ message: "Please check quotation item" });
     }
-    await sendQuotationMail(Sender, Receiver, Quotation);
+    await sendQuotationMail(Sender, Receiver, Quotation, "approve");
     let WaitApproveQuotation = `UPDATE privanet.Quotation
         SET QuotationApproval = 1
         WHERE QuotationId = ${QuotationId};`;
@@ -73,6 +73,26 @@ router.put("/approve", async (req, res) => {
         SET QuotationApproval = 2
         WHERE QuotationId = ${QuotationId};`;
     await pool.request().query(ApproveQuotation);
+    let getQuotation = await pool.request().query(`SELECT
+      b.QuotationNo, a.QuotationRevised,
+      c.CustomerName, c.CustomerEmail, d.CompanyName, d.CompanyAddress, a.EndCustomer,
+      a.QuotationSubject, FORMAT(a.QuotationDate, 'dd-MM-yyyy') QuotationDate,
+      a.QuotationTotalPrice, a.QuotationDiscount,
+      a.QuotationNet, a.QuotationVat, a.QuotationNetVat, a.EmployeeEditId
+      FROM privanet.[Quotation] a
+      LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
+      LEFT JOIN privanet.[MasterCustomer] c ON b.CustomerId = c.CustomerId
+      LEFT JOIN privanet.[MasterCompany] d ON c.CompanyId = d.CompanyId
+      WHERE a.QuotationId = ${QuotationId}`);
+    let Quotation = getQuotation.recordset[0];
+    let { EmployeeEditId } = Quotation;
+    if (UserId != EmployeeEditId) {
+      let getSender = await pool.request().query(SelectEmp(UserId));
+      let Sender = getSender.recordset[0];
+      let getReceiver = await pool.request().query(SelectEmp(EmployeeEditId));
+      let Receiver = getReceiver.recordset[0];
+      await sendQuotationMail(Sender, Receiver, Quotation, "check");
+    }
     res.status(201).send({ message: "Successfully Approve Quotation" });
   } catch (err) {
     res.status(500).send({ message: `${err}` });
