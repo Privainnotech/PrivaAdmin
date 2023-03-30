@@ -525,10 +525,11 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
         };`;
         let payterms = await pool.request().query(getPayterm);
         if (payterms.recordset.length) {
+          console.log("new term");
           let { PayTerm, PayPercent } = payterms.recordset[0];
           if (PayPercent == 0) {
             let match = PayTerm.match(/\d+\s*%/);
-            PayPercent = parseFloat(match[0]);
+            PayPercent = match ? parseFloat(match[0]) : 0;
             PayPercent = isNaN(PayPercent) ? 0 : PayPercent;
             PayTerm = PayTerm.replace(/\d+\s*%/, "");
           }
@@ -539,10 +540,11 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
             PayForecast = N'${PayForecast}',PayInvoiced = ${PayInvoiced}
           WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
         } else {
+          console.log("old term");
           let TempPayTerm = OldPayTerm[`QuotationPayTerm${idx + 1}`];
           let PayPercent = 0;
           let match = TempPayTerm.match(/\d+\s*%/);
-          PayPercent = parseFloat(match[0]);
+          PayPercent = match ? parseFloat(match[0]) : 0;
           PayPercent = isNaN(PayPercent) ? 0 : PayPercent;
           TempPayTerm = TempPayTerm.replace(/\d+\s*%/, "");
           if (!PayPercent && QuotationPayLength == 1) PayPercent = 100;
