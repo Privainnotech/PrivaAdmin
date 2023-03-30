@@ -526,10 +526,11 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
         let payterms = await pool.request().query(getPayterm);
         if (payterms.recordset.length) {
           let { PayTerm, PayPercent } = payterms.recordset[0];
-          if (!PayTerm.toLowerCase().includes("day") && PayPercent == 0) {
-            PayPercent = parseFloat(PayTerm);
+          if (PayPercent == 0) {
+            let match = PayTerm.match(/\d+\s*%/);
+            PayPercent = parseFloat(match[0]);
             PayPercent = isNaN(PayPercent) ? 0 : PayPercent;
-            PayTerm = PayTerm.replace(/%|[0-9]/g, "");
+            PayTerm = PayTerm.replace(/\d+\s*%/, "");
           }
           if (!PayPercent && QuotationPayLength == 1) PayPercent = 100;
           if (PayInvoiced) InvoicePercent += PayPercent;
@@ -540,11 +541,10 @@ router.put("/edit_payforecast/:QuotationId", async (req, res) => {
         } else {
           let TempPayTerm = OldPayTerm[`QuotationPayTerm${idx + 1}`];
           let PayPercent = 0;
-          if (!TempPayTerm.toLowerCase().includes("day")) {
-            PayPercent = parseFloat(OldPayTerm);
-            PayPercent = isNaN(PayPercent) ? 0 : PayPercent;
-            TempPayTerm = TempPayTerm.replace(/%|[0-9]/g, "");
-          }
+          let match = TempPayTerm.match(/\d+\s*%/);
+          PayPercent = parseFloat(match[0]);
+          PayPercent = isNaN(PayPercent) ? 0 : PayPercent;
+          TempPayTerm = TempPayTerm.replace(/\d+\s*%/, "");
           if (!PayPercent && QuotationPayLength == 1) PayPercent = 100;
           if (PayInvoiced) InvoicePercent += PayPercent;
           await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
