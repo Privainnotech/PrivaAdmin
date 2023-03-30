@@ -16,8 +16,11 @@ CREATE Table [MasterCompany]
 	CompanyAddress NVARCHAR(255) NOT NULL,
 	CompanyEmail NVARCHAR(50) NULL,
 	CompanyTel NVARCHAR(20) NULL,
+	CompanyTaxNo NVARCHAR(30) NULL,
 	CompanyActive int NOT NULL DEFAULT 1
 )
+ALTER TABLE [MasterCompany]
+ADD CompayTaxNo NVARCHAR(30) NULL
 
 CREATE Table [MasterCustomer]
 (

@@ -5,7 +5,7 @@ const fs = require("fs");
 const mailInfo = require("../../libs/mailInfo");
 const QuotationLink = "https://dashboard.privainnotech.net/quotation";
 
-const sendQuotationMail = async (Sender, Receiver, Quotation) => {
+const sendQuotationMail = async (Sender, Receiver, Quotation, Type) => {
   try {
     let { EmployeeFname, EmployeeLname } = Sender;
     let SenderName = `${EmployeeFname} ${EmployeeLname}`;
@@ -31,10 +31,14 @@ const sendQuotationMail = async (Sender, Receiver, Quotation) => {
         pass: mailInfo.auth.pass,
       },
     });
+    let subject =
+      Type == "approve"
+        ? `Please approve quotation ${quotationNo}`
+        : `Please check quotation ${quotationNo} approval`;
     let mail = {
       from: `"${SenderName}" <${mailInfo.auth.email}>`,
       to: `${ApproverEmail}`,
-      subject: `Please approve quotation ${quotationNo}`,
+      subject: subject,
       html: await mailHtml(quotationNo, Quotation),
       attachments: [
         {

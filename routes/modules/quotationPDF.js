@@ -93,7 +93,7 @@ let getPayTerm = async (QuotationPayTerm, payterm) => {
   // if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
   let payTerm = "";
   let i = 1;
-  if (typeof QuotationPayTerm == 'object') {
+  if (typeof QuotationPayTerm == "object") {
     QuotationPayTerm = JSON.parse(QuotationPayTerm);
     let payTerms = Object.values(QuotationPayTerm);
     payTerms.map((term) => {
@@ -104,27 +104,53 @@ let getPayTerm = async (QuotationPayTerm, payterm) => {
     });
   }
 
-  let PayTermArr = "", idx = 0
+  let PayTermArr = "",
+    idx = 0;
   while (idx < payterm.length) {
     // console.log(payterm[idx])
-    let { PayTerm, PayPercent } = payterm[idx]
-    if (PayTerm == '') {
-      PayTermArr += '-'
+    let { PayTerm, PayPercent } = payterm[idx];
+    if (PayTerm == "") {
+      PayTermArr += "-";
       break;
     }
-    PayTermArr += `${PayTerm}  ${PayPercent}%\n`
-    idx++
+    PayTermArr += `${PayTerm}  ${PayPercent}%\n`;
+    idx++;
   }
-  if (PayTermArr) return { payTerm: PayTermArr, idx }
+  if (PayTermArr) return { payTerm: PayTermArr, idx };
   return { payTerm, idx: i };
 };
 
-const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) => {
-  let { CustomerName, CustomerEmail, CompanyName, CompanyAddress, EndCustomer,
-    QuotationSubject, QuotationDate, QuotationTotalPrice, QuotationDiscount,
-    QuotationNet, QuotationVat, QuotationNetVat, QuotationValidityDate,
-    QuotationPayTerm, QuotationDelivery, QuotationRemark, QuotationDetail,
-    EmployeeName, EmployeeFname, EmployeeLname, EmployeePosition, QuotationApproval } = quotation;
+const createPdf = async (
+  QuotationId,
+  quotationNo,
+  quotation,
+  setting,
+  payterm
+) => {
+  let {
+    CustomerName,
+    CustomerEmail,
+    CompanyName,
+    CompanyAddress,
+    EndCustomer,
+    QuotationSubject,
+    QuotationDate,
+    QuotationTotalPrice,
+    QuotationDiscount,
+    QuotationNet,
+    QuotationVat,
+    QuotationNetVat,
+    QuotationValidityDate,
+    QuotationPayTerm,
+    QuotationDelivery,
+    QuotationRemark,
+    QuotationDetail,
+    EmployeeName,
+    EmployeeFname,
+    EmployeeLname,
+    EmployeePosition,
+    QuotationApproval,
+  } = quotation;
   let { TableShow, TablePrice, TableQty, TableTotal } = setting;
   // head
   let head = [
@@ -294,9 +320,9 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
   // condition
   let { payTerm, idx } = await getPayTerm(QuotationPayTerm, payterm);
   // console.log(payTerm)
-  let newline = ""
+  let newline = "";
   for (let i = 0; i < idx; i++) {
-    newline += '\n'
+    newline += "\n";
   }
   let condition = [
     {
@@ -341,7 +367,7 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
   let space = applySpacing(EmployeeFname + EmployeeLname);
   let sign = "";
   QuotationApproval == 2
-    ? (sign = `${space}${EmployeeFname}.${space}`)
+    ? (sign = `${space}${EmployeeFname} ${EmployeeLname[0]}.${space}`)
     : (sign = `${space}${space}${space}`);
   let signature = [
     {
@@ -629,15 +655,17 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
         fontSize: 8,
       },
     ],
-  }
+  };
   let detailTable = {
     headerRows: 0,
     widths: ["*", "10%", "10%"],
     style: "text",
     body: [],
   };
-  if (QuotationDetail && QuotationDetail != 'null') {
-    let detailTable1 = detailTable, detailTable2 = detailTable, detailTable3 = detailTable;
+  if (QuotationDetail && QuotationDetail != "null") {
+    let detailTable1 = detailTable,
+      detailTable2 = detailTable,
+      detailTable3 = detailTable;
     let detail1 = {
       margin: [15, 0, 50, 0],
       layout: "noBorders",
@@ -655,16 +683,17 @@ const createPdf = async (QuotationId, quotationNo, quotation, setting, payterm) 
     };
     let Details;
     // console.log(QuotationDetail)
-    if (QuotationDetail[0] == '<') {
+    if (QuotationDetail[0] == "<") {
       // let DetailArr = []
-      Details = QuotationDetail.replaceAll('<p>', '').split('</p>')
-    }
-    else Details = JSON.parse(QuotationDetail).blocks;
+      Details = QuotationDetail.replaceAll("<p>", "").split("</p>");
+    } else Details = JSON.parse(QuotationDetail).blocks;
     Details.forEach((Detail, i) => {
-      let text = Detail.data ? Detail.data.text : Detail
-      if (text.includes("ตัวอย่างการพิมพ์")) throw new Error("Please delete detail example");
-      let isBold = text.includes("<strong>") || text.includes("<b>") ? true : false;
-      let isUnderline = text.includes("<u>") ? 'underline' : '';
+      let text = Detail.data ? Detail.data.text : Detail;
+      if (text.includes("ตัวอย่างการพิมพ์"))
+        throw new Error("Please delete detail example");
+      let isBold =
+        text.includes("<strong>") || text.includes("<b>") ? true : false;
+      let isUnderline = text.includes("<u>") ? "underline" : "";
       text = text.replace(/<b>|<\/b>|<strong>|<\/strong>|<u>|<\/u>/g, "");
       text = text.replace(/&nbsp;/g, " ");
       text = text.split("; ");
