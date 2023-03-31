@@ -1,7 +1,7 @@
 const PORT = 2999;
 const dbconfig = {
   user: "privaadmin",
-  password: "Bvc7f&07",
+  password: "Jz2^7b8a",
   server: "119.59.96.61",
   // user: "sa",
   // password: "P@ssw0rd",
