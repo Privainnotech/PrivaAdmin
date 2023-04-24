@@ -1,15 +1,15 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const sql = require("mssql");
-const { dbconfig } = require("../../config");
+const sql = require('mssql');
+const { dbconfig } = require('../../config');
 
-const path = require("path");
-const fs = require("fs");
-const pdfMake = require("pdfmake");
+const path = require('path');
+const fs = require('fs');
+const pdfMake = require('pdfmake');
 
-const { fonts, customLayouts, createPdf } = require("../modules/quotationPDF");
+const { fonts, customLayouts, createPdf } = require('../modules/quotationPDF');
 
-router.get("/:QuotationId", async (req, res) => {
+router.get('/:QuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
@@ -28,7 +28,7 @@ router.get("/:QuotationId", async (req, res) => {
       e.EmployeeFname, e.EmployeeLname, e.EmployeeEmail, e.EmployeePosition
       FROM privanet.[Quotation] a
       LEFT JOIN privanet.[QuotationNo] b ON a.QuotationNoId = b.QuotationNoId
-      LEFT JOIN privanet.[MasterCustomer] c ON b.CustomerId = c.CustomerId
+      LEFT JOIN privanet.[MasterCustomer] c ON a.CustomerId = c.CustomerId
       LEFT JOIN privanet.[MasterStatus] d ON a.QuotationStatus = d.StatusId
       LEFT JOIN privanet.[MasterEmployee] e ON a.EmployeeApproveId = e.EmployeeId
       LEFT JOIN privanet.[MasterCompany] f ON c.CompanyId = f.CompanyId
@@ -37,47 +37,54 @@ router.get("/:QuotationId", async (req, res) => {
       FROM privanet.QuotationSetting
       WHERE QuotationId = ${QuotationId}`;
     let getPayterm = `SELECT IndexPayTerm,PayTerm,PayPercent FROM privanet.QuotationPayTerm
-      WHERE QuotationId = ${QuotationId} ORDER BY IndexPayTerm;`
+      WHERE QuotationId = ${QuotationId} ORDER BY IndexPayTerm;`;
     let quotations = await pool.request().query(getQuotation);
     let settings = await pool.request().query(getSetting);
     let payterms = await pool.request().query(getPayterm);
     let quotation = quotations.recordset[0];
     let setting = settings.recordset[0];
     let payterm = payterms.recordset;
-    if (quotation.EmployeeApproveId == null) return res.status(400).send({ message: "Please select Approver" });
+    if (quotation.EmployeeApproveId == null)
+      return res.status(400).send({ message: 'Please select Approver' });
     // console.log(setting)
-    let quotationNo = "";
+    let quotationNo = '';
     if (quotation.QuotationRevised < 10)
-      quotationNo = quotation.QuotationNo + "_0" + quotation.QuotationRevised;
-    else quotationNo = quotation.QuotationNo + "_" + quotation.QuotationRevised;
-    let quotationPdf = await createPdf(QuotationId, quotationNo, quotation, setting, payterm);
+      quotationNo = quotation.QuotationNo + '_0' + quotation.QuotationRevised;
+    else quotationNo = quotation.QuotationNo + '_' + quotation.QuotationRevised;
+    let quotationPdf = await createPdf(
+      QuotationId,
+      quotationNo,
+      quotation,
+      setting,
+      payterm
+    );
     let pdfCreator = new pdfMake(fonts);
-    console.log("Creating quotation....");
+    console.log('Creating quotation....');
     let pdfDoc = pdfCreator.createPdfKitDocument(quotationPdf, {
       tableLayouts: customLayouts,
     });
-    console.log("Quotation created");
+    console.log('Quotation created');
     let quotationPath = path.join(
       process.cwd(),
       `/public/report/quotation/${quotationNo}.pdf`
     );
-    console.log("file creating");
+    console.log('file creating');
     let creating = pdfDoc.pipe(fs.createWriteStream(quotationPath));
     pdfDoc.end();
-    creating.on("finish", () => {
-      console.log("create file success");
+    creating.on('finish', () => {
+      console.log('create file success');
       res.send({ message: `/report/quotation/${quotationNo}.pdf` });
       // res.status(200).sendFile(quotationPath)
       // res.download(quotationPath)
       // res.status(200).send({message: 'Successfully create quotation report'});
     });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).send({ message: `${err}` });
   }
 });
 
-router.get("/download/:QuotationId", async (req, res) => {
+router.get('/download/:QuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
@@ -87,10 +94,10 @@ router.get("/download/:QuotationId", async (req, res) => {
         WHERE a.QuotationId = ${QuotationId}`;
     let quotations = await pool.request().query(getQuotation);
     let quotation = quotations.recordset[0];
-    let quotationNo = "";
+    let quotationNo = '';
     if (quotation.QuotationRevised < 10)
-      quotationNo = quotation.QuotationNo + "_0" + quotation.QuotationRevised;
-    else quotationNo = quotation.QuotationNo + "_" + quotation.QuotationRevised;
+      quotationNo = quotation.QuotationNo + '_0' + quotation.QuotationRevised;
+    else quotationNo = quotation.QuotationNo + '_' + quotation.QuotationRevised;
     let quotationPath = path.join(
       process.cwd(),
       `/public/report/quotation/${quotationNo}.pdf`
@@ -98,10 +105,10 @@ router.get("/download/:QuotationId", async (req, res) => {
     fs.readFileSync(quotationPath);
     res.status(200).download(quotationPath);
   } catch (err) {
-    if (err.code.includes("ENOENT")) {
+    if (err.code.includes('ENOENT')) {
       res
         .status(500)
-        .send({ message: "Please preview quotation before download" });
+        .send({ message: 'Please preview quotation before download' });
       return;
     }
     res.status(500).send({ message: `${err}` });
