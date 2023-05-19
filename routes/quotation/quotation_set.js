@@ -1,17 +1,17 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const sql = require("mssql");
-const { dbconfig } = require("../../config");
+const sql = require('mssql');
+const { dbconfig } = require('../../config');
 
-const { checkMonth, checkDate, checkTime } = require("../../libs/datetime");
+const { checkMonth, checkDate, checkTime } = require('../../libs/datetime');
 
 //revised quotation
-router.get("/revise/:OldQuotationId", async (req, res) => {
+router.get('/revise/:OldQuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let UserId = req.session.UserId;
-    if (UserId == "") {
-      res.status(400).send({ message: "Please login" });
+    if (UserId == '') {
+      res.status(400).send({ message: 'Please login' });
       return;
     }
     let OldQuotationId = req.params.OldQuotationId;
@@ -29,16 +29,35 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
       WHERE a.QuotationId = ${OldQuotationId}`;
     let Oldquotations = await pool.request().query(getOldQuotation);
     let Oldquotation = Oldquotations.recordset[0];
-    let { QuotationNoId, CustomerId, QuotationSubject, QuotationStatus, EndCustomer, QuotationTotalPrice,
-      QuotationDiscount, QuotationValidityDate, QuotationPayTerm, QuotationDelivery } = Oldquotation;
+    let {
+      QuotationNoId,
+      CustomerId,
+      QuotationSubject,
+      QuotationStatus,
+      EndCustomer,
+      QuotationTotalPrice,
+      QuotationDiscount,
+      QuotationValidityDate,
+      QuotationPayTerm,
+      QuotationDelivery,
+    } = Oldquotation;
     let { QuotationRemark, QuotationDetail, EmployeeApproveId } = Oldquotation;
-    if (!EndCustomer) EndCustomer = "-";
-    if (!QuotationValidityDate) QuotationValidityDate = "-";
-    if (!QuotationPayTerm) QuotationPayTerm = "-";
-    if (!QuotationDelivery) QuotationDelivery = "-";
-    if (!QuotationRemark) QuotationRemark = "-";
-    let Detail = (!QuotationDetail) ? null : QuotationDetail;
-    if (QuotationStatus == 1) return res.status(400).send({ message: "Cannot revise pre-quotation" });
+    if (!EndCustomer) EndCustomer = '-';
+    if (!QuotationValidityDate) QuotationValidityDate = '-';
+    if (!QuotationPayTerm) QuotationPayTerm = '-';
+    if (!QuotationDelivery) QuotationDelivery = '-';
+    if (!QuotationRemark) QuotationRemark = '-';
+    let Detail = !QuotationDetail ? null : QuotationDetail;
+    if (QuotationStatus == 1)
+      return res.status(400).send({ message: 'Cannot revise pre-quotation' });
+    if (QuotationStatus == 0)
+      return res
+        .status(400)
+        .send({ message: 'Cannot revise invoiced quotation' });
+    if (QuotationStatus == 3)
+      return res
+        .status(400)
+        .send({ message: 'Cannot revise booking quotation' });
     // InsertQuotationRevised
     let getRevise = await pool.request()
       .query(`SELECT COUNT(a.QuotationId) as Revised FROM privanet.Quotation a
@@ -46,7 +65,7 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
         WHERE a.QuotationNoId = ${QuotationNoId} AND NOT a.QuotationStatus = 1`);
     let newRevise = getRevise.recordset[0].Revised;
     // let newRevise = QuotationRevised+1;
-    console.log("Revised: " + newRevise);
+    console.log('Revised: ' + newRevise);
     let InsertQuotation = `INSERT INTO privanet.Quotation(
         QuotationNoId, QuotationRevised, QuotationSubject, QuotationTotalPrice,
         QuotationDiscount, QuotationValidityDate, QuotationPayTerm,
@@ -58,10 +77,12 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
     let Quotation = await pool.request().query(InsertQuotation);
     let NewQuotationId = Quotation.recordset[0].Id;
     // Copy PayTerm
-    let selectOldPayterm = await pool.request().query(`SELECT QuotationId, IndexPayTerm, PayTerm, PayPercent,
+    let selectOldPayterm = await pool.request()
+      .query(`SELECT QuotationId, IndexPayTerm, PayTerm, PayPercent,
       FORMAT(PayForecast,'yyyy-MM-dd') PayForecast FROM privanet.QuotationPayTerm
       WHERE QuotationId = ${OldQuotationId}`);
-    for (const payterm of selectOldPayterm.recordset) await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
+    for (const payterm of selectOldPayterm.recordset)
+      await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
       (QuotationId, IndexPayTerm, PayTerm, PayPercent, PayForecast)
       VALUES(${NewQuotationId}, ${payterm.IndexPayTerm}, N'${payterm.PayTerm}', ${payterm.PayPercent}, N'${payterm.PayForecast}')
       SELECT SCOPE_IDENTITY() AS Id`);
@@ -77,7 +98,8 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
       VALUES(${NewQuotationId}, ${TableShow}, ${TablePrice}, ${TableQty}, ${TableTotal})
       SELECT SCOPE_IDENTITY() AS Id`);
     // Copy Item
-    let selectOldItem = await pool.request().query(`SELECT * FROM privanet.QuotationItem
+    let selectOldItem = await pool.request()
+      .query(`SELECT * FROM privanet.QuotationItem
       WHERE QuotationId = ${OldQuotationId}`);
     for (const item of selectOldItem.recordset) {
       let newItem = await pool.request()
@@ -97,16 +119,15 @@ router.get("/revise/:OldQuotationId", async (req, res) => {
             ${subitem.SubItemPrice}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`);
       }
     }
-    console.log("revise success");
-    res.status(200).send({ message: "Successfully revise quotation" });
-
+    console.log('revise success');
+    res.status(200).send({ message: 'Successfully revise quotation' });
   } catch (err) {
     res.status(500).send({ message: `${err}` });
   }
 });
 
 //set quotation status
-router.get("/quotation/:QuotationId", async (req, res) => {
+router.get('/quotation/:QuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
@@ -118,11 +139,11 @@ router.get("/quotation/:QuotationId", async (req, res) => {
       WHERE QuotationId = ${QuotationId}`);
     let { EmployeeApproveId, QuotationApproval } = getQuotation.recordset[0];
     if (EmployeeApproveId === null) {
-      res.status(400).send({ message: "Cannot quotation without approver" });
+      res.status(400).send({ message: 'Cannot quotation without approver' });
       return;
     }
     if (QuotationApproval !== 2) {
-      res.status(400).send({ message: "Cannot quotation without approved" });
+      res.status(400).send({ message: 'Cannot quotation without approved' });
       return;
     }
     let checkItem = await pool.request().query(`SELECT CASE
@@ -134,14 +155,14 @@ router.get("/quotation/:QuotationId", async (req, res) => {
       THEN CAST (1 AS BIT)
       ELSE CAST (0 AS BIT) END AS 'check'`);
     if (!checkItem.recordset[0].check) {
-      res.status(400).send({ message: "Cannot quotation without item" });
+      res.status(400).send({ message: 'Cannot quotation without item' });
     } else {
       let { QuotationNoId, QuotationRevised, QuotationStatus, CustomerId } =
         getQuotation.recordset[0];
       if (QuotationStatus == 1 && QuotationRevised == 0) {
         // GenQuotationNo
         let month = checkMonth();
-        let genQuotationNo = "";
+        let genQuotationNo = '';
         let SearchQuotationNo = await pool.request().query(`SELECT *
           FROM privanet.QuotationNo WHERE QuotationNo LIKE N'${month}%'`);
         // Check QuotationNo
@@ -149,9 +170,9 @@ router.get("/quotation/:QuotationId", async (req, res) => {
         let Number = SearchQuotationNo.recordset.length;
         do {
           if (Number < 10) {
-            genQuotationNo = month + "00" + Number;
+            genQuotationNo = month + '00' + Number;
           } else if (Number < 100) {
-            genQuotationNo = month + "0" + Number;
+            genQuotationNo = month + '0' + Number;
           } else {
             genQuotationNo = month + Number;
           }
@@ -168,7 +189,7 @@ router.get("/quotation/:QuotationId", async (req, res) => {
             Number++;
           }
         } while (duplicateNo);
-        console.log("Gen QuotationNo: " + genQuotationNo);
+        console.log('Gen QuotationNo: ' + genQuotationNo);
         // Insert QuotationNo
         let InsertQuotationNo = `INSERT INTO privanet.QuotationNo
           (QuotationNo,CustomerId)
@@ -184,7 +205,7 @@ router.get("/quotation/:QuotationId", async (req, res) => {
         let DeletePreQuotationNo = `DELETE FROM privanet.QuotationNo WHERE QuotationNoId = ${QuotationNoId} AND QuotationNo LIKE N'pre_%'`;
         await pool.request().query(UpdateQuotationStatus);
         await pool.request().query(DeletePreQuotationNo);
-        res.status(200).send({ message: "Successfully set quotation" });
+        res.status(200).send({ message: 'Successfully set quotation' });
       } else if (QuotationStatus == 1 && QuotationRevised > 0) {
         let getRevise = await pool.request().query(`SELECT
           COUNT(a.QuotationId) as Revised
@@ -193,7 +214,7 @@ router.get("/quotation/:QuotationId", async (req, res) => {
           WHERE a.QuotationNoId = ${QuotationNoId} AND NOT a.QuotationStatus = 1`);
         let newRevise = getRevise.recordset[0].Revised;
         // let newRevise = QuotationRevised+1;
-        console.log("Revised: " + newRevise);
+        console.log('Revised: ' + newRevise);
         // Update privanet.Quotation NoId, Status & cancel other quotation
         let UpdateQuotationStatus = `Update privanet.Quotation
           SET QuotationRevised = ${newRevise}, QuotationStatus = 2,
@@ -205,9 +226,9 @@ router.get("/quotation/:QuotationId", async (req, res) => {
           AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`;
         await pool.request().query(UpdateQuotationStatus);
         await pool.request().query(CancelQuotation);
-        res.status(200).send({ message: "Successfully set quotation" });
+        res.status(200).send({ message: 'Successfully set quotation' });
       } else if (QuotationStatus == 2) {
-        res.status(400).send({ message: "Already quotation" });
+        res.status(400).send({ message: 'Already quotation' });
       } else {
         // Update privanet.Quotation NoId, Status & cancel other quotation
         let UpdateQuotationStatus = `Update privanet.Quotation
@@ -220,7 +241,7 @@ router.get("/quotation/:QuotationId", async (req, res) => {
           AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`;
         await pool.request().query(UpdateQuotationStatus);
         await pool.request().query(CancelQuotation);
-        res.status(200).send({ message: "Successfully set quotation" });
+        res.status(200).send({ message: 'Successfully set quotation' });
       }
     }
   } catch (err) {
@@ -229,7 +250,7 @@ router.get("/quotation/:QuotationId", async (req, res) => {
 });
 
 //set booking status
-router.get("/booking/:QuotationId", async (req, res) => {
+router.get('/booking/:QuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
@@ -249,9 +270,9 @@ router.get("/booking/:QuotationId", async (req, res) => {
         AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`;
       await pool.request().query(UpdateQuotationStatus);
       await pool.request().query(CancelQuotation);
-      res.status(200).send({ message: "Successfully set quotation" });
+      res.status(200).send({ message: 'Successfully set quotation' });
     } else {
-      res.status(400).send({ message: "Cannot booking pre-quotation" });
+      res.status(400).send({ message: 'Cannot booking pre-quotation' });
     }
   } catch (err) {
     res.status(500).send({ message: `${err}` });
@@ -259,7 +280,7 @@ router.get("/booking/:QuotationId", async (req, res) => {
 });
 
 //set loss status
-router.get("/loss/:QuotationId", async (req, res) => {
+router.get('/loss/:QuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
@@ -279,9 +300,9 @@ router.get("/loss/:QuotationId", async (req, res) => {
         AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`;
       await pool.request().query(UpdateQuotationStatus);
       await pool.request().query(CancelQuotation);
-      res.status(200).send({ message: "Successfully set quotation" });
+      res.status(200).send({ message: 'Successfully set quotation' });
     } else {
-      res.status(400).send({ message: "Cannot loss pre-quotation" });
+      res.status(400).send({ message: 'Cannot loss pre-quotation' });
     }
   } catch (err) {
     res.status(500).send({ message: `${err}` });
@@ -289,7 +310,7 @@ router.get("/loss/:QuotationId", async (req, res) => {
 });
 
 //set cancel status
-router.get("/cancel/:QuotationId", async (req, res) => {
+router.get('/cancel/:QuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
     let QuotationId = req.params.QuotationId;
@@ -304,11 +325,11 @@ router.get("/cancel/:QuotationId", async (req, res) => {
         SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkTime()}'
         WHERE QuotationId = ${QuotationId}`;
       await pool.request().query(UpdateQuotationStatus);
-      res.status(200).send({ message: "Successfully set quotation" });
+      res.status(200).send({ message: 'Successfully set quotation' });
     } else {
       res
         .status(400)
-        .send({ message: "Cannot cancel pre-quotation or canceled" });
+        .send({ message: 'Cannot cancel pre-quotation or canceled' });
     }
   } catch (err) {
     res.status(500).send({ message: `${err}` });
