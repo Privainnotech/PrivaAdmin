@@ -69,7 +69,6 @@ router.get('/quotation_no_list', async (req, res, next) => {
         LEFT JOIN privanet.[MasterCompany] b on a.CompanyId = b.CompanyId
         WHERE CustomerId = ${CustomerIdQ}`);
       let { CustomerName, CompanyName } = getCustomer.recordset[0];
-      console.log(QuotationId, CompanyName, CustomerName);
       if (CompanyName == 'Fake') {
         quotationNos.recordset.splice(i, 1);
         i--;
