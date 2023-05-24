@@ -253,6 +253,15 @@ router.get('/quotation/:QuotationId', async (req, res) => {
 router.get('/booking/:QuotationId', async (req, res) => {
   try {
     let pool = await sql.connect(dbconfig);
+    let UserId = req.session.UserId;
+    let getUser = await pool.request().query(
+      `SELECT EmployeeFname
+        FROM privanet.MasterEmployee WHERE EmployeeId = ${UserId}`
+    );
+    if (getUser.recordset[0].EmployeeFname !== 'Parichart')
+      return res
+        .status(401)
+        .send({ message: 'Only Parichart can set booking' });
     let QuotationId = req.params.QuotationId;
     let getQuotation = await pool.request().query(
       `SELECT QuotationNoId, QuotationStatus
