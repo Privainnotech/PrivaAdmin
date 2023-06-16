@@ -5,6 +5,7 @@ const { dbconfig } = require('../../config');
 
 const { checkMonth, checkDate, checkTime } = require('../../libs/datetime');
 const { PriceS, PriceI, PriceQ } = require('../modules/price');
+const { quotationNoGenerate } = require('../../libs/utils');
 
 router.get('/quotation_no_list', async (req, res, next) => {
   try {
@@ -281,28 +282,7 @@ router.post('/add_pre_quotation', async (req, res) => {
     if (CustomerId == '')
       return res.status(400).send({ message: 'Please select Customer' });
     // Generate QuotationNo
-    let month = checkMonth();
-    console.log(month);
-    let genQuotationNo = '';
-    let SearchQuotationNo = await pool
-      .request()
-      .query(
-        `SELECT * FROM privanet.QuotationNo WHERE QuotationNo LIKE N'pre_${month}%'`
-      );
-    // Check QuotationNo
-    let duplicateNo = true;
-    let Number = SearchQuotationNo.recordset.length;
-    do {
-      if (Number < 10) genQuotationNo = 'pre_' + month + '00' + Number;
-      else if (Number < 100) genQuotationNo = 'pre_' + month + '0' + Number;
-      else genQuotationNo = 'pre_' + month + Number;
-
-      let CheckQuotationNo = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(SELECT * FROM privanet.QuotationNo WHERE QuotationNo = N'${genQuotationNo}')
-        THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
-      duplicateNo = CheckQuotationNo.recordset[0].check;
-      if (duplicateNo) Number++;
-    } while (duplicateNo);
+    const genQuotationNo = await quotationNoGenerate();
     // Insert QuotationNo
     let InsertQuotationNo = `INSERT INTO privanet.QuotationNo(QuotationNo,CustomerId)
       VALUES(N'${genQuotationNo}', ${CustomerId}) SELECT SCOPE_IDENTITY() AS Id`;

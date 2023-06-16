@@ -4,6 +4,108 @@ const sql = require('mssql');
 const { dbconfig } = require('../../config');
 
 const { checkMonth, checkDate, checkTime } = require('../../libs/datetime');
+const { quotationNoGenerate } = require('../../libs/utils');
+
+//copy quotation
+router.get('/copy/:OldQuotationId', async (req, res) => {
+  try {
+    let pool = await sql.connect(dbconfig);
+    let UserId = req.session.UserId;
+    if (UserId == '') {
+      res.status(400).send({ message: 'Please login' });
+      return;
+    }
+    let OldQuotationId = req.params.OldQuotationId;
+    let getOldQuotation = `SELECT * FROM privanet.[Quotation] WHERE QuotationId = ${OldQuotationId}`;
+    let Oldquotations = await pool.request().query(getOldQuotation);
+    let Oldquotation = Oldquotations.recordset[0];
+    let {
+      QuotationNoId,
+      CustomerId,
+      QuotationSubject,
+      EndCustomer,
+      QuotationTotalPrice,
+      QuotationDiscount,
+      QuotationValidityDate,
+      QuotationPayTerm,
+      QuotationDelivery,
+      QuotationRemark,
+      QuotationDetail,
+      EmployeeApproveId,
+    } = Oldquotation;
+    if (!EndCustomer) EndCustomer = '-';
+    if (!QuotationValidityDate) QuotationValidityDate = '-';
+    if (!QuotationPayTerm) QuotationPayTerm = '-';
+    if (!QuotationDelivery) QuotationDelivery = '-';
+    if (!QuotationRemark) QuotationRemark = '-';
+    let Detail = !QuotationDetail ? null : QuotationDetail;
+    const genQuotationNo = await quotationNoGenerate();
+    // Insert QuotationNo
+    let InsertQuotationNo = `INSERT INTO privanet.QuotationNo(QuotationNo,CustomerId)
+      VALUES(N'${genQuotationNo}', ${CustomerId}) SELECT SCOPE_IDENTITY() AS Id`;
+    let QuotationNo = await pool.request().query(InsertQuotationNo);
+    console.log('Quotation NO');
+    let newQuotationNoId = QuotationNo.recordset[0].Id;
+    // Insert QuotationCopy
+    let InsertQuotation = `INSERT INTO privanet.Quotation(
+        QuotationNoId, QuotationSubject, QuotationTotalPrice,
+        QuotationDiscount, QuotationValidityDate, QuotationPayTerm,
+        QuotationDelivery, QuotationRemark, QuotationDetail, QuotationUpdatedDate,
+        EmployeeApproveId, EmployeeEditId, EndCustomer, CustomerId
+      )
+      VALUES(${newQuotationNoId}, N'${QuotationSubject}', ${QuotationTotalPrice}, ${QuotationDiscount}, N'${QuotationValidityDate}', N'${QuotationPayTerm}', N'${QuotationDelivery}', N'${QuotationRemark}', N'${Detail}', N'${checkTime()}', ${EmployeeApproveId}, ${UserId}, N'${EndCustomer}',${CustomerId})
+      SELECT SCOPE_IDENTITY() AS Id`;
+    let Quotation = await pool.request().query(InsertQuotation);
+    let NewQuotationId = Quotation.recordset[0].Id;
+    // Copy PayTerm
+    let selectOldPayterm = await pool.request()
+      .query(`SELECT QuotationId, IndexPayTerm, PayTerm, PayPercent,
+      FORMAT(PayForecast,'yyyy-MM-dd') PayForecast FROM privanet.QuotationPayTerm
+      WHERE QuotationId = ${OldQuotationId}`);
+    for (const payterm of selectOldPayterm.recordset)
+      await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
+      (QuotationId, IndexPayTerm, PayTerm, PayPercent, PayForecast)
+      VALUES(${NewQuotationId}, ${payterm.IndexPayTerm}, N'${payterm.PayTerm}', ${payterm.PayPercent}, N'${payterm.PayForecast}')
+      SELECT SCOPE_IDENTITY() AS Id`);
+
+    // Copy Setting
+    let getSetting = await pool.request().query(`SELECT *
+      FROM privanet.QuotationSetting
+      WHERE QuotationId = ${OldQuotationId}`);
+    let { TableShow, TablePrice, TableQty, TableTotal } =
+      getSetting.recordset[0];
+    await pool.request().query(`INSERT INTO privanet.QuotationSetting
+        (QuotationId, TableShow, TablePrice, TableQty, TableTotal)
+      VALUES(${NewQuotationId}, ${TableShow}, ${TablePrice}, ${TableQty}, ${TableTotal})
+      SELECT SCOPE_IDENTITY() AS Id`);
+    // Copy Item
+    let selectOldItem = await pool.request()
+      .query(`SELECT * FROM privanet.QuotationItem
+      WHERE QuotationId = ${OldQuotationId}`);
+    for (const item of selectOldItem.recordset) {
+      let newItem = await pool.request()
+        .query(`INSERT INTO privanet.QuotationItem
+          (QuotationId, ItemName, ItemPrice, ItemQty)
+            VALUES(${NewQuotationId}, N'${item.ItemName}', ${item.ItemPrice}, ${item.ItemQty})
+            SELECT SCOPE_IDENTITY() AS Id`);
+      let NewItemId = newItem.recordset[0].Id;
+      let selectOldSubItem = await pool.request().query(
+        `SELECT * FROM privanet.QuotationSubItem
+            WHERE ItemId = ${item.ItemId}`
+      );
+      for (const subitem of selectOldSubItem.recordset) {
+        await pool.request().query(`INSERT INTO privanet.QuotationSubItem
+            (ItemId, ProductId, SubItemName, SubItemPrice, SubItemQty, SubItemUnit)
+            VALUES(${NewItemId}, ${subitem.ProductId}, N'${subitem.SubItemName}',
+            ${subitem.SubItemPrice}, ${subitem.SubItemQty}, N'${subitem.SubItemUnit}')`);
+      }
+    }
+    console.log('revise success');
+    res.status(200).send({ message: 'Successfully revise quotation' });
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
 
 //revised quotation
 router.get('/revise/:OldQuotationId', async (req, res) => {
