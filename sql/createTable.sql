@@ -112,7 +112,8 @@ CREATE TABLE [QuotationPayTerm]
 	IndexPayTerm int NOT NULL,
 	PayTerm NVARCHAR(255) NULL,
 	PayPercent float NULL,
-	PayForecast date NULL
+	PayForecast date NULL,
+	PayInvoiced int NOT NULL DEFAULT 0
 )
 ALTER TABLE [QuotationPayTerm]
 ADD PayInvoiced int NOT NULL DEFAULT 0
@@ -124,8 +125,7 @@ CREATE Table [QuotationSetting]
 	TableShow int NOT NULL DEFAULT 3,
 	TablePrice int NOT NULL DEFAULT 1,
 	TableQty int NOT NULL DEFAULT 1,
-	TableTotal int NOT NULL DEFAULT 1,
-	PayInvoiced int NOT NULL DEFAULT 0
+	TableTotal int NOT NULL DEFAULT 1
 	FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId)
 )
 

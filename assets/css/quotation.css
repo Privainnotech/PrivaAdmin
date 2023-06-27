@@ -328,6 +328,7 @@ input[type=number].payment:disabled {
 
   #btnPrint,
   #btnRevised,
+  #btnCopy,
   #modalEditProject,
   #btnExample {
     min-width: 82px;
@@ -379,6 +380,7 @@ input[type=number].payment:disabled {
 
   #btnPrint,
   #btnRevised,
+  #btnCopy,
   #modalEditProject,
   #btnExample {
     width: 82px;

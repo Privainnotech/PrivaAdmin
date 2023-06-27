@@ -347,6 +347,23 @@
           </div>
         </div>
       </div>
+      <!-- form Confirm copy -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalCopyConfirm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Copy</h4><button type="button" class="close" data-dismiss="modal"
+                aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to Copy?</p>
+            </div>
+            <div class="modal-footer"><button class="btn btn-secondary no" type="button"
+                data-dismiss="modal">No</button><button class="btn btn-success btnYes" id="btnCopyYes"
+                type="button">Yes</button></div>
+          </div>
+        </div>
+      </div>
       <!-- form Confirm Print -->
       <div class="modal fade" role="dialog" tabindex="-1" id="modalPrintConfirm">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -654,7 +671,9 @@
                             <button type="button" class="btn btn-dark btn-rad invisible"
                               id="btnExample">Preview</button>
                             <button type="button" class="btn btn-dark btn-rad invisible"
-                              id="btnRevised">Revised</button>
+                              id="btnRevised">Revise</button>
+                              <button type="button" class="btn btn-dark btn-rad invisible"
+                              id="btnCopy">Copy</button>
                           </div>
                         </div>
                       </div>

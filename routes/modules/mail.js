@@ -26,6 +26,7 @@ const sendQuotationMail = async (Sender, Receiver, Quotation, Type) => {
     let transporter = await nodemailer.createTransport({
       host: mailInfo.auth.host,
       port: mailInfo.auth.port,
+      secure: true,
       auth: {
         user: mailInfo.auth.email,
         pass: mailInfo.auth.pass,
