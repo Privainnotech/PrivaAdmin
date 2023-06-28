@@ -174,16 +174,14 @@ function searchTableQuoHead() {
     .clone(true)
     .addClass("filters")
     .appendTo("#tableQuoHead thead");
-  $("#tableQuoHead .filters th").each(function (i) {
+  $("#tableQuoHead .filters th").each(async function (i) {
     var title = $("#tableQuoHead thead th").eq($(this).index()).text();
-    console.log(title);
     disable = title == "จัดการข้อมูล" ? "disabled" : "";
 
     if (title == "Status") {
       $(this).html(
         // `<input class="form-control p-1 column-search" type="text" placeholder="${title}" ${disable} value ="pre"/>`
         `<select class=" table-select column-search">
-        
           <option selected value="">${title}</option>
           <option value="Invoice">Invoice</option>
           <option value="Pre-Quotation">Pre-Quotation</option>
@@ -193,12 +191,80 @@ function searchTableQuoHead() {
           <option value="Cancel">Cancel</option>
         </select>`
       );
+    } else if (title == "Company") {
+      let data = await AjaxDataJson("/company_master/data");
+      data = JSON.parse(data);
+      let companyNames = data.map((item, Index) => item.CompanyName);
+
+      // console.log(companyNames);
+      // const uniqueData = [...new Set(companyNames)];
+
+      // console.log(uniqueData);
+
+      $(this).html(
+        // `<select class="table-select select-company column-search">
+        //   <option selected value="">${title}</option>
+
+        // </select>`
+        `<div class="search-select ">
+          <input class="form-control" id="search_01" type="text" placeholder="${title}">
+          <ul class="selection select-company"></ul>
+         </div>`
+      );
+      for (let i = 0; i < companyNames.length; i++) {
+        $(
+          `<li value="${companyNames[i]}">${companyNames[i]}</li>`
+        ).appendTo(".select-company");
+      }
+
+      $(".search-select input").on("input", function () {
+				let value = $(this).val().toLowerCase();
+				// let selection = $(".selection li");
+				let selection = $(this).siblings().children();
+				let length = selection.length
+				for (let i = 0; i < length; i++) {
+					let Text = $(selection[i]).text()
+					let checkSearch = Text.toLowerCase().includes(value);
+					!checkSearch
+						? $(selection[i]).addClass('d-none')
+						: $(selection[i]).removeClass('d-none')
+				}
+			});
+			$('.selection li').unbind();
+			$('.selection li').click((e) => {
+				let selected = $(e.target).attr('value');
+				let currentElement = ($(e.target).parent());
+				let prevElement = currentElement.prev();
+				prevElement.val(selected).trigger('change');
+			})
+
     } else {
       $(this).html(
-        `<input class="form-control p-1 column-search" type="text" placeholder="${title}" ${disable}/>`
+        `<input class="form-control p-1 column-search " type="text" placeholder="${title}" ${disable}/>`
       );
     }
   });
+
+  $(".search-select input").on("input", function () {
+    let value = $(this).val().toLowerCase();
+    // let selection = $(".selection li");
+    let selection = $(this).siblings().children();
+    let length = selection.length
+    for (let i = 0; i < length; i++) {
+      let Text = $(selection[i]).text()
+      let checkSearch = Text.toLowerCase().startsWith(value);
+      !checkSearch
+        ? $(selection[i]).addClass('d-none')
+        : $(selection[i]).removeClass('d-none')
+    }
+  });
+  $('.selection li').unbind();
+  $('.selection li').click((e) => {
+    let selected = $(e.target).attr('value');
+    let currentElement = ($(e.target).parent());
+    let prevElement = currentElement.prev();
+    prevElement.val(selected).trigger('change');
+  })
 }
 // Fill Table
 //Quotation

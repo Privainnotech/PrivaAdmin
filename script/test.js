@@ -208,6 +208,8 @@ function removeDetailPaper() {
 
 
 $(document).ready(function () {
+    alert('sss')
+
     //Reset Item Table
     function fill_resetTable() {
         var trHTML = '';

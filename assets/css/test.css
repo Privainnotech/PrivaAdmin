@@ -22,3 +22,35 @@ input {
 .ql-editor {
   padding-bottom: 100px;
 }
+
+
+.search-select {
+  /* display: ; */
+  position: relative;
+
+  > input:focus ~ .selection {
+    display: block;
+  }
+  >.selection {
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 120%;
+    left: 0;
+    background-color: white;
+    padding: 0;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    >li {
+      padding: .25rem;
+    }
+    >li:hover {
+      background-color: #3b7ddd;
+      color: white;
+    }
+  }
+
+  >.selection:hover {
+    display: block;
+  }
+}

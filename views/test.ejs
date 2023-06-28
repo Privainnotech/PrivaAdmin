@@ -32,6 +32,7 @@
 	<link rel="stylesheet" href="/css/main.css">
 	<link rel="stylesheet" href="/css/app.css">
 
+	<link rel="stylesheet" href="/css/select2.min.css" />
 	<link rel="stylesheet" href="/css/test.css">
 </head>
 
@@ -48,6 +49,14 @@
 						<div class="container-fluid p-0">
 							<div class="row">
 								<div class="col-md-6">
+
+									<div class="search-select ">
+										<input class="form-control" id="search_01" type="text">
+										<ul class="selection">
+											<li value="Alabama">Alabama</li>
+											<li value="Wyoming">Wyoming</li>
+										</ul>
+									</div>
 
 								</div>
 								<div class="col-md-6">
@@ -126,32 +135,17 @@
 			width
 		</div>
 	</div>
-	
-
-	<!-- <div class="input-group input-group-sm w-25">
-		<div class="row">
-			<div class="col p-0">
-				<input type="text" class="form-control payment m-0" value="">
-
-			</div>
-			<div class="col-3 p-0">
-				<input type="number" class="form-control payment m-0" value="">
-			</div>
-			<div class="col-auto p-0">
-				<span class="input-group-text bg-white m-0 h-100">%</span>
-			</div>
-		</div>
-
-	</div> -->
-	<div class="d-flex justify-content-center align-items-center"></div>
 
 
 
 
 
 
-	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+	<!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> -->
 	<script src="/js/jquery.min.js"></script>
+	<script src="/js/select2.full.min.js"></script>
 	<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 	<script src="/bootstrap/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -161,6 +155,35 @@
 	<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 	<script src="/js/app.js"></script>
 	<script src="/js/test.js"></script>
+	<script>
+		$(document).ready(function () {
+			// $("#search_01").change(function () {
+			// 	let value = $(this).val();
+			// 	console.log("ค่าใหม่:", value);
+			// });
+			$(".search-select input").on("input", function () {
+				let value = $(this).val().toLowerCase();
+				// let selection = $(".selection li");
+				let selection = $(this).siblings().children();
+				let length = selection.length
+				for (let i = 0; i < length; i++) {
+					let Text = $(selection[i]).text()
+					let checkSearch = Text.toLowerCase().includes(value);
+					!checkSearch
+						? $(selection[i]).addClass('d-none')
+						: $(selection[i]).removeClass('d-none')
+				}
+			});
+			$('.selection li').unbind();
+			$('.selection li').click((e) => {
+				let selected = $(e.target).attr('value');
+				let currentElement = ($(e.target).parent());
+				let prevElement = currentElement.prev();
+				prevElement.val(selected).trigger('change');
+			})
+		});
+	</script>
+
 
 </body>
 

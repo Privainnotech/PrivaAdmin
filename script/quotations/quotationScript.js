@@ -301,6 +301,11 @@ $(document).ready(function () {
   fill_quotation();
   fill_resetQuoTable();
 
+  $('.table-select-1').select2();
+
+  
+
+
   //======================== Quotation =============================//
   $('#CusName').change(async (e) => {
     let CusId = $('#CusName').val();
