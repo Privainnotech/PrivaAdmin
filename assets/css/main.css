@@ -342,50 +342,51 @@ thead tr:first-child th:last-child {
   width: 100%;
 }
 
-.dataTables_scrollHead{
-  overflow: visible!important;
+.dataTables_scrollHead {
+  overflow: visible !important;
 }
 
 .search-select {
   /* display: ; */
   position: relative;
   z-index: 1000;
+}
 
-  > input {
-    padding: 4px;
-  }
-  > input:focus ~ .selection {
-    display: block;
-  }
-  > .selection {
-    display: none;
-    position: absolute;
-    width: 100%;
-    max-height: 200px;
-    overflow: auto;
-    top: 120%;
-    left: 0;
-    background-color: white;
-    color: #333;
-    padding: 0;
-    border: 1px solid #ced4da;
-    border-radius: 0.2rem;
-    font-size: 10px;
-    font-weight: normal;
-    z-index: 1000;
-    > li {
-      padding: 0.25rem;
-      text-align: start;
-    }
-    > li:hover {
-      background-color: #3b7ddd;
-      color: white;
-    }
-  }
+.search-select input {
+  padding: 4px;
+}
+.search-select input:focus ~ .selection {
+  display: block;
+}
+.search-select .selection {
+  display: none;
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow: auto;
+  top: 120%;
+  left: 0;
+  background-color: white;
+  color: #333;
+  padding: 0;
+  border: 1px solid #ced4da;
+  border-radius: 0.2rem;
+  font-size: 10px;
+  font-weight: normal;
+  z-index: 1000;
+}
 
-  > .selection:hover {
-    display: block;
-  }
+.search-select .selection li {
+  padding: 0.25rem;
+  text-align: start;
+}
+.search-select .selection li:hover {
+  background-color: #3b7ddd;
+  color: white;
+}
+
+.search-select .selection:hover {
+  display: block;
 }
 
 @media only screen and (max-width: 768px) {
