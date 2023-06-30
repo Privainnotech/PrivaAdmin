@@ -605,7 +605,7 @@ router.put('/edit_payforecast/:QuotationId', async (req, res) => {
             .status(401)
             .send({ message: 'Only Parichart can set invoiced' });
         await pool.request().query(`Update privanet.Quotation
-        SET QuotationStatus = 2, QuotationUpdatedDate = N'${checkTime()}'
+        SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkTime()}'
         WHERE QuotationId = ${QuotationId}`);
       }
     }

@@ -390,6 +390,45 @@ router.get('/booking/:QuotationId', async (req, res) => {
   }
 });
 
+//set q-booking status
+router.get('/q-booking/:QuotationId', async (req, res) => {
+  try {
+    let pool = await sql.connect(dbconfig);
+    let UserId = req.session.UserId;
+    let getUser = await pool.request().query(
+      `SELECT EmployeeFname
+        FROM privanet.MasterEmployee WHERE EmployeeId = ${UserId}`
+    );
+    if (getUser.recordset[0].EmployeeFname !== 'Parichart')
+      return res
+        .status(401)
+        .send({ message: 'Only Parichart can set q-booking' });
+    let QuotationId = req.params.QuotationId;
+    let getQuotation = await pool.request().query(
+      `SELECT QuotationNoId, QuotationStatus
+        FROM privanet.Quotation WHERE QuotationId = ${QuotationId}`
+    );
+    let { QuotationNoId, QuotationStatus } = getQuotation.recordset[0];
+    if (QuotationStatus != 6 && QuotationStatus != 1) {
+      // Update privanet.Quotation NoId, Status & Delete pre-quotation no
+      let UpdateQuotationStatus = `Update privanet.Quotation
+        SET QuotationStatus = 6, QuotationUpdatedDate = N'${checkTime()}'
+        WHERE QuotationId = ${QuotationId}`;
+      let CancelQuotation = `Update privanet.Quotation
+        SET QuotationStatus = 5, QuotationUpdatedDate = N'${checkTime()}'
+        WHERE QuotationNoId = ${QuotationNoId} AND NOT QuotationId = ${QuotationId}
+        AND NOT QuotationStatus = 5 AND NOT QuotationStatus = 1`;
+      await pool.request().query(UpdateQuotationStatus);
+      await pool.request().query(CancelQuotation);
+      res.status(200).send({ message: 'Successfully set quotation' });
+    } else {
+      res.status(400).send({ message: 'Cannot booking pre-quotation' });
+    }
+  } catch (err) {
+    res.status(500).send({ message: `${err}` });
+  }
+});
+
 //set loss status
 router.get('/loss/:QuotationId', async (req, res) => {
   try {
