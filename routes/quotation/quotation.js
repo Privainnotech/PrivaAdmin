@@ -590,20 +590,20 @@ router.put('/edit_payforecast/:QuotationId', async (req, res) => {
     let status = getStatus.recordset[0].QuotationStatus;
     if (InvoicePercent) {
       if (status != 0) {
-        if (getUser.recordset[0].EmployeeFname !== 'Parichart')
-          return res
-            .status(401)
-            .send({ message: 'Only Parichart can set invoiced' });
+        // if (getUser.recordset[0].EmployeeFname !== 'Parichart')
+        //   return res
+        //     .status(401)
+        //     .send({ message: 'Only Parichart can set invoiced' });
       }
       await pool.request().query(`Update privanet.Quotation
         SET QuotationStatus = 0, QuotationUpdatedDate = N'${checkTime()}'
         WHERE QuotationId = ${QuotationId}`);
     } else {
       if (status == 0) {
-        if (getUser.recordset[0].EmployeeFname !== 'Parichart')
-          return res
-            .status(401)
-            .send({ message: 'Only Parichart can set invoiced' });
+        // if (getUser.recordset[0].EmployeeFname !== 'Parichart')
+        //   return res
+        //     .status(401)
+        //     .send({ message: 'Only Parichart can set invoiced' });
         await pool.request().query(`Update privanet.Quotation
         SET QuotationStatus = 3, QuotationUpdatedDate = N'${checkTime()}'
         WHERE QuotationId = ${QuotationId}`);
