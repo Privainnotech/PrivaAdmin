@@ -990,7 +990,7 @@ $(document).ready(function () {
         $('#btnSetYes').click(async function () {
           try {
             let res = await AjaxDataJson(
-              `/quotation_set/booking/${QuotationId}`,
+              `/quotation_set/q-booking/${QuotationId}`,
               `get`
             );
             SwalSuccess(res);

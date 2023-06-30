@@ -276,6 +276,11 @@ nav.navbar {
   color: var(--font-light);
   background-color: var(--status-cancel);
 }
+
+.status-q-booking {
+  color: var(--font-light);
+  background-color: #21722e;
+}
 .status-booking {
   color: var(--font-light);
   background-color: var(--status-booking);
