@@ -346,6 +346,11 @@ thead tr:first-child th:last-child {
   overflow: visible !important;
 }
 
+.btn-green {
+  color: #fff!important;
+  background-color: #21722e!important;
+}
+
 .search-select {
   /* display: ; */
   position: relative;

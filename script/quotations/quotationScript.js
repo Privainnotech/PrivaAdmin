@@ -4,7 +4,7 @@ const $fieldProject = $(
 const $SettingTable = $(
   '#IP-Set-TableShow, #IP-Set-TablePrice, #IP-Set-TableQty, #IP-Set-TableTotal'
 );
-const $StatusButton = $('#btn-cancel, #btn-quotation, #btn-book, #btn-loss');
+const $StatusButton = $('#btn-cancel, #btn-quotation, #btn-book,#btn-q-book, #btn-loss');
 const $EditGroup = $('#modalEditProject, #btnExample,#btnRevised,#btnCopy');
 // let loadDetail = null;
 let $LoadingPreview = $('#loading-preview').hide();
@@ -665,6 +665,20 @@ $(document).ready(function () {
         $('#btn-book').attr('disabled', '');
       }
 
+      // Status Q booking
+      if (QuotationStatus === 6) {
+        $('#btn-text').text('Edit');
+        //Eidt button
+        $EditGroup.removeClass('invisible');
+        $('#modalEditProject').addClass('invisible');
+        //AddItem button
+        $('#addItem').hide();
+
+        hideSetting();
+        $StatusButton.removeAttr('disabled');
+        $('#btn-q-book').attr('disabled', '');
+      }
+
       // Status loss
       if (QuotationStatus === 4) {
         $('#btn-text').text('Edit');
@@ -928,7 +942,7 @@ $(document).ready(function () {
             SwalSuccess(res);
             tableQuo.ajax.reload(null, false);
             tableQuoHead.ajax.reload(null, false);
-            $('#btn-quotation,#btn-loss,#btn-book').removeAttr('disabled');
+            $StatusButton.removeAttr('disabled');
             $('#btn-cancel').attr('disabled', '');
           } catch (error) {
             SwalError(error);
@@ -955,8 +969,35 @@ $(document).ready(function () {
             SwalSuccess(res);
             tableQuo.ajax.reload(null, false);
             tableQuoHead.ajax.reload(null, false);
-            $('#btn-quotation,#btn-loss,#btn-cancel').removeAttr('disabled');
+            $StatusButton.removeAttr('disabled');
             $('#btn-book').attr('disabled', '');
+          } catch (error) {
+            SwalError(error);
+          }
+          $('#modalStatusConfirm').modal('hide');
+        });
+        $('.close,.no').click(function () {
+          $('#modalStatusConfirm').modal('hide');
+        });
+      });
+
+      //btn-q-book
+      $('#btn-q-book').unbind();
+      $('#btn-q-book').on('click', function () {
+        $('#modalStatusConfirm').modal('show');
+        $('.modal-title').text('Confirm Set Status Book');
+        $('#btnSetYes').unbind();
+        $('#btnSetYes').click(async function () {
+          try {
+            let res = await AjaxDataJson(
+              `/quotation_set/booking/${QuotationId}`,
+              `get`
+            );
+            SwalSuccess(res);
+            tableQuo.ajax.reload(null, false);
+            tableQuoHead.ajax.reload(null, false);
+            $StatusButton.removeAttr('disabled');
+            $('#btn-q-book').attr('disabled', '');
           } catch (error) {
             SwalError(error);
           }
@@ -982,7 +1023,7 @@ $(document).ready(function () {
             SwalSuccess(res);
             tableQuo.ajax.reload(null, false);
             tableQuoHead.ajax.reload(null, false);
-            $('#btn-quotation,#btn-book,#btn-cancel').removeAttr('disabled');
+            $StatusButton.removeAttr('disabled');
             $('#btn-loss').attr('disabled', '');
           } catch (error) {
             SwalError(error);

@@ -182,7 +182,7 @@ function searchTableQuoHead() {
       let data = await AjaxDataJson("/dropdown/status");
       data = JSON.parse(data);
       let statusName = data.map((item, Index) => item.StatusName);
-      console.log(statusName);
+      console.log(data);
 
       $(this).html(
         // `<input class="form-control p-1 column-search" type="text" placeholder="${title}" ${disable} value ="pre"/>`
