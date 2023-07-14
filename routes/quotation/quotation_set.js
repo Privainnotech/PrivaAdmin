@@ -360,10 +360,10 @@ router.get('/booking/:QuotationId', async (req, res) => {
       `SELECT EmployeeFname
         FROM privanet.MasterEmployee WHERE EmployeeId = ${UserId}`
     );
-    // if (getUser.recordset[0].EmployeeFname !== 'Parichart')
-    //   return res
-    //     .status(401)
-    //     .send({ message: 'Only Parichart can set booking' });
+    if (getUser.recordset[0].EmployeeFname !== 'Parichart')
+      return res
+        .status(401)
+        .send({ message: 'Only Parichart can set booking' });
     let QuotationId = req.params.QuotationId;
     let getQuotation = await pool.request().query(
       `SELECT QuotationNoId, QuotationStatus
@@ -399,10 +399,10 @@ router.get('/q-booking/:QuotationId', async (req, res) => {
       `SELECT EmployeeFname
         FROM privanet.MasterEmployee WHERE EmployeeId = ${UserId}`
     );
-    // if (getUser.recordset[0].EmployeeFname !== 'Parichart')
-    //   return res
-    //     .status(401)
-    //     .send({ message: 'Only Parichart can set booking' });
+    if (getUser.recordset[0].EmployeeFname !== 'Parichart')
+      return res
+        .status(401)
+        .send({ message: 'Only Parichart can set booking' });
     let QuotationId = req.params.QuotationId;
     let getQuotation = await pool.request().query(
       `SELECT QuotationNoId, QuotationStatus
