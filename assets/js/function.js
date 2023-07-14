@@ -179,65 +179,60 @@ function searchTableQuoHead() {
     disable = title == "จัดการข้อมูล" ? "disabled" : "";
 
     if (title == "Status") {
+      let data = await AjaxDataJson("/dropdown/status");
+      data = JSON.parse(data);
+      let statusName = data.map((item, Index) => item.StatusName);
+      console.log(data);
+
       $(this).html(
         // `<input class="form-control p-1 column-search" type="text" placeholder="${title}" ${disable} value ="pre"/>`
-        `<select class=" table-select column-search">
+        `<select class=" table-select select-status column-search">
           <option selected value="">${title}</option>
-          <option value="Invoice">Invoice</option>
-          <option value="Pre-Quotation">Pre-Quotation</option>
-          <option value="Quotation">Quotation</option>
-          <option value="Booking">Booking</option>
-          <option value="Loss">Loss</option>
-          <option value="Cancel">Cancel</option>
+          
         </select>`
       );
+      for (let i = 0; i < statusName.length; i++) {
+        $(`<option value="${statusName[i]}">${statusName[i]}</option>`).appendTo(
+          ".select-status"
+        );
+      }
     } else if (title == "Company") {
       let data = await AjaxDataJson("/company_master/data");
       data = JSON.parse(data);
       let companyNames = data.map((item, Index) => item.CompanyName);
 
-      // console.log(companyNames);
-      // const uniqueData = [...new Set(companyNames)];
-
-      // console.log(uniqueData);
-
       $(this).html(
-        // `<select class="table-select select-company column-search">
-        //   <option selected value="">${title}</option>
-
-        // </select>`
         `<div class="search-select ">
           <input class="form-control" id="search_01" type="text" placeholder="${title}">
           <ul class="selection select-company"></ul>
          </div>`
       );
       for (let i = 0; i < companyNames.length; i++) {
-        $(
-          `<li value="${companyNames[i]}">${companyNames[i]}</li>`
-        ).appendTo(".select-company");
+        $(`<li value="${companyNames[i]}">${companyNames[i]}</li>`).appendTo(
+          ".select-company"
+        );
       }
 
       $(".search-select input").on("input", function () {
-				let value = $(this).val().toLowerCase();
-				// let selection = $(".selection li");
-				let selection = $(this).siblings().children();
-				let length = selection.length
-				for (let i = 0; i < length; i++) {
-					let Text = $(selection[i]).text()
-					let checkSearch = Text.toLowerCase().includes(value);
-					!checkSearch
-						? $(selection[i]).addClass('d-none')
-						: $(selection[i]).removeClass('d-none')
-				}
-			});
-			$('.selection li').unbind();
-			$('.selection li').click((e) => {
-				let selected = $(e.target).attr('value');
-				let currentElement = ($(e.target).parent());
-				let prevElement = currentElement.prev();
-				prevElement.val(selected).trigger('change');
-			})
-
+        let value = $(this).val().toLowerCase();
+        // let selection = $(".selection li");
+        let selection = $(this).siblings().children();
+        let length = selection.length;
+        for (let i = 0; i < length; i++) {
+          let Text = $(selection[i]).text();
+          let checkSearch = Text.toLowerCase().includes(value);
+          !checkSearch
+            ? $(selection[i]).addClass("d-none")
+            : $(selection[i]).removeClass("d-none");
+        }
+      });
+      $(".selection li").unbind();
+      $(".selection li").click((e) => {
+        let selected = $(e.target).attr("value");
+        let currentElement = $(e.target).parent();
+        let prevElement = currentElement.prev();
+        prevElement.val(selected).trigger("change");
+      });
     } else {
       $(this).html(
         `<input class="form-control p-1 column-search " type="text" placeholder="${title}" ${disable}/>`
@@ -249,22 +244,22 @@ function searchTableQuoHead() {
     let value = $(this).val().toLowerCase();
     // let selection = $(".selection li");
     let selection = $(this).siblings().children();
-    let length = selection.length
+    let length = selection.length;
     for (let i = 0; i < length; i++) {
-      let Text = $(selection[i]).text()
+      let Text = $(selection[i]).text();
       let checkSearch = Text.toLowerCase().startsWith(value);
       !checkSearch
-        ? $(selection[i]).addClass('d-none')
-        : $(selection[i]).removeClass('d-none')
+        ? $(selection[i]).addClass("d-none")
+        : $(selection[i]).removeClass("d-none");
     }
   });
-  $('.selection li').unbind();
-  $('.selection li').click((e) => {
-    let selected = $(e.target).attr('value');
-    let currentElement = ($(e.target).parent());
+  $(".selection li").unbind();
+  $(".selection li").click((e) => {
+    let selected = $(e.target).attr("value");
+    let currentElement = $(e.target).parent();
     let prevElement = currentElement.prev();
-    prevElement.val(selected).trigger('change');
-  })
+    prevElement.val(selected).trigger("change");
+  });
 }
 // Fill Table
 //Quotation
@@ -343,8 +338,15 @@ function fill_quotationHead() {
           $("input,select", $(".filters th")[colIdx]).on(
             "keyup change clear",
             function (e) {
-              // console.log(colIdx, this.value);
-              thisTable.column(colIdx).search(this.value).draw();
+              if (colIdx == 1) {
+                // ใช้ startsWith() ในการค้นหาข้อมูลที่เริ่มต้นด้วยค่าที่กำหนด
+                thisTable
+                  .column(colIdx)
+                  .search("^" + this.value, true, false)
+                  .draw();
+              } else {
+                thisTable.column(colIdx).search(this.value).draw();
+              }
             }
           );
         });
