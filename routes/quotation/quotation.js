@@ -82,6 +82,14 @@ router.get('/quotation_no_list', async (req, res, next) => {
       }
       quotationNos.recordset[i].CustomerName = CustomerName;
       quotationNos.recordset[i].CompanyName = CompanyName;
+
+      let pos = await pool.request().query(`SELECT PONo
+        FROM privanet.[QuotationPO] WHERE QuotationId = ${QuotationId}`);
+      let poText = '';
+      pos.recordset.forEach((po) => {
+        poText += po.PONo;
+      });
+      quotationNos.recordset[i].PO = poText;
     }
     // for (let Quotation of quotationNos.recordset) {
     //   let { QuotationId, CustomerIdQ, StatusName } = Quotation;
@@ -179,6 +187,8 @@ router.get('/:QuotationId', async (req, res) => {
     let getPayterm = `SELECT PayTerm,PayPercent,FORMAT(PayForecast, 'yyyy-MM-dd') PayForecast, PayInvoiced
       FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} ORDER BY IndexPayTerm;`;
     let payterms = await pool.request().query(getPayterm);
+    let getPO = `SELECT POId, PONo, PODate FROM privanet.[QuotationPO] WHERE QuotationId = ${QuotationId}`;
+    let pos = await pool.request().query(getPO);
 
     let quotation = quotations.recordset[0];
     let {
@@ -232,6 +242,7 @@ router.get('/:QuotationId', async (req, res) => {
       PayTermArr.push({ PayTerm, PayPercent, PayForecast, PayInvoiced });
     }
     if (PayTermArr.length) quotation.QuotationPayTerm = PayTermArr;
+    quotation.PO = pos.recordset;
     res.status(200).send(JSON.stringify(quotation));
   } catch (err) {
     console.log(`${err}`);
