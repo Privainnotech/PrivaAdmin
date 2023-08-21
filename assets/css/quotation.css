@@ -110,6 +110,11 @@ table.dataTable tbody td {
   padding: 0;
 }
 
+.project-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .title h2 {
   font-size: 25px;
   padding: 9px;

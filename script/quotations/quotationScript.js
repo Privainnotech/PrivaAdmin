@@ -971,6 +971,10 @@ $(document).ready(function () {
             tableQuoHead.ajax.reload(null, false);
             $StatusButton.removeAttr('disabled');
             $('#btn-book').attr('disabled', '');
+
+            //TODO: Input PO
+
+            
           } catch (error) {
             SwalError(error);
           }
