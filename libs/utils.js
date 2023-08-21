@@ -9,6 +9,7 @@ const moneyFormat = (x) => {
 const preQuotationNoGenerate = async () => {
   let pool = await sql.connect(dbconfig);
   let month = checkMonth();
+  console.log(month);
   let SearchQuotationNo = await pool
     .request()
     .query(
@@ -16,7 +17,7 @@ const preQuotationNoGenerate = async () => {
     );
   // Check QuotationNo
   let Number = SearchQuotationNo.recordset.length;
-  const genQuotationNo = await checkNo(Number, 'QuotationNo', 'pre_');
+  const genQuotationNo = await checkNo(month, Number, 'QuotationNo', 'pre_');
   return genQuotationNo;
 };
 
@@ -27,7 +28,7 @@ const quotationNoGenerate = async () => {
     FROM privanet.QuotationNo WHERE QuotationNo LIKE N'${month}%'`);
   // Check QuotationNo
   let Number = SearchQuotationNo.recordset.length;
-  const genQuotationNo = await checkNo(Number, 'QuotationNo');
+  const genQuotationNo = await checkNo(month, Number, 'QuotationNo');
   return genQuotationNo;
 };
 
@@ -38,11 +39,11 @@ const invoiceNoGenerate = async () => {
     FROM privanet.QuotationInvoice WHERE InvoiceNo LIKE N'${month}%'`);
   // Check InvoiceNo
   let Number = SearchInvoiceNo.recordset.length;
-  const genInvoiceNo = await checkNo(Number, 'QuotationInvoice');
+  const genInvoiceNo = await checkNo(month, Number, 'QuotationInvoice');
   return genInvoiceNo;
 };
 
-const checkNo = async (Number, Table, Prefix = '') => {
+const checkNo = async (month, Number, Table, Prefix = '') => {
   let genNo = '';
   let duplicateNo = true;
   let pool = await sql.connect(dbconfig);
