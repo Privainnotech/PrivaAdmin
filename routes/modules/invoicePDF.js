@@ -1,50 +1,8 @@
 const sql = require('mssql');
 const { dbconfig } = require('../../config');
 
-const { bahttext } = require('bahttext');
-const { moneyFormat } = require('../../libs/utils');
-
-const applySpacing = (name) => {
-  let spacebar = '';
-  for (let i = 0; i < name.length / 2; i++) {
-    spacebar = spacebar + ' ';
-  }
-  return spacebar;
-};
-
-let getPayTerm = async (QuotationPayTerm, payterm) => {
-  // console.log(QuotationPayTerm, payterm)
-  // if (!QuotationPayTerm || !QuotationPayTerm.includes("QuotationPayTerm")) return { payTerm: "-", idx: 0 };
-  let payTerm = '';
-  let i = 1;
-  if (typeof QuotationPayTerm == 'object') {
-    QuotationPayTerm = JSON.parse(QuotationPayTerm);
-    let payTerms = Object.values(QuotationPayTerm);
-    payTerms.map((term) => {
-      // console.log(term)
-      if (i == 1 && term == '') term = '-';
-      payTerm += `${term}\n`;
-      i++;
-    });
-  }
-
-  let PayTermArr = '',
-    idx = 0;
-  while (idx < payterm.length) {
-    // console.log(payterm[idx])
-    let { PayTerm, PayPercent } = payterm[idx];
-    if (PayTerm == '') {
-      PayTermArr += '-';
-      break;
-    }
-    PayTermArr += `${PayTerm}  ${PayPercent}%\n`;
-    idx++;
-  }
-  if (PayTermArr) return { payTerm: PayTermArr, idx };
-  return { payTerm, idx: i };
-};
-
-const createQuotationPdf = async (
+// TODO: Create Invoice PDF
+const createInvoicePdf = async (
   QuotationId,
   quotationNo,
   quotation,
@@ -56,24 +14,17 @@ const createQuotationPdf = async (
     CustomerEmail,
     CompanyName,
     CompanyAddress,
-    EndCustomer,
+    CompanyTaxNo,
     QuotationSubject,
-    QuotationDate,
     QuotationTotalPrice,
     QuotationDiscount,
     QuotationNet,
     QuotationVat,
     QuotationNetVat,
-    QuotationValidityDate,
-    QuotationPayTerm,
-    QuotationDelivery,
-    QuotationRemark,
-    QuotationDetail,
     EmployeeName,
     EmployeeFname,
     EmployeeLname,
     EmployeePosition,
-    QuotationApproval,
   } = quotation;
   let { TableShow, TablePrice, TableQty, TableTotal } = setting;
   // head
@@ -648,4 +599,4 @@ const createQuotationPdf = async (
   return doc;
 };
 
-module.exports = { createQuotationPdf };
+module.exports = { createInvoicePdf };

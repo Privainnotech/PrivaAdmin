@@ -6,30 +6,71 @@ const moneyFormat = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-const quotationNoGenerate = async () => {
+const preQuotationNoGenerate = async () => {
   let pool = await sql.connect(dbconfig);
   let month = checkMonth();
-  let genQuotationNo = '';
   let SearchQuotationNo = await pool
     .request()
     .query(
       `SELECT * FROM privanet.QuotationNo WHERE QuotationNo LIKE N'pre_${month}%'`
     );
   // Check QuotationNo
-  let duplicateNo = true;
   let Number = SearchQuotationNo.recordset.length;
-  do {
-    if (Number < 10) genQuotationNo = 'pre_' + month + '00' + Number;
-    else if (Number < 100) genQuotationNo = 'pre_' + month + '0' + Number;
-    else genQuotationNo = 'pre_' + month + Number;
-
-    let CheckQuotationNo = await pool.request().query(`SELECT CASE
-        WHEN EXISTS(SELECT * FROM privanet.QuotationNo WHERE QuotationNo = N'${genQuotationNo}')
-        THEN CAST (1 AS BIT) ELSE CAST (0 AS BIT) END AS 'check'`);
-    duplicateNo = CheckQuotationNo.recordset[0].check;
-    if (duplicateNo) Number++;
-  } while (duplicateNo);
+  const genQuotationNo = await checkNo(Number, 'QuotationNo', 'pre_');
   return genQuotationNo;
 };
 
-module.exports = { moneyFormat, quotationNoGenerate };
+const quotationNoGenerate = async () => {
+  let pool = await sql.connect(dbconfig);
+  let month = checkMonth();
+  let SearchQuotationNo = await pool.request().query(`SELECT *
+    FROM privanet.QuotationNo WHERE QuotationNo LIKE N'${month}%'`);
+  // Check QuotationNo
+  let Number = SearchQuotationNo.recordset.length;
+  const genQuotationNo = await checkNo(Number, 'QuotationNo');
+  return genQuotationNo;
+};
+
+const invoiceNoGenerate = async () => {
+  let pool = await sql.connect(dbconfig);
+  let month = checkMonth();
+  let SearchInvoiceNo = await pool.request().query(`SELECT *
+    FROM privanet.QuotationInvoice WHERE InvoiceNo LIKE N'${month}%'`);
+  // Check InvoiceNo
+  let Number = SearchInvoiceNo.recordset.length;
+  const genInvoiceNo = await checkNo(Number, 'QuotationInvoice');
+  return genInvoiceNo;
+};
+
+const checkNo = async (Number, Table, Prefix = '') => {
+  let genNo = '';
+  let duplicateNo = true;
+  let pool = await sql.connect(dbconfig);
+  let fromQuery =
+    Table == 'QuotationNo'
+      ? `FROM privanet.QuotationNo`
+      : `FROM privanet.QuotationInvoice`;
+  do {
+    if (Number < 10) genNo = Prefix + month + '00' + Number;
+    else if (Number < 100) genNo = Prefix + month + '0' + Number;
+    else genNo = Prefix + month + Number;
+    let whereQuery =
+      Table == 'QuotationNo'
+        ? `WHERE QuotationNo = N'${genNo}'`
+        : `WHERE InvoiceNo = N'${genNo}'`;
+    let CheckInvoiceNo = await pool.request().query(`SELECT CASE
+      WHEN EXISTS(SELECT * ${fromQuery} ${whereQuery})
+      THEN CAST (1 AS BIT)
+      ELSE CAST (0 AS BIT) END AS 'check'`);
+    duplicateNo = CheckInvoiceNo.recordset[0].check;
+    if (duplicateNo) Number++;
+  } while (duplicateNo);
+  return genNo;
+};
+
+module.exports = {
+  moneyFormat,
+  preQuotationNoGenerate,
+  quotationNoGenerate,
+  invoiceNoGenerate,
+};

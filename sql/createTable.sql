@@ -115,8 +115,6 @@ CREATE TABLE [QuotationPayTerm]
 	PayForecast date NULL,
 	PayInvoiced int NOT NULL DEFAULT 0
 )
-ALTER TABLE [QuotationPayTerm]
-ADD PayInvoiced int NOT NULL DEFAULT 0
 
 CREATE Table [QuotationSetting]
 (
@@ -150,6 +148,23 @@ CREATE Table [QuotationSubItem]
 	SubItemUnit NVARCHAR(10) NULL
 		FOREIGN KEY (ItemId) REFERENCES QuotationItem(ItemId),
 	FOREIGN KEY (ProductId) REFERENCES MasterProduct(ProductId)
+)
+
+CREATE Table [QuotationPO]
+(
+	POId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	QuotationId bigint NOT NULL FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId),
+	PONo NVARCHAR(30) NOT NULL,
+	PODate date NULL
+)
+
+CREATE Table [QuotationInvoice]
+(
+	InvoiceId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	QuotationId bigint NOT NULL FOREIGN KEY (QuotationId) REFERENCES Quotation(QuotationId),
+	POId bigint NOT NULL FOREIGN KEY (POId) REFERENCES QuotationPO(POId),
+	InvoiceNo NVARCHAR(30) NOT NULL,
+	InvoiceDate date NULL
 )
 
 
