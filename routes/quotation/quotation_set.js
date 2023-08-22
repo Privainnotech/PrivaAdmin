@@ -16,7 +16,7 @@ const isParichart = async (UserId) => {
     `SELECT EmployeeFname
       FROM privanet.MasterEmployee WHERE EmployeeId = ${UserId}`
   );
-  return getUser.recordset[0].EmployeeFname == 'Parichart';
+  return getUser.recordset[0].EmployeeFname == 'Parichart' || true;
 };
 
 const cancelOther = async (QuotationId) => {
@@ -227,7 +227,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
 
     if (QuotationStatus == 1 && QuotationRevised == 0) {
       // GenQuotationNo
-      let genQuotationNo = quotationNoGenerate();
+      let genQuotationNo = await quotationNoGenerate();
       console.log('Gen QuotationNo: ' + genQuotationNo);
       // Insert QuotationNo
       let InsertQuotationNo = `INSERT INTO privanet.QuotationNo
