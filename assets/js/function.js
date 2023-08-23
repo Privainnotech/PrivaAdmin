@@ -182,7 +182,7 @@ function searchTableQuoHead() {
       let data = await AjaxDataJson("/dropdown/status");
       data = JSON.parse(data);
       let statusName = data.map((item, Index) => item.StatusName);
-      console.log(data);
+      // console.log(data);
 
       $(this).html(
         // `<input class="form-control p-1 column-search" type="text" placeholder="${title}" ${disable} value ="pre"/>`
@@ -192,9 +192,9 @@ function searchTableQuoHead() {
         </select>`
       );
       for (let i = 0; i < statusName.length; i++) {
-        $(`<option value="${statusName[i]}">${statusName[i]}</option>`).appendTo(
-          ".select-status"
-        );
+        $(
+          `<option value="${statusName[i]}">${statusName[i]}</option>`
+        ).appendTo(".select-status");
       }
     } else if (title == "Company") {
       let data = await AjaxDataJson("/company_master/data");
@@ -280,52 +280,56 @@ function fill_quotationHead() {
     },
     columns: [
       {
-        width: "10px",
-        // width: "5%",
         data: "index",
       },
       {
-        // width: "10%",
         data: "StatusName",
         render: function (data, type, row) {
-          // let L_Status = data.toLowerCase();
-          // return `<div class = "d-flex justify-content-center align-items-center"><span class="d-block status status-${L_Status}">${data}</span></div>`;
           return `<div class = "d-flex justify-content-center align-items-center"><span >${data}</span></div>`;
         },
       },
       {
-        // width: "10%",
         data: "QuotationNo",
       },
       {
-        // width: "25%",
         data: "CompanyName",
         render: function (data, type, row) {
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
-        // width: "25%",
         data: "QuotationSubject",
         render: function (data, type, row) {
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
-        // width: "15%",
         data: "CustomerName",
         render: function (data, type, row) {
           return `<div class = "d-flex justify-content-start align-items-center"><span class="text-start">${data}</span></div>`;
         },
       },
       {
-        // width: "10%",
         data: "QuotationNet",
         render: function (data, type, row) {
           let [bath, stang] = data.toFixed(2).split(".");
           return `<div class = "d-flex justify-content-end align-items-center"><span class="text-end">${parseInt(
             bath
           ).toLocaleString()}.${stang}</span></div>`;
+        },
+      },
+
+      {
+        data: "PO",
+        render: function (data, type, row) {
+          // console.log(data)
+          let html = "";
+          data.forEach((res) => {
+            html += `${res.PONo} <br/>`;
+          })
+          return `<div class = "d-flex justify-content-center align-items-center">
+          <span class="text-center">${html}</span>
+          </div>`;
         },
       },
     ],

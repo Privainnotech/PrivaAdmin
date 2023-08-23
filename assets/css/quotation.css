@@ -110,6 +110,11 @@ table.dataTable tbody td {
   padding: 0;
 }
 
+.project-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .title h2 {
   font-size: 25px;
   padding: 9px;
@@ -223,8 +228,8 @@ hr {
 }
 
 .approve-float {
-  display: inline-block;
-  margin-left: auto;
+  /* display: inline-block;
+  margin-left: auto; */
 }
 #previewbtn {
   margin-left: 1.5em;
@@ -294,6 +299,16 @@ input[type=number].payment:disabled {
   padding-bottom: 100px;
 }
 
+.po-item {
+  padding: .75rem .75rem;
+  border-radius: 10px;
+  border: 2px dashed #9b9b9b;
+}
+
+.po-item span {
+  width: 95px;
+}
+
 @media only screen and (max-width: 768px) {
   /* .title h2 {
     font-size: 20px;
@@ -322,7 +337,7 @@ input[type=number].payment:disabled {
   } */
 
   .title.v-2 {
-    display: block;
+    /* display: block; */
     margin-top: 0;
   }
 
