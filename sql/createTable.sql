@@ -167,4 +167,25 @@ CREATE Table [QuotationInvoice]
 	InvoiceDate date NULL
 )
 
-
+CREATE Table [MasterVendor]
+(
+	VendorId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	Vendor NVARCHAR(255) NOT NULL,
+	VendorAddress NVARCHAR(1000) NULL,
+	VendorUrl NVARCHAR(1000) NULL
+)
+CREATE Table [MasterCategory]
+(
+	CategoryId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	Category NVARCHAR(255) NOT NULL
+)
+CREATE Table [MasterPricing]
+(
+	PricingId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	Pricing NVARCHAR(255) NOT NULL,
+	PricingUrl NVARCHAR(1000) NULL,
+	Cost money NOT NULL,
+	SellingPrice money NULL,
+	VendorId bigint NOT NULL FOREIGN KEY (VendorId) REFERENCES privanet.MasterVendor(VendorId),
+	CategoryId bigint NOT NULL FOREIGN KEY (CategoryId) REFERENCES privanet.MasterCategory(CategoryId)
+)

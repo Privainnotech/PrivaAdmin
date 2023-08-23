@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5"
+    />
+    <meta name="author" content="AdminKit" />
+    <meta
+      name="keywords"
+      content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web"
+    />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"
+    />
+
+    <link rel="stylesheet" href="/fonts/fontawesome-all.min.css" />
+    <link rel="stylesheet" href="/fonts/font-awesome.min.css" />
+    <link rel="stylesheet" href="/fonts/fontawesome5-overrides.min.css" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/font.css" />
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="stylesheet" href="/css/quotation.css" />
+
+    <link rel="stylesheet" href="/css/table.css" />
+
+    <title>Pricing</title>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <%- include('./partials/sidebar'); %>
+
+      <!-- form Pricing -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalPricing">
+        <div
+          class="modal-dialog modal-lg modal-dialog-centered"
+          role="document"
+        >
+          <div class="modal-content">
+            <form id="formPricing">
+              <div class="modal-header">
+                <h4 class="modal-title">Pricing Detail</h4>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row my-2">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>
+                      <p class="red">*</p>
+                      Name:&nbsp;
+                    </span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="inpPricingName"
+                      style="width: 100%"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>
+                      <p class="red">*</p>
+                      Cost:&nbsp;
+                    </span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <input
+                      class="form-control"
+                      type="number"
+                      id="inpPricingCost"
+                      style="width: 100%"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="form-row my-2">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>Selling Price:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <input
+                      class="form-control"
+                      type="number"
+                      id="inpPricingPrice"
+                      style="width: 100%"
+                    />
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>Url:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="inpPricingUrl"
+                      style="width: 100%"
+                    />
+                  </div>
+                </div>
+                <div class="form-row mb-2 mt-4">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>
+                      <p class="red">*</p>
+                      Category:&nbsp;
+                    </span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <select class="form-select" id="inpPricingCategory">
+                      <option value="" selected>New Category</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="categoryGroup">
+                  <div class="form-row my-2">
+                    <div
+                      class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                    >
+                      <span>
+                        <p class="red">*</p>
+                        New Category:&nbsp;
+                      </span>
+                    </div>
+                    <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                      <input class="form-control" id="inpPricingCategoryName" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row mb-2 mt-4">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>
+                      <p class="red">*</p>
+                      Vendor:&nbsp;
+                    </span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <select class="form-select" id="inpPricingVendor">
+                      <option value="" selected>New Vendor</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="vendorGroup" class="">
+                  <div class="form-row my-2">
+                    <div
+                      class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                    >
+                      <span>
+                        <p class="red">*</p>
+                        New Vendor:&nbsp;
+                      </span>
+                    </div>
+                    <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                      <input class="form-control" id="inpPricingVendorName" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div
+                      class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                    >
+                      <span> Vendor Address:&nbsp; </span>
+                    </div>
+                    <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                      <input
+                        class="form-control"
+                        id="inpPricingVendorAddress"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div
+                      class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                    >
+                      <span> Vendor Url:&nbsp; </span>
+                    </div>
+                    <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                      <input class="form-control" id="inpPricingVendorUrl" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" id="savePricing" type="button">
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- form Vendor -->
+      <div class="modal fade" role="dialog" tabindex="-1" id="modalVendor">
+        <div
+          class="modal-dialog modal-lg modal-dialog-centered"
+          role="document"
+        >
+          <div class="modal-content">
+            <form id="formVendor">
+              <div class="modal-header">
+                <h4 class="modal-title">Vendor Detail</h4>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row my-2">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>
+                      <p class="red">*</p>
+                      Name:&nbsp;
+                    </span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="inpVendorName"
+                      style="width: 100%"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span> Address:&nbsp; </span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="inpVendorAddress"
+                      style="width: 100%"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>Url:&nbsp;</span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="inpVendorUrl"
+                      style="width: 100%"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" id="saveVendor" type="button">
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- form delete
+      <div
+        class="modal fade"
+        role="dialog"
+        tabindex="-1"
+        id="modalDeleteConfirm"
+      >
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Confirm Delete</h4>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-body text-center">
+              <p>Are you sure to delete?</p>
+            </div>
+            <div class="modal-footer">
+              <button
+                class="btn btn-secondary"
+                type="button"
+                data-dismiss="modal"
+              >
+                No</button
+              ><button class="btn btn-danger btnYes" id="btnYes" type="button">
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="main">
+        <%- include('./partials/navbar'); %>
+
+        <main class="content">
+          <div class="container-fluid p-0">
+            <div class="row">
+              <div class="col-12 d-flex">
+                <div class="card flex-fill">
+                  <div class="card-header title">
+                    <div class="d-flex align-items-center">
+                      <h1 id="cardHeader">Pricing</h1>
+                      <div class="ml-2 btn-group dropright" role="group">
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-dark"
+                          data-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          Category
+                        </button>
+                        <div
+                          id="categoryDropdown"
+                          class="dropdown-menu p-2"
+                          style="width: 15rem"
+                        >
+                          <div
+                            class="d-flex justify-content-between align-items-center"
+                          >
+                            <input
+                              id="inpCategory"
+                              type="text"
+                              class="form-control"
+                              placeholder="Category"
+                            />
+                            <button
+                              id="addCategory"
+                              type="button"
+                              class="ml-1 p-2 btn btn-success"
+                            >
+                              <i class="fa fa-plus"></i>
+                            </button>
+                          </div>
+                          <ul id="categoryList" class="list-group mt-2"></ul>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      id="addPricing"
+                    >
+                      ADD
+                    </button>
+                  </div>
+                  <table
+                    id="tablePricing"
+                    class="table table-sm text-nowrap text-center table-hover my-0"
+                    style="width: 100%"
+                  >
+                    <thead class="thead-dark">
+                      <tr>
+                        <!-- <th>Index</th> -->
+                        <th>Item</th>
+                        <th>Cost</th>
+                        <th>Selling Price</th>
+                        <th>Category</th>
+                        <th>Vendor</th>
+                        <th style="width: 10%">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="5">No data available in table</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-12 d-flex">
+                <div class="card flex-fill">
+                  <div class="card-header title">
+                    <h1 id="cardHeader">Vendor</h1>
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      id="addVendor"
+                    >
+                      ADD
+                    </button>
+                  </div>
+
+                  <table
+                    id="tableVendor"
+                    class="table table-sm text-nowrap text-center table-hover my-0"
+                    style="width: 100%"
+                  >
+                    <thead class="thead-dark">
+                      <tr>
+                        <!-- <th>Index</th> -->
+                        <th>Vendor</th>
+                        <th>Address</th>
+                        <th style="width: 10%">Action</th>
+                        <!-- <th style="display: none"></th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="2">No data available in table</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/function.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.14/dist/sweetalert2.all.min.js"></script>
+
+    <script src="/pricing_script/category.js"></script>
+    <script src="/pricing_script/vendor.js"></script>
+    <script src="/pricing_script/pricing.js"></script>
+  </body>
+</html>
