@@ -302,7 +302,7 @@ input[type=number].payment:disabled {
 .po-item {
   padding: .75rem .75rem;
   border-radius: 10px;
-  border: 2px dashed #8d8d8d;
+  border: 2px dashed #9b9b9b;
 }
 
 .po-item span {

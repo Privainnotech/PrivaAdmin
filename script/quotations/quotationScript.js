@@ -48,6 +48,50 @@ function SwalPO(QuotationId) {
   });
 }
 
+function action_po() {
+  $(".btn-po-edit").unbind();
+  $(".btn-po-edit").on("click", function () {
+    let thisGroup = $(this).parent().parent();
+    let POId = $(thisGroup).attr("id").replace("po_", "");
+
+    $(`#po_${POId} input`).removeAttr("disabled");
+    $(`#po_${POId} .btn-po-save,#po_${POId} .btn-po-edit`).toggleClass(
+      "d-none"
+    );
+  });
+
+  $(".btn-po-save").unbind();
+  $(".btn-po-save").on("click", async function () {
+    let thisGroup = $(this).parent().parent();
+    let POId = $(thisGroup).attr("id").replace("po_", "");
+    let url = `/quotation/edit_po/${POId}`;
+    let data = {
+      PONo: $(`#po_${POId} input[name='PONo']`).val(),
+      PODate: $(`#po_${POId} input[name='PODate']`).val(),
+    };
+
+    try {
+      let res = await AjaxDataJson(url, `put`, data);
+      SwalEditSuccess(res);
+      $(`#po_${POId} input`).attr("disabled", "disabled");
+      $(`#po_${POId} .btn-po-save,#po_${POId} .btn-po-edit`).toggleClass(
+        "d-none"
+      );
+      tableQuoHead.ajax.reload(null, false);
+    } catch (error) {
+      SwalError(error);
+    }
+  });
+
+  $(".btn-po-delete").unbind();
+  $(".btn-po-delete").on("click", function () {
+    // todo: find PO Id
+    let thisGroup = $(this).parent().parent();
+    let POId = $(thisGroup).attr("id").replace("po_", "");
+    // let QuotationId = QuotationId;
+  });
+}
+
 //Hide Setting
 function hideSetting() {
   $("#modalSaveSetting").hide();
@@ -120,9 +164,15 @@ function ShowPro(QuotationId) {
                       <span class="input-group-text bg-transparent border-0">Date</span>
                     </div>
                     <input type="date" class="form-control mr-3" name="PODate" value="${PODate}" disabled>
-                    <button class="btn btn-primary btn-po-edit mr-1 ">Edit</button>
-                    <button class="btn btn-success btn-po-save mr-1 d-none">save</button>
-                    <button class="btn btn-danger btn-po-delete">del</button>
+                    <button class="btn btn-primary btn-po-edit mr-1 ">
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                    <button class="btn btn-success btn-po-save mr-1 d-none">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    </button>
+                    <button class="btn btn-danger btn-po-delete">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
                   </div>
                 </div>
         `;
@@ -299,7 +349,7 @@ function RePro() {
   $("#modalSaveSetting").hide();
   $("#save-button").hide();
   $("#btn_AddPayment").hide();
-  $("#btn-PO").addClass('d-none');
+  $("#btn-PO").addClass("d-none");
 
   $EditGroup.addClass("invisible");
 
@@ -531,7 +581,7 @@ $(document).ready(function () {
       if (QuotationStatus === 0) {
         $StatusButton.attr("disabled", "");
         $("#btn-cancel").removeAttr("disabled");
-        $("#btn-PO").removeClass('d-none');
+        $("#btn-PO").removeClass("d-none");
       }
       // pre quotation
       if (QuotationStatus === 1) {
@@ -548,7 +598,7 @@ $(document).ready(function () {
         $("#save-button").show();
         //Show Setting
         ShowSetting();
-        $("#btn-PO").addClass('d-none');
+        $("#btn-PO").addClass("d-none");
 
         // Edit Ouotation
         $("#modalEditProject").unbind();
@@ -705,7 +755,7 @@ $(document).ready(function () {
       //======================== Set Status =============================//
       // Status Quotation
       if (QuotationStatus === 2) {
-        $("#btn-PO").addClass('d-none');
+        $("#btn-PO").addClass("d-none");
 
         $("#btn-text").text("Edit");
 
@@ -723,7 +773,7 @@ $(document).ready(function () {
 
       // Status booking
       if (QuotationStatus === 3) {
-        $("#btn-PO").removeClass('d-none');
+        $("#btn-PO").removeClass("d-none");
         $("#btn-text").text("Edit");
         //Eidt button
         $EditGroup.removeClass("invisible");
@@ -738,7 +788,7 @@ $(document).ready(function () {
 
       // Status Q booking
       if (QuotationStatus === 6) {
-        $("#btn-PO").addClass('d-none');
+        $("#btn-PO").addClass("d-none");
 
         $("#btn-text").text("Edit");
         //Eidt button
@@ -754,7 +804,7 @@ $(document).ready(function () {
 
       // Status loss
       if (QuotationStatus === 4) {
-        $("#btn-PO").removeClass('d-none');
+        $("#btn-PO").removeClass("d-none");
 
         $("#btn-text").text("Edit");
         //Eidt button
@@ -771,7 +821,7 @@ $(document).ready(function () {
 
       // Status cancel
       if (QuotationStatus === 5) {
-        $("#btn-PO").addClass('d-none');
+        $("#btn-PO").addClass("d-none");
 
         $("#btn-text").text("Edit");
         //Eidt button
@@ -1125,9 +1175,6 @@ $(document).ready(function () {
           let POId = $(id).attr("id").replace("po_", "");
           checkPOId.push(POId);
         }
-        // console.log(checkPOId);
-
-        // $(".po-list").html("");
 
         $("#btn_po_add").unbind();
         $("#btn_po_add").on("click", async function () {
@@ -1138,9 +1185,9 @@ $(document).ready(function () {
           let url = `/quotation/add_po/${QuotationId}`;
           let url_New = `/quotation/${QuotationId}`;
           try {
-            // let res = await AjaxDataJson(url, `post`, data);
-            // SwalEditSuccess(res);
-            // tableQuoHead.ajax.reload(null, false);
+            let res = await AjaxDataJson(url, `post`, data);
+            SwalEditSuccess(res);
+            tableQuoHead.ajax.reload(null, false);
 
             //todo: gen new po
             let POId_toCheck = [];
@@ -1169,13 +1216,20 @@ $(document).ready(function () {
                         <span class="input-group-text bg-transparent border-0">Date</span>
                       </div>
                       <input type="date" class="form-control mr-3" name="PODate" value="${res.PODate}" disabled>
-                      <button class="btn btn-primary btn-po-edit mr-1 ">Edit</button>
-                      <button class="btn btn-success btn-po-save mr-1 d-none">save</button>
-                      <button class="btn btn-danger btn-po-delete">del</button>
+                      <button class="btn btn-primary btn-po-edit mr-1 ">
+                        <i class="fa-solid fa-pen"></i>
+                      </button>
+                      <button class="btn btn-success btn-po-save mr-1 d-none">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                      </button>
+                      <button class="btn btn-danger btn-po-delete">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
                     </div>
                   </div>
                 `;
                 $(".po-list").append(html);
+                action_po();
               }
             });
           } catch (error) {
@@ -1183,48 +1237,7 @@ $(document).ready(function () {
           }
         });
 
-        $(".btn-po-edit").unbind();
-        $(".btn-po-edit").on("click", function () {
-          let thisGroup = $(this).parent().parent();
-          let POId = $(thisGroup).attr("id").replace("po_", "");
-
-          $(`#po_${POId} input`).removeAttr("disabled");
-          $(`#po_${POId} .btn-po-save,#po_${POId} .btn-po-edit`).toggleClass(
-            "d-none"
-          );
-        });
-
-        $(".btn-po-save").unbind();
-        $(".btn-po-save").on("click", async function () {
-          let thisGroup = $(this).parent().parent();
-          let POId = $(thisGroup).attr("id").replace("po_", "");
-          let url = `/quotation/edit_po/${POId}`;
-          let data = {
-            PONo: $(`#po_${POId} input[name='PONo']`).val(),
-            PODate: $(`#po_${POId} input[name='PODate']`).val(),
-          };
-
-          try {
-            let res = await AjaxDataJson(url, `put`, data);
-            SwalEditSuccess(res);
-            $(`#po_${POId} input`).attr("disabled", "disabled");
-            $(`#po_${POId} .btn-po-save,#po_${POId} .btn-po-edit`).toggleClass(
-              "d-none"
-            );
-            tableQuoHead.ajax.reload(null, false);
-          } catch (error) {
-            SwalError(error);
-          }
-        });
-
-        // $(".btn-po-delete").unbind();
-        // $(".btn-po-delete").on("click", function () {
-        //   // todo: find PO Id
-        //   let thisGroup = $(this).parent().parent();
-        //   let POId = $(thisGroup).attr("id").replace("po_", "");
-        //   let QuotationId = QuotationId;
-
-        // });
+        action_po();
 
         $(".close,.no").click(function () {
           $("#modalPoList").modal("hide");
