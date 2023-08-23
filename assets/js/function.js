@@ -267,7 +267,7 @@ function fill_quotationHead() {
   searchTableQuoHead();
   tableQuoHead = $("#tableQuoHead").DataTable({
     bDestroy: true,
-    scrollX: true,
+    scrollX: false,
     scrollY: "40vh",
     searching: true,
     ordering: false,
@@ -328,7 +328,7 @@ function fill_quotationHead() {
             html += `${res.PONo} <br/>`;
           })
           return `<div class = "d-flex justify-content-center align-items-center">
-          <span class="text-center">${html}</span>
+          <span class="text-center">${html || '-'}</span>
           </div>`;
         },
       },

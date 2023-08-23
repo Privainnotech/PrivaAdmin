@@ -83,13 +83,13 @@ function action_po() {
     }
   });
 
-  $(".btn-po-delete").unbind();
-  $(".btn-po-delete").on("click", function () {
-    // todo: find PO Id
-    let thisGroup = $(this).parent().parent();
-    let POId = $(thisGroup).attr("id").replace("po_", "");
-    // let QuotationId = QuotationId;
-  });
+  // $(".btn-po-delete d-none").unbind();
+  // $(".btn-po-delete d-none").on("click", function () {
+  //   // todo: find PO Id
+  //   let thisGroup = $(this).parent().parent();
+  //   let POId = $(thisGroup).attr("id").replace("po_", "");
+  //   // let QuotationId = QuotationId;
+  // });
 }
 
 //Hide Setting
@@ -170,7 +170,7 @@ function ShowPro(QuotationId) {
                     <button class="btn btn-success btn-po-save mr-1 d-none">
                     <i class="fa-solid fa-floppy-disk"></i>
                     </button>
-                    <button class="btn btn-danger btn-po-delete">
+                    <button class="btn btn-danger btn-po-delete d-none">
                       <i class="fa-solid fa-trash"></i>
                     </button>
                   </div>
@@ -1222,7 +1222,7 @@ $(document).ready(function () {
                       <button class="btn btn-success btn-po-save mr-1 d-none">
                         <i class="fa-solid fa-floppy-disk"></i>
                       </button>
-                      <button class="btn btn-danger btn-po-delete">
+                      <button class="btn btn-danger btn-po-delete d-none">
                         <i class="fa-solid fa-trash"></i>
                       </button>
                     </div>
