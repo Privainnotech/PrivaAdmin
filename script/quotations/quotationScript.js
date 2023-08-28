@@ -84,11 +84,20 @@ function action_po() {
   });
 
   $('.btn-po-delete').unbind();
-  $('.btn-po-delete').on('click', function () {
+  $('.btn-po-delete').on('click', async function () {
     // todo: find PO Id
     let thisGroup = $(this).parent().parent();
     let POId = $(thisGroup).attr('id').replace('po_', '');
-    // let QuotationId = QuotationId;
+    let url = `/quotation/delete_po/${POId}`;
+
+    try {
+      let res = await AjaxDataJson(url, `delete`);
+      SwalDeleteSuccess(res);
+      $(`#po_${POId}`).remove();
+      tableQuoHead.ajax.reload(null, false);
+    } catch (error) {
+      SwalError(error);
+    }
   });
 }
 
