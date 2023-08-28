@@ -320,7 +320,6 @@ function fill_quotationHead() {
           ).toLocaleString()}.${stang}</span></div>`;
         },
       },
-
       {
         data: 'PO',
         render: function (data, type, row) {

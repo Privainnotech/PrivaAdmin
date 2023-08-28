@@ -219,6 +219,56 @@
                     </div>
                   </div>
                 </div>
+                <div class="form-row mb-2 mt-4">
+                  <div
+                    class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                  >
+                    <span>
+                      <p class="red">*</p>
+                      Seller:&nbsp;
+                    </span>
+                  </div>
+                  <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                    <select class="form-select" id="inpPricingSeller">
+                      <option value="" selected>New Seller</option>
+                    </select>
+                  </div>
+                </div>
+                <div id="sellerGroup" class="">
+                  <div class="form-row my-2">
+                    <div
+                      class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                    >
+                      <span>
+                        <p class="red">*</p>
+                        New Seller:&nbsp;
+                      </span>
+                    </div>
+                    <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                      <input class="form-control" id="inpPricingSellerName" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div
+                      class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                    >
+                      <span> Seller Email:&nbsp; </span>
+                    </div>
+                    <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                      <input class="form-control" id="inpPricingSellerEmail" />
+                    </div>
+                  </div>
+                  <div class="form-row my-2">
+                    <div
+                      class="col-xl-4 d-xl-flex justify-content-xl-end align-items-xl-center"
+                    >
+                      <span> Seller Tel:&nbsp; </span>
+                    </div>
+                    <div class="col-xl-8 d-xl-flex align-items-xl-center">
+                      <input class="form-control" id="inpPricingSellerTel" />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="modal-footer">
                 <button class="btn btn-primary" id="savePricing" type="button">
@@ -298,6 +348,63 @@
                       id="inpVendorUrl"
                       style="width: 100%"
                     />
+                  </div>
+                </div>
+                <div id="vendorSellerGroup" class="form-row mb-2 mt-4">
+                  <div class="col-xl-8 d-xl-flex align-items-xl-start">
+                    <table
+                      id="tableSeller"
+                      class="table table-sm text-center table-hover my-0"
+                      style="width: 100%"
+                    >
+                      <thead class="thead-dark"></thead>
+                      <tbody>
+                        <tr>
+                          <td colspan="3">No data available in table</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                    class="col-xl-4 d-flex flex-column justify-content-xl-start align-items-xl-start"
+                  >
+                    <div class="mt-2">Sell's Name:</div>
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="inpSellerName"
+                      style="width: 100%"
+                    />
+                    <div class="mt-2">Email:</div>
+                    <input
+                      class="form-control"
+                      type="email"
+                      id="inpSellerEmail"
+                      style="width: 100%"
+                    />
+                    <div class="mt-2">Tel:</div>
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="inpSellerTel"
+                      style="width: 100%"
+                    />
+                    <div class="w-100 d-flex justify-content-between mt-2">
+                      <button
+                        class="btn btn-primary"
+                        id="saveSeller"
+                        type="button"
+                      >
+                        Apply
+                      </button>
+                      <button
+                        class="btn btn-danger"
+                        id="delSeller"
+                        type="button"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -408,20 +515,10 @@
                     class="table table-sm text-center table-hover my-0"
                     style="width: 100%"
                   >
-                    <thead class="thead-dark">
-                      <tr>
-                        <!-- <th>Index</th> -->
-                        <th>Item</th>
-                        <th>Cost</th>
-                        <th>Selling Price</th>
-                        <th>Category</th>
-                        <th>Vendor</th>
-                        <th style="width: 8%">Action</th>
-                      </tr>
-                    </thead>
+                    <thead class="thead-dark"></thead>
                     <tbody>
                       <tr>
-                        <td colspan="5">No data available in table</td>
+                        <td colspan="7">No data available in table</td>
                       </tr>
                     </tbody>
                   </table>
@@ -445,18 +542,10 @@
                     class="table table-sm text-center table-hover my-0"
                     style="width: 100%"
                   >
-                    <thead class="thead-dark">
-                      <tr>
-                        <!-- <th>Index</th> -->
-                        <th>Vendor</th>
-                        <th>Address</th>
-                        <th style="width: 10%">Action</th>
-                        <!-- <th style="display: none"></th> -->
-                      </tr>
-                    </thead>
+                    <thead class="thead-dark"></thead>
                     <tbody>
                       <tr>
-                        <td colspan="2">No data available in table</td>
+                        <td colspan="4">No data available in table</td>
                       </tr>
                     </tbody>
                   </table>
@@ -483,6 +572,7 @@
     <script src="/js/function.js"></script>
     <!-- <script src="/js/fontawesome.js"></script> -->
 
+    <script src="/pricing_script/seller.js"></script>
     <script src="/pricing_script/category.js"></script>
     <script src="/pricing_script/vendor.js"></script>
     <script src="/pricing_script/pricing.js"></script>

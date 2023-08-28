@@ -87,28 +87,6 @@ router.get('/quotation_no_list', async (req, res, next) => {
         FROM privanet.[QuotationPO] WHERE QuotationId = ${QuotationId}`);
       quotationNos.recordset[i].PO = pos.recordset;
     }
-    // for (let Quotation of quotationNos.recordset) {
-    //   let { QuotationId, CustomerIdQ, StatusName } = Quotation;
-    //   if (StatusName == 'Invoice') {
-    //     let getPayterm = `SELECT SUM(PayPercent) TotalInvoice
-    //       FROM privanet.QuotationPayTerm
-    //       WHERE QuotationId = ${QuotationId} AND PayInvoiced = 1;`;
-    //     let payterms = await pool.request().query(getPayterm);
-    //     let { TotalInvoice } = payterms.recordset[0];
-    //     Quotation.StatusName += ` ${TotalInvoice}%`;
-    //   }
-    //   if (!CustomerIdQ) continue;
-    //   let getCustomer = await pool.request()
-    //     .query(`SELECT a.CustomerName,b.CompanyName
-    //     FROM privanet.[MasterCustomer] a
-    //     LEFT JOIN privanet.[MasterCompany] b on a.CompanyId = b.CompanyId
-    //     WHERE CustomerId = ${CustomerIdQ}`);
-    //   let { CustomerName, CompanyName } = getCustomer.recordset[0];
-    //   console.log(QuotationId, CompanyName, CustomerName);
-    //   Quotation.CustomerName = CustomerName;
-    //   Quotation.CompanyName = CompanyName;
-    // }
-    // console.log(quotationNos.recordset);
     res.status(200).send(JSON.stringify(quotationNos.recordset));
   } catch (err) {
     console.log(err);

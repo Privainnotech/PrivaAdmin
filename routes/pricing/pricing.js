@@ -1,17 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const { checkNewVendor, checkNewCategory } = require('./pricing.controller');
+const {
+  checkNewVendor,
+  checkNewSeller,
+  checkNewCategory,
+} = require('./pricing.controller');
 const { selectDt, insertDt, updateDt, deleteDt } = require('../../libs/crud');
 
 router.get('/', async (req, res) => {
   try {
     const Pricings = await selectDt({
-      field: '*',
+      field: `a.PricingId,a.Pricing,a.PricingUrl,a.Cost,a.SellingPrice,
+        a.VendorId,b.Vendor,b.VendorAddress,b.VendorUrl,
+        a.SellerId,c.Seller,c.SellerEmail,c.SellerTel,
+        a.CategoryId,d.Category`,
       table: 'MasterPricing a',
       otherQuery: `
         LEFT JOIN privanet.[MasterVendor] b ON a.VendorId = b.VendorId
-        LEFT JOIN privanet.[MasterCategory] c ON a.CategoryId = c.CategoryId`,
+        LEFT JOIN privanet.[MasterSeller] c ON a.SellerId = c.SellerId
+        LEFT JOIN privanet.[MasterCategory] d ON a.CategoryId = d.CategoryId`,
     });
+
     res.status(200).send(JSON.stringify(Pricings));
   } catch (err) {
     res.status(err.name == 'Error' ? 400 : 500).send({ message: err.message });
@@ -34,19 +43,32 @@ router.get('/:PricingId', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { Pricing, PricingUrl, Cost, SellingPrice, Vendor, Category } =
-      req.body;
+    const {
+      Pricing,
+      PricingUrl,
+      Cost,
+      SellingPrice,
+      Vendor,
+      Seller,
+      Category,
+    } = req.body;
     if (!Pricing || !Cost)
       return res.status(400).send({ message: 'Pricing and Cost is required' });
     const VendorId = await checkNewVendor(Vendor);
+    const SellerId = await checkNewSeller(Seller);
     const CategoryId = await checkNewCategory(Category);
 
     const Data = await insertDt({
-      field: 'Pricing,PricingUrl,Cost,SellingPrice,VendorId,CategoryId',
+      field:
+        'Pricing,PricingUrl,Cost,SellingPrice,VendorId,SellerId,CategoryId',
       table: 'MasterPricing',
-      valueQuery: `(N'${Pricing || ''}',N'${PricingUrl || ''}',${Cost || 0},${
-        SellingPrice || 0
-      },${VendorId},${CategoryId})`,
+      valueQuery: `(N'${Pricing || ''}',
+      N'${PricingUrl || ''}',
+      ${Cost || 0},
+      ${SellingPrice || 0},
+      ${VendorId},
+      ${SellerId},
+      ${CategoryId})`,
     });
     console.log(Data);
     res.status(201).send({ message: 'Successfully add pricing' });
@@ -58,11 +80,20 @@ router.post('/', async (req, res) => {
 router.put('/:PricingId', async (req, res) => {
   try {
     const { PricingId } = req.params;
-    const { Pricing, PricingUrl, Cost, SellingPrice, Vendor, Category } =
-      req.body;
+    const {
+      Pricing,
+      PricingUrl,
+      Cost,
+      SellingPrice,
+      Vendor,
+      Seller,
+      Category,
+    } = req.body;
+    console.log(req.body);
     if (!Pricing || !Cost)
       return res.status(400).send({ message: 'Pricing and Cost is required' });
     const VendorId = await checkNewVendor(Vendor);
+    const SellerId = await checkNewSeller(Seller, VendorId);
     const CategoryId = await checkNewCategory(Category);
 
     const Data = await updateDt({
@@ -72,6 +103,7 @@ router.put('/:PricingId', async (req, res) => {
         Cost = ${Cost || 0},
         SellingPrice = ${SellingPrice || 0},
         VendorId = ${VendorId},
+        SellerId = ${SellerId},
         CategoryId = ${CategoryId}`,
       whereQuery: `PricingId = ${PricingId}`,
     });

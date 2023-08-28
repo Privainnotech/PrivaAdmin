@@ -1,7 +1,10 @@
 let tablePricing;
 const pricingColumn = [
   {
+    title: 'Item',
     data: 'Pricing',
+    width: '25%',
+    className: 'text-left',
     render: (data, type, row) => {
       const url = row.PricingUrl
         ? `<a href="${row.PricingUrl}" target="_blank">
@@ -11,24 +14,46 @@ const pricingColumn = [
     },
   },
   {
+    title: 'Cost',
     data: 'Cost',
+    width: '10%',
     render: (data, type, row) => {
       let show = data ? data : '-';
       return show;
     },
   },
   {
+    title: 'Selling Price',
     data: 'SellingPrice',
+    width: '10%',
     render: (data, type, row) => {
       let show = data ? data : '-';
       return show;
     },
   },
   {
+    title: 'Category',
     data: 'Category',
+    width: '10%',
   },
   {
+    title: 'Seller',
+    data: 'Seller',
+    width: '25%',
+    render: (data, type, row) => {
+      const { SellerEmail, SellerTel } = row;
+      let show = data ? data : '-';
+      let contact =
+        SellerEmail || SellerTel
+          ? `: ${SellerEmail || ''} ${SellerTel || ''}`
+          : '';
+      return `${show}${contact}`;
+    },
+  },
+  {
+    title: 'Vendor',
     data: 'Vendor',
+    width: '10%',
     render: (data, type, row) => {
       const url = row.VendorUrl
         ? `<a href="${row.VendorUrl}" target="_blank">
@@ -38,6 +63,8 @@ const pricingColumn = [
     },
   },
   {
+    title: 'Action',
+    width: '10%',
     defaultContent: `<div class='btn-group' role='group'>
         <button type='button' class='btn btn-primary p-1' id='btnEditPricing'>
           <i class='fa fa-pencil-square-o'></i></button>
@@ -78,13 +105,18 @@ async function callPricingAPI(method, { PricingId } = { PricingId: '' }) {
       VendorAddress: $('#inpPricingVendorAddress').val() || '',
       VendorUrl: $('#inpPricingVendorUrl').val() || '',
     },
+    Seller: {
+      SellerId: $('#inpPricingSeller').val(),
+      Seller: $('#inpPricingSellerName').val() || '',
+      SellerEmail: $('#inpPricingSellerEmail').val() || '',
+      SellerTel: $('#inpPricingSellerTel').val() || '',
+    },
     Category: {
       CategoryId: $('#inpPricingCategory').val(),
       Category: $('#inpPricingCategoryName').val() || '',
     },
   };
   try {
-    // let additional = PricingId ? `/${PricingId}` : '';
     let res = await AjaxDataJson(`/pricing/${PricingId}`, method, data);
     method == 'post' ? SwalAddSuccess(res) : SwalEditSuccess(res);
 
@@ -105,6 +137,7 @@ function triggerPricingModal() {
   $('#inpPricingCategory,#inpPricingVendor').unbind();
   $('#inpPricingCategory').on('change', handleCategoryChange);
   $('#inpPricingVendor').on('change', handleVendorChange);
+  $('#inpPricingSeller').on('change', handleSellerChange);
 
   $('#savePricing').unbind();
   $('.close,.no').click(function () {
@@ -127,7 +160,7 @@ $(document).ready(function () {
 
   //Edit Pricing
   $('#tablePricing').unbind();
-  $('#tablePricing').on('click', '#btnEditPricing', function () {
+  $('#tablePricing').on('click', '#btnEditPricing', async function () {
     triggerPricingModal();
     let rows = $(this).closest('tr');
     let {
@@ -140,15 +173,23 @@ $(document).ready(function () {
       Vendor,
       VendorAddress,
       VendorUrl,
+      SellerId,
+      Seller,
+      SellerEmail,
+      SellerTel,
       CategoryId,
       Category,
     } = tablePricing.row(rows).data();
 
     if (CategoryId) $('#categoryGroup').hide();
     else $('#categoryGroup').show();
-    if (VendorId) $('#vendorGroup').hide();
-    else $('#vendorGroup').show();
+    if (VendorId) {
+      await getSeller(VendorId);
+      $('#vendorGroup').hide();
+    } else $('#vendorGroup').show();
 
+    if (SellerId) $('#sellerGroup').hide();
+    else $('#sellerGroup').show();
     $('#inpPricingName').val(Pricing);
     $('#inpPricingUrl').val(PricingUrl);
     $('#inpPricingCost').val(Cost);
@@ -157,6 +198,10 @@ $(document).ready(function () {
     $('#inpPricingVendorName').val(Vendor);
     $('#inpPricingVendorAddress').val(VendorAddress);
     $('#inpPricingVendorUrl').val(VendorUrl);
+    $('#inpPricingSeller').val(SellerId);
+    $('#inpPricingSellerName').val(Seller);
+    $('#inpPricingSellerEmail').val(SellerEmail);
+    $('#inpPricingSellerTel').val(SellerTel);
     $('#inpPricingCategory').val(CategoryId);
     $('#inpPricingCategoryName').val(Category);
 

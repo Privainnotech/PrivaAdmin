@@ -24,6 +24,32 @@ const checkNewVendor = async (Vendors) => {
   return Data[0].Id;
 };
 
+const checkNewSeller = async (Sellers, VendorId) => {
+  console.log(Sellers);
+  let { SellerId } = Sellers;
+  console.log(`SellerId ${SellerId}`);
+  if (SellerId) return SellerId;
+  const { Seller, SellerEmail, SellerTel } = Sellers;
+  if (!Seller) throw new Error('Seller is required');
+  const isDup = await checkExists({
+    value: Seller,
+    field: 'Seller',
+    table: 'MasterSeller',
+  });
+  if (isDup) throw new Error('Seller is duplicated');
+
+  const Data = await insertDt({
+    field: 'Seller, SellerEmail, SellerTel,VendorId',
+    table: 'MasterSeller',
+    valueQuery: `(N'${Seller}',
+      N'${SellerEmail || ''}',
+      N'${SellerTel || ''}',
+      ${VendorId})`,
+  });
+  console.log(`New SellerId ${Data[0].Id}`);
+  return Data[0].Id;
+};
+
 const checkNewCategory = async (Categories) => {
   let { CategoryId } = Categories;
   console.log(`CategoryId ${CategoryId}`);
@@ -46,4 +72,4 @@ const checkNewCategory = async (Categories) => {
   return Data[0].Id;
 };
 
-module.exports = { checkNewVendor, checkNewCategory };
+module.exports = { checkNewVendor, checkNewCategory, checkNewSeller };

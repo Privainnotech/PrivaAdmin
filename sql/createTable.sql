@@ -174,6 +174,14 @@ CREATE Table [MasterVendor]
 	VendorAddress NVARCHAR(1000) NULL,
 	VendorUrl NVARCHAR(1000) NULL
 )
+CREATE Table [MasterSeller]
+(
+	SellerId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
+	Seller NVARCHAR(255) NOT NULL,
+	SellerEmail NVARCHAR(1000) NULL,
+	SellerTel NVARCHAR(1000) NULL,
+	VendorId bigint NOT NULL FOREIGN KEY (VendorId) REFERENCES privanet.MasterVendor(VendorId),
+)
 CREATE Table [MasterCategory]
 (
 	CategoryId bigint IDENTITY(1,1) PRIMARY KEY CLUSTERED NOT NULL,
@@ -187,5 +195,6 @@ CREATE Table [MasterPricing]
 	Cost money NOT NULL,
 	SellingPrice money NULL,
 	VendorId bigint NOT NULL FOREIGN KEY (VendorId) REFERENCES privanet.MasterVendor(VendorId),
+	SellerId bigint NULL FOREIGN KEY (SellerId) REFERENCES privanet.MasterSeller(SellerId),
 	CategoryId bigint NOT NULL FOREIGN KEY (CategoryId) REFERENCES privanet.MasterCategory(CategoryId)
 )

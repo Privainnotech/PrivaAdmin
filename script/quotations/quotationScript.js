@@ -91,7 +91,7 @@ function action_po() {
     let url = `/quotation/delete_po/${POId}`;
 
     try {
-      let res = await AjaxDataJson(url, `delete`);
+      let res = await AjaxDelete(url);
       SwalDeleteSuccess(res);
       $(`#po_${POId}`).remove();
       tableQuoHead.ajax.reload(null, false);
