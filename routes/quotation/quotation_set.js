@@ -80,7 +80,7 @@ const copyQuotation = async (OldQuotationId, UserId, Type = 'copy') => {
     newQuotationNoId = QuotationNo.recordset[0].Id;
   } else {
     // Revise create new revise quotation
-    newRevise = getRevise(QuotationNoId);
+    newRevise = await getRevise(QuotationNoId);
   }
 
   // Insert Quotation
@@ -167,7 +167,8 @@ router.get('/revise/:OldQuotationId', async (req, res) => {
     if (UserId == '') return res.status(400).send({ message: 'Please login' });
 
     let OldQuotationId = req.params.OldQuotationId;
-    const status = checkStatus(OldQuotationId);
+    const status = await checkStatus(OldQuotationId);
+    console.log(status);
     // Check Reject
     if (status == 1)
       return res.status(400).send({ message: 'Cannot revise pre-quotation' });
@@ -183,6 +184,7 @@ router.get('/revise/:OldQuotationId', async (req, res) => {
     await copyQuotation(OldQuotationId, UserId, 'revise');
     res.status(200).send({ message: 'Successfully revise quotation' });
   } catch (err) {
+    console.log(err);
     res.status(500).send({ message: `${err}` });
   }
 });
@@ -245,7 +247,7 @@ router.get('/quotation/:QuotationId', async (req, res) => {
       await pool.request().query(UpdateQuotationStatus);
       await pool.request().query(DeletePreQuotationNo);
     } else if (QuotationStatus == 1 && QuotationRevised > 0) {
-      let newRevise = getRevise(QuotationNoId);
+      let newRevise = await getRevise(QuotationNoId);
       // Update privanet.Quotation NoId, Status & cancel other quotation
       let UpdateQuotationStatus = `Update privanet.Quotation
           SET QuotationRevised = ${newRevise}, QuotationStatus = 2,
@@ -277,7 +279,7 @@ router.get('/booking/:QuotationId', async (req, res) => {
         .send({ message: 'Only Parichart can set booking' });
 
     let QuotationId = req.params.QuotationId;
-    const status = checkStatus(QuotationId);
+    const status = await checkStatus(QuotationId);
     if (status == 3 || status == 1)
       res.status(400).send({ message: 'Cannot booking pre-quotation' });
 
@@ -300,7 +302,7 @@ router.get('/q-booking/:QuotationId', async (req, res) => {
         .send({ message: 'Only Parichart can set booking' });
 
     let QuotationId = req.params.QuotationId;
-    const status = checkStatus(QuotationId);
+    const status = await checkStatus(QuotationId);
     if (status == 6 || status == 1)
       res.status(400).send({ message: 'Cannot booking pre-quotation' });
 
@@ -317,7 +319,7 @@ router.get('/q-booking/:QuotationId', async (req, res) => {
 router.get('/loss/:QuotationId', async (req, res) => {
   try {
     let QuotationId = req.params.QuotationId;
-    const status = checkStatus(QuotationId);
+    const status = await checkStatus(QuotationId);
     if (status == 4 || status == 1)
       res.status(400).send({ message: 'Cannot loss pre-quotation' });
 
@@ -334,7 +336,7 @@ router.get('/loss/:QuotationId', async (req, res) => {
 router.get('/cancel/:QuotationId', async (req, res) => {
   try {
     let QuotationId = req.params.QuotationId;
-    const status = checkStatus(QuotationId);
+    const status = await checkStatus(QuotationId);
     if (status == 5 || status == 1)
       res
         .status(400)
