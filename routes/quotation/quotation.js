@@ -265,6 +265,7 @@ router.post('/add_pre_quotation', async (req, res) => {
 });
 router.put('/edit_quotation/:QuotationId', async (req, res) => {
   try {
+    console.log('call edit');
     let pool = await sql.connect(dbconfig);
     let UserId = req.session.UserId;
     if (!UserId) return res.status(400).send({ message: 'Please login' });
@@ -292,12 +293,14 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
     let RemarkFilter = QuotationRemark.replace(/'/g, "''");
     let EndCustomerFilter = EndCustomer.replace(/'/g, "''");
     // Update Quotation
+    // console.log(QuotationPayTerm);
     if (Array.isArray(QuotationPayTerm)) {
       // Array
       let UpdateQuotation = `UPDATE privanet.Quotation
-        SET QuotationSubject = N'${QuotationSubject}', CustomerId = ${CustomerId}, QuotationDiscount = ${
-        parseFloat(QuotationDiscount.replaceAll(',', '')) || 0
-      },
+        SET QuotationSubject = N'${QuotationSubject}', CustomerId = ${CustomerId},
+          QuotationDiscount=${
+            parseFloat(QuotationDiscount.replaceAll(',', '')) || 0
+          },
           QuotationValidityDate = N'${ValidityDateFilter}', QuotationDelivery = N'${DeliveryFilter}',
           QuotationRemark = N'${RemarkFilter}', EmployeeApproveId = ${EmployeeApproveId},
           EndCustomer = N'${EndCustomerFilter}', EmployeeEditId = ${UserId}
@@ -309,18 +312,22 @@ router.put('/edit_quotation/:QuotationId', async (req, res) => {
           FROM privanet.QuotationPayTerm WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${
           idx + 1
         }`);
-        if (checkPayTerm.recordset.length)
+        console.log(checkPayTerm.recordset.length);
+        if (checkPayTerm.recordset.length) {
+          console.log('update');
           await pool.request().query(`UPDATE privanet.QuotationPayTerm
           SET PayTerm = N'${PayTerm}', PayPercent = ${
             Percent || 0
           }, PayForecast = N'${PayForecast}'
           WHERE QuotationId = ${QuotationId} AND IndexPayTerm = ${idx + 1};`);
-        else
+        } else {
+          console.log('insert');
           await pool.request().query(`INSERT INTO privanet.QuotationPayTerm
           (QuotationId,IndexPayTerm,PayTerm,PayPercent,PayForecast)
           VALUES(${QuotationId},${idx + 1},N'${PayTerm}',${
             Percent || 0
           },N'${PayForecast}');`);
+        }
       }
       let checkPayTermLength = await pool.request()
         .query(`SELECT COUNT(IndexPayTerm) PayTermLength
