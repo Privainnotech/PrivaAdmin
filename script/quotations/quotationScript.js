@@ -15,9 +15,9 @@ $("#loading-close").on("click", function () {
 });
 
 function selectPaymentChange() {
-  $("select.payment").change( function () {
-    $(this).next().val(this.value)
-  })
+  $("select.payment").change(function () {
+    $(this).next().val(this.value);
+  });
 }
 
 function SwalPO(QuotationId) {
@@ -264,12 +264,12 @@ function ShowPro(QuotationId) {
                 <div class="input-group input-group-sm mb-1">
 
                   <select class="form-select mb-1 w-100 payment d-none" disabled>
-  	                <option value="" selected>อื่นๆ</option>
   	                <option value="After PO">After PO</option>
                     <option value="Complete Concept design">Complete Concept design</option>
                     <option value="Complete GUI design">Complete GUI design</option>
                     <option value="Install system complete">Install system complete</option>
                     <option value="Customer testing and accept">Customer testing and accept</option>
+  	                <option value="" selected>อื่นๆ</option>
                   </select>
 
                   <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
@@ -292,14 +292,9 @@ function ShowPro(QuotationId) {
             </div>
         `);
 
-        selectPaymentChange()
-
-        
-
-
+          selectPaymentChange();
         }
       }
-
 
       $("#CusName").val(CustomerId);
       $("#QDate").val(QuotationDate || "-");
@@ -723,13 +718,13 @@ $(document).ready(function () {
                   <div class="input-group input-group-sm mb-1">
 
                   <select class="form-select mb-1 w-100 payment">
-                    <option value="" selected>อื่นๆ</option>
                     <option value="After PO">After PO</option>
                     <option value="Complete Concept design">Complete Concept design</option>
                     <option value="Complete GUI design">Complete GUI design</option>
                     <option value="Install system complete">Install system complete</option>
                     <option value="Customer testing and accept">Customer testing and accept</option>
-                  </select>
+                    <option value="" selected>อื่นๆ</option>
+                    </select>
 
                     <input type="text" class="form-control mb-0 me-3 payment" value="">
                     <input type="number" class="p-0 mb-0 payment text-end" value="">
