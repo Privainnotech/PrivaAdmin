@@ -182,19 +182,26 @@ function searchTableQuoHead() {
       let data = await AjaxDataJson("/dropdown/status");
       data = JSON.parse(data);
       let statusName = data.map((item, Index) => item.StatusName);
-      // console.log(data);
-
       $(this).html(
-        // `<input class="form-control p-1 column-search" type="text" placeholder="${title}" ${disable} value ="pre"/>`
         `<select class=" table-select select-status column-search">
           <option selected value="">${title}</option>
-          
         </select>`
       );
       for (let i = 0; i < statusName.length; i++) {
-        $(
-          `<option value="${statusName[i]}">${statusName[i]}</option>`
-        ).appendTo(".select-status");
+        if (statusName[i] == "Invoice") {
+          $(
+            `<option value="${statusName[i]}">${statusName[i]}</option>
+            <option value="${statusName[i]} 30%">${statusName[i]} 30%</option>
+            <option value="${statusName[i]} 50%">${statusName[i]} 50%</option>
+            <option value="${statusName[i]} 70%">${statusName[i]} 70%</option>
+            <option value="${statusName[i]} 90%">${statusName[i]} 90%</option>
+            <option value="${statusName[i]} 100%">${statusName[i]} 100%</option>`
+          ).appendTo(".select-status");
+        } else {
+          $(
+            `<option value="${statusName[i]}">${statusName[i]}</option>`
+          ).appendTo(".select-status");
+        }
       }
     } else if (title == "Company") {
       let data = await AjaxDataJson("/company_master/data");
@@ -203,7 +210,7 @@ function searchTableQuoHead() {
 
       $(this).html(
         `<div class="search-select ">
-          <input class="form-control" id="search_01" type="text" placeholder="${title}">
+          <input class="form-control" id="search_01" type="text" placeholder="${title}" autocomplete="off">
           <ul class="selection select-company"></ul>
          </div>`
       );
@@ -326,9 +333,9 @@ function fill_quotationHead() {
           let html = "";
           data.forEach((res) => {
             html += `${res.PONo} <br/>`;
-          })
+          });
           return `<div class = "d-flex justify-content-center align-items-center">
-          <span class="text-center">${html || '-'}</span>
+          <span class="text-center">${html || "-"}</span>
           </div>`;
         },
       },
@@ -356,6 +363,14 @@ function fill_quotationHead() {
         });
     },
   });
+
+  // $(".sidebar-toggle").unbind();
+  // $(".sidebar-toggle").click(function () {
+  //   console.log("nav click");
+
+  //   tableQuoHead.ajax.reload(null, false);
+  //   $(`#tableQuoHead`).DataTable().columns.adjust().draw();
+  // });
 }
 function fill_quotation(QuotationNoId = null) {
   tableQuo = $("#tableQuo").DataTable({
@@ -364,8 +379,6 @@ function fill_quotation(QuotationNoId = null) {
     pageLength: 5,
     searching: true,
     dom: "rtip",
-    // "bInfo": false,
-    // bLengthChange: false,
     ajax: {
       url: `/quotation/quotation_list/${QuotationNoId}`,
       dataSrc: "",

@@ -263,16 +263,8 @@ function ShowPro(QuotationId) {
               <div class="col">
                 <div class="input-group input-group-sm mb-1">
 
-                  <select class="form-select mb-1 w-100 payment d-none" disabled>
-  	                <option value="After PO">After PO</option>
-                    <option value="Complete Concept design">Complete Concept design</option>
-                    <option value="Complete GUI design">Complete GUI design</option>
-                    <option value="Install system complete">Install system complete</option>
-                    <option value="Customer testing and accept">Customer testing and accept</option>
-  	                <option value="" selected>อื่นๆ</option>
-                  </select>
-
-                  <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
+                  
+                  <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" list="paymentList" disabled>
                   <input type="number" class="p-0 mb-0 payment text-end mr-1" value="${PayTermPercent}" disabled>
                   <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                   <span class="input-group-text bg-white fw-bold border-0">Invoice: </span>
@@ -635,17 +627,9 @@ $(document).ready(function () {
                   let group1 = col[0];
                   let group2 = col[1];
 
-                  let pay_detail_select = $(group1).children()[0].value;
-                  let pay_detail_input = $(group1).children()[1].value;
+                  let pay_detail = $(group1).children()[0].value;
                   let pay_percent = $(group1).children()[2].value;
                   let pay_forecast = $(group2).children()[1].value;
-                  let pay_detail;
-
-                  if (pay_detail_select) {
-                    pay_detail = pay_detail_select;
-                  } else {
-                    pay_detail = pay_detail_input;
-                  }
 
                   if (pay_detail) {
                     QuotationPayTerm.push({
@@ -716,16 +700,9 @@ $(document).ready(function () {
                 <div class="col">
                   <div class="input-group input-group-sm mb-1">
 
-                  <select class="form-select mb-1 w-100 payment">
-                    <option value="After PO">After PO</option>
-                    <option value="Complete Concept design">Complete Concept design</option>
-                    <option value="Complete GUI design">Complete GUI design</option>
-                    <option value="Install system complete">Install system complete</option>
-                    <option value="Customer testing and accept">Customer testing and accept</option>
-                    <option value="" selected>อื่นๆ</option>
-                    </select>
+                    
 
-                    <input type="text" class="form-control mb-0 me-3 payment" value="">
+                    <input type="text" class="form-control mb-0 me-3 payment" value="" list="paymentList">
                     <input type="number" class="p-0 mb-0 payment text-end mr-1" value="">
                     <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                     <span class="input-group-text bg-white fw-bold border-0">Invoice: </span>
