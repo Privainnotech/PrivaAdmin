@@ -637,7 +637,7 @@ $(document).ready(function () {
                   let group2 = col[1];
 
                   let pay_detail = $(group1).children()[0].value;
-                  let pay_percent = $(group1).children()[2].value;
+                  let pay_percent = $(group1).children()[1].value;
                   let pay_forecast = $(group2).children()[1].value;
 
                   if (pay_detail) {
@@ -655,7 +655,7 @@ $(document).ready(function () {
                   PayForecast: "",
                 });
               }
-              // console.log("test data", QuotationPayTerm);
+              console.log("test data", QuotationPayTerm);
               let data = {
                 CustomerId: $("#CusName").val(),
                 QuotationSubject: $("#PJ_Name").val(),
