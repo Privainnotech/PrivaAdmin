@@ -273,7 +273,7 @@ function ShowPro(QuotationId) {
                   </select>
 
                   <input type="text" class="form-control mb-0 me-3 payment" value="${PayTermDetail}" disabled>
-                  <input type="number" class="p-0 mb-0 payment text-end" value="${PayTermPercent}" disabled>
+                  <input type="number" class="p-0 mb-0 payment text-end mr-1" value="${PayTermPercent}" disabled>
                   <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                   <span class="input-group-text bg-white fw-bold border-0">Invoice: </span>
                   <div class="form-check d-flex justify-content-center align-items-center">
@@ -726,7 +726,7 @@ $(document).ready(function () {
                     </select>
 
                     <input type="text" class="form-control mb-0 me-3 payment" value="">
-                    <input type="number" class="p-0 mb-0 payment text-end" value="">
+                    <input type="number" class="p-0 mb-0 payment text-end mr-1" value="">
                     <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
                     <span class="input-group-text bg-white fw-bold border-0">Invoice: </span>
                     <div class="form-check d-flex justify-content-center align-items-center">
