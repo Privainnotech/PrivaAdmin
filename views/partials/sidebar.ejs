@@ -14,6 +14,11 @@
             <i class="fa fa-file-o" aria-hidden="true"></i> <span class="align-middle">Quotation</span>
           </a>
       </li>
+      <li class="sidebar-item <% if (messages.page == "pricing") { %> active <% } %>">
+        <a class="sidebar-link" href="/price">
+          <i class="fa fa-money-bill" aria-hidden="true"></i> <span class="align-middle">Pricing</span>
+        </a>
+      </li>
       <li class="sidebar-item">
         <a class="dropdown-toggle sidebar-link" data-toggle="collapse" href="#master"
           aria-expanded="<% if (messages.page == "employee" || messages.page == "customer") { %> true <% } else { %> false <% } %>" aria-controls="master">
