@@ -8,7 +8,7 @@ const dbconfig = {
   user: "sa",
   password: "P@ssw0rd",
   server: "192.168.1.6",
-  database: 'PrivaDashboard',
+  database: "PrivaDashboard",
   port: 1433,
   options: {
     encrypt: false,
