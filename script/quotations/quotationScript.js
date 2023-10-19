@@ -708,9 +708,6 @@ $(document).ready(function () {
               <div class="row mb-3">
                 <div class="col">
                   <div class="input-group input-group-sm mb-1">
-
-                    
-
                     <input type="text" class="form-control mb-0 me-3 payment" value="" list="paymentList">
                     <input type="number" class="p-0 mb-0 payment text-end mr-1" value="">
                     <span class="input-group-text bg-white border-0 ps-0 text-start">%</span>
