@@ -193,7 +193,7 @@ function searchTableQuoHead() {
         if (statusName[i] == "Invoice") {
           $(
             `<option value="${statusName[i]}">${statusName[i]}</option>
-            <option value="${statusName[i]} 30%">${statusName[i]} 20%</option>
+            <option value="${statusName[i]} 20%">${statusName[i]} 20%</option>
             <option value="${statusName[i]} 30%">${statusName[i]} 30%</option>
             <option value="${statusName[i]} 50%">${statusName[i]} 50%</option>
             <option value="${statusName[i]} 70%">${statusName[i]} 70%</option>
