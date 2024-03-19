@@ -3,7 +3,7 @@ const dbconfig = {
   // main
   user: 'privaadmin',
   password: 'Jz2^7b8a',
-  server: '119.59.96.61',
+  server: '119.59.96.61', // sql
   // test
   // user: "sa",
   // password: "P@ssw0rd",
