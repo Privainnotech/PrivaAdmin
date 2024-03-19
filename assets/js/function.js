@@ -322,6 +322,7 @@ function fill_quotationHead() {
       {
         data: 'QuotationNet',
         render: function (data, type, row) {
+          data = data || 0;
           let [bath, stang] = data.toFixed(2).split('.');
           return `<div class = "d-flex justify-content-end align-items-center"><span class="text-end">${parseInt(
             bath
@@ -332,6 +333,7 @@ function fill_quotationHead() {
         data: 'PO',
         render: function (data, type, row) {
           // console.log(data)
+          data = data || [];
           let html = '';
           data.forEach((res) => {
             html += `${res.PONo} <br/>`;
